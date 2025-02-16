@@ -167,7 +167,7 @@ const WelcomeCard = () => {
   }
 
   return (
-    <div className='flex max-md:flex-col md:items-center gap-6 plb-5'>
+    <div className='flex max-md:flex-col md:items-center bg-backgroundPaper gap-6 plb-5 pl-[1.25rem] rounded-[4px] shadow-md'>
       <div className='md:is-8/12'>
         <div className='flex items-baseline gap-1 mbe-2'>
           <Typography variant='h5'>Welcome back,</Typography>

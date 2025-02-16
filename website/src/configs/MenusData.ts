@@ -2,10 +2,10 @@ export const HeaderMenusList: any[] = [
     {title:'首页', target:'', href:'/home', default: true},
     {title:'学校概况', target:'', href:'', default: false, children:
         [
-          {title: '学校简介', target:'', href: '/summary' },
-          {title: '学校领导', target:'', href: '/summary' },
-          {title: '学校风采', target:'', href: '/summary' },
-          {title: '组织机构', target:'', href: '/summary' },
+          {title: '学校简介', target:'', href: '/dashboard' },
+          {title: '学校领导', target:'', href: '/leader' },
+          {title: '学校风采', target:'', href: '/teacher' },
+          {title: '组织机构', target:'', href: '/dashboard' },
         ]
     },
     {title:'学校新闻', target:'', href:'', default: false, children:
@@ -16,10 +16,11 @@ export const HeaderMenusList: any[] = [
     },
     {title:'教育教学', target:'', href:'', default: false, children:
       [
-        {title: '教学管理', target:'', href: '/teaching' },
+        {title: '学校日历', target:'', href: '/calendar' },
+        {title: '教学看板', target:'', href: '/logistics' },
         {title: '教学改革', target:'', href: '/teacher' },
-        {title: '人陪方案', target:'', href: '/teaching' },
-        {title: '教学成果奖', target:'', href: '/teaching' },
+        {title: '人陪方案', target:'', href: '/dashboard' },
+        {title: '教学成果奖', target:'', href: '/teacher' },
       ]
     },
     {title:'校园风采', target:'', href:'', default: false, children:
