@@ -26,7 +26,7 @@ import FrontMenuDropDown from './FrontMenuDropDown'
 // import axios from 'axios'
 // import authConfig from '@configs/auth'
 
-import { HeaderMenusList } from './MenusData'
+import { HeaderMenusList } from '../../../configs/MenusData'
 
 type Props = {
   mode: Mode
