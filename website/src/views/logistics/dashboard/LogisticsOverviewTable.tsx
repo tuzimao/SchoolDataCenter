@@ -5,7 +5,6 @@ import { useState, useMemo } from 'react'
 
 // Next Imports
 import Link from 'next/link'
-import { useParams } from 'next/navigation'
 
 // MUI Imports
 import Card from '@mui/material/Card'
@@ -84,11 +83,6 @@ const columnHelper = createColumnHelper<Vehicle>()
 const LogisticsOverviewTable = ({ vehicleData }: { vehicleData?: Vehicle[] }) => {
   // States
   const [rowSelection, setRowSelection] = useState({})
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [data, setData] = useState(...[vehicleData])
-
-  // Hooks
-  const { lang: locale } = useParams()
 
   const columns = useMemo<ColumnDef<Vehicle, any>[]>(
     () => [
@@ -171,7 +165,7 @@ const LogisticsOverviewTable = ({ vehicleData }: { vehicleData?: Vehicle[] }) =>
   )
 
   const table = useReactTable({
-    data: data as Vehicle[],
+    data: vehicleData as Vehicle[],
     columns,
     filterFns: {
       fuzzy: fuzzyFilter
