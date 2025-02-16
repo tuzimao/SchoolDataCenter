@@ -46,7 +46,7 @@ const AcademyMyCourse = () => {
     <section id='home' className='relative overflow-hidden pbs-[70px] -mbs-[70px] bg-backgroundPaper z-[1]'>
       <img src={'/images/front-pages/landing-page/hero-bg-light.png'} alt='hero-bg' className={styles.heroSectionBg} />
       <section id='home' className='relative overflow-hidden pbs-[70px] -mbs-[70px] z-[1]'>
-        <div className={frontCommonStyles.layoutSpacing} style={{paddingTop: '1rem', paddingBottom: '1rem'}}>
+        <div className={frontCommonStyles.layoutSpacing} style={{paddingTop: '1.5rem', paddingBottom: '1.5rem'}}>
           <Grid container spacing={6}>
             <Grid item xs={12}>
               <MyCourseHeader mode={'light'} searchValue={searchValue} setSearchValue={setSearchValue} />
