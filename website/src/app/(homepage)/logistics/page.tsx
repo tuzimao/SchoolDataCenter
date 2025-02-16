@@ -1,10 +1,10 @@
 'use client'
 
-import Logistics from '@/views/logistics/index'
+import Logistics from '@/views/Logistics/index'
 
 const LogisticsPage = async () => {
   
-  return <Logistics mode={'light'} />
+  return <Logistics />
 }
 
 export default LogisticsPage

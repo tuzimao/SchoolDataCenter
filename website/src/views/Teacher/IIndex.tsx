@@ -6,19 +6,11 @@ import { useState } from 'react'
 // MUI Imports
 import Grid from '@mui/material/Grid'
 
-// Type Imports
-import type { Mode } from '@core/types'
-import type { Course } from '@/types/apps/academyTypes'
-
 // Component Imports
 import MyCourseHeader from './MyCourseHeader'
 import Courses from './Courses'
 import ColoredCards from './ColoredCards'
 import FreeCourses from './FreeCourses'
-
-type Props = {
-  mode: Mode
-}
 
 import frontCommonStyles from '@views/home/styles.module.css'
 
@@ -46,7 +38,7 @@ import { db as courseData } from '@/views/Teacher/db'
   return res.json()
 } */
 
-const AcademyMyCourse = ({ mode }: Props) => {
+const AcademyMyCourse = () => {
   // States
   const [searchValue, setSearchValue] = useState('')
 
@@ -57,7 +49,7 @@ const AcademyMyCourse = ({ mode }: Props) => {
         <div className={frontCommonStyles.layoutSpacing} style={{paddingTop: '1rem', paddingBottom: '1rem'}}>
           <Grid container spacing={6}>
             <Grid item xs={12}>
-              <MyCourseHeader mode={mode} searchValue={searchValue} setSearchValue={setSearchValue} />
+              <MyCourseHeader mode={'light'} searchValue={searchValue} setSearchValue={setSearchValue} />
             </Grid>
             <Grid item xs={12}>
               <Courses courseData={courseData.courses} searchValue={searchValue} />

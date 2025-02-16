@@ -1,28 +1,11 @@
 'use client'
 
-// MUI Imports
-import Card from '@mui/material/Card'
-
 // Component Imports
-import CalendarWrapper from '@views/Calendar/CalendarWrapper'
+import Calendar from '@/views/Calendar/index'
 
-// Styled Component Imports
-import AppFullCalendar from '@/libs/styles/AppFullCalendar'
+const CalendarPage = () => {
 
-import frontCommonStyles from '@views/home/styles.module.css'
-
-const CalendarApp = () => {
-  return (
-    <section id='home' className='relative overflow-hidden pbs-[70px] -mbs-[70px] bg-backgroundPaper z-[1]'>
-      <div className={frontCommonStyles.layoutSpacing} style={{paddingTop: '20px', paddingBottom: '20px'}}>
-        <Card className='overflow-visible'>
-          <AppFullCalendar className='app-calendar'>
-            <CalendarWrapper />
-          </AppFullCalendar>
-        </Card>
-      </div>
-    </section>
-  )
+  return <Calendar />
 }
 
-export default CalendarApp
+export default CalendarPage

@@ -3,17 +3,17 @@
 import Grid from '@mui/material/Grid'
 
 //Component Imports
-import LogisticsStatisticsCard from '@/views/logistics/dashboard/LogisticsStatisticsCard'
-import LogisticsVehicleOverview from '@/views/logistics/dashboard/LogisticsVehicleOverview'
-import LogisticsShipmentStatistics from '@/views/logistics/dashboard/LogisticsShipmentStatistics'
-import LogisticsDeliveryPerformance from '@/views/logistics/dashboard/LogisticsDeliveryPerformance'
-import LogisticsDeliveryExceptions from '@/views/logistics/dashboard/LogisticsDeliveryExceptions'
-import LogisticsOrdersByCountries from '@/views/logistics/dashboard/LogisticsOrdersByCountries'
-import LogisticsOverviewTable from '@/views/logistics/dashboard/LogisticsOverviewTable'
+import LogisticsStatisticsCard from '@/views/Logistics/dashboard/LogisticsStatisticsCard'
+import LogisticsVehicleOverview from '@/views/Logistics/dashboard/LogisticsVehicleOverview'
+import LogisticsShipmentStatistics from '@/views/Logistics/dashboard/LogisticsShipmentStatistics'
+import LogisticsDeliveryPerformance from '@/views/Logistics/dashboard/LogisticsDeliveryPerformance'
+import LogisticsDeliveryExceptions from '@/views/Logistics/dashboard/LogisticsDeliveryExceptions'
+import LogisticsOrdersByCountries from '@/views/Logistics/dashboard/LogisticsOrdersByCountries'
+import LogisticsOverviewTable from '@/views/Logistics/dashboard/LogisticsOverviewTable'
 
 //Data Imports
-import { db as getLogisticsData } from '@/views/logistics/getLogisticsData'
-import { db as getStatisticsData } from '@/views/logistics/getStatisticsData'
+import { db as getLogisticsData } from '@/views/Logistics/getLogisticsData'
+import { db as getStatisticsData } from '@/views/Logistics/getStatisticsData'
 
 import frontCommonStyles from '@views/home/styles.module.css'
 

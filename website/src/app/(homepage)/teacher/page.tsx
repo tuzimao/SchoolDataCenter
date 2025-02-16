@@ -4,7 +4,7 @@ import Teacher from '@/views/Teacher'
 
 const TeacherPage = async () => {
   
-  return <Teacher mode={'light'} />
+  return <Teacher />
 }
 
 export default TeacherPage
