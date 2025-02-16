@@ -13,7 +13,6 @@ import Providers from '@components/Providers'
 import BlankLayout from '@layouts/BlankLayout'
 import FrontLayout from '@components/layout/front-pages'
 
-import { AuthProvider } from '@/context/AuthContext'
 import { Toaster } from 'react-hot-toast'
 
 // Style Imports
@@ -30,26 +29,25 @@ export const metadata = {
 
 const Layout = ({ children }: ChildrenType) => {
   // Vars
-  const systemMode = 'light'
+  const systemMode = 'dark'
 
   return (
     <html id='__next'>
       <body className='flex is-full min-bs-full flex-auto flex-col'>
-        <AuthProvider>
-          <Providers direction='ltr'>
-            <BlankLayout systemMode={systemMode}>
-              <IntersectionProvider>
-                <FrontLayout>{children}</FrontLayout>
-              </IntersectionProvider>
-              <ReactHotToast>
-                <Toaster position={'top-center'} toastOptions={{ className: 'react-hot-toast' }} />
-              </ReactHotToast>
-            </BlankLayout>
-          </Providers>
-        </AuthProvider>
+        <Providers direction='ltr'>
+          <BlankLayout systemMode={systemMode}>
+            <IntersectionProvider>
+              <FrontLayout>{children}</FrontLayout>
+            </IntersectionProvider>
+            <ReactHotToast>
+              <Toaster position={'top-center'} toastOptions={{ className: 'react-hot-toast' }} />
+            </ReactHotToast>
+          </BlankLayout>
+        </Providers>
       </body>
     </html>
   )
 }
+
 
 export default Layout
