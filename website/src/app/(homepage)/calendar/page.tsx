@@ -1,7 +1,7 @@
 'use client'
 
 // Component Imports
-import Calendar from '@/views/Calendar/index'
+import Calendar from '@/views/Calendar/Index'
 
 const CalendarPage = () => {
 

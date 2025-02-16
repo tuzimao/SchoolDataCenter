@@ -1,7 +1,7 @@
 'use client'
 
 // Component Imports
-import Dashboard from '@/views/Dashboard/index'
+import Dashboard from '@/views/Dashboard/Index'
 
 const DashboardPage = () => {
 

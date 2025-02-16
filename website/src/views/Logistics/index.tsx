@@ -16,6 +16,7 @@ import { db as getLogisticsData } from '@/views/Logistics/getLogisticsData'
 import { db as getStatisticsData } from '@/views/Logistics/getStatisticsData'
 
 import frontCommonStyles from '@views/home/styles.module.css'
+import styles from '@views/Leader/styles.module.css'
 
 /**
  * ! If you need data using an API call, uncomment the below API code, update the `process.env.API_URL` variable in the
@@ -60,31 +61,34 @@ const LogisticsDashboard = async () => {
   
   return (
     <section id='home' className='relative overflow-hidden pbs-[70px] -mbs-[70px] bg-backgroundPaper z-[1]'>
-      <div className={frontCommonStyles.layoutSpacing} style={{paddingTop: '20px', paddingBottom: '20px'}}>
-        <Grid container spacing={6}>
-          <Grid item xs={12}>
-            <LogisticsStatisticsCard data={data?.statsHorizontalWithBorder} />
+      <img src={'/images/front-pages/landing-page/hero-bg-light.png'} alt='hero-bg' className={styles.heroSectionBg} />
+      <section id='home' className='relative overflow-hidden pbs-[70px] -mbs-[70px] z-[1]'>
+        <div className={frontCommonStyles.layoutSpacing} style={{paddingTop: '1rem', paddingBottom: '1rem'}}>
+          <Grid container spacing={6}>
+            <Grid item xs={12}>
+              <LogisticsStatisticsCard data={data?.statsHorizontalWithBorder} />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <LogisticsVehicleOverview />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <LogisticsShipmentStatistics />
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <LogisticsDeliveryPerformance />
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <LogisticsDeliveryExceptions />
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <LogisticsOrdersByCountries />
+            </Grid>
+            <Grid item xs={12}>
+              <LogisticsOverviewTable vehicleData={vehicleData?.vehicles} />
+            </Grid>
           </Grid>
-          <Grid item xs={12} md={6}>
-            <LogisticsVehicleOverview />
-          </Grid>
-          <Grid item xs={12} md={6}>
-            <LogisticsShipmentStatistics />
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <LogisticsDeliveryPerformance />
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <LogisticsDeliveryExceptions />
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <LogisticsOrdersByCountries />
-          </Grid>
-          <Grid item xs={12}>
-            <LogisticsOverviewTable vehicleData={vehicleData?.vehicles} />
-          </Grid>
-        </Grid>
-      </div>
+        </div>
+      </section>
     </section>
   )
 }

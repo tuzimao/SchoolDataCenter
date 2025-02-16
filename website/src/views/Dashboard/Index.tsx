@@ -40,7 +40,7 @@ const AcademyDashboard = async () => {
 
   return (
     <section id='home' className='relative overflow-hidden pbs-[70px] -mbs-[70px] bg-backgroundPaper z-[1]'>
-      <div className={frontCommonStyles.layoutSpacing} style={{paddingTop: '20px', paddingBottom: '20px'}}>
+      <div className={frontCommonStyles.layoutSpacing} style={{paddingTop: '1rem', paddingBottom: '1rem'}}>
         <Grid container spacing={6}>
           <Grid item xs={12}>
             <WelcomeCard />

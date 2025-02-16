@@ -1,6 +1,6 @@
 'use client'
 
-import Logistics from '@/views/Logistics/index'
+import Logistics from '@/views/Logistics/Index'
 
 const LogisticsPage = async () => {
   

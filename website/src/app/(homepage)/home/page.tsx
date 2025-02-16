@@ -1,7 +1,7 @@
 'use client'
 
 // Component Imports
-import LandingPageWrapper from '@/views/home/landing-page'
+import LandingPageWrapper from '@/views/home/landing-page/Index'
 
 const LandingPage = () => {
 
