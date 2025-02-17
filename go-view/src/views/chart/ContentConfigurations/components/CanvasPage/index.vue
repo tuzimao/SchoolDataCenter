@@ -30,7 +30,8 @@
         :onBeforeUpload="beforeUploadHandle"
       >
         <n-upload-dragger>
-          <img v-if="canvasConfig.backgroundImage" class="upload-show" :src="canvasConfig.backgroundImage" alt="背景" />
+
+          <img v-if="canvasConfig.backgroundImage" class="upload-show" :src="imagePre + canvasConfig.backgroundImage"  alt="背景" />
           <div class="upload-img" v-show="!canvasConfig.backgroundImage">
             <img src="@/assets/images/canvas/noImage.png" />
             <n-text class="upload-desc" depth="3">
@@ -140,6 +141,7 @@ import { PreviewScaleEnum } from '@/enums/styleEnum'
 import { ResultEnum } from '@/enums/httpEnum'
 import { icon } from '@/plugins'
 import { uploadFile } from '@/api/path'
+import { imagePre } from '@/settings/httpSetting'
 
 const { ColorPaletteIcon } = icon.ionicons5
 const { ScaleIcon, FitToScreenIcon, FitToHeightIcon, FitToWidthIcon } = icon.carbon

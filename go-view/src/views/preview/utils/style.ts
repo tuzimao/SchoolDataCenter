@@ -1,5 +1,6 @@
 import { PickCreateComponentType } from '@/packages/index.d'
 import { EditCanvasConfigType } from '@/store/modules/chartEditStore/chartEditStore.d'
+import { imagePre } from '@/settings/httpSetting'
 
 type AttrType = PickCreateComponentType<'attr'>
 type StatusType = PickCreateComponentType<'status'>
@@ -47,7 +48,7 @@ export const getEditCanvasConfigStyle = (canvas: EditCanvasConfigType) => {
   const computedBackground = canvas.selectColor
     ? { background: canvas.background }
     : {
-        background: `url(${canvas.backgroundImage}) center center / cover no-repeat !important`
+        background: `url(${imagePre}${canvas.backgroundImage}) center center / cover no-repeat !important`
       }
   return {
     position: 'relative' as const,

@@ -112,6 +112,7 @@ import { EditRule } from './components/EditRule'
 import { EditBottom } from './components/EditBottom'
 import { EditShapeBox } from './components/EditShapeBox'
 import { EditTools } from './components/EditTools'
+import { imagePre } from '@/settings/httpSetting'
 
 const chartEditStore = useChartEditStore()
 const { handleContextMenu } = useContextMenu()
@@ -174,7 +175,7 @@ const filterShow = computed(() => {
 const rangeStyle = computed(() => {
   // 设置背景色和图片背景
   const background = chartEditStore.getEditCanvasConfig.background
-  const backgroundImage = chartEditStore.getEditCanvasConfig.backgroundImage
+  const backgroundImage = imagePre + chartEditStore.getEditCanvasConfig.backgroundImage
   const selectColor = chartEditStore.getEditCanvasConfig.selectColor
   const backgroundColor = background ? background : undefined
 
