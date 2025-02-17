@@ -12,7 +12,7 @@ import classnames from 'classnames'
 // Styles Imports
 import tableStyles from '@core/styles/table.module.css'
 import styles from './styles.module.css'
-import frontCommonStyles from '@views/home/styles.module.css'
+import frontCommonStyles from '@views/Styles/styles.module.css'
 
 // Types
 type FeatureType = {

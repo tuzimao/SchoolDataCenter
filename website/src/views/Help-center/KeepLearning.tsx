@@ -16,7 +16,7 @@ import Bulb from '@assets/svg/front-pages/help-center/Bulb'
 import Discord from '@assets/svg/front-pages/help-center/Discord'
 
 // Styles Imports
-import frontCommonStyles from '@views/home/styles.module.css'
+import frontCommonStyles from '@views/Styles/styles.module.css'
 
 // Types
 type keepLearningType = {

@@ -8,7 +8,7 @@ import CalendarWrapper from '@views/Calendar/CalendarWrapper'
 // Styled Component Imports
 import AppFullCalendar from '@/libs/styles/AppFullCalendar'
 
-import frontCommonStyles from '@views/home/styles.module.css'
+import frontCommonStyles from '@views/Styles/styles.module.css'
 
 const CalendarApp = () => {
   return (

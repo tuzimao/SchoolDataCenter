@@ -15,7 +15,7 @@ import LogisticsOverviewTable from '@/views/Logistics/dashboard/LogisticsOvervie
 import { db as getLogisticsData } from '@/views/Logistics/getLogisticsData'
 import { db as getStatisticsData } from '@/views/Logistics/getStatisticsData'
 
-import frontCommonStyles from '@views/home/styles.module.css'
+import frontCommonStyles from '@views/Styles/styles.module.css'
 import styles from '@views/Leader/styles.module.css'
 
 /**

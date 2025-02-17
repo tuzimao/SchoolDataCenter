@@ -1,7 +1,7 @@
 'use client'
 
 // Component Imports
-import Questions from '@/views/home/help-center/Questions'
+import Questions from '@/views/Help-center/Questions'
 
 const Article = () => {
   return <Questions />

@@ -5,7 +5,7 @@ import Button from '@mui/material/Button'
 import classnames from 'classnames'
 import type { Mode } from '@core/types'
 import styles from './styles.module.css'
-import frontCommonStyles from '@views/home/styles.module.css'
+import frontCommonStyles from '@views/Styles/styles.module.css'
 
 const HeroSection = ({ mode }: { mode: Mode }) => {
   const [dashboardPosition, setDashboardPosition] = useState({ x: 0, y: 0 })

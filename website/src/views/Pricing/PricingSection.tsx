@@ -7,7 +7,7 @@ import classnames from 'classnames'
 import Pricing from '@components/pricing'
 
 // Styles Imports
-import frontCommonStyles from '@views/home/styles.module.css'
+import frontCommonStyles from '@views/Styles/styles.module.css'
 
 const PricingSection = ({ data }: { data: any[] }) => {
   return (

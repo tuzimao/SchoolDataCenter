@@ -8,7 +8,7 @@ import AccordionDetails from '@mui/material/AccordionDetails'
 import classnames from 'classnames'
 
 // Styles Imports
-import frontCommonStyles from '@views/home/styles.module.css'
+import frontCommonStyles from '@views/Styles/styles.module.css'
 
 // Types
 type faqsDataTypes = {

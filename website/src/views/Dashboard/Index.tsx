@@ -32,7 +32,7 @@ import { db as getAcademyData } from '@/views/Teacher/db'
   return res.json()
 } */
 
-import frontCommonStyles from '@views/home/styles.module.css'
+import frontCommonStyles from '@views/Styles/styles.module.css'
 import styles from '@views/Leader/styles.module.css'
 
 const AcademyDashboard = async () => {

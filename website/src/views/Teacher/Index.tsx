@@ -12,7 +12,7 @@ import Courses from './Courses'
 import ColoredCards from './ColoredCards'
 import FreeCourses from './FreeCourses'
 
-import frontCommonStyles from '@views/home/styles.module.css'
+import frontCommonStyles from '@views/Styles/styles.module.css'
 
 import styles from '@views/Leader/styles.module.css'
 

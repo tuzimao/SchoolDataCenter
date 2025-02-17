@@ -19,7 +19,7 @@ import ElementOne from '@/assets/svg/front-pages/landing-page/ElementOne'
 import Lines from '@assets/svg/front-pages/landing-page/Lines'
 
 // Styles Imports
-import frontCommonStyles from '@views/home/styles.module.css'
+import frontCommonStyles from '@views/Styles/styles.module.css'
 
 import CardActions from '@mui/material/CardActions'
 import IconButton from '@mui/material/IconButton'

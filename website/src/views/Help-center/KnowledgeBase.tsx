@@ -15,7 +15,7 @@ import classnames from 'classnames'
 import CustomAvatar from '@/@core/components/mui/Avatar'
 
 // Styles Imports
-import frontCommonStyles from '@views/home/styles.module.css'
+import frontCommonStyles from '@views/Styles/styles.module.css'
 
 // Types
 type popularArticlesType = {

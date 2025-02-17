@@ -17,7 +17,7 @@ import Rocket from '@assets/svg/front-pages/help-center/Rocket'
 import File from '@assets/svg/front-pages/help-center/File'
 
 // Styles Imports
-import frontCommonStyles from '@views/home/styles.module.css'
+import frontCommonStyles from '@views/Styles/styles.module.css'
 
 // Types
 type popularArticlesType = {
