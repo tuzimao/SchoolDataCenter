@@ -114,6 +114,10 @@ export const useChartDataFetch = (
         } else {
           fetchFn()
         }
+
+        //第一次页面刷新的时候，也需要立即访问API
+        fetchFn()
+        
       }
       // eslint-disable-next-line no-empty
     } catch (error) {
