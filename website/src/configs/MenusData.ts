@@ -10,7 +10,7 @@ export const HeaderMenusList: any[] = [
     },
     {title:'学校新闻', target:'', href:'', default: false, children:
       [
-        {title: '新闻咨询', target:'', href: '/teacher' },
+        {title: '新闻咨询', target:'', href: '/help' },
         {title: '校园公告', target:'', href: '/teacher' },
       ]
     },
