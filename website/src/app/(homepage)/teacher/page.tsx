@@ -2,7 +2,7 @@
 
 import Teacher from '@/views/Teacher/Index'
 
-const TeacherPage = async () => {
+const TeacherPage = () => {
   
   return <Teacher />
 }

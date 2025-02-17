@@ -2,7 +2,7 @@
 
 import Logistics from '@/views/Logistics/Index'
 
-const LogisticsPage = async () => {
+const LogisticsPage = () => {
   
   return <Logistics />
 }
