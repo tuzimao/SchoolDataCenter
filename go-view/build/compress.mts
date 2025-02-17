@@ -42,7 +42,7 @@ function zipDirectory(sourceDir: string, outputZip: string): Promise<void> {
 
 // 这里指定要压缩的目录与输出的 ZIP 路径
 const OUTPUT_DIR = path.resolve(__dirname, '../../htdocs/goview');
-const ZIP_PATH = path.resolve(__dirname, '../../htdocs/goview/goview_html.zip');
+const ZIP_PATH = path.resolve(__dirname, './goview_html.zip');
 
 zipDirectory(OUTPUT_DIR, ZIP_PATH).catch((err) => {
   console.error('❌ 压缩失败:', err);
