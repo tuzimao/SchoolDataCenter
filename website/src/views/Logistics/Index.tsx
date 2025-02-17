@@ -54,7 +54,7 @@ import styles from '@views/Leader/styles.module.css'
   return res.json()
 } */
 
-const LogisticsDashboard = async () => {
+const LogisticsDashboard = () => {
   // Vars
   const data = getStatisticsData
   const vehicleData = getLogisticsData
