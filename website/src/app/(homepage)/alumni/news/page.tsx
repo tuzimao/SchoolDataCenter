@@ -1,7 +1,7 @@
 'use client'
 
 // Component Imports
-import HelpCenterWrapper from '@/views/Help-center/Index11'
+import HelpCenterWrapper from '@/views/Help-center/Index'
 
 function HelpCenterPage() {
   return <HelpCenterWrapper />

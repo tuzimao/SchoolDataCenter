@@ -12,7 +12,7 @@ import { useSettings } from '@core/hooks/useSettings'
 
 // Type Imports
 
-const PricingWrapper = ({ data }: { data: any[] }) => {
+const PricingWrapper = () => {
   // Hooks
   const { updatePageSettings } = useSettings()
 
@@ -26,7 +26,7 @@ const PricingWrapper = ({ data }: { data: any[] }) => {
 
   return (
     <>
-      <PricingSection data={data} />
+      <PricingSection />
       <FreeTrial />
       <Plans />
       <Faqs />
