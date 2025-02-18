@@ -29,6 +29,13 @@ jobs:
       run: npm run build
       working-directory: ./htdocs
 
+    - name: Extract goview_html.zip to ./htdocs/goview
+      run: |
+        # 创建目标目录
+        New-Item -ItemType Directory -Path "htdocs\goview" -Force
+        # 解压 goview_html.zip 到 htdocs/goview
+        Expand-Archive -Path "go-view\build\goview_html.zip" -DestinationPath "htdocs\goview" -Force
+
     - name: Install Inno Setup
       run: |
         choco install innosetup -y
@@ -42,7 +49,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: MySchoolAI-installer
-        path: "D:/a/SchoolDataCenter/SchoolDataCenter/MySchoolAI-0.1.exe"
+        path: "D:/a/SchoolDataCenter/SchoolDataCenter/MySchoolAI-0.2.exe"
 
     # - name: Create or Update Release
     #   id: create_release
@@ -50,8 +57,8 @@ jobs:
     #   env:
     #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     #   with:
-    #     tag_name: V0.1
-    #     release_name: "单点智慧校园-中小学版 V0.1"
+    #     tag_name: V0.2
+    #     release_name: "单点智慧校园-中小学版 V0.2"
     #     draft: true
     #     prerelease: false
     #     body: |
@@ -94,6 +101,6 @@ jobs:
     #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     #   with:
     #     upload_url: ${{ steps.create_release.outputs.upload_url }}
-    #     asset_path: "D:/a/SchoolDataCenter/SchoolDataCenter/MySchoolAI-0.1.exe"
-    #     asset_name: "MySchoolAI-0.1.exe"
+    #     asset_path: "D:/a/SchoolDataCenter/SchoolDataCenter/MySchoolAI-0.2.exe"
+    #     asset_name: "MySchoolAI-0.2.exe"
     #     asset_content_type: application/octet-stream
