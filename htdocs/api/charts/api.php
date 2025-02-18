@@ -5,9 +5,6 @@ require_once('../include.inc.php');
 
 CheckAuthUserLoginStatus();
 
-$redis = new Redis();
-$redis->connect('127.0.0.1', 6379);
-
 global $GLOBAL_USER;
 
 $payload    = file_get_contents('php://input');
@@ -207,7 +204,7 @@ if($_POST['action']=="ListData"&&$projectId!=''&&$sectionId!="") {
     $远程数据库信息  = $rs->fields;
     if($远程数据库信息['数据库用户名']!="")    {
       $缓存中的值 = GetRedisKeyWithCache($Field='ListData_'.$id."_".md5($Targetsql));
-      if($缓存中的值 == false)   {
+      if($缓存中的值 == false || 1)   {
         $db_remote = NewADOConnection($DB_TYPE='mysqli');
         $db_remote->connect($远程数据库信息['数据库主机'], $远程数据库信息['数据库用户名'], DecryptIDFixed($远程数据库信息['数据库密码']), $远程数据库信息['数据库名称']);
         $db_remote->Execute("Set names utf8;");
@@ -231,8 +228,55 @@ if($_POST['action']=="ListData"&&$projectId!=''&&$sectionId!="") {
                 }
                 $RS = [];
                 //$RS['rs_a_remote']  = $rs_a_remote;
+                if(sizeof($rs_a_remote) > 8 && sizeof($dimensions) == 2) {
+                  //先找出哪个字段存储的名称，哪个字段存储的值
+                  $字段的名称 = $dimensions[0];
+                  $字段的数值 = $dimensions[1];
+                  if(strlen($rs_a_remote[0][$字段的名称]) > 0 && strlen($rs_a_remote[0][$字段的名称]) < strlen($rs_a_remote[0][$字段的数值])) {
+                    $字段的名称 = $dimensions[1];
+                    $字段的数值 = $dimensions[0];
+                  }
+                  if(strlen($rs_a_remote[1][$字段的名称]) > 0 && strlen($rs_a_remote[1][$字段的名称]) < strlen($rs_a_remote[1][$字段的数值])) {
+                    $字段的名称 = $dimensions[1];
+                    $字段的数值 = $dimensions[0];
+                  }
 
-                $ResultData    = ['dimensions'=>$dimensions,'source'=>$rs_a_remote];
+                  //数据太多，需要把数据合并一下
+                  usort($rs_a_remote, function ($a, $b) {
+                    // 转换为整数后，进行倒序比较
+                    $dimensions = array_keys($a);
+                    $字段的名称 = $dimensions[0];
+                    $字段的数值 = $dimensions[1];
+                    if(strlen($a[$字段的名称]) > 0 && strlen($a[$字段的名称]) < strlen($a[$字段的数值])) {
+                      $字段的名称 = $dimensions[1];
+                      $字段的数值 = $dimensions[0];
+                    }
+                    if(strlen($b[$字段的名称]) > 0 && strlen($b[$字段的名称]) < strlen($b[$字段的数值])) {
+                      $字段的名称 = $dimensions[1];
+                      $字段的数值 = $dimensions[0];
+                    }
+                    return (int)$b[$字段的数值] <=> (int)$a[$字段的数值];
+                  });
+                  // 取前六个元素
+                  $firstSix = array_slice($rs_a_remote, 0, 4);
+                  // 取剩余元素
+                  $others = array_slice($rs_a_remote, 4);
+                  // 其它值
+                  $其它值 = 0;
+                  foreach ($others as $item) {
+                    $其它值 += intval($item[$字段的数值]);
+                  }
+                  $最终返回记录 = $firstSix;
+                  $Element = [];
+                  $Element[$字段的数值] = $其它值;
+                  $Element[$字段的名称] = "其它";
+                  $最终返回记录[] = $Element;
+                }
+                else {
+                  $最终返回记录 = $rs_a_remote;
+                }
+
+                $ResultData    = ['dimensions'=>$dimensions,'source'=>$最终返回记录];
 
                 $缓存中的值               = [];
                 $缓存中的值['Content']    = $ResultData;
@@ -248,8 +292,12 @@ if($_POST['action']=="ListData"&&$projectId!=''&&$sectionId!="") {
                   $RS['Targetsql']        = $Targetsql;
                   $RS['sql']              = $sql;
                 }
-                $RS['Source']   = $缓存中的值['Source'];
-                $RS['msg']      = "获取远程数据成功";
+                $RS['Source']       = $缓存中的值['Source'];
+                $RS['msg']          = "获取远程数据成功";
+                $RS['字段的数值']    = $字段的数值;
+                $RS['字段的名称']    = $字段的名称;
+                $RS['firstSix']     = $firstSix;
+                $RS['others']       = $others;
                 print json_encode($RS);
                 exit;
             }
