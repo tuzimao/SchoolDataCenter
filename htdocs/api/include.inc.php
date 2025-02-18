@@ -21,29 +21,6 @@ $db->Execute("SET NAMES 'utf8'");
 
 //$db->debug=true;
 
-//重新过虑变量, 不能注释
-$_GETKeys         = @array_keys($_GET);
-for($i=0;$i<sizeof($_GETKeys);$i++)				{
-	$_GETKey	      = $_GETKeys[$i];
-	$_GET[$_GETKey] = FilterString($_GET[$_GETKey]);
-}
-$_POSTKeys         = @array_keys($_POST);
-for($i=0;$i<sizeof($_POSTKeys);$i++)				{
-	$_POSTKey	      = $_POSTKeys[$i];
-	$_POST[$_POSTKey] = FilterString($_POST[$_POSTKey]);
-}
-$payload        = file_get_contents('php://input');
-$_POST_PAYLOAD  = json_decode($payload,true);
-if(is_array($_POST_PAYLOAD))  {
-  $_POSTKeys         = @array_keys($_POST_PAYLOAD);
-  for($i=0;$i<sizeof($_POSTKeys);$i++)				{
-    $_POSTKey	        = $_POSTKeys[$i];
-    //重置 $_POST 变量
-    $_POST[$_POSTKey] = FilterString($_POST_PAYLOAD[$_POSTKey]);
-  }
-}
-
-
 function __($Value) {
 	global $MAP;
 	if($MAP[$Value]!="") {
