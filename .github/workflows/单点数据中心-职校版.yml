@@ -20,6 +20,24 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: '20.x'
+    
+    - name: Replace line in auth.ts
+      shell: pwsh  # 使用 PowerShell
+      run: |
+        # 定义文件路径
+        $filePath = "./htdocs/src/configs/auth.ts"
+
+        # 读取文件内容
+        $fileContent = Get-Content -Path $filePath
+
+        # 替换第 8 行的内容
+        $fileContent[7] = 'const AppMarkId = "localhost";'
+
+        # 将修改后的内容写回文件
+        Set-Content -Path $filePath -Value $fileContent
+
+        # 输出提示信息
+        Write-Output "第 8 行已替换为: const AppMarkId = 'localhost'"
 
     - name: Install dependencies
       run: npm install
