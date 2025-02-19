@@ -57,6 +57,7 @@ Source: "{#MyAppSourceDir}\xampp\Attach\*"; DestDir: "{app}\xampp\Attach"; Flags
 Source: "{#MyAppSourceDir}\xampp\install\*"; DestDir: "{app}\xampp\install"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "{#MyAppSourceDir}\xampp\mysql\*"; DestDir: "{app}\xampp\mysql"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "{#MyAppSourceDir}\xampp\php\*"; DestDir: "{app}\xampp\php"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#MyAppSourceDir}\xampp\redis\*"; DestDir: "{app}\xampp\redis"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "{#MyAppSourceDir}\xampp\tmp\*"; DestDir: "{app}\xampp\tmp"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "{#MyAppSourceDir}\xampp\InitialSetup.bat"; DestDir: "{app}\xampp"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "{#MyAppSourceDir}\xampp\xampp-control.exe"; DestDir: "{app}\xampp"; Flags: ignoreversion recursesubdirs createallsubdirs
@@ -71,6 +72,7 @@ Name: "{autodesktop}\{#MyAppName}"; Filename: "http://localhost:80"
 Filename: "{app}\xampp\readme.txt"; Description: "{cm:LaunchProgram,Readme}"; Flags: shellexec nowait postinstall skipifsilent
 Filename: "{app}\xampp\InitialSetup.bat"; Description: "{cm:LaunchProgram,InitialSetup}"; Flags: waituntilterminated postinstall skipifsilent
 Filename: "{app}\xampp\xampp-control.exe"; Description: "{cm:LaunchProgram,xampp-control}"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\xampp\redis\Redis-x64-3.0.504.msi"; Description: "{cm:LaunchProgram,InstallRedis}"; Flags: nowait postinstall skipifsilent
 
 [Code]
 procedure InitializeWizard();
