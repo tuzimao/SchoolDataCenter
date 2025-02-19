@@ -18,9 +18,9 @@
 班主任: banzhuren / 密码: Abcd1234!
 学生: 20230101 / 密码: Abcd1234!
 
-6 如果本地没有安装Redis，则需要单独安装Redis服务端。
+6 如果本地没有安装Redis，则需要单独安装Redis服务端。Redis安装文件路径：安装目录\xampp\redis\Redis-x64-3.0.504.msi
 
-7 如果在启动Apache的时候，提示VCRUNTIME140.dll错误，请在安装如下文件： 安装目录\xampp\support\vcredist2022_x64.exe
+7 如果在启动Apache的时候，提示VCRUNTIME140.dll错误，请安装如下文件： 安装目录\xampp\support\vcredist2022_x64.exe
 
 
 # #000000，#E05757，#F5FD59，#61D328，#589AFD，#E05757，#7664FA，#65E5EC，#FFFFFF，#FA920A
