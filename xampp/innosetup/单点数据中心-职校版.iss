@@ -72,7 +72,6 @@ Name: "{autodesktop}\{#MyAppName}"; Filename: "http://localhost:80"
 Filename: "{app}\xampp\readme.txt"; Description: "{cm:LaunchProgram,Readme}"; Flags: shellexec nowait postinstall skipifsilent
 Filename: "{app}\xampp\InitialSetup.bat"; Description: "{cm:LaunchProgram,InitialSetup}"; Flags: waituntilterminated postinstall skipifsilent
 Filename: "{app}\xampp\xampp-control.exe"; Description: "{cm:LaunchProgram,xampp-control}"; Flags: nowait postinstall skipifsilent
-Filename: "{app}\xampp\redis\Redis-x64-3.0.504.msi"; Description: "{cm:LaunchProgram,InstallRedis}"; Flags: nowait postinstall skipifsilent
 
 [Code]
 procedure InitializeWizard();
