@@ -20,8 +20,6 @@
 /xampp/xampp-control.log
 
 /xampp/wget
-/xampp/tmp/*
-!/xampp/tmp/readme.txt
 
 # git rm --cached xampp/mysql/data/ib_logfile0
 # git rm --cached xampp/mysql/data/ib_logfile1
