@@ -30,8 +30,6 @@
 # git rm -r --cached xampp/xampp-control.ini
 # git commit -m "Remove ignored files from index"
 
-/htdocs/webroot.zip
-
 /htdocs/api/tools
 /htdocs/api/autotask
 /htdocs/api/download
@@ -47,5 +45,7 @@
 
 /htdocs/go-view/dist
 /htdocs/go-view/node_modules
-xampp/support/vcredist2022_x64.exe
+/xampp/support/vcredist2022_x64.exe
 /htdocs/goview
+/htdocs/webroot.zip
+/htdocs/output/webroot.zip
