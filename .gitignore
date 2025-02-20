@@ -39,12 +39,17 @@
 
 /htdocs/.next
 /htdocs/node_modules
-/htdocs/webroot
 /htdocs/api/aipptx/json
 /htdocs/api/aipptx/templates
 
+/htdocs/webroot.zip
 /htdocs/go-view/dist
 /htdocs/go-view/node_modules
 /xampp/support/vcredist2022_x64.exe
-/htdocs/goview
-/htdocs/webroot.zip
+
+/htdocs/goview/*
+!/htdocs/goview/readme.txt
+
+/htdocs/webroot/*
+!/htdocs/webroot/readme.txt
+
