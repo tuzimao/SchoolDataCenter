@@ -88,8 +88,8 @@ const AnalyticsDashboard = () => {
       {isLoading ? (
                     <Grid item xs={12} sm={12} container justifyContent="space-around">
                         <Box sx={{ mt: 6, mb: 6, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-                            <CircularProgress />
-                            <Typography>加载中...</Typography>
+                            <CircularProgress size={45} />
+                            <Typography sx={{ mt: 6, mb: 6 }}>加载中...</Typography>
                         </Box>
                     </Grid>
                 ) : (
