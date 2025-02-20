@@ -29,6 +29,10 @@ class ComposerStaticInit4703474fbb2f7c93cd3c47536bc5c3e4
             'PhpOffice\\PhpPresentation\\' => 26,
             'PhpOffice\\Common\\' => 17,
         ),
+        'O' => 
+        array (
+            'Overtrue\\Pinyin\\' => 16,
+        ),
         'M' => 
         array (
             'Matrix\\' => 7,
@@ -85,6 +89,10 @@ class ComposerStaticInit4703474fbb2f7c93cd3c47536bc5c3e4
         'PhpOffice\\Common\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpoffice/common/src/Common',
+        ),
+        'Overtrue\\Pinyin\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/overtrue/pinyin/src',
         ),
         'Matrix\\' => 
         array (
