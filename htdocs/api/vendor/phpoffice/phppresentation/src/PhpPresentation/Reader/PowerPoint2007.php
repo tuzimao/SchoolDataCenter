@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of PHPPresentation - A pure PHP library for reading and writing
  * presentations documents.
@@ -95,6 +96,11 @@ class PowerPoint2007 implements ReaderInterface
     protected $fileRels;
 
     /**
+     * @var bool
+     */
+    protected $loadImages = true;
+
+    /**
      * Can the current \PhpOffice\PhpPresentation\Reader\ReaderInterface read the file?
      */
     public function canRead(string $pFilename): bool
@@ -128,12 +134,14 @@ class PowerPoint2007 implements ReaderInterface
     /**
      * Loads PhpPresentation Serialized file.
      */
-    public function load(string $pFilename): PhpPresentation
+    public function load(string $pFilename, int $flags = 0): PhpPresentation
     {
         // Unserialize... First make sure the file supports it!
         if (!$this->fileSupportsUnserializePhpPresentation($pFilename)) {
             throw new InvalidFileFormatException($pFilename, self::class);
         }
+
+        $this->loadImages = !((bool) ($flags & self::SKIP_IMAGES));
 
         return $this->loadFile($pFilename);
     }
@@ -484,7 +492,9 @@ class PowerPoint2007 implements ReaderInterface
                         file_put_contents($tmpBkgImg, $contentImg);
                         // Background
                         $oBackground = new Slide\Background\Image();
-                        $oBackground->setPath($tmpBkgImg);
+                        $oBackground
+                            ->setPath($tmpBkgImg)
+                            ->setExtension(pathinfo($pathImage, PATHINFO_EXTENSION));
                         // Slide Background
                         $oSlide = $this->oPhpPresentation->getActiveSlide();
                         $oSlide->setBackground($oBackground);
@@ -828,6 +838,9 @@ class PowerPoint2007 implements ReaderInterface
                 if (!empty($imageFile)) {
                     if ($oShape instanceof Gd) {
                         $info = getimagesizefromstring($imageFile);
+                        if (!$info) {
+                            return;
+                        }
                         $oShape->setMimeType($info['mime']);
                         $oShape->setRenderingFunction(str_replace('/', '', $info['mime']));
                         $image = @imagecreatefromstring($imageFile);
@@ -1312,22 +1325,23 @@ class PowerPoint2007 implements ReaderInterface
                             $this->loadHyperlink($document, $oElementHlinkClick, $oText->getHyperlink())
                         );
                     }
+
                     // Font
                     $oElementFontFormat = null;
-                    $oElementFontFormatLatin = $document->getElement('a:latin', $oElementrPr);
-                    if (is_object($oElementFontFormatLatin)) {
-                        $oText->getFont()->setFormat(Font::FORMAT_LATIN);
-                        $oElementFontFormat = $oElementFontFormatLatin;
+                    $oElementFontFormatComplexScript = $document->getElement('a:cs', $oElementrPr);
+                    if (is_object($oElementFontFormatComplexScript)) {
+                        $oText->getFont()->setFormat(Font::FORMAT_COMPLEX_SCRIPT);
+                        $oElementFontFormat = $oElementFontFormatComplexScript;
                     }
                     $oElementFontFormatEastAsian = $document->getElement('a:ea', $oElementrPr);
                     if (is_object($oElementFontFormatEastAsian)) {
                         $oText->getFont()->setFormat(Font::FORMAT_EAST_ASIAN);
                         $oElementFontFormat = $oElementFontFormatEastAsian;
                     }
-                    $oElementFontFormatComplexScript = $document->getElement('a:cs', $oElementrPr);
-                    if (is_object($oElementFontFormatComplexScript)) {
-                        $oText->getFont()->setFormat(Font::FORMAT_COMPLEX_SCRIPT);
-                        $oElementFontFormat = $oElementFontFormatComplexScript;
+                    $oElementFontFormatLatin = $document->getElement('a:latin', $oElementrPr);
+                    if (is_object($oElementFontFormatLatin)) {
+                        $oText->getFont()->setFormat(Font::FORMAT_LATIN);
+                        $oElementFontFormat = $oElementFontFormatLatin;
                     }
                     if (is_object($oElementFontFormat) && $oElementFontFormat->hasAttribute('typeface')) {
                         $oText->getFont()->setName($oElementFontFormat->getAttribute('typeface'));
@@ -1404,7 +1418,7 @@ class PowerPoint2007 implements ReaderInterface
         $oColor->setRGB($oElement->getAttribute('val'));
         $oElementAlpha = $xmlReader->getElement('a:alpha', $oElement);
         if ($oElementAlpha instanceof DOMElement && $oElementAlpha->hasAttribute('val')) {
-            $alpha = strtoupper(dechex((int)(((int) $oElementAlpha->getAttribute('val') / 1000) / 100) * 255));
+            $alpha = strtoupper(dechex((int) (((int) $oElementAlpha->getAttribute('val') / 1000) / 100) * 255));
             $oColor->setRGB($oElement->getAttribute('val'), $alpha);
         }
 
@@ -1494,7 +1508,7 @@ class PowerPoint2007 implements ReaderInterface
 
                     break;
                 case 'p:pic':
-                    if ($oSlide instanceof AbstractSlide) {
+                    if ($this->loadImages && $oSlide instanceof AbstractSlide) {
                         $this->loadShapeDrawing($xmlReader, $oNode, $oSlide);
                     }
 

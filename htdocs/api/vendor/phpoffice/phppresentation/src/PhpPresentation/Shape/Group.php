@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of PHPPresentation - A pure PHP library for reading and writing
  * presentations documents.
@@ -188,6 +189,17 @@ class Group extends AbstractShape implements ShapeContainerInterface
     public function createLineShape(int $fromX, int $fromY, int $toX, int $toY): Line
     {
         $shape = new Line($fromX, $fromY, $toX, $toY);
+        $this->addShape($shape);
+
+        return $shape;
+    }
+
+    /**
+     * Create geometric shape.
+     */
+    public function createAutoShape(): AutoShape
+    {
+        $shape = new AutoShape();
         $this->addShape($shape);
 
         return $shape;

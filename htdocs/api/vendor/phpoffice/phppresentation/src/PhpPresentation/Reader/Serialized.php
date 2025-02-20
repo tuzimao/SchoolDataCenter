@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of PHPPresentation - A pure PHP library for reading and writing
  * presentations documents.
@@ -57,7 +58,7 @@ class Serialized implements ReaderInterface
     /**
      * Loads PhpPresentation Serialized file.
      */
-    public function load(string $pFilename): PhpPresentation
+    public function load(string $pFilename, int $flags = 0): PhpPresentation
     {
         // Check if file exists
         if (!file_exists($pFilename)) {

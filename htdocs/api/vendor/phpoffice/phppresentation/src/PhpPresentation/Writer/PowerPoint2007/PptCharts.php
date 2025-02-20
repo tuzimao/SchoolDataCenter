@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of PHPPresentation - A pure PHP library for reading and writing
  * presentations documents.
@@ -1794,6 +1795,9 @@ class PptCharts extends AbstractDecoratorWriter
             $objWriter->endElement();
 
             $objWriter->endElement();
+
+            // c:dLblPos
+            $this->writeElementWithValAttribute($objWriter, 'c:dLblPos', $series->getLabelPosition());
 
             // c:showVal
             $this->writeElementWithValAttribute($objWriter, 'c:showVal', $series->hasShowValue() ? '1' : '0');

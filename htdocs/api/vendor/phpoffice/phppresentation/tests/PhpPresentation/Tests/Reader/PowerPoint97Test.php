@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of PHPPresentation - A pure PHP library for reading and writing
  * presentations documents.
@@ -94,6 +95,18 @@ class PowerPoint97Test extends TestCase
 
         $oSlide = $oPhpPresentation->getSlide(0);
         self::assertCount(2, $oSlide->getShapeCollection());
+    }
+
+    public function testLoadFile01WithoutImages(): void
+    {
+        $file = PHPPRESENTATION_TESTS_BASE_DIR . '/resources/files/Sample_00_01.ppt';
+        $object = new PowerPoint97();
+        $oPhpPresentation = $object->load($file, PowerPoint97::SKIP_IMAGES);
+        self::assertInstanceOf('PhpOffice\\PhpPresentation\\PhpPresentation', $oPhpPresentation);
+        self::assertEquals(1, $oPhpPresentation->getSlideCount());
+
+        $oSlide = $oPhpPresentation->getSlide(0);
+        self::assertCount(1, $oSlide->getShapeCollection());
     }
 
     public function testLoadFile02(): void

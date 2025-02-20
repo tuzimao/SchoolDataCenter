@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of PHPPresentation - A pure PHP library for reading and writing
  * presentations documents.
@@ -710,7 +711,7 @@ class PptChartsTest extends PhpPresentationTestCase
         $this->assertZipXmlAttributeNotExists($pathShape, $element, 'rot');
 
         $this->resetPresentationFile();
-        $value = mt_rand(0, 360);
+        $value = mt_rand(1, 360);
         $oShape->getPlotArea()->getAxisX()->setTitleRotation($value);
 
         $pathShape = 'ppt/charts/' . $oShape->getIndexedFilename();
@@ -750,7 +751,7 @@ class PptChartsTest extends PhpPresentationTestCase
 
     public function testAxisXUnit(): void
     {
-        $value = mt_rand(0, 100);
+        $value = mt_rand(1, 100);
 
         $oSeries = new Series('Downloads', $this->seriesData);
         $oLine = new Line();
@@ -1238,6 +1239,35 @@ class PptChartsTest extends PhpPresentationTestCase
         $oShape->getPlotArea()->setType($oLine);
 
         $this->assertZipXmlElementExists('ppt/charts/' . $oShape->getIndexedFilename(), $element);
+
+        $this->assertIsSchemaECMA376Valid();
+    }
+
+    public function testTypeLineSeriesLabelPosition(): void
+    {
+        $expectedElement = '/c:chartSpace/c:chart/c:plotArea/c:lineChart/c:ser/c:dLbls/c:dLblPos';
+
+        $oSlide = $this->oPresentation->getActiveSlide();
+        $oShape = $oSlide->createChartShape();
+        $oShape->setResizeProportional(false)->setHeight(550)->setWidth(700)->setOffsetX(120)->setOffsetY(80);
+        $oLine = new Line();
+        $oSeries = new Series('Downloads', $this->seriesData);
+        $oLine->addSeries($oSeries);
+        $oShape->getPlotArea()->setType($oLine);
+
+        $this->assertZipFileExists('ppt/charts/' . $oShape->getIndexedFilename());
+        $this->assertZipXmlElementExists('ppt/charts/' . $oShape->getIndexedFilename(), $expectedElement);
+        $this->assertZipXmlAttributeEquals('ppt/charts/' . $oShape->getIndexedFilename(), $expectedElement, 'val', Series::LABEL_CENTER);
+
+        $this->assertIsSchemaECMA376Valid();
+
+        $oSeries->setLabelPosition(Series::LABEL_BOTTOM);
+        $oLine->setSeries([$oSeries]);
+        $this->resetPresentationFile();
+
+        $this->assertZipFileExists('ppt/charts/' . $oShape->getIndexedFilename());
+        $this->assertZipXmlElementExists('ppt/charts/' . $oShape->getIndexedFilename(), $expectedElement);
+        $this->assertZipXmlAttributeEquals('ppt/charts/' . $oShape->getIndexedFilename(), $expectedElement, 'val', Series::LABEL_BOTTOM);
 
         $this->assertIsSchemaECMA376Valid();
     }

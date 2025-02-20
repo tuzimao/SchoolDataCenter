@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of PHPPresentation - A pure PHP library for reading and writing
  * presentations documents.
@@ -18,6 +19,8 @@
 declare(strict_types=1);
 
 namespace PhpOffice\PhpPresentation\Shape\Drawing;
+
+use GdImage;
 
 class Gd extends AbstractDrawingAdapter
 {
@@ -83,7 +86,7 @@ class Gd extends AbstractDrawingAdapter
     /**
      * Set image resource.
      *
-     * @param resource $value
+     * @param null|false|GdImage|resource $value
      *
      * @return $this
      */
@@ -91,7 +94,7 @@ class Gd extends AbstractDrawingAdapter
     {
         $this->imageResource = $value;
 
-        if (null !== $this->imageResource) {
+        if (null !== $this->imageResource && false !== $this->imageResource) {
             // Get width/height
             $this->width = imagesx($this->imageResource);
             $this->height = imagesy($this->imageResource);

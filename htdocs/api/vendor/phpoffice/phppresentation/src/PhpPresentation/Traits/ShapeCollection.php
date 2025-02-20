@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of PHPPresentation - A pure PHP library for reading and writing
  * presentations documents.
@@ -20,6 +21,7 @@ declare(strict_types=1);
 namespace PhpOffice\PhpPresentation\Traits;
 
 use PhpOffice\PhpPresentation\AbstractShape;
+use PhpOffice\PhpPresentation\ShapeContainerInterface;
 
 trait ShapeCollection
 {
@@ -79,7 +81,11 @@ trait ShapeCollection
      */
     public function addShape(AbstractShape $shape)
     {
-        $this->shapeCollection[] = $shape;
+        if (!$shape->getContainer() && $this instanceof ShapeContainerInterface) {
+            $shape->setContainer($this);
+        } else {
+            $this->shapeCollection[] = $shape;
+        }
 
         return $this;
     }
