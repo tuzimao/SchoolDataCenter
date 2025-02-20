@@ -20,6 +20,8 @@
 /xampp/xampp-control.log
 
 /xampp/wget
+/xampp/tmp/*
+!/xampp/tmp/.gitkeep
 
 # git rm --cached xampp/mysql/data/ib_logfile0
 # git rm --cached xampp/mysql/data/ib_logfile1
@@ -47,8 +49,8 @@
 /xampp/support/vcredist2022_x64.exe
 
 /htdocs/goview/*
-!/htdocs/goview/readme.txt
+!/htdocs/goview/.gitkeep
 
 /htdocs/webroot/*
-!/htdocs/webroot/readme.txt
+!/htdocs/webroot/.gitkeep
 
