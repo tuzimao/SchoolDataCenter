@@ -1913,7 +1913,7 @@ if($_GET['action']=="delete_array")  {
     exit;
 }
 
-if($_GET['action']=="Reset_Password_123654")  {
+if($_GET['action']=="Reset_Password_Abcd1234")  {
     $selectedRows  = ForSqlInjection($_POST['selectedRows']);
     $selectedRows = explode(',',$selectedRows);
     $primary_key = $MetaColumnNames[0];
@@ -1923,9 +1923,9 @@ if($_GET['action']=="Reset_Password_123654")  {
             if(1)  {
                 $sql    = "select * from $TableName where $primary_key = '$id'";
                 $rs     = $db->Execute($sql);
-                SystemLogRecord("Reset_Password_123654", '', json_encode($rs->fields));
+                SystemLogRecord("Reset_Password_Abcd1234", '', json_encode($rs->fields));
             }
-            $密码       = password_make("123654");
+            $密码       = password_make("Abcd1234!");
             if(in_array("密码",$MetaColumnNames)) {
                 $sql        = "update $TableName set 密码='$密码' where $primary_key = '$id'";
                 $db->Execute($sql);
@@ -1949,7 +1949,7 @@ if($_GET['action']=="Reset_Password_123654")  {
     exit;
 }
 
-if($_GET['action']=="Reset_Password_ID_Last6")  {
+if($_GET['action']=="Reset_Password_ID_Last6PinYin")  {
     $selectedRows  = ForSqlInjection($_POST['selectedRows']);
     $selectedRows = explode(',',$selectedRows);
     $primary_key = $MetaColumnNames[0];
@@ -1958,7 +1958,7 @@ if($_GET['action']=="Reset_Password_ID_Last6")  {
         if($id>0)  {
             $sql    = "select * from $TableName where $primary_key = '$id'";
             $rs     = $db->Execute($sql);
-            SystemLogRecord("Reset_Password_ID_Last6", '', json_encode($rs->fields));
+            SystemLogRecord("Reset_Password_ID_Last6PinYin", '', json_encode($rs->fields));
             $身份证件号 = $rs->fields['身份证件号'];
             if(strlen($身份证件号)>6) {
                 $身份证件号6 = substr($身份证件号,-6);
@@ -2842,11 +2842,11 @@ if(in_array('Batch_Cancel',$Bottom_Button_Actions_Array))   {
 if(in_array('Batch_Reject',$Bottom_Button_Actions_Array))   {
     $multireview['multireview'][] = ["text"=>__("Multi Refuse"),"action"=>"option_multi_refuse","title"=>__("Refuse multi items one time"),"content"=>__("Do you really want to approval multi items at this time?"),"memoname"=>$SettingMap['Batch_Approval_Review_Field'],"inputmust"=>$SettingMap['Batch_Approval_Review_Field']?true:false,"inputmusttip"=>__("Opinion must input"),"submit"=>__("Submit"),"cancel"=>__("Cancel")];
 }
-if(in_array('Reset_Password_123654',$Bottom_Button_Actions_Array))   {
-    $multireview['multireview'][] = ["text"=>__("Reset_Password_123654"),"action"=>"Reset_Password_123654","title"=>__("Modify user passwords in batches"),"content"=>__("Modify the password of the selected record at one time to 123654"),"memoname"=>"","inputmust"=>false,"inputmusttip"=>"","submit"=>__("Submit"),"cancel"=>__("Cancel")];
+if(in_array('Reset_Password_Abcd1234',$Bottom_Button_Actions_Array))   {
+    $multireview['multireview'][] = ["text"=>__("Reset_Password_Abcd1234"),"action"=>"Reset_Password_Abcd1234","title"=>__("Modify user passwords in batches"),"content"=>__("Modify the password of the selected record at one time to 123654"),"memoname"=>"","inputmust"=>false,"inputmusttip"=>"","submit"=>__("Submit"),"cancel"=>__("Cancel")];
 }
-if(in_array('Reset_Password_ID_Last6',$Bottom_Button_Actions_Array))   {
-    $multireview['multireview'][] = ["text"=>__("Reset_Password_ID_Last6"),"action"=>"Reset_Password_ID_Last6","title"=>__("Modify user passwords in batches"),"content"=>__("Modify the password of the selected record to the last six digits of the ID number, if no ID number is set, the password is 123654"),"memoname"=>"","inputmust"=>false,"inputmusttip"=>"","submit"=>__("Submit"),"cancel"=>__("Cancel")];
+if(in_array('Reset_Password_ID_Last6PinYin',$Bottom_Button_Actions_Array))   {
+    $multireview['multireview'][] = ["text"=>__("Reset_Password_ID_Last6PinYin"),"action"=>"Reset_Password_ID_Last6PinYin","title"=>__("Modify user passwords in batches"),"content"=>__("Modify the password of the selected record to the last six digits of the ID number, if no ID number is set, the password is 123654"),"memoname"=>"","inputmust"=>false,"inputmusttip"=>"","submit"=>__("Submit"),"cancel"=>__("Cancel")];
 }
 if(in_array('Batch_Setting_One',$Bottom_Button_Actions_Array))   {
     $multireview['multireview'][] = ["text"=>$SettingMap["Batch_Setting_One_Name"],"action"=>"option_multi_setting_one","title"=>__("Change multiple item values one time"),"content"=>__("Do you really want to change multiple item values at this time?")."\n批量把[".$SettingMap['Batch_Setting_Two_Change_Field']."]列修改为:".$SettingMap['Batch_Setting_Two_Change_Value']."","memoname"=>$SettingMap['Batch_Approval_Review_Field'],"inputmust"=>$SettingMap['Batch_Approval_Review_Field']?true:false,"inputmusttip"=>__("Opinion must input"),"submit"=>__("Submit"),"cancel"=>__("Cancel")];

@@ -243,7 +243,7 @@ const IndexTableHeaderMobile = (props: TableHeaderProps) => {
               {searchFieldArray ?
                 <Grid item sm={12} sx={{width: 'calc(100%)'}}>
                   <FormControl fullWidth>
-                    <Button variant='contained' type='submit'>{button_search}</Button>
+                    <Button sx={{ textTransform: 'capitalize' }} variant='contained' type='submit'>{button_search}</Button>
                   </FormControl>
                 </Grid>
                 : ''}
@@ -260,7 +260,7 @@ const IndexTableHeaderMobile = (props: TableHeaderProps) => {
               return (
                 <Grid item key={"Grid_" + index}>
                   <Fragment>
-                    <Button sx={{ mb: 2 }} variant='contained' type="button" onClick={() => handleMultiOpenDialog(Item.action)}>{Item.text}</Button>
+                    <Button sx={{ mb: 2, textTransform: 'capitalize' }} variant='contained' type="button" onClick={() => handleMultiOpenDialog(Item.action)}>{Item.text}</Button>
                     <Dialog
                       open={multiReviewOpenDialog[Item.action] == undefined ? false : multiReviewOpenDialog[Item.action]}
                       onClose={() => handleMultiCloseDialog()}
@@ -274,11 +274,11 @@ const IndexTableHeaderMobile = (props: TableHeaderProps) => {
                         {Item.memoname != "" ? <TextField required={Item.inputmust} inputRef={myRef} id={Item.memoname} value={multiReviewInputValue} onChange={(e) => { setMultiReviewInputValue(e.target.value) }} autoFocus fullWidth type='text' label={Item.memoname} /> : ''}
                       </DialogContent>
                       <DialogActions className='dialog-actions-dense'>
-                        <Button onClick={() => handleMultiCloseDialog()}>{Item.cancel}</Button>
+                        <Button sx={{ textTransform: 'capitalize' }} onClick={() => handleMultiCloseDialog()}>{Item.cancel}</Button>
                         {Item.memoname != "" ?
-                          <Button onClick={() => { myRef.current.reportValidity(); handleMultiCloseDialogAndSubmit(Item.action, selectedRows, Item) }} variant='contained'>{Item.submit}</Button>
+                          <Button sx={{ textTransform: 'capitalize' }} onClick={() => { myRef.current.reportValidity(); handleMultiCloseDialogAndSubmit(Item.action, selectedRows, Item) }} variant='contained'>{Item.submit}</Button>
                           :
-                          <Button onClick={() => { handleMultiCloseDialogAndSubmit(Item.action, selectedRows, Item) }} variant='contained'>{Item.submit}</Button>
+                          <Button sx={{ textTransform: 'capitalize' }} onClick={() => { handleMultiCloseDialogAndSubmit(Item.action, selectedRows, Item) }} variant='contained'>{Item.submit}</Button>
                         }
                       </DialogActions>
                     </Dialog>

@@ -194,7 +194,7 @@ const IndexTableHeader = (props: TableHeaderProps) => {
               {isAddButton && (isMobileData==true && MobileEndShowSearch=='No') ?
               <Grid item sm={3} xs={6}>
                 <Tooltip title="Alt+a">
-                  <Button sx={{ ml: 0, mb: 0 }} onClick={()=>toggleAddTableDrawer('')} variant='contained'>{button_add}</Button>
+                  <Button sx={{ ml: 0, mb: 0, textTransform: 'capitalize' }} onClick={()=>toggleAddTableDrawer('')} variant='contained'>{button_add}</Button>
                 </Tooltip>
               </Grid>
               :
@@ -259,7 +259,7 @@ const IndexTableHeader = (props: TableHeaderProps) => {
                 <Grid item sm={2} xs={6}>
                   <FormControl fullWidth size="small" sx={{}}>
                     <Tooltip title="Alt+f">
-                      <Button sx={{ ml: 0, mb: 0 }} variant='contained' type='submit'>{button_search}</Button>
+                      <Button sx={{ ml: 0, mb: 0, textTransform: 'capitalize' }} variant='contained' type='submit'>{button_search}</Button>
                     </Tooltip>
                   </FormControl>
                 </Grid>
@@ -268,17 +268,17 @@ const IndexTableHeader = (props: TableHeaderProps) => {
                 <Grid item sm={4} xs={6}>
                   {isAddButton ?
                   <Tooltip title="Alt+a">
-                    <Button sx={{ ml: 3, mb: 2 }} onClick={()=>toggleAddTableDrawer('')} variant='contained'>{button_add}</Button>
+                    <Button sx={{ ml: 3, mb: 2, textTransform: 'capitalize' }} onClick={()=>toggleAddTableDrawer('')} variant='contained'>{button_add}</Button>
                   </Tooltip>
                   : ''}
                   {isMobileData == false && isImportButton ?
                   <Tooltip title="Alt+i">
-                    <Button sx={{ ml: 3, mb: 2 }} onClick={toggleImportTableDrawer} variant='contained'>{button_import}</Button>
+                    <Button sx={{ ml: 3, mb: 2, textTransform: 'capitalize' }} onClick={toggleImportTableDrawer} variant='contained'>{button_import}</Button>
                   </Tooltip>
                   : ''}
                   {isMobileData == false && isExportButton ?
                   <Tooltip title="Alt+e">
-                    <Button sx={{ ml: 3, mb: 2 }} onClick={toggleExportTableDrawer} variant='contained'>{button_export}</Button>
+                    <Button sx={{ ml: 3, mb: 2, textTransform: 'capitalize' }} onClick={toggleExportTableDrawer} variant='contained'>{button_export}</Button>
                   </Tooltip>
                   : ''}
                 </Grid>
@@ -295,7 +295,7 @@ const IndexTableHeader = (props: TableHeaderProps) => {
                 return (
                   <Grid item key={"Grid_" + index}>
                     <Fragment>
-                      <Button sx={{ mb: 2 }} variant='contained' type="button" onClick={() => handleMultiOpenDialog(Item.action)}>{Item.text}</Button>
+                      <Button sx={{ mb: 2, textTransform: 'capitalize' }} variant='contained' type="button" onClick={() => handleMultiOpenDialog(Item.action)}>{Item.text}</Button>
                       <Dialog
                         open={multiReviewOpenDialog[Item.action] == undefined ? false : multiReviewOpenDialog[Item.action]}
                         onClose={() => handleMultiCloseDialog()}
@@ -309,11 +309,11 @@ const IndexTableHeader = (props: TableHeaderProps) => {
                           {Item.memoname != "" ? <TextField required={Item.inputmust} inputRef={myRef} id={Item.memoname} value={multiReviewInputValue} onChange={(e) => { setMultiReviewInputValue(e.target.value) }} autoFocus fullWidth type='text' label={Item.memoname} /> : ''}
                         </DialogContent>
                         <DialogActions className='dialog-actions-dense'>
-                          <Button onClick={() => handleMultiCloseDialog()}>{Item.cancel}</Button>
+                          <Button sx={{ textTransform: 'capitalize' }} onClick={() => handleMultiCloseDialog()}>{Item.cancel}</Button>
                           {Item.memoname != "" ?
-                            <Button onClick={() => { myRef.current.reportValidity(); handleMultiCloseDialogAndSubmit(Item.action, selectedRows, Item) }} variant='contained'>{Item.submit}</Button>
+                            <Button sx={{ textTransform: 'capitalize' }} onClick={() => { myRef.current.reportValidity(); handleMultiCloseDialogAndSubmit(Item.action, selectedRows, Item) }} variant='contained'>{Item.submit}</Button>
                             :
-                            <Button onClick={() => { handleMultiCloseDialogAndSubmit(Item.action, selectedRows, Item) }} variant='contained'>{Item.submit}</Button>
+                            <Button sx={{ textTransform: 'capitalize' }} onClick={() => { handleMultiCloseDialogAndSubmit(Item.action, selectedRows, Item) }} variant='contained'>{Item.submit}</Button>
                           }
                         </DialogActions>
                       </Dialog>
