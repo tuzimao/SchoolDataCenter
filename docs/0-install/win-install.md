@@ -19,10 +19,7 @@ icon: instalod
 4. APACHE和MYSQL正常启动以后，请在浏览器打开 http://localhost:80 就可以看到系统的界面了。
 
 5. 测试账户
-管理员: admin / 密码: Abcd1234!
-系部: xibu / 密码: Abcd1234!
-班主任: banzhuren / 密码: Abcd1234!
-学生: 20230101 / 密码: Abcd1234!
+    请加QQ群 138595160 来获取
 
 - 如果本地没有安装Redis，则需要单独安装Redis服务端。Redis安装文件路径：安装目录\xampp\redis\Redis-x64-3.0.504.msi
 
@@ -40,3 +37,4 @@ icon: instalod
 | <img src="./images/07.png" > | <img src="./images/08.png" > |
 | <img src="./images/09.png" > | <img src="./images/10.png" > |
 | <img src="./images/11.png" > | <img src="./images/12.png" > |
+| 如果本地没有安装Redis，则需要安装Redis。Redis路径：安装目录\xampp\redis\Redis-x64-3.0.504.msi | 如果在启动Apache的时候，提示VCRUNTIME140.dll错误，请安装如下文件： 安装目录\xampp\support\vcredist2022_x64.exe |
