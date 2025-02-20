@@ -1466,7 +1466,7 @@ function option_multi_approval_exection($selectedRows, $multiReviewInputValue, $
             SystemLogRecord("option_multi_approval", '', json_encode($sqlArray));
         }
         $RS['status']   = "OK";
-        if($SettingMap['Debug_Sql_Show_On_Api']=="Yes" && 1)  {
+        if($SettingMap['Debug_Sql_Show_On_Api']=="Yes" && in_array($GLOBAL_USER->USER_ID, ['admin', 'admin001']))  {
             $RS['sqlArray'] = $sqlArray;
             global $GLOBAL_EXEC_KEY_SQL;
             $RS['GLOBAL_EXEC_KEY_SQL'] = $GLOBAL_EXEC_KEY_SQL;
@@ -1563,7 +1563,7 @@ function option_multi_refuse_exection($selectedRows, $multiReviewInputValue, $Re
             SystemLogRecord("option_multi_refuse", '', json_encode($sqlArray));
         }
         $RS['status']   = "OK";
-        if($SettingMap['Debug_Sql_Show_On_Api']=="Yes")  {
+        if($SettingMap['Debug_Sql_Show_On_Api']=="Yes" && in_array($GLOBAL_USER->USER_ID, ['admin', 'admin001']))  {
             $RS['sqlArray'] = $sqlArray;
             global $GLOBAL_EXEC_KEY_SQL;
             $RS['GLOBAL_EXEC_KEY_SQL'] = $GLOBAL_EXEC_KEY_SQL;
@@ -1670,7 +1670,7 @@ function option_multi_cancel_exection($selectedRows, $multiReviewInputValue, $Re
             SystemLogRecord("option_multi_cancel", '', json_encode($sqlArray));
         }
         $RS['status']   = "OK";
-        if($SettingMap['Debug_Sql_Show_On_Api']=="Yes" && 1)  {
+        if($SettingMap['Debug_Sql_Show_On_Api']=="Yes" && in_array($GLOBAL_USER->USER_ID, ['admin', 'admin001']))  {
             $RS['sqlArray'] = $sqlArray;
             global $GLOBAL_EXEC_KEY_SQL;
             $RS['GLOBAL_EXEC_KEY_SQL'] = $GLOBAL_EXEC_KEY_SQL;
@@ -1720,7 +1720,7 @@ function option_multi_setting_one_exection($selectedRows, $multiReviewInputValue
             SystemLogRecord("option_multi_setting_one", '', json_encode($sqlArray));
         }
         $RS['status']   = "OK";
-        if($SettingMap['Debug_Sql_Show_On_Api']=="Yes" && 1)  {
+        if($SettingMap['Debug_Sql_Show_On_Api']=="Yes" && in_array($GLOBAL_USER->USER_ID, ['admin', 'admin001']))  {
             $RS['sqlArray'] = $sqlArray;
             global $GLOBAL_EXEC_KEY_SQL;
             $RS['GLOBAL_EXEC_KEY_SQL'] = $GLOBAL_EXEC_KEY_SQL;
@@ -1770,7 +1770,7 @@ function option_multi_setting_two_exection($selectedRows, $multiReviewInputValue
             SystemLogRecord("option_multi_setting_two", '', json_encode($sqlArray));
         }
         $RS['status']   = "OK";
-        if($SettingMap['Debug_Sql_Show_On_Api']=="Yes" && 1)  {
+        if($SettingMap['Debug_Sql_Show_On_Api']=="Yes" && in_array($GLOBAL_USER->USER_ID, ['admin', 'admin001']))  {
             $RS['sqlArray'] = $sqlArray;
             global $GLOBAL_EXEC_KEY_SQL;
             $RS['GLOBAL_EXEC_KEY_SQL'] = $GLOBAL_EXEC_KEY_SQL;
