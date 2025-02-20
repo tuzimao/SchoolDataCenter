@@ -41,7 +41,7 @@
 
 ### 系统安全
 
-* [通信加密](12-security/README.md)
+* [系统安全](12-security/README.md)
 
 ### 如何安装本系统
 
