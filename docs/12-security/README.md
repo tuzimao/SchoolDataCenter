@@ -1,9 +1,5 @@
-
-
-
-
 ---
-icon: bars
+icon: globe-pointer
 ---
 
 #### 系统安全
