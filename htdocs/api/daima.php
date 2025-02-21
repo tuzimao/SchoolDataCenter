@@ -1,9 +1,14 @@
 <?php
+/*
+* 基础架构: 单点低代码开发平台
+* 版权所有: 郑州单点科技软件有限公司
+* Email: moodle360@qq.com
+* Copyright (c) 2007-2025
+* License: 商业授权
+*/
 header("Content-Type: application/json");
 require_once('cors.php');
 require_once('include.inc.php');
-
-
 
 $sql	= "select left(代码,2) as ProvinceID,行政区 as ProvinceName from edu_xingzhengdaima where right(代码,10)='0000000000'";
 $rs		= $db->Execute($sql);
