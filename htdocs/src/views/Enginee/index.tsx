@@ -152,7 +152,7 @@ const UserList = ({ authConfig, backEndApi, externalId, handleActionInMobileApp,
 
   const [allSubmitFields, setAllSubmitFields] = useState({ 'searchFieldName': '' });
 
-  const [pageSize, setPageSize] = useState<number>(10)
+  const [pageSize, setPageSize] = useState<number>(15)
   const [pageCount, setPageCount] = useState<number>(0)
   const [page, setPage] = useState<number>(0)
   const [mobileEditPageId, setMobileEditPageId] = useState<number>(-1)

@@ -26,8 +26,8 @@ const ListSubheader = styled((props: ListSubheaderProps) => <MuiListSubheader co
     lineHeight: 1,
     display: 'flex',
     position: 'static',
-    marginTop: theme.spacing(7),
-    marginBottom: theme.spacing(2),
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1),
     backgroundColor: 'transparent'
   })
 )
@@ -79,11 +79,11 @@ const VerticalNavSectionTitle = (props: Props) => {
           ...conditionalColors(),
           ...(navCollapsed && !navHover
             ? {
-                py: 3.5,
+                py: 1,
                 pr: (collapsedNavWidth - navigationBorderWidth - 24) / 8 - 1,
                 pl: (collapsedNavWidth - navigationBorderWidth - 24) / 8 + 0.25
               }
-            : { px: 0, py: 1.75 })
+            : { px: 0, py: 1 })
         }}
       >
         <Divider
