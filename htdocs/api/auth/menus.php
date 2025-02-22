@@ -16,8 +16,9 @@ CheckAuthUserLoginStatus();
 $Menu = [];
 $Menu['icon'] = 'mdi:home-outline';
 $Menu['title'] = '快捷面板';
-$Menu['children'][] = ['title' => '德育量化', 'icon' => 'mdi:chart-donut', 'path' => '/dashboards/analyticsstudent'];
-$Menu['children'][] = ['title' => '班级评价', 'icon' => 'mdi:chart-donut', 'path' => '/dashboards/analyticsclass'];
+$Menu['children'][] = ['title' => '德育量化', 'icon' => 'ph:ranking', 'path' => '/dashboards/analyticsstudent'];
+$Menu['children'][] = ['title' => '班级评价', 'icon' => 'healthicons:i-training-class-24px', 'path' => '/dashboards/analyticsclass'];
+$Menu['children'][] = ['title' => '食堂消费', 'icon' => 'dashicons:food', 'path' => '/dashboards/shitangxiaofei'];
 
 $Menus[] = $Menu;
 
