@@ -10,6 +10,13 @@ if($optionsMenuItem=="")  {
     $optionsMenuItem = "最近一月";
 }
 
+$TopRightOptions    = [];
+$TopRightOptions[]  = ['name'=>'最近一周','selected'=>$optionsMenuItem=='最近一周'?true:false];
+$TopRightOptions[]  = ['name'=>'最近一月','selected'=>$optionsMenuItem=='最近一月'?true:false];
+$TopRightOptions[]  = ['name'=>'最近三月','selected'=>$optionsMenuItem=='最近三月'?true:false];
+$TopRightOptions[]  = ['name'=>'最近半年','selected'=>$optionsMenuItem=='最近半年'?true:false];
+$TopRightOptions[]  = ['name'=>'最近一年','selected'=>$optionsMenuItem=='最近一年'?true:false];
+
 $学期       = getCurrentXueQi();
 
 $USER_ID    = ForSqlInjection($GLOBAL_USER->USER_ID);
@@ -43,10 +50,10 @@ switch($optionsMenuItem) {
 }
 
 //奖杯模块
-$sql = "select SUM(订单金额) AS NUM from data_shitangxiaofei where 1=1 $whereSql";
+$sql = "select ROUND(SUM(订单金额) / 10000, 4) AS NUM from data_shitangxiaofei where 1=1 $whereSql";
 $rs = $db->Execute($sql);
 $AnalyticsTrophy['Welcome']     = "您好,".$GLOBAL_USER->USER_NAME."!🥳";
-$AnalyticsTrophy['SubTitle']    = $班级." - 食堂消费总金额";
+$AnalyticsTrophy['SubTitle']    = "食堂消费总金额(万元) - " . $optionsMenuItem;
 $AnalyticsTrophy['TotalScore']  = $rs->fields['NUM'];
 $AnalyticsTrophy['ViewButton']['name']  = "查看明细";
 $AnalyticsTrophy['ViewButton']['url']   = "/tab/apps_180";
@@ -55,8 +62,8 @@ $AnalyticsTrophy['grid']        = 4;
 $AnalyticsTrophy['type']        = "AnalyticsTrophy";
 $AnalyticsTrophy['sql']         = $sql;
 
-//按一级指标统计积分
-$sql = "select 订单类型 AS title, SUM(订单金额) AS NUM from data_shitangxiaofei where 1=1 $whereSql group by 订单类型 order by 订单类型 asc";
+//按订单类型统计积分
+$sql = "select 订单类型 AS title, ROUND(SUM(订单金额) / 10000, 4) AS NUM from data_shitangxiaofei where 1=1 $whereSql group by 订单类型 order by 订单类型 asc";
 $rs = $db->Execute($sql);
 $rs_a = $rs->GetArray();
 $Item = [];
@@ -67,12 +74,9 @@ foreach($rs_a as $Element)   {
     $Index ++;
 }
 $AnalyticsTransactionsCard['Title']       = "食堂消费";
-$AnalyticsTransactionsCard['SubTitle']    = "按类别统计总金额";
+$AnalyticsTransactionsCard['SubTitle']    = "按类别统计总金额(万元)";
 $AnalyticsTransactionsCard['data']        = $data;
-$AnalyticsTransactionsCard['TopRightOptions'][]    = ['name'=>'最近一周','selected'=>$optionsMenuItem=='最近一周'?true:false];
-$AnalyticsTransactionsCard['TopRightOptions'][]    = ['name'=>'最近一月','selected'=>$optionsMenuItem=='最近一月'?true:false];
-$AnalyticsTransactionsCard['TopRightOptions'][]    = ['name'=>'当前学期','selected'=>$optionsMenuItem=='当前学期'?true:false];
-$AnalyticsTransactionsCard['TopRightOptions'][]    = ['name'=>'所有学期','selected'=>$optionsMenuItem=='所有学期'?true:false];
+$AnalyticsTransactionsCard['TopRightOptions']      = $TopRightOptions;
 $AnalyticsTransactionsCard['grid']                 = 8;
 $AnalyticsTransactionsCard['type']                 = "AnalyticsTransactionsCard";
 $AnalyticsTransactionsCard['sql']                  = $sql;
@@ -106,10 +110,10 @@ $AnalyticsDepositWithdraw['sql']                        = $sql;
 
 
 
-//本班积分排行
+//设备终端
 $colorArray = ['primary','success','warning','info','info'];
 $iconArray  = ['mdi:trending-up','mdi:account-outline','mdi:cellphone-link','mdi:currency-usd','mdi:currency-usd','mdi:currency-usd'];
-$sql    = "select 设备名称, SUM(订单金额) AS 订单金额 from data_shitangxiaofei where 1=1 $whereSql group by 设备名称 order by 设备名称 desc";
+$sql    = "select 设备名称 as 姓名, ROUND(SUM(订单金额) / 10000, 4) AS 积分分值 from data_shitangxiaofei where 1=1 $whereSql group by 设备名称 order by 积分分值 desc limit 5";
 $rs     = $db->Execute($sql);
 $rs_a   = $rs->GetArray();
 $Item   = [];
@@ -118,56 +122,17 @@ for($i=0;$i<sizeof($rs_a);$i++) {
     $rs_a[$i]['图标颜色']   = $colorArray[$i];
     $rs_a[$i]['头像']       = '/images/avatars/'.(($i)+1).'.png';
 }
-$AnalyticsSalesByCountries['Title']       = "设备终端";
+$AnalyticsSalesByCountries['Title']       = "消费最多的设备终端(万元)";
 $AnalyticsSalesByCountries['SubTitle']    = "按设备终端统计消费总金额";
 $AnalyticsSalesByCountries['data']        = $rs_a;
-$AnalyticsSalesByCountries['TopRightOptions'][]    = ['name'=>'最近一周','selected'=>$optionsMenuItem=='最近一周'?true:false];
-$AnalyticsSalesByCountries['TopRightOptions'][]    = ['name'=>'最近一月','selected'=>$optionsMenuItem=='最近一月'?true:false];
-$AnalyticsSalesByCountries['TopRightOptions'][]    = ['name'=>'当前学期','selected'=>$optionsMenuItem=='当前学期'?true:false];
-$AnalyticsSalesByCountries['TopRightOptions'][]    = ['name'=>'所有学期','selected'=>$optionsMenuItem=='所有学期'?true:false];
+$AnalyticsSalesByCountries['TopRightOptions']      = $TopRightOptions;
 $AnalyticsSalesByCountries['grid']                 = 4;
 $AnalyticsSalesByCountries['type']                 = "AnalyticsSalesByCountries";
 $AnalyticsSalesByCountries['sql']                  = $sql;
 
 
-print_R($AnalyticsSalesByCountries);exit;
-
-/*
 //ApexAreaChart
-$sql = "select 订单类型,支付日期,sum(订单金额) AS NUM from data_shitangxiaofei where 1=1 $whereSql group by 订单类型,支付日期 order by 支付日期 asc";
-$rs = $db->Execute($sql);
-$rs_a = $rs->GetArray();
-$输出数据 = [];
-$一级指标Array = [];
-for($i=0;$i<sizeof($rs_a);$i++) {
-    $输出数据[$rs_a[$i]['支付日期']][$rs_a[$i]['订单类型']] = $rs_a[$i]['NUM'];
-    $一级指标Array[$rs_a[$i]['订单类型']] = $rs_a[$i]['订单类型'];
-}
-$dataY = [];
-$dataX = array_keys($输出数据);
-$一级指标Array = array_keys($一级指标Array);
-foreach($一级指标Array as $订单类型)  {
-    $ItemY = [];
-    $ItemYDate = [];
-    foreach($dataX as $Date) {
-        $ItemYDate[] = intval($输出数据[$Date][$订单类型]);
-    }
-    $dataY[] = ["name"=>$订单类型,"data"=>$ItemYDate];
-}
-
-$ApexAreaChart['Title']       = "班级学生积分之和";
-$ApexAreaChart['SubTitle']    = "按天统计班级学生积分之和";
-$ApexAreaChart['dataX']       = $dataX;
-$ApexAreaChart['dataY']       = $dataY;
-$ApexAreaChart['sql']       = $sql;
-$ApexAreaChart['TopRightOptions'][]    = ['name'=>'最近一周','selected'=>$optionsMenuItem=='最近一周'?true:false];
-$ApexAreaChart['TopRightOptions'][]    = ['name'=>'最近一月','selected'=>$optionsMenuItem=='最近一月'?true:false];
-$ApexAreaChart['TopRightOptions'][]    = ['name'=>'当前学期','selected'=>$optionsMenuItem=='当前学期'?true:false];
-$ApexAreaChart['TopRightOptions'][]    = ['name'=>'所有学期','selected'=>$optionsMenuItem=='所有学期'?true:false];
-*/
-
-//ApexAreaChart
-$sql = "select 支付日期,sum(订单金额) AS NUM from data_shitangxiaofei where 1=1 $whereSql group by 支付日期 order by 支付日期 asc";
+$sql = "select 支付日期,ROUND(SUM(订单金额) / 10000, 4) AS NUM from data_shitangxiaofei where 1=1 $whereSql group by 支付日期 order by 支付日期 asc";
 $rs = $db->Execute($sql);
 $rs_a = $rs->GetArray();
 $输出数据 = [];
@@ -178,88 +143,59 @@ $dataY = [];
 $dataX = array_keys($输出数据);
 $dataY[] = ["name"=>"班级总积分","data"=>array_values($输出数据)];
 
-$ApexAreaChart['Title']       = "班级学生积分之和";
-$ApexAreaChart['SubTitle']    = "按天统计班级学生积分之和";
+$ApexAreaChart['Title']       = "食堂每天消费总金额";
+$ApexAreaChart['SubTitle']    = "按天统计食堂每天消费总金额(万元)";
 $ApexAreaChart['dataX']       = $dataX;
 $ApexAreaChart['dataY']       = $dataY;
-$ApexAreaChart['sql']       = $sql;
-$ApexAreaChart['TopRightOptions'][]    = ['name'=>'最近一周','selected'=>$optionsMenuItem=='最近一周'?true:false];
-$ApexAreaChart['TopRightOptions'][]    = ['name'=>'最近一月','selected'=>$optionsMenuItem=='最近一月'?true:false];
-$ApexAreaChart['TopRightOptions'][]    = ['name'=>'当前学期','selected'=>$optionsMenuItem=='当前学期'?true:false];
-$ApexAreaChart['TopRightOptions'][]    = ['name'=>'所有学期','selected'=>$optionsMenuItem=='所有学期'?true:false];
+$ApexAreaChart['sql']         = $sql;
+$ApexAreaChart['TopRightOptions']      = $TopRightOptions;
 $ApexAreaChart['grid']                  = 8;
 $ApexAreaChart['type']                  = "ApexAreaChart";
 $ApexAreaChart['sql']                   = $sql;
 
 
-$ApexLineChart['Title']         = "班级学生积分之和";
-$ApexLineChart['SubTitle']      = "按天统计班级学生积分之和";
+$ApexLineChart['Title']         = "食堂每天消费总金额";
+$ApexLineChart['SubTitle']      = "按天统计食堂每天消费总金额(万元)";
 $ApexLineChart['dataX']         = $dataX;
 $ApexLineChart['dataY']         = $dataY;
 $ApexLineChart['sql']           = $sql;
-$ApexLineChart['TopRightOptions'][]    = ['name'=>'最近一周','selected'=>$optionsMenuItem=='最近一周'?true:false];
-$ApexLineChart['TopRightOptions'][]    = ['name'=>'最近一月','selected'=>$optionsMenuItem=='最近一月'?true:false];
-$ApexLineChart['TopRightOptions'][]    = ['name'=>'当前学期','selected'=>$optionsMenuItem=='当前学期'?true:false];
-$ApexLineChart['TopRightOptions'][]    = ['name'=>'所有学期','selected'=>$optionsMenuItem=='所有学期'?true:false];
+$ApexLineChart['TopRightOptions']       = $TopRightOptions;
 $ApexLineChart['grid']                  = 8;
 $ApexLineChart['type']                  = "ApexLineChart";
 
-//输出GoView结构
-$ApexLineChart['GoView']['dimensions']      = ["支付日期",$ApexLineChart['Title']];
-$GoViewSource = [];
-foreach($输出数据 as $输出数据X=>$输出数据Y)  {
-    $GoViewSource[] = [$ApexLineChart['Title']=>$输出数据Y,'支付日期'=>$输出数据X];
-}
-$ApexLineChart['GoView']['source']    = $GoViewSource;
-
-//额外一个班级的统计数据 -- 开始
-$额外一个班级的统计数据 = $班级名称Array[1];
-$sql = "select 支付日期,sum(订单金额) AS NUM from data_shitangxiaofei where 班级='$额外一个班级的统计数据' $whereSql group by 支付日期 order by 支付日期 asc";
-$rs = $db->Execute($sql);
-$rs_a = $rs->GetArray();
-$输出数据T = [];
-for($i=0;$i<sizeof($rs_a);$i++) {
-    $输出数据T[$rs_a[$i]['支付日期']] = $rs_a[$i]['NUM'];
-}
-$dataY = [];
-$dataX = array_keys($输出数据T);
-$dataY[] = ["name"=>"班级总积分","data"=>array_values($输出数据T)];
-//输出GoView结构
-$ApexLineChart['GoView2']['dimensions']      = ["支付日期",$班级,$额外一个班级的统计数据];
-$GoViewSource = [];
-foreach($输出数据T as $输出数据X=>$输出数据Y)  {
-    $GoViewSource[] = [$班级=>$输出数据Y, '支付日期'=>$输出数据X, $额外一个班级的统计数据=>rand(1,20)];
-}
-$ApexLineChart['GoView2']['source']    = $GoViewSource;
-//额外一个班级的统计数据 -- 结束
-
 
 //AnalyticsWeeklyOverview
-$sql = "select 支付日期,sum(订单金额) AS NUM from data_shitangxiaofei where 1=1 $whereSql group by 支付日期 order by 支付日期 desc limit 7";
+$sql = "select DATE_FORMAT(支付日期, '%Y-%m') AS 月份, ROUND(SUM(订单金额) / 10000, 4) AS NUM from data_shitangxiaofei where 1=1 $whereSql  group by DATE_FORMAT(支付日期, '%Y-%m') order by 月份 asc";
 $rs = $db->Execute($sql);
 $rs_a = $rs->GetArray();
 $输出数据 = [];
 for($i=0;$i<sizeof($rs_a);$i++) {
-    $输出数据[$rs_a[$i]['支付日期']] = $rs_a[$i]['NUM'];
+    $输出数据[$rs_a[$i]['月份']] = $rs_a[$i]['NUM'];
 }
-ksort($输出数据);
-$dataY = [];
-$dataX = array_keys($输出数据);
-$dataYItem = array_values($输出数据);
-$dataY[] = ["name"=>"班级总积分","data"=>$dataYItem];
+$dataY      = [];
+$dataX      = array_keys($输出数据);
+$dataYItem  = array_values($输出数据);
+$dataY[]    = ["name"=>"每月消费总金额","data"=>$dataYItem];
 
-$AnalyticsWeeklyOverview['Title']         = "班级学生积分周报";
-$AnalyticsWeeklyOverview['SubTitle']      = "最近一周班级学生积分之和";
+$AnalyticsWeeklyOverview['Title']         = "每月消费总金额";
+$AnalyticsWeeklyOverview['SubTitle']      = "每月消费总金额";
 $AnalyticsWeeklyOverview['dataX']         = $dataX;
 $AnalyticsWeeklyOverview['dataY']         = $dataY;
 $AnalyticsWeeklyOverview['sql']           = $sql;
-$AnalyticsWeeklyOverview['TopRightOptions'][]    = ['name'=>'最近一周','selected'=>$optionsMenuItem=='最近一周'?true:false];
-$AnalyticsWeeklyOverview['TopRightOptions'][]    = ['name'=>'最近一月','selected'=>$optionsMenuItem=='最近一月'?true:false];
-$AnalyticsWeeklyOverview['TopRightOptions'][]    = ['name'=>'当前学期','selected'=>$optionsMenuItem=='当前学期'?true:false];
-$AnalyticsWeeklyOverview['TopRightOptions'][]    = ['name'=>'所有学期','selected'=>$optionsMenuItem=='所有学期'?true:false];
+$AnalyticsWeeklyOverview['TopRightOptions']         = $TopRightOptions;
 
-$AnalyticsWeeklyOverview['BottomText']['Left']      = array_sum($dataYItem);
-$AnalyticsWeeklyOverview['BottomText']['Right']     = "最近一周总积分为".array_sum($dataYItem).", 比上周增加13%";
+$当月金额 = $dataYItem[sizeof($dataYItem)-1];
+$上月金额 = $dataYItem[sizeof($dataYItem)-2];
+$AnalyticsWeeklyOverview['BottomText']['Left']      = $当月金额;
+$AnalyticsWeeklyOverview['BottomText']['Right']     = "上个月为".$上月金额."";
+if($上月金额 > 0 && $当月金额 > $上月金额)  {
+    $增加比例 = intval(($当月金额 - $上月金额)* 100 / $上月金额);
+    $AnalyticsWeeklyOverview['BottomText']['Right'] .= ", 比上月增加".$增加比例."%";
+}
+if($上月金额 > 0 && $当月金额 < $上月金额)  {
+    $增加比例 = intval(($当月金额 - $上月金额)* 100 / $上月金额);
+    $AnalyticsWeeklyOverview['BottomText']['Right'] .= ", 比上月下降".$增加比例."%";
+}
 
 $AnalyticsWeeklyOverview['ViewButton']['name']  = "明细";
 $AnalyticsWeeklyOverview['ViewButton']['url']   = "/tab/apps_180";
@@ -270,7 +206,7 @@ $AnalyticsWeeklyOverview['sql']                 = $sql;
 
 
 //AnalyticsPerformance
-$sql = "select 订单类型,sum(订单金额) AS NUM from data_shitangxiaofei where 1=1 $whereSql group by 订单类型 order by 订单类型 asc";
+$sql = "select 订单类型,ROUND(SUM(订单金额) / 10000, 4) AS NUM from data_shitangxiaofei where 1=1 $whereSql group by 订单类型 order by 订单类型 asc";
 $rs = $db->Execute($sql);
 $rs_a = $rs->GetArray();
 $输出数据 = [];
@@ -279,26 +215,22 @@ for($i=0;$i<sizeof($rs_a);$i++) {
 }
 $dataY = [];
 $dataX = array_keys($输出数据);
-$dataY[] = ["name"=>"班级总积分","data"=>array_values($输出数据)];
+$dataY[] = ["name"=>"订单类型","data"=>array_values($输出数据)];
 
-$AnalyticsPerformance['Title']       = "按一级指标统计积分之和";
-$AnalyticsPerformance['SubTitle']    = "按一级指标统计班级学生积分之和";
+$AnalyticsPerformance['Title']       = "订单类型统计食堂消费";
+$AnalyticsPerformance['SubTitle']    = "按订单类型统计食堂消费";
 $AnalyticsPerformance['dataX']       = $dataX;
 $AnalyticsPerformance['dataY']       = $dataY;
 $AnalyticsPerformance['sql']         = $sql;
 $AnalyticsPerformance['colors']      = ['#fdd835','#32baff','#00d4bd','#7367f0','#FFA1A1'];
-$AnalyticsPerformance['TopRightOptions'][]    = ['name'=>'最近一周','selected'=>$optionsMenuItem=='最近一周'?true:false];
-$AnalyticsPerformance['TopRightOptions'][]    = ['name'=>'最近一月','selected'=>$optionsMenuItem=='最近一月'?true:false];
-$AnalyticsPerformance['TopRightOptions'][]    = ['name'=>'当前学期','selected'=>$optionsMenuItem=='当前学期'?true:false];
-$AnalyticsPerformance['TopRightOptions'][]    = ['name'=>'所有学期','selected'=>$optionsMenuItem=='所有学期'?true:false];
+$AnalyticsPerformance['TopRightOptions']      = $TopRightOptions;
 $AnalyticsPerformance['grid']                 = 4;
 $AnalyticsPerformance['type']                 = "AnalyticsPerformance";
 $AnalyticsPerformance['sql']                  = $sql;
 
 
-
 //ApexDonutChart
-$sql = "select 订单类型,sum(订单金额) AS NUM from data_shitangxiaofei where 1=1 $whereSql group by 订单类型 order by 订单类型 asc";
+$sql = "select 订单类型,ROUND(SUM(订单金额) / 10000, 4) AS NUM from data_shitangxiaofei where 1=1 $whereSql group by 订单类型 order by 订单类型 asc";
 $rs = $db->Execute($sql);
 $rs_a = $rs->GetArray();
 $输出数据 = [];
@@ -309,16 +241,13 @@ $dataY = [];
 $dataX = array_keys($输出数据);
 $dataY[] = ["name"=>"班级总积分百分比","data"=>array_values($输出数据)];
 
-$ApexDonutChart['Title']       = "按一级指标统计百分比";
-$ApexDonutChart['SubTitle']    = "按一级指标统计加分之和的百分比";
+$ApexDonutChart['Title']       = "订单类型统计消费金额";
+$ApexDonutChart['SubTitle']    = "按订单类型统计消费金额的百分比";
 $ApexDonutChart['dataX']       = $dataX;
 $ApexDonutChart['dataY']       = $dataY;
 $ApexDonutChart['sql']         = $sql;
 $ApexDonutChart['colors']      = ['#fdd835','#32baff','#00d4bd','#7367f0','#FFA1A1'];
-$ApexDonutChart['TopRightOptions'][]    = ['name'=>'最近一周','selected'=>$optionsMenuItem=='最近一周'?true:false];
-$ApexDonutChart['TopRightOptions'][]    = ['name'=>'最近一月','selected'=>$optionsMenuItem=='最近一月'?true:false];
-$ApexDonutChart['TopRightOptions'][]    = ['name'=>'当前学期','selected'=>$optionsMenuItem=='当前学期'?true:false];
-$ApexDonutChart['TopRightOptions'][]    = ['name'=>'所有学期','selected'=>$optionsMenuItem=='所有学期'?true:false];
+$ApexDonutChart['TopRightOptions']      = $TopRightOptions;
 $ApexDonutChart['grid']                 = 4;
 $ApexDonutChart['type']                 = "ApexDonutChart";
 $ApexDonutChart['sql']                  = $sql;
@@ -326,7 +255,7 @@ $ApexDonutChart['sql']                  = $sql;
 
 
 //ApexRadialBarChart
-$sql = "select 订单类型,sum(订单金额) AS NUM from data_shitangxiaofei where 1=1 $whereSql group by 订单类型 order by 订单类型 asc limit 5";
+$sql = "select 订单类型,ROUND(SUM(订单金额) / 10000, 4) AS NUM from data_shitangxiaofei where 1=1 $whereSql group by 订单类型 order by 订单类型 asc";
 $rs = $db->Execute($sql);
 $rs_a = $rs->GetArray();
 $输出数据 = [];
@@ -335,26 +264,22 @@ for($i=0;$i<sizeof($rs_a);$i++) {
 }
 $dataY = [];
 $dataX = array_keys($输出数据);
-$dataY[] = ["name"=>"班级总积分百分比","data"=>array_values($输出数据)];
+$dataY[] = ["name"=>"食堂消费金额百分比","data"=>array_values($输出数据)];
 
-$ApexRadialBarChart['Title']       = "按一级指标统计百分比";
-$ApexRadialBarChart['SubTitle']    = "按一级指标统计加分之和的百分比";
+$ApexRadialBarChart['Title']       = "订单类型统计消费总金额";
+$ApexRadialBarChart['SubTitle']    = "按订单类型统计消费总金额";
 $ApexRadialBarChart['dataX']       = $dataX;
 $ApexRadialBarChart['dataY']       = $dataY;
 $ApexRadialBarChart['sql']         = $sql;
 $ApexRadialBarChart['colors']      = ['#fdd835','#32baff','#00d4bd','#7367f0','#FFA1A1'];
-$ApexRadialBarChart['TopRightOptions'][]    = ['name'=>'最近一周','selected'=>$optionsMenuItem=='最近一周'?true:false];
-$ApexRadialBarChart['TopRightOptions'][]    = ['name'=>'最近一月','selected'=>$optionsMenuItem=='最近一月'?true:false];
-$ApexRadialBarChart['TopRightOptions'][]    = ['name'=>'当前学期','selected'=>$optionsMenuItem=='当前学期'?true:false];
-$ApexRadialBarChart['TopRightOptions'][]    = ['name'=>'所有学期','selected'=>$optionsMenuItem=='所有学期'?true:false];
+$ApexRadialBarChart['TopRightOptions']      = $TopRightOptions;
 $ApexRadialBarChart['grid']                 = 4;
 $ApexRadialBarChart['type']                 = "ApexRadialBarChart";
-$ApexRadialBarChart['sql']                = $sql;
-
+$ApexRadialBarChart['sql']                  = $sql;
 
 
 $RS                             = [];
-$RS['defaultValue']             = $班级;
+$RS['defaultValue']             = $optionsMenuItem;
 $RS['optionsMenuItem']          = $optionsMenuItem;
 
 $RS['charts'][]       = $AnalyticsTrophy;

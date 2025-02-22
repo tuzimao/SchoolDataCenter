@@ -89,8 +89,27 @@ const AnalyticsTransactionsCard = (props: DataType) => {
       <CardContent sx={{ pt: (theme: any) => `${theme.spacing(3)} !important` }}>
         <Grid container spacing={[5, 0]}>
           {
-            data.data.map((item: DataType2, index: number) => (
+            data.data && data.data.length == 5 && data.data.map((item: DataType2, index: number) => (
               <Grid item xs={12} sm={2.4} key={index}>
+                <Box key={index} sx={{ display: 'flex', alignItems: 'center' }}>
+                  <CustomAvatar
+                    variant='rounded'
+                    color={item.color}
+                    sx={{ mr: 3, boxShadow: 3, width: 44, height: 44, '& svg': { fontSize: '1.75rem' } }}
+                  >
+                  <Icon icon={item.icon} />
+                  </CustomAvatar>
+                  <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                    <Typography>{item.title}</Typography>
+                    <Typography variant='h6'>{item.stats}</Typography>
+                  </Box>
+                </Box>
+              </Grid>
+            ))
+          }
+          {
+            data.data && data.data.length == 3 && data.data.map((item: DataType2, index: number) => (
+              <Grid item xs={12} sm={4} key={index}>
                 <Box key={index} sx={{ display: 'flex', alignItems: 'center' }}>
                   <CustomAvatar
                     variant='rounded'
