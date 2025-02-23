@@ -272,22 +272,7 @@ const Customizer = () => {
                 )}
               </RadioGroup>
             </Box>
-
-            {/* Footer */}
-            <Box sx={{ mb: 4 }}>
-              <Typography>底部布局</Typography>
-              <RadioGroup
-                row
-                value={footer}
-                onChange={e => handleChange('footer', e.target.value as Settings['footer'])}
-                sx={{ '& .MuiFormControlLabel-label': { fontSize: '.875rem', color: 'text.secondary' } }}
-              >
-                <FormControlLabel value='fixed' label='固定' control={<Radio />} />
-                <FormControlLabel value='static' label='静态' control={<Radio />} />
-                <FormControlLabel value='hidden' label='隐藏' control={<Radio />} />
-              </RadioGroup>
-            </Box>
-
+            
             {/* AppBar Blur */}
             <Box sx={{ mb: 4, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <Typography>应用栏模糊</Typography>

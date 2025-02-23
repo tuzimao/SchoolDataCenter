@@ -26,7 +26,7 @@ foreach($rs_a as $Line) {
 $sql        = "select 班级名称 from data_banji where (是否毕业='否' or 是否毕业='0') and (find_in_set('$USER_ID',实习班主任) or (班主任用户名='$USER_ID'))";
 $rs         = $db->Execute($sql);
 $rs_a       = $rs->GetArray();
-$班级名称Array = [];
+$班级名称Array  = [];
 $TopRightOptions = [];
 foreach($rs_a as $Line) {
     $班级名称Array[]    = ForSqlInjection($Line['班级名称']);
@@ -36,7 +36,7 @@ if($_GET['className']!="")   {
     $班级 = ForSqlInjection($_GET['className']);
 }
 elseif($班级名称Array[0]!="") {
-    $班级 = $班级名称Array[0];
+    $班级 = $班级名称Array[sizeof($班级名称Array)-1];
 }
 else {
     $班级 = "计算机三班";
@@ -66,8 +66,8 @@ $rs = $db->Execute($sql);
 $AnalyticsTrophy['Welcome']     = "您好,".$GLOBAL_USER->USER_NAME."!🥳";
 $AnalyticsTrophy['SubTitle']    = $班级." - 积分明细总数";
 $AnalyticsTrophy['TotalScore']  = $rs->fields['NUM'];
-$AnalyticsTrophy['ViewButton']['name']  = "查看明细";
-$AnalyticsTrophy['ViewButton']['url']   = "/tab/apps_180";
+//$AnalyticsTrophy['ViewButton']['name']  = "查看明细";
+//$AnalyticsTrophy['ViewButton']['url']   = "/tab/apps_180";
 $AnalyticsTrophy['TopRightOptions']     = $TopRightOptions;
 $AnalyticsTrophy['grid']        = 4;
 $AnalyticsTrophy['type']        = "AnalyticsTrophy";

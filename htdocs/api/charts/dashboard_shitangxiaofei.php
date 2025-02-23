@@ -25,9 +25,9 @@ $sql        = "select * from data_deyu_geren_gradeone";
 $rs         = $db->Execute($sql);
 $rs_a       = $rs->GetArray();
 $图标和颜色 = [];
-$图标和颜色['收银']     = ['颜色'=> 'warning', '图标'=> 'trending-up'];
-$图标和颜色['收银退款'] = ['颜色'=> 'success', '图标'=> 'account-star'];
-$图标和颜色['在线充值'] = ['颜色'=> 'error', '图标'=> 'run-fast'];
+$图标和颜色['收银']     = ['颜色'=> 'error', '图标'=> 'uil:usd-circle'];
+$图标和颜色['收银退款'] = ['颜色'=> 'success', '图标'=> 'mdi:account-star'];
+$图标和颜色['在线充值'] = ['颜色'=> 'warning', '图标'=> 'mdi:cash-edit'];
 //$图标和颜色['在线充值'] = ['颜色'=> 'info', '图标'=> 'drawing-box'];
 //$图标和颜色['在线充值'] = ['颜色'=> 'primary', '图标'=> 'worker'];
 
@@ -50,13 +50,13 @@ switch($optionsMenuItem) {
 }
 
 //奖杯模块
-$sql = "select ROUND(SUM(订单金额) / 10000, 4) AS NUM from data_shitangxiaofei where 1=1 $whereSql";
+$sql = "select ROUND(SUM(订单金额) / 10000, 4) AS NUM from data_shitangxiaofei where 1=1 and 订单类型='收银'  $whereSql";
 $rs = $db->Execute($sql);
 $AnalyticsTrophy['Welcome']     = "您好,".$GLOBAL_USER->USER_NAME."!🥳";
 $AnalyticsTrophy['SubTitle']    = "食堂消费总金额(万元) - " . $optionsMenuItem;
 $AnalyticsTrophy['TotalScore']  = $rs->fields['NUM'];
-$AnalyticsTrophy['ViewButton']['name']  = "查看明细";
-$AnalyticsTrophy['ViewButton']['url']   = "/tab/apps_180";
+//$AnalyticsTrophy['ViewButton']['name']  = "查看明细";
+//$AnalyticsTrophy['ViewButton']['url']   = "/apps/421";
 $AnalyticsTrophy['TopRightOptions']     = [];
 $AnalyticsTrophy['grid']        = 4;
 $AnalyticsTrophy['type']        = "AnalyticsTrophy";
@@ -67,12 +67,16 @@ $sql = "select 订单类型 AS title, ROUND(SUM(订单金额) / 10000, 4) AS NUM
 $rs = $db->Execute($sql);
 $rs_a = $rs->GetArray();
 $Item = [];
-$data = [];
+$dataMap = [];
 $Index = 0;
 foreach($rs_a as $Element)   {
-    $data[] = ['title'=>$Element['title'],'stats'=>$Element['NUM'],'color'=>$图标和颜色[$Element['title']]['颜色'],'icon'=>"mdi:".$图标和颜色[$Element['title']]['图标']];
+    $dataMap[$Element['title']] = ['title'=>$Element['title'],'stats'=>$Element['NUM'],'color'=>$图标和颜色[$Element['title']]['颜色'],'icon'=>$图标和颜色[$Element['title']]['图标']];
     $Index ++;
 }
+$data = [];
+$data[] = $dataMap['收银'];
+$data[] = $dataMap['在线充值'];
+$data[] = $dataMap['收银退款'];
 $AnalyticsTransactionsCard['Title']       = "食堂消费";
 $AnalyticsTransactionsCard['SubTitle']    = "按类别统计总金额(万元)";
 $AnalyticsTransactionsCard['data']        = $data;
@@ -81,33 +85,33 @@ $AnalyticsTransactionsCard['grid']                 = 8;
 $AnalyticsTransactionsCard['type']                 = "AnalyticsTransactionsCard";
 $AnalyticsTransactionsCard['sql']                  = $sql;
 
-
 //得到最新加分或是扣分的几条记录
-$sql = "select 订单类型, 订单金额, 人员编号, 人员姓名, 部门名称 from data_shitangxiaofei where 1=1 $whereSql and 订单类型='收银' order by id desc limit 5";
+$sql = "select 订单类型,concat(设备名称, ' ', DATE_FORMAT(支付时间, '%m:%d %H:%i'))  as 二级指标, 订单金额 as 积分分值, 人员编号, 人员姓名 as 积分项目, 部门名称 from data_shitangxiaofei where 1=1 $whereSql and 订单类型='收银' order by 支付时间 desc limit 5";
 $rs = $db->Execute($sql);
 $rs_a = $rs->GetArray();
 for($i=0;$i<sizeof($rs_a);$i++) {
-    $rs_a[$i]['项目图标'] = "mdi:".$图标和颜色[$rs_a[$i]['订单类型']]['图标'];
+    $rs_a[$i]['项目图标'] = $图标和颜色[$rs_a[$i]['订单类型']]['图标'];
     $rs_a[$i]['图标颜色'] = $图标和颜色[$rs_a[$i]['订单类型']]['颜色'];
+    $rs_a[$i]['积分分值'] = '-'.$rs_a[$i]['积分分值'];
 }
-$AnalyticsDepositWithdraw['加分']['Title']             = "加分";
-$AnalyticsDepositWithdraw['加分']['TopRightButton']    = ['name'=>'查看所有','url'=>'/tab/apps_180'];
+$AnalyticsDepositWithdraw['加分']['Title']             = "收银";
+$AnalyticsDepositWithdraw['加分']['TopRightButton']    = ['name'=>'查看所有','url'=>'/apps/421'];
 $AnalyticsDepositWithdraw['加分']['data']              = $rs_a;
 
-$sql = "select 订单类型, 订单金额, 人员编号, 人员姓名, 部门名称 from data_shitangxiaofei where 1=1 $whereSql and 订单类型='在线充值' order by id desc limit 5";
+$sql = "select 订单类型,concat(设备名称, ' ', DATE_FORMAT(支付时间, '%m:%d %H:%i'))  as 二级指标, 订单金额 as 积分分值, 人员编号, 人员姓名 as 积分项目, 部门名称 from data_shitangxiaofei where 1=1 $whereSql and 订单类型='在线充值' order by 支付时间 desc limit 5";
 $rs = $db->Execute($sql);
 $rs_a = $rs->GetArray();
 for($i=0;$i<sizeof($rs_a);$i++) {
-    $rs_a[$i]['项目图标'] = "mdi:".$图标和颜色[$rs_a[$i]['订单类型']]['图标'];
+    $rs_a[$i]['项目图标'] = $图标和颜色[$rs_a[$i]['订单类型']]['图标'];
     $rs_a[$i]['图标颜色'] = $图标和颜色[$rs_a[$i]['订单类型']]['颜色'];
+    $rs_a[$i]['积分分值'] = '+'.$rs_a[$i]['积分分值'];
 }
-$AnalyticsDepositWithdraw['扣分']['Title']              = "扣分";
-$AnalyticsDepositWithdraw['扣分']['TopRightButton']     = ['name'=>'查看所有','url'=>'/tab/apps_180'];
+$AnalyticsDepositWithdraw['扣分']['Title']              = "充值";
+$AnalyticsDepositWithdraw['扣分']['TopRightButton']     = ['name'=>'查看所有','url'=>'/apps/421'];
 $AnalyticsDepositWithdraw['扣分']['data']               = $rs_a;
 $AnalyticsDepositWithdraw['grid']                       = 8;
 $AnalyticsDepositWithdraw['type']                       = "AnalyticsDepositWithdraw";
 $AnalyticsDepositWithdraw['sql']                        = $sql;
-
 
 
 //设备终端
@@ -198,7 +202,7 @@ if($上月金额 > 0 && $当月金额 < $上月金额)  {
 }
 
 $AnalyticsWeeklyOverview['ViewButton']['name']  = "明细";
-$AnalyticsWeeklyOverview['ViewButton']['url']   = "/tab/apps_180";
+$AnalyticsWeeklyOverview['ViewButton']['url']   = "/apps/421";
 $AnalyticsWeeklyOverview['grid']                = 4;
 $AnalyticsWeeklyOverview['type']                = "AnalyticsWeeklyOverview";
 $AnalyticsWeeklyOverview['sql']                 = $sql;

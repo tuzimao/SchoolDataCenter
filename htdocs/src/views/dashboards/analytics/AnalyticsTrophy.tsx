@@ -29,7 +29,7 @@ const AnalyticsTrophy = (props: DataType) => {
   const router = useRouter();
 
   return (
-    <Card sx={{ position: 'relative' }}>
+    <Card sx={{ position: 'relative', height: '100%' }}>
       <CardContent style={{ overflow: 'auto' }}>
         <Typography variant='h6'>{data.Welcome}</Typography>
         <Typography variant='body2' sx={{ letterSpacing: '0.25px' }}>
@@ -38,7 +38,7 @@ const AnalyticsTrophy = (props: DataType) => {
         <Typography variant='h5' sx={{ my: 3.5, color: 'primary.main' }}>
           {data.TotalScore}
         </Typography>
-        {data.TopRightOptions ?
+        {data.TopRightOptions && data.TopRightOptions.length > 0 && (
           <Autocomplete
             autoSelect
             size="small"
@@ -55,11 +55,14 @@ const AnalyticsTrophy = (props: DataType) => {
             isOptionEqualToValue={(option, value) => option.code === value.code}
             value={data.TopRightOptions.find((option: { code: string }) => option.code == className)}
           />
-        :
+        )}
+          
+        {data.ViewButton && data.ViewButton.url && (
           <Button size='small' variant='contained' onClick={() => router.push(data.ViewButton.url)}>
             {data.ViewButton.name}
           </Button>
-        }
+        )}
+
         <TrophyImg alt='trophy' src='/images/misc/trophy.png' />
       </CardContent>
     </Card>
