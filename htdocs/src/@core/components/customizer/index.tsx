@@ -81,7 +81,6 @@ const Customizer = () => {
   // ** Vars
   const {
     appBar,
-    footer,
     layout,
     navHidden,
     appBarBlur,
@@ -272,7 +271,7 @@ const Customizer = () => {
                 )}
               </RadioGroup>
             </Box>
-            
+
             {/* AppBar Blur */}
             <Box sx={{ mb: 4, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <Typography>应用栏模糊</Typography>
