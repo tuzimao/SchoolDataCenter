@@ -21,9 +21,6 @@ $学期       = getCurrentXueQi();
 
 $USER_ID    = ForSqlInjection($GLOBAL_USER->USER_ID);
 
-$sql        = "select * from data_deyu_geren_gradeone";
-$rs         = $db->Execute($sql);
-$rs_a       = $rs->GetArray();
 $图标和颜色 = [];
 $图标和颜色['收银']     = ['颜色'=> 'error', '图标'=> 'uil:usd-circle'];
 $图标和颜色['收银退款'] = ['颜色'=> 'success', '图标'=> 'mdi:account-star'];

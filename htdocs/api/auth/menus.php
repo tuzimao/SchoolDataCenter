@@ -19,6 +19,7 @@ $Menu['title'] = '快捷面板';
 $Menu['children'][] = ['title' => '德育量化', 'icon' => 'ph:ranking', 'path' => '/dashboards/analyticsstudent'];
 $Menu['children'][] = ['title' => '班级评价', 'icon' => 'healthicons:i-training-class-24px', 'path' => '/dashboards/analyticsclass'];
 $Menu['children'][] = ['title' => '食堂消费', 'icon' => 'dashicons:food', 'path' => '/dashboards/shitangxiaofei'];
+$Menu['children'][] = ['title' => '宿舍门禁', 'icon' => 'cil:room', 'path' => '/dashboards/sushemenjin'];
 
 $Menus[] = $Menu;
 

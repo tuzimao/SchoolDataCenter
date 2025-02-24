@@ -1,2 +1,3 @@
 
 $MAP['ShowType_名称'] 	= 'ShowType_名称';
+$MAP['ShowType_名称'] 	= 'ShowType_名称';
