@@ -525,12 +525,20 @@ const UserList = ({ authConfig, backEndApi, externalId, handleActionInMobileApp,
   const toggleExportTableDrawer = () => {
     setIsLoadingTip(true)
     setIsLoadingTipText(store.export_default.ExportLoading)
-    fetch(authConfig.backEndApiHost + store.export_default.exportUrl)
+    fetch(
+      authConfig.backEndApiHost + store.export_default.exportUrl,
+      {
+        headers: {
+          Authorization: storedToken+"::::"+store.init_default.CSRF_TOKEN
+        },
+        method: 'GET',
+      }
+    )
     .then(response => response.json())
     .then(jsonData => {
-      if(jsonData && jsonData['data'] && jsonData['data'].length > 0)  {
+      if(jsonData && jsonData['data'] && jsonData['data'].length > 0 && jsonData['header'] && jsonData['header'].length > 0)  {
         const ws: any = XLSX.utils.json_to_sheet(jsonData['data']);
-        ws['!cols'] = jsonData['header'];
+        ws['!cols'] = jsonData['cols'];
         ws['!rows'] = [];
         const BodyData = jsonData['data'];
         ws && ws['!rows'] && BodyData.map(() => {
@@ -541,7 +549,7 @@ const UserList = ({ authConfig, backEndApi, externalId, handleActionInMobileApp,
         if (ws['!rows']) {
           ws['!rows'].push({ hpx: 20 });
         }
-        const header = Object.keys(jsonData['data'][0]);
+        const header = jsonData['header'];
         XLSX.utils.sheet_add_aoa(ws, [header], { origin: 'A1' });
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, 'Sheet 1');
@@ -549,7 +557,7 @@ const UserList = ({ authConfig, backEndApi, externalId, handleActionInMobileApp,
       }
       else {
         const ws: any = XLSX.utils.json_to_sheet(jsonData['data']);
-        ws['!cols'] = jsonData['header'];
+        ws['!cols'] = jsonData['cols'];
         ws['!rows'] = [];
         const BodyData = jsonData['data'];
         ws && ws['!rows'] && BodyData.map(() => {

@@ -153,7 +153,11 @@ if($Action=="export_data"&&$FormId!=""&&$FlowId!=""&&$DATA['AddSql']!=""&&$DATA[
     //Make Header Data
     $Header = [];
     foreach($FieldNameArray as $Item) {
-        $Header[] = ["wch"=>20];
+        $Header[] = $AllFieldsMap[$Item]['ChineseName'];
+    }
+    $Cols = [];
+    foreach($FieldNameArray as $Item) {
+        $Cols[] = ["wch"=>20];
     }
     //Make Body Data
     for($i=0;$i<sizeof($rs_a);$i++)  {
@@ -170,6 +174,7 @@ if($Action=="export_data"&&$FormId!=""&&$FlowId!=""&&$DATA['AddSql']!=""&&$DATA[
     header('Content-Type: application/json; charset=utf-8');
     $RS = [];
     $RS['header']   = $Header;
+    $RS['cols']     = $Cols;
     $RS['data']     = $rs_a;
     print_R(json_encode($RS));
     exit;
