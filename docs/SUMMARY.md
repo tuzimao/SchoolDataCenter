@@ -10,6 +10,7 @@
 * [AI仪表盘](3-schoolai/aischool.md)
 * [AI生成PPTX](3-schoolai/aipptx.md)
 * [AI课堂测验](3-schoolai/aiquestion.md)
+* [AI心理测评](3-schoolai/aixinliceping.md)
 * [AI模块配置](3-schoolai/aiconfig.md)
 
 ### 数字校园
