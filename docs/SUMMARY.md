@@ -15,6 +15,7 @@
 
 ### 数字校园
 
+* [数据大屏](4-campus/daping.md)
 * [教务管理](4-campus/jiaowu.md)
 * [学生管理](4-campus/xuesheng.md)
 * [德育量化](4-campus/gerenjifen.md)
