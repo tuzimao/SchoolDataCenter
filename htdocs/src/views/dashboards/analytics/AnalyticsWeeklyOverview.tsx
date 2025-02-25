@@ -134,7 +134,7 @@ const AnalyticsWeeklyOverview = (props: DataType) => {
         }
       />
       <CardContent sx={{ '& .apexcharts-xcrosshairs.apexcharts-active': { opacity: 0 } }}>
-        <ReactApexcharts type='bar' height={205} options={options} series={data.dataY} />
+        <ReactApexcharts type='bar' height={227} options={options} series={data.dataY} />
         <Box sx={{ mb: 7, display: 'flex', alignItems: 'center' }}>
           <Typography variant='h5' sx={{ mr: 4 }}>
             {data.BottomText.Left}

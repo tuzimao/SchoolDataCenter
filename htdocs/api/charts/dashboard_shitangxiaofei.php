@@ -83,7 +83,7 @@ $AnalyticsTransactionsCard['type']                 = "AnalyticsTransactionsCard"
 $AnalyticsTransactionsCard['sql']                  = $sql;
 
 //得到最新加分或是扣分的几条记录
-$sql = "select 订单类型,concat(设备名称, ' ', DATE_FORMAT(支付时间, '%m:%d %H:%i'))  as 二级指标, 订单金额 as 积分分值, 人员编号, 人员姓名 as 积分项目, 部门名称 from data_shitangxiaofei where 1=1 $whereSql and 订单类型='收银' order by 支付时间 desc limit 5";
+$sql = "select 订单类型,concat(设备名称, ' ', DATE_FORMAT(支付时间, '%m-%d %H:%i'))  as 二级指标, 订单金额 as 积分分值, 人员编号, 人员姓名 as 积分项目, 部门名称 from data_shitangxiaofei where 1=1 $whereSql and 订单类型='收银' order by 支付时间 desc limit 5";
 $rs = $db->Execute($sql);
 $rs_a = $rs->GetArray();
 for($i=0;$i<sizeof($rs_a);$i++) {
@@ -95,7 +95,7 @@ $AnalyticsDepositWithdraw['加分']['Title']             = "收银";
 $AnalyticsDepositWithdraw['加分']['TopRightButton']    = ['name'=>'查看所有','url'=>'/apps/421'];
 $AnalyticsDepositWithdraw['加分']['data']              = $rs_a;
 
-$sql = "select 订单类型,concat(设备名称, ' ', DATE_FORMAT(支付时间, '%m:%d %H:%i'))  as 二级指标, 订单金额 as 积分分值, 人员编号, 人员姓名 as 积分项目, 部门名称 from data_shitangxiaofei where 1=1 $whereSql and 订单类型='在线充值' order by 支付时间 desc limit 5";
+$sql = "select 订单类型,concat(设备名称, ' ', DATE_FORMAT(支付时间, '%m-%d %H:%i'))  as 二级指标, 订单金额 as 积分分值, 人员编号, 人员姓名 as 积分项目, 部门名称 from data_shitangxiaofei where 1=1 $whereSql and 订单类型='在线充值' order by 支付时间 desc limit 5";
 $rs = $db->Execute($sql);
 $rs_a = $rs->GetArray();
 for($i=0;$i<sizeof($rs_a);$i++) {
