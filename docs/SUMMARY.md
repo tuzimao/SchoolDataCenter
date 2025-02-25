@@ -4,6 +4,8 @@
 
 ### 教育AI
 
+* [AI工作流](3-schoolai/aiworkflow.md)
+* [AI知识库](3-schoolai/aiknowledge.md)
 * [AI对话](3-schoolai/aichat.md)
 * [AI仪表盘](3-schoolai/aischool.md)
 * [AI生成PPTX](3-schoolai/aipptx.md)
