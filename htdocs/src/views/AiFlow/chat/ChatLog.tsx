@@ -14,15 +14,12 @@ import toast from 'react-hot-toast'
 import Avatar from '@mui/material/Avatar'
 import ListItem from '@mui/material/ListItem';
 import { authConfig } from 'src/configs/auth'
-import { useAuth } from 'src/hooks/useAuth'
 import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
 import { useTranslation } from 'react-i18next'
 import CircularProgress from '@mui/material/CircularProgress'
 
 import ChatContextPreview from 'src/views/AiFlow/chat/ChatContextPreview'
-
-import { ChatAiAudioV1 } from 'src/functions/ChatBook'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -90,14 +87,12 @@ const SystemPromptTemplate = ({text, handleSendMsg}: any) => {
 };
 
 
-const TextToSpeech = ({ text, AudioType, app, userType }: any) => {
+const TextToSpeech = ({ text, AudioType }: any) => {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [audioFilesCache, setAudioFilesCache] = useState<any>({})
 
   const [audio] = useState(new Audio());
   const synth = window.speechSynthesis;
   const { t } = useTranslation()
-  const auth = useAuth()
 
   const beginPlaying = async () => {
     if (!isPlaying && AudioType == 'AudioBrowser') {
@@ -108,31 +103,6 @@ const TextToSpeech = ({ text, AudioType, app, userType }: any) => {
       synth.speak(utterance);
     }
 
-    if (!isPlaying && AudioType != 'AudioBrowser' && AudioType != 'Disabled' && auth && auth.user && 'auth.user?.token') {
-      setIsPlaying(true);
-      if(audioFilesCache[text] == null)    {
-        const ChatAiAudioV1Status: any = await ChatAiAudioV1(text, 'auth.user?.token', AudioType, app._id, userType)
-        console.log("ChatAiAudioV1Status", ChatAiAudioV1Status)
-        if(ChatAiAudioV1Status && ChatAiAudioV1Status.type == 'audio' && ChatAiAudioV1Status.status == 'OK') {
-          setAudioFilesCache((prevState: any)=>{
-            const AudioFilesCache = { ...prevState }
-            AudioFilesCache[text] = ChatAiAudioV1Status.ShortFileName
-
-            return AudioFilesCache
-          })
-
-          // Test URL `http://localhost:1988/api/audio/1706839115494-336161094-TTS-1`
-          audio.src = authConfig.backEndApiHost + '/api/audio/' + ChatAiAudioV1Status.ShortFileName
-          console.log("audio.src realtime get audio", audio.src)
-          audio.play();
-        }
-      }
-      else {
-        audio.src = authConfig.backEndApiHost + '/api/audio/' + audioFilesCache[text]
-        console.log("audio.src using cache", audio.src)
-        audio.play();
-      }
-    }
   };
 
   const stopPlaying = () => {

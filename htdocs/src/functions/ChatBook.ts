@@ -1,11 +1,162 @@
 import axios from 'axios'
+import { authConfig } from 'src/configs/auth'
 import { customAlphabet } from 'nanoid';
 
+const ChatKnowledge = "ChatKnowledge"
 const ChatChat = "ChatChat"
 const ChatChatName = "ChatChatName"
+const ChatKnowledgeHistory = "ChatKnowledgeHistory"
 const ChatChatHistory = "ChatChatHistory"
 const ChatBookLanguage = "ChatBookLanguage"
 const ChatAnonymousUserId = "ChatAnonymousUserId"
+
+export async function GetLLMS() {
+    const response = await axios.get(authConfig.backEndApiHost + '/api/llms', { }).then(res=>res.data)
+    
+    return response
+}
+
+
+export async function GetAllMyDataset(token: string) {
+    const response = await axios.post(authConfig.backEndApiHost + '/api/getdatasetpage/0/100',
+        {},
+        {
+        headers: {
+            Authorization: token,
+            'Content-Type': 'application/json'
+        },
+        params: {}
+    }).then(res=>res.data);
+    
+    return response
+}
+
+
+export function ChatKnowledgeInit(MsgList: any) {
+    const ChatLogList: any = []
+    MsgList.map((Item: any)=>{
+        ChatLogList.push({
+            "message": Item.send,
+            "time": Item.timestamp,
+            "senderId": Item.userId,
+            "feedback": {
+                "isSent": true,
+                "isDelivered": true,
+                "isSeen": true
+            }
+          })
+        ChatLogList.push({
+            "message": Item.received,
+            "time": Item.timestamp,
+            "senderId": 9999999999,
+            "feedback": {
+                "isSent": true,
+                "isDelivered": true,
+                "isSeen": true
+            }
+          })
+    })
+    window.localStorage.setItem(ChatKnowledge, JSON.stringify(ChatLogList))
+
+    return ChatLogList
+}
+
+export function ChatKnowledgeInput(Message: string, UserId: number, knowledgeId: number) {
+	const ChatKnowledgeText = window.localStorage.getItem(ChatKnowledge)      
+    const ChatKnowledgeList = ChatKnowledgeText ? JSON.parse(ChatKnowledgeText) : []
+    ChatKnowledgeList.push({
+      "message": Message,
+      "time": String(Date.now()),
+      "senderId": UserId,
+      "knowledgeId": knowledgeId,
+      "feedback": {
+          "isSent": true,
+          "isDelivered": true,
+          "isSeen": true
+      }
+    })
+    window.localStorage.setItem(ChatKnowledge, JSON.stringify(ChatKnowledgeList))
+}
+
+export async function ChatKnowledgeOutput(Message: string, Token: string, UserId: number, knowledgeId: number, setProcessingMessage:any) {
+    const ChatKnowledgeHistoryText = window.localStorage.getItem(ChatKnowledgeHistory)      
+    const ChatKnowledgeList = ChatKnowledgeHistoryText ? JSON.parse(ChatKnowledgeHistoryText) : []
+    const History: any = []
+    if(ChatKnowledgeList && ChatKnowledgeList[UserId] && ChatKnowledgeList[UserId][knowledgeId]) {
+        const ChatKnowledgeListLast10 = ChatKnowledgeList[UserId][knowledgeId].slice(-10)
+        ChatKnowledgeListLast10.map((Item: any)=>{
+            if(Item.question && Item.answer) {
+                History.push([Item.question,Item.answer.substring(0, 200)])
+            }
+        })
+    }
+    try {
+        setProcessingMessage('')
+        const response = await fetch(authConfig.backEndApiHost + `/api/ChatOpenaiKnowledge`, {
+          method: 'POST',
+          headers: {
+            Authorization: Token,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ question: Message, history: History, knowledgeId: knowledgeId }),
+        });
+        if (!response.body) {
+          throw new Error('Response body is not readable as a stream');
+        }
+        const reader = response.body.getReader();
+        let responseText = "";
+        while (true) {
+          const { done, value } = await reader.read();
+          const text = new TextDecoder('utf-8').decode(value);
+          setProcessingMessage((prevText: string) => prevText + text);
+          responseText = responseText + text;
+          if (done) {
+            setProcessingMessage('')
+            break;
+          }
+        }
+        if(responseText) {
+            console.log("OpenAI Response:", responseText)
+            ChatKnowledgeInput(responseText, 999999, knowledgeId)
+            ChatKnowledgeHistoryInput(Message, responseText, UserId, knowledgeId)
+            setProcessingMessage(responseText);
+
+            return true
+        }
+        else {
+            return false
+        }
+
+    } 
+    catch (error: any) {
+        console.log('Error:', error.message);
+        
+        return false
+    }
+}
+
+export function ChatKnowledgeHistoryInput(question: string, answer: string, UserId: number, knowledgeId: number) {
+    console.log("ChatKnowledgeHistoryList", question, answer, UserId)
+	const ChatKnowledgeHistoryText = window.localStorage.getItem(ChatKnowledgeHistory)      
+    const ChatKnowledgeHistoryList = ChatKnowledgeHistoryText ? JSON.parse(ChatKnowledgeHistoryText) : {}
+    if(ChatKnowledgeHistoryList && ChatKnowledgeHistoryList[UserId] && ChatKnowledgeHistoryList[UserId][knowledgeId]) {
+        ChatKnowledgeHistoryList[UserId][knowledgeId].push({
+            "question": question,
+            "time": String(Date.now()),
+            "answer": answer,
+        })
+    }
+    else {
+        ChatKnowledgeHistoryList[UserId] = {}
+        ChatKnowledgeHistoryList[UserId][knowledgeId] = [{
+            "question": question,
+            "time": String(Date.now()),
+            "answer": answer,
+        }]
+    }
+    console.log("ChatKnowledgeHistoryList", ChatKnowledgeHistoryList)
+    window.localStorage.setItem(ChatKnowledgeHistory, JSON.stringify(ChatKnowledgeHistoryList))
+}
 
 export const getNanoid = (size = 12) => {
   return customAlphabet('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890', size)();

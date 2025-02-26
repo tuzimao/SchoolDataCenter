@@ -41,7 +41,9 @@ const AppChat = (props: any) => {
   const [chatName, setChatName] = useState<string>("")
   const [historyCounter, setHistoryCounter] = useState<number>(0)
   const [stopMsg, setStopMsg] = useState<boolean>(false)
-
+  const [stepingMessage, setStepingMessage] = useState("")
+  const [temperature, setTemperature] = useState<number>(Number(app.Temperature) / 10)
+  console.log("stepingMessage", stepingMessage, setTemperature, publishId)
   const anonymousUserId: string = getAnonymousUserId()
 
   useEffect(() => {
@@ -68,7 +70,7 @@ const AppChat = (props: any) => {
         } 
       }).then(res=>res.data)
       if(RS['data'])  {
-        const ChatChatInitList = ChatChatInit(RS['data'].reverse(), appTemplate)
+        const ChatChatInitList = ChatChatInit('', RS['data'].reverse(), appTemplate)
         setHistoryCounter(ChatChatInitList.length)
         const selectedChat = {
           "chat": {
@@ -101,7 +103,7 @@ const AppChat = (props: any) => {
       userId = anonymousUserId
     }
     if(userId) {
-      DeleteChatChat()
+      DeleteChatChat('')
       DeleteChatChatHistory(userId, chatId, app.id)
       const selectedChat = {
         "chat": {
@@ -123,7 +125,7 @@ const AppChat = (props: any) => {
       setStore(storeInit)
 
       //Set system prompt
-      ChatChatInit([], GetWelcomeTextFromAppValue)
+      ChatChatInit('', [], GetWelcomeTextFromAppValue)
       setHistoryCounter(0)
       setRefreshChatCounter(0)
       
@@ -146,7 +148,7 @@ const AppChat = (props: any) => {
   const handleDeleteOneChatLogById = async function (chatlogId: string) {
     if (auth && auth.user && app && app._id) {
       const userId = userType=='User' ? auth.user.id : anonymousUserId
-      DeleteChatChatByChatlogId(chatlogId)
+      DeleteChatChatByChatlogId(app.id, chatlogId)
       DeleteChatChatHistoryByChatlogId(userId, chatId, app.id, chatlogId)
       
       const data: any = {chatlogId: chatlogId, appId: app._id, userType: userType}
@@ -212,7 +214,7 @@ const AppChat = (props: any) => {
       userId = anonymousUserId
     }
     if(userId) {
-      const ChatChatListValue = ChatChatList()
+      const ChatChatListValue = ChatChatList(app.id, app.WelcomeText)
       if(processingMessage && processingMessage!="") {
         
         //流式输出的时候,进来显示
@@ -380,11 +382,12 @@ const AppChat = (props: any) => {
       setSendButtonText(t("Sending") as string)
       setSendInputText(t("Answering...") as string)
       const _id = getNanoid(32)
-      ChatChatInput(_id, Obj.send, Obj.message, userId, 0, [])
+      ChatChatInput(app.id, _id, Obj.send, Obj.message, userId, 0, [])
       setRefreshChatCounter(refreshChatCounter + 1)
       const startTime = performance.now()
       const GetDatasetFromAppData: any = GetDatasetFromApp(app)
-      const ChatAiOutputV1Status = await ChatAiOutputV1(_id, Obj.message, authorization, userId, chatId, app.id, publishId, setProcessingMessage, GetSystemPromptFromAppValue, setFinishedMessage, userType, true, setQuestionGuide, t('questionGuideTemplate'), stopMsg, setStopMsg, GetModelFromAppValue, GetDatasetFromAppData?.MyDatasetIdList, GetDatasetFromAppData?.DatasetPrompt)
+      console.log("GetDatasetFromAppData", GetDatasetFromAppData)
+      const ChatAiOutputV1Status = await ChatAiOutputV1(authConfig, app, _id, Obj.message, authorization, userId, chatId, setProcessingMessage, setFinishedMessage, setQuestionGuide, setStepingMessage, app.QuestionGuideTemplate, stopMsg, setStopMsg, temperature)
       const endTime = performance.now();
       setResponseTime(endTime - startTime);
       if(ChatAiOutputV1Status)      {

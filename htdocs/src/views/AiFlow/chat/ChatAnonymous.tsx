@@ -8,7 +8,8 @@ import { useTheme } from '@mui/material/styles'
 // ** Hooks
 import { useSettings } from 'src/@core/hooks/useSettings'
 import ChatIndex from 'src/views/AiFlow/chat/ChatIndex'
-import IdNotExist from 'src/pages/404IdNotExist'
+
+//import IdNotExist from 'src/pages/404IdNotExist'
 
 // ** Axios Imports
 import axios from 'axios'
@@ -43,7 +44,7 @@ const ChatAnonymous = () => {
           i18n.changeLanguage(RS.PublishApp.language)
           setShow(false)
           setApp(RS)
-          saveSettings({ ...settings, pageTitle: RS.name })
+          saveSettings({ ...settings })
         }
       }
     }
@@ -76,11 +77,6 @@ const ChatAnonymous = () => {
           >
             {app && app.id ?
             <ChatIndex app={app} userType={'Anonymous'} publishId={id}/>
-            :
-            null
-            }
-            {app == null ?
-            <IdNotExist id={id} module={'Ai Chat Module For Public'}/>
             :
             null
             }
