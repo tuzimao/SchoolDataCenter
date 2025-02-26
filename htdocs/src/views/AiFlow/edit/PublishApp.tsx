@@ -48,7 +48,7 @@ const PublishApp = (props: any) => {
   }, [])
 
   const [isDisabledButton, setIsDisabledButton] = useState<boolean>(false)
-  const [pageData, setPageData] = useState<any>({name: '', maxToken: 16000, returnReference: 0, ipLimitPerMinute: 100, expiredTime: '', authCheck: '', appId: appId, FormAction: 'addpublish', FormTitle: 'Create', FormSubmit: 'Add', FormTitleIcon: '/imgs/modal/shareFill.svg', openEdit: false, openDelete: false })
+  const [pageData, setPageData] = useState<any>({name: '', maxToken: 16000, returnReference: 0, ipLimitPerMinute: 100, expiredTime: '', authCheck: '', appId: appId, FormAction: 'addpublish', FormTitle: 'Create', FormSubmit: 'Add', FormTitleIcon: '/images/agent/modal/shareFill.svg', openEdit: false, openDelete: false })
 
   const isMobileData = isMobile()
   
@@ -187,14 +187,14 @@ const PublishApp = (props: any) => {
           </Button>
           <Tooltip title={t('Edit')}>
             <IconButton size='small' onClick={
-                        () => { setPageData( () => ({ ...row, openEdit: true, FormAction: 'editpublish', FormTitle: 'Edit', FormSubmit: 'Save', FormTitleIcon: '/imgs/modal/shareFill.svg' }) ) }
+                        () => { setPageData( () => ({ ...row, openEdit: true, FormAction: 'editpublish', FormTitle: 'Edit', FormSubmit: 'Save', FormTitleIcon: '/images/agent/modal/shareFill.svg' }) ) }
                     }>
               <Icon icon='mdi:edit-outline' fontSize={20} />
             </IconButton>
           </Tooltip>
           <Tooltip title={t('Delete')}>
             <IconButton size='small' onClick={
-                        () => { setPageData( () => ({ ...row, openDelete: true, FormAction: 'deletepublish', FormTitle: 'Delete', FormSubmit: 'Confirm', FormTitleIcon: '/imgs/modal/shareFill.svg' }) ) }
+                        () => { setPageData( () => ({ ...row, openDelete: true, FormAction: 'deletepublish', FormTitle: 'Delete', FormSubmit: 'Confirm', FormTitleIcon: '/images/agent/modal/shareFill.svg' }) ) }
                     }>
               <Icon icon='mdi:delete-outline' fontSize={20} />
             </IconButton>
@@ -238,7 +238,7 @@ const PublishApp = (props: any) => {
                 <Grid item xs={12} lg={12} sx={{ display: 'flex', justifyContent: 'space-between' }}>
                     <Typography sx={{ my: 3, ml: 5 }}>{t('NotNeedLoginWindow')}</Typography>
                     <Button sx={{ my: 3, mr: 5 }} size="small" variant='outlined' onClick={
-                        () => { setPageData( (prevState: any) => ({ ...prevState, openEdit: true, FormAction: 'addpublish', FormTitle: 'Create', FormSubmit: 'Add', FormTitleIcon: '/imgs/modal/shareFill.svg' }) ) }
+                        () => { setPageData( (prevState: any) => ({ ...prevState, openEdit: true, FormAction: 'addpublish', FormTitle: 'Create', FormSubmit: 'Add', FormTitleIcon: '/images/agent/modal/shareFill.svg' }) ) }
                     }>
                     {t("Add")}
                     </Button>

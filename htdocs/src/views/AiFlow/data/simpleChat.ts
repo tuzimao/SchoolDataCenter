@@ -17,7 +17,7 @@ export const simpleChat: any = {
               "id": "userGuideNodeInitial_1",
               "templateType": "userGuide",
               "flowType": "userGuide",
-              "avatar": "/imgs/module/userGuide.png",
+              "avatar": "/images/agent/module/userGuide.png",
               "name": "System Setting",
               "intro": "userGuideTip",
               "inputs": [
@@ -74,7 +74,7 @@ export const simpleChat: any = {
               "id": "questionInputNodeInitial_1",
               "templateType": "SystemInput",
               "flowType": "questionInput",
-              "avatar": "/imgs/module/userChatInput.svg",
+              "avatar": "/images/agent/module/userChatInput.svg",
               "name": "Chat entrance",
               "intro": "userChatInputIntro",
               "inputs": [
@@ -115,7 +115,7 @@ export const simpleChat: any = {
               "id": "chatNodeInitial_1",
               "templateType": "textAnswer",
               "flowType": "chatNode",
-              "avatar": "/imgs/module/AI.png",
+              "avatar": "/images/agent/module/AI.png",
               "name": "AI Chat",
               "intro": "AI Model Chat",
               "showStatus": true,

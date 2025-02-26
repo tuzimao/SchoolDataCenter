@@ -16,7 +16,7 @@ export const allNodesData: any = {
               "id": "userGuideNodeInitial_1",
               "templateType": "userGuide",
               "flowType": "userGuide",
-              "avatar": "/imgs/module/userGuide.png",
+              "avatar": "/images/agent/module/userGuide.png",
               "name": "System Setting",
               "intro": "userGuideTip",
               "inputs": [
@@ -70,7 +70,7 @@ export const allNodesData: any = {
               "id": "questionInputNodeInitial_1",
               "templateType": "SystemInput",
               "flowType": "questionInput",
-              "avatar": "/imgs/module/userChatInput.svg",
+              "avatar": "/images/agent/module/userChatInput.svg",
               "name": "Chat entrance",
               "intro": "userChatInputIntro",
               "inputs": [
@@ -111,7 +111,7 @@ export const allNodesData: any = {
               "id": "chatNodeInitial_1",
               "templateType": "textAnswer",
               "flowType": "chatNode",
-              "avatar": "/imgs/module/AI.png",
+              "avatar": "/images/agent/module/AI.png",
               "name": "AI Chat",
               "intro": "AI Model Chat",
               "showStatus": true,
@@ -296,7 +296,7 @@ export const allNodesData: any = {
             "id": "assignedReply_1",
             "templateType": "assignedReply",
             "flowType": "assignedReply",
-            "avatar": "/imgs/module/reply.png",
+            "avatar": "/images/agent/module/reply.png",
             "name": "Assigned reply",
             "intro": "Assigned reply intro",
             "inputs": [
@@ -346,7 +346,7 @@ export const allNodesData: any = {
             "id": "classifyQuestion_1",
             "templateType": "classifyQuestion",
             "flowType": "classifyQuestion",
-            "avatar": "/imgs/module/cq.png",
+            "avatar": "/images/agent/module/cq.png",
             "name": "Classify question",
             "intro": "Classify question intro",
             "inputs": [
@@ -489,7 +489,7 @@ export const allNodesData: any = {
             "id": "contentExtract_1",
             "templateType": "contentExtract",
             "flowType": "contentExtract",
-            "avatar": "/imgs/module/extract.png",
+            "avatar": "/images/agent/module/extract.png",
             "name": "Extract field",
             "intro": "Extract field intro",
             "inputs": [
@@ -643,7 +643,7 @@ export const allNodesData: any = {
             "id": "httpRequest_1",
             "templateType": "httpRequest",
             "flowType": "httpRequest",
-            "avatar": "/imgs/module/http.png",
+            "avatar": "/images/agent/module/http.png",
             "name": "Http request",
             "intro": "Http request intro",
             "inputs": [

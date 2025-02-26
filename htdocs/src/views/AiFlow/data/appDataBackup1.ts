@@ -16,7 +16,7 @@ export const appData: any = {
               "id": "userGuideNodeInitial_1",
               "templateType": "userGuide",
               "flowType": "userGuide",
-              "avatar": "/imgs/module/userGuide.png",
+              "avatar": "/images/agent/module/userGuide.png",
               "name": "System Setting",
               "intro": "userGuideTip",
               "inputs": [
@@ -70,7 +70,7 @@ export const appData: any = {
               "id": "questionInputNodeInitial_1",
               "templateType": "SystemInput",
               "flowType": "questionInput",
-              "avatar": "/imgs/module/userChatInput.svg",
+              "avatar": "/images/agent/module/userChatInput.svg",
               "name": "Chat entrance",
               "intro": "userChatInputIntro",
               "inputs": [
@@ -111,7 +111,7 @@ export const appData: any = {
               "id": "chatNodeInitial_1",
               "templateType": "textAnswer",
               "flowType": "chatNode",
-              "avatar": "/imgs/module/AI.png",
+              "avatar": "/images/agent/module/AI.png",
               "name": "AI Chat",
               "intro": "AI Model Chat",
               "showStatus": true,
@@ -311,7 +311,7 @@ export const appData: any = {
 export const appTemplates: any[] = [
   {
     id: 'simpleChat',
-    avatar: '/imgs/module/AI.png',
+    avatar: '/images/agent/module/AI.png',
     name: '简易模板',
     intro: '一个极其简单的 AI 应用，你可以绑定知识库或工具。',
     type: "simple",
@@ -319,7 +319,7 @@ export const appTemplates: any[] = [
       {
         moduleId: 'userGuide',
         name: 'core.module.template.User guide',
-        avatar: '/imgs/module/userGuide.png',
+        avatar: '/images/agent/module/userGuide.png',
         flowType: 'userGuide',
         position: {
           x: 454.98510354678695,
@@ -369,7 +369,7 @@ export const appTemplates: any[] = [
       {
         moduleId: 'userChatInput',
         name: 'Chat entrance',
-        avatar: '/imgs/module/userChatInput.png',
+        avatar: '/images/agent/module/userChatInput.png',
         flowType: 'questionInput',
         position: {
           x: 450,
@@ -404,7 +404,7 @@ export const appTemplates: any[] = [
       {
         moduleId: 'chatModule',
         name: 'AI Chat',
-        avatar: '/imgs/module/AI.png',
+        avatar: '/images/agent/module/AI.png',
         flowType: 'chatNode',
         showStatus: true,
         position: {
@@ -594,7 +594,7 @@ export const appTemplates: any[] = [
   },
   {
     id: 'chatGuide',
-    avatar: '/imgs/module/userGuide.png',
+    avatar: '/images/agent/module/userGuide.png',
     name: '对话引导 + 变量',
     intro: '可以在对话开始发送一段提示，或者让用户填写一些内容，作为本次对话的变量',
     type: "simple",
@@ -602,7 +602,7 @@ export const appTemplates: any[] = [
       {
         moduleId: 'userGuide',
         name: 'core.module.template.User guide',
-        avatar: '/imgs/module/userGuide.png',
+        avatar: '/images/agent/module/userGuide.png',
         flowType: 'userGuide',
         position: {
           x: 447.98520778293346,
@@ -684,7 +684,7 @@ export const appTemplates: any[] = [
       {
         moduleId: 'userChatInput',
         name: 'Chat entrance',
-        avatar: '/imgs/module/userChatInput.png',
+        avatar: '/images/agent/module/userChatInput.png',
         flowType: 'questionInput',
         position: {
           x: 450,
@@ -719,7 +719,7 @@ export const appTemplates: any[] = [
       {
         moduleId: 'chatModule',
         name: 'AI Chat',
-        avatar: '/imgs/module/AI.png',
+        avatar: '/images/agent/module/AI.png',
         flowType: 'chatNode',
         showStatus: true,
         position: {
@@ -910,7 +910,7 @@ export const appTemplates: any[] = [
   },
   {
     id: 'simpleDatasetChat',
-    avatar: '/imgs/module/db.png',
+    avatar: '/images/agent/module/db.png',
     name: '知识库+对话引导',
     intro: '每次提问时进行一次知识库搜索，将搜索结果注入 LLM 模型进行参考回答',
     type: "advanced",
@@ -919,7 +919,7 @@ export const appTemplates: any[] = [
         moduleId: 'userGuide',
         name: 'core.module.template.User guide',
         intro: 'core.app.tip.userGuideTip',
-        avatar: '/imgs/module/userGuide.png',
+        avatar: '/images/agent/module/userGuide.png',
         flowType: 'userGuide',
         position: {
           x: 447.98520778293346,
@@ -975,7 +975,7 @@ export const appTemplates: any[] = [
         moduleId: 'userChatInput',
         name: 'Chat entrance',
         intro: 'userChatInputIntro',
-        avatar: '/imgs/module/userChatInput.svg',
+        avatar: '/images/agent/module/userChatInput.svg',
         flowType: 'questionInput',
         position: {
           x: 324.81436595478294,
@@ -1011,7 +1011,7 @@ export const appTemplates: any[] = [
         moduleId: '63toub',
         name: 'AI Chat',
         intro: 'AI Model Chat',
-        avatar: '/imgs/module/AI.png',
+        avatar: '/images/agent/module/AI.png',
         flowType: 'chatNode',
         showStatus: true,
         position: {
@@ -1179,7 +1179,7 @@ export const appTemplates: any[] = [
         moduleId: '0voh5n',
         name: '知识库搜索',
         intro: '调用“语义检索”和“全文检索”能力，从“知识库”中查找可能与问题相关的参考内容',
-        avatar: '/imgs/module/db.png',
+        avatar: '/images/agent/module/db.png',
         flowType: 'datasetSearchNode',
         showStatus: true,
         position: {
@@ -1343,7 +1343,7 @@ export const appTemplates: any[] = [
   },
   {
     id: 'CQ',
-    avatar: '/imgs/module/cq.png',
+    avatar: '/images/agent/module/cq.png',
     name: '问题分类 + 知识库',
     intro: '先对用户的问题进行分类，再根据不同类型问题，执行不同的操作',
     type: "advanced",

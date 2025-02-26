@@ -49,7 +49,7 @@ const Collection = (props: any) => {
   }, [])
 
   const [isDisabledButton, setIsDisabledButton] = useState<boolean>(false)
-  const [pageData, setPageData] = useState<any>({name: '', type: 'File', files: [], csvs: [], trainingMode: 'Chunk Split', processWay: 'Auto process', datasetId: datasetId, FormAction: 'addcollection', FormTitle: 'Create', FormSubmit: 'Add', FormTitleIcon: '/imgs/modal/shareFill.svg', openEdit: false, openDelete: false })
+  const [pageData, setPageData] = useState<any>({name: '', type: 'File', files: [], csvs: [], trainingMode: 'Chunk Split', processWay: 'Auto process', datasetId: datasetId, FormAction: 'addcollection', FormTitle: 'Create', FormSubmit: 'Add', FormTitleIcon: '/images/agent/modal/shareFill.svg', openEdit: false, openDelete: false })
 
   const [uploadProgress, setUploadProgress] = useState<any>({files: {}, csvs: {}})
 
@@ -154,7 +154,7 @@ const Collection = (props: any) => {
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <Tooltip title={t('Delete')}>
             <IconButton size='small' onClick={
-                        () => { setPageData( () => ({ ...row, openEdit: false, openDelete: true, FormAction: 'deletecollection', FormTitle: 'Delete', FormSubmit: 'Confirm', FormTitleIcon: '/imgs/modal/shareFill.svg' }) ) }
+                        () => { setPageData( () => ({ ...row, openEdit: false, openDelete: true, FormAction: 'deletecollection', FormTitle: 'Delete', FormSubmit: 'Confirm', FormTitleIcon: '/images/agent/modal/shareFill.svg' }) ) }
                     }>
               <Icon icon='mdi:delete-outline' fontSize={20} />
             </IconButton>
@@ -199,7 +199,7 @@ const Collection = (props: any) => {
                   <Grid item xs={12} lg={12} sx={{ display: 'flex', justifyContent: 'space-between' }}>
                       <Typography sx={{ my: 3, ml: 5 }}>{t('Dataset')}</Typography>
                       <Button sx={{ my: 3, mr: 5 }} size="small" variant='outlined' onClick={
-                          () => { setPageData( (prevState: any) => ({ ...prevState, openEdit: true, FormAction: 'addcollection', FormTitle: 'Create', FormSubmit: 'Add', FormTitleIcon: '/imgs/modal/shareFill.svg' }) ) }
+                          () => { setPageData( (prevState: any) => ({ ...prevState, openEdit: true, FormAction: 'addcollection', FormTitle: 'Create', FormSubmit: 'Add', FormTitleIcon: '/images/agent/modal/shareFill.svg' }) ) }
                       }>
                       {t("Add Data Source")}
                       </Button>

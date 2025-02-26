@@ -23,13 +23,13 @@ import TextField from '@mui/material/TextField'
 const DatasetTypesList: any[] = [
     {
       type: 'General',
-      avatar: '/imgs/module/AI.png',
+      avatar: '/images/agent/module/AI.png',
       name: 'Common Dataset',
       intro: 'Common Dataset Desc',
     },
     {
       type: 'Web',
-      avatar: '/imgs/module/userGuide.png',
+      avatar: '/images/agent/module/userGuide.png',
       name: 'Website Dataset',
       intro: 'Website Dataset Desc',
     }
