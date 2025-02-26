@@ -50,7 +50,7 @@ const EditApp = (props: any) => {
   const getMyApp = async function (id: string) {
     if (auth && auth.user && id) {
       const authorization = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
-      const RS = await axios.post(authConfig.backEndApiHost + '/api/getapp', {appId: id}, { headers: { Authorization: authorization, 'Content-Type': 'application/json'} }).then(res=>res.data)
+      const RS = await axios.post(authConfig.backEndApiAiBaseUrl + '/api/getapp', {appId: id}, { headers: { Authorization: authorization, 'Content-Type': 'application/json'} }).then(res=>res.data)
       setApp(RS)
     }
   }
@@ -82,7 +82,7 @@ const EditApp = (props: any) => {
 
       const authorization = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
       const FormSubmit: any = await axios.post(
-        authConfig.backEndApiHost + '/api/editapp',
+        authConfig.backEndApiAiBaseUrl + '/api/editapp',
         formData,
         {
           headers: {
@@ -93,7 +93,7 @@ const EditApp = (props: any) => {
       ).then(res => res.data);
 
       //const PostParams = {name: appNew.name, _id: appNew._id, teamId: appNew.teamId, intro: appNew.intro, avatar: appNew.avatar, type: appNew.type, groupTwo: appNew.groupTwo, permission: appNew.permission, data: appNew}
-      //const FormSubmit: any = await axios.post(authConfig.backEndApiHost + '/api/editapp', PostParams, { headers: { Authorization: authorization, 'Content-Type': 'application/json'} }).then(res => res.data)
+      //const FormSubmit: any = await axios.post(authConfig.backEndApiAiBaseUrl + '/api/editapp', PostParams, { headers: { Authorization: authorization, 'Content-Type': 'application/json'} }).then(res => res.data)
       console.log("FormSubmit", FormSubmit)
       setIsDisabledButton(false)
       if(FormSubmit?.status == "ok") {
@@ -114,7 +114,7 @@ const EditApp = (props: any) => {
     if (auth && auth.user) {
       const authorization = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
       const PostParams = {appId: app._id}
-      const FormSubmit: any = await axios.post(authConfig.backEndApiHost + '/api/deleteapp', PostParams, { headers: { Authorization: authorization, 'Content-Type': 'application/json'} }).then(res => res.data)
+      const FormSubmit: any = await axios.post(authConfig.backEndApiAiBaseUrl + '/api/deleteapp', PostParams, { headers: { Authorization: authorization, 'Content-Type': 'application/json'} }).then(res => res.data)
       console.log("FormSubmit", FormSubmit)
       setIsDisabledButton(false)
       if(FormSubmit?.status == "ok") {

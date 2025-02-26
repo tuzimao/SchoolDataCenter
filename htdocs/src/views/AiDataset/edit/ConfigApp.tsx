@@ -87,7 +87,7 @@ const ConfigApp = (props: any) => {
                                     </Box>
                                 ) : (
                                     <Box sx={{alignItems: 'center'}}>
-                                        <Img alt={`${t(`Upload Avatar image`)}`} src={authConfig.backEndApiHost + '/api/avatarfordataset/' + (app.avatar)} sx={{width: '100%', borderRadius: '25px'}}/>
+                                        <Img alt={`${t(`Upload Avatar image`)}`} src={authConfig.backEndApiAiBaseUrl + '/api/avatarfordataset/' + (app.avatar)} sx={{width: '100%', borderRadius: '25px'}}/>
                                     </Box>
                                 )}
                             </Box>

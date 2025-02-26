@@ -149,7 +149,7 @@ const CollectionNewEdit = (props: any) => {
         if (auth && auth.user && pageData) {
             const authorization = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
             console.log("handleStartUpload pageData", pageData)
-            const FormSubmit: any = await axios.post(authConfig.backEndApiHost + '/api/uploadcollection', pageData, { headers: { Authorization: authorization, 'Content-Type': 'application/json'} }).then(res => res.data)
+            const FormSubmit: any = await axios.post(authConfig.backEndApiAiBaseUrl + '/api/uploadcollection', pageData, { headers: { Authorization: authorization, 'Content-Type': 'application/json'} }).then(res => res.data)
             console.log("FormSubmit:", FormSubmit)
             if(FormSubmit?.status == "ok") {
                 toast.success(t(FormSubmit.msg) as string, { duration: 4000, position: 'top-center' })

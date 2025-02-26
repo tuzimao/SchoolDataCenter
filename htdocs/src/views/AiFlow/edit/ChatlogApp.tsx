@@ -52,7 +52,7 @@ const ChatlogApp = (props: any) => {
   const fetchData = async function (paginationModel: any) {
     if (auth && auth.user && appId) {
       const authorization = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
-      const RS = await axios.get(authConfig.backEndApiHost + '/api/chatlogstaticbyapp/' + appId + '/' + paginationModel.page + '/' + paginationModel.pageSize, { headers: { Authorization: authorization, 'Content-Type': 'application/json' }, params: { } }).then(res=>res.data)
+      const RS = await axios.get(authConfig.backEndApiAiBaseUrl + '/api/chatlogstaticbyapp/' + appId + '/' + paginationModel.page + '/' + paginationModel.pageSize, { headers: { Authorization: authorization, 'Content-Type': 'application/json' }, params: { } }).then(res=>res.data)
       console.log("RS", RS, "appId", appId)
       setStore(RS)  
     }

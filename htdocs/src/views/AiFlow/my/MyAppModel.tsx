@@ -145,7 +145,7 @@ const AppModel = (props: any) => {
                             sx={{cursor: 'pointer'}}
                           >
                             <Box display="flex" alignItems="center">
-                              <Avatar src={AppAvatar(authConfig.backEndApiHost, item.avatar)} sx={{ mr: 3, width: 35, height: 35 }} />
+                              <Avatar src={AppAvatar(authConfig.backEndApiAiBaseUrl, item.avatar)} sx={{ mr: 3, width: 35, height: 35 }} />
                               <Typography 
                                   sx={{
                                       fontWeight: 500,

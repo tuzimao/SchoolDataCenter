@@ -168,7 +168,7 @@ const CollectionFilesUploader = (props: any) => {
           formData.append('datasetId', pageData.datasetId);
           formData.append('files', file);
           try {
-            const FormSubmit: any = await axios.post(authConfig.backEndApiHost + '/api/uploadfiles', formData, {
+            const FormSubmit: any = await axios.post(authConfig.backEndApiAiBaseUrl + '/api/uploadfiles', formData, {
               headers: {
                 Authorization: authorization,
                 'Content-Type': 'multipart/form-data',

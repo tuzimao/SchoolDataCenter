@@ -64,7 +64,7 @@ const MyApp = () => {
     if(loadingAllData == false)  {
       setLoading(true)
       const authorization = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
-      const RS = await axios.post(authConfig.backEndApiHost + '/api/getapppage/' + pageid + '/' + pagesize, {type, search},  {
+      const RS = await axios.post(authConfig.backEndApiAiBaseUrl + '/api/getapppage/' + pageid + '/' + pagesize, {type, search},  {
         headers: { Authorization: authorization, 'Content-Type': 'application/json' },
       }).then(res => res.data);
       if(RS && RS.data) {
@@ -105,7 +105,7 @@ const MyApp = () => {
       setLoading(true)
       setIsDisabledButton(true)
       const authorization = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
-      const RS = await axios.post(authConfig.backEndApiHost + '/api/deleteapp', {appId: appId}, {
+      const RS = await axios.post(authConfig.backEndApiAiBaseUrl + '/api/deleteapp', {appId: appId}, {
         headers: { Authorization: authorization, 'Content-Type': 'application/json' },
       }).then(res => res.data);
       if(RS && RS.status && RS.status == 'ok') {
@@ -167,7 +167,7 @@ const MyApp = () => {
       }
       const PostParams = {name: AppNewForm.name, _id: simpleChatNew._id, teamId: simpleChatNew.teamId, intro: simpleChatNew.intro, avatar: simpleChatNew.avatar, type: simpleChatNew.type, groupOne: AppNewForm.groupOne, groupTwo: AppNewForm.groupTwo, permission: simpleChatNew.permission, data: simpleChatNew}
       const authorization = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
-      const FormSubmit: any = await axios.post(authConfig.backEndApiHost + '/api/addapp', PostParams, { headers: { Authorization: authorization, 'Content-Type': 'application/json'} }).then(res => res.data)
+      const FormSubmit: any = await axios.post(authConfig.backEndApiAiBaseUrl + '/api/addapp', PostParams, { headers: { Authorization: authorization, 'Content-Type': 'application/json'} }).then(res => res.data)
       console.log("FormSubmit", FormSubmit)
       if(FormSubmit && FormSubmit.status == 'ok' && code)  {
         toast.success(t(FormSubmit.msg) as string, { duration: 2500, position: 'top-center' })

@@ -39,7 +39,7 @@ const ChatAnonymous = () => {
 
     const getMyApp = async function (id: string, anonymousUserId: string) {
       if (id && id.length == 32 && anonymousUserId && anonymousUserId.length == 32) {
-        const RS = await axios.post(authConfig.backEndApiHost + '/api/getappbypublishid/', {publishId: id, userType: 'Anonymous'}, { headers: { Authorization: anonymousUserId, 'Content-Type': 'application/json'} }).then(res=>res.data)
+        const RS = await axios.post(authConfig.backEndApiAiBaseUrl + '/api/getappbypublishid/', {publishId: id, userType: 'Anonymous'}, { headers: { Authorization: anonymousUserId, 'Content-Type': 'application/json'} }).then(res=>res.data)
         if(RS && RS.PublishApp && RS.PublishApp.appId) {
           i18n.changeLanguage(RS.PublishApp.language)
           setShow(false)

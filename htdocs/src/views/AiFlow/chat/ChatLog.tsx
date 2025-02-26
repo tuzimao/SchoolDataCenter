@@ -308,7 +308,7 @@ const ChatLog = (props: any) => {
                 fontSize: '0.875rem',
               }}
               {...{
-                src: app.avatar? AppAvatar(authConfig.backEndApiHost, app.avatar) : '/images/avatars/1.png',
+                src: app.avatar? AppAvatar(authConfig.backEndApiAiBaseUrl, app.avatar) : '/images/avatars/1.png',
                 alt: chatName
               }}
             >
@@ -466,8 +466,8 @@ const ChatLog = (props: any) => {
                     }
                     {ChatMsgType == "Image" && ChatMsgContent && ChatMsgContent.ShortFileName ?
                       <div>
-                        <LinkStyled target='_blank' href={authConfig.backEndApiHost + '/api/image/' + ChatMsgContent.ShortFileName}>
-                          <CardMedia image={authConfig.backEndApiHost + '/api/image/' + ChatMsgContent.ShortFileName} sx={{ mt: 1, width: '500px', height: '500px', borderRadius: '5px' }}/>
+                        <LinkStyled target='_blank' href={authConfig.backEndApiAiBaseUrl + '/api/image/' + ChatMsgContent.ShortFileName}>
+                          <CardMedia image={authConfig.backEndApiAiBaseUrl + '/api/image/' + ChatMsgContent.ShortFileName} sx={{ mt: 1, width: '500px', height: '500px', borderRadius: '5px' }}/>
                         </LinkStyled>
                         <Box
                             sx={{
@@ -482,7 +482,7 @@ const ChatLog = (props: any) => {
                                 ? new Date(Number(chat.time)).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })
                                 : null}
                               {ChatMsgContent.ShortFileName ?
-                              <LinkStyled onClick={()=>handleDownload(authConfig.backEndApiHost + '/api/image/' + ChatMsgContent.ShortFileName, ChatMsgContent.ShortFileName + '.png')} href={'#'} sx={{ml: 1}}>
+                              <LinkStyled onClick={()=>handleDownload(authConfig.backEndApiAiBaseUrl + '/api/image/' + ChatMsgContent.ShortFileName, ChatMsgContent.ShortFileName + '.png')} href={'#'} sx={{ml: 1}}>
                                 Download
                               </LinkStyled>
                               :
@@ -496,8 +496,8 @@ const ChatLog = (props: any) => {
                     }
                     {ChatMsgType == "Audio" && ChatMsgContent && ChatMsgContent.ShortFileName ?
                       <div>
-                        <LinkStyled target='_blank' href={authConfig.backEndApiHost + '/api/audio/' + ChatMsgContent.ShortFileName}>
-                          <CardMedia component="audio" controls src={authConfig.backEndApiHost + '/api/audio/' + ChatMsgContent.ShortFileName} sx={{ mt: 1, width: '360px', borderRadius: '5px' }}/>
+                        <LinkStyled target='_blank' href={authConfig.backEndApiAiBaseUrl + '/api/audio/' + ChatMsgContent.ShortFileName}>
+                          <CardMedia component="audio" controls src={authConfig.backEndApiAiBaseUrl + '/api/audio/' + ChatMsgContent.ShortFileName} sx={{ mt: 1, width: '360px', borderRadius: '5px' }}/>
                         </LinkStyled>
                         <Box
                             sx={{
@@ -512,7 +512,7 @@ const ChatLog = (props: any) => {
                                 ? new Date(Number(chat.time)).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })
                                 : null}
                               {ChatMsgContent.ShortFileName ?
-                              <LinkStyled onClick={()=>handleDownload(authConfig.backEndApiHost + '/api/audio/' + ChatMsgContent.ShortFileName, ChatMsgContent.ShortFileName + '.mp3')} href={'#'} sx={{ml: 1}}>
+                              <LinkStyled onClick={()=>handleDownload(authConfig.backEndApiAiBaseUrl + '/api/audio/' + ChatMsgContent.ShortFileName, ChatMsgContent.ShortFileName + '.mp3')} href={'#'} sx={{ml: 1}}>
                                 Download
                               </LinkStyled>
                               :

@@ -68,7 +68,7 @@ const PublishApp = (props: any) => {
   const fetchData = async function (paginationModel: any) {
     if (auth && auth.user && appId) {
       const authorization = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
-      const RS = await axios.get(authConfig.backEndApiHost + '/api/publishsbyapp/' + appId + '/' + paginationModel.page + '/' + paginationModel.pageSize, { headers: { Authorization: authorization, 'Content-Type': 'application/json' }, params: { } }).then(res=>res.data)
+      const RS = await axios.get(authConfig.backEndApiAiBaseUrl + '/api/publishsbyapp/' + appId + '/' + paginationModel.page + '/' + paginationModel.pageSize, { headers: { Authorization: authorization, 'Content-Type': 'application/json' }, params: { } }).then(res=>res.data)
       console.log("RS", RS, "appId", appId)
       setStore(RS)  
     }
@@ -209,7 +209,7 @@ const PublishApp = (props: any) => {
     if (auth && auth.user && pageData && pageData.FormAction) {
       setIsDisabledButton(true)
       const authorization = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
-      const FormSubmit: any = await axios.post(authConfig.backEndApiHost + '/api/' + pageData.FormAction, pageData, { headers: { Authorization: authorization, 'Content-Type': 'application/json'} }).then(res => res.data)
+      const FormSubmit: any = await axios.post(authConfig.backEndApiAiBaseUrl + '/api/' + pageData.FormAction, pageData, { headers: { Authorization: authorization, 'Content-Type': 'application/json'} }).then(res => res.data)
       console.log("FormSubmit:", FormSubmit)
       if(FormSubmit?.status == "ok") {
           toast.success(t(FormSubmit.msg) as string, { duration: 4000, position: 'top-center' })

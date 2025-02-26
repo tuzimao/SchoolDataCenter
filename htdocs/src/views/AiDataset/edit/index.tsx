@@ -46,7 +46,7 @@ const EditDataSet = (props: any) => {
   const fetchData = async function (id: string) {
     if (auth && auth.user && id) {
       const authorization = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
-      const RS = await axios.get(authConfig.backEndApiHost + '/api/getdataset/' + id, { headers: { Authorization: authorization, 'Content-Type': 'application/json'} }).then(res=>res.data)
+      const RS = await axios.get(authConfig.backEndApiAiBaseUrl + '/api/getdataset/' + id, { headers: { Authorization: authorization, 'Content-Type': 'application/json'} }).then(res=>res.data)
       setApp({...RS, openDelete: false})
     }
   }
@@ -75,7 +75,7 @@ const EditDataSet = (props: any) => {
 
       const authorization = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
       const FormSubmit: any = await axios.post(
-        authConfig.backEndApiHost + '/api/editdataset',
+        authConfig.backEndApiAiBaseUrl + '/api/editdataset',
         formData,
         {
           headers: {
@@ -104,7 +104,7 @@ const EditDataSet = (props: any) => {
       }
       const PostParams = appNew
       const authorization = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
-      const FormSubmit: any = await axios.post(authConfig.backEndApiHost + '/api/deletedataset', PostParams, { headers: { Authorization: authorization, 'Content-Type': 'application/json'} }).then(res => res.data)
+      const FormSubmit: any = await axios.post(authConfig.backEndApiAiBaseUrl + '/api/deletedataset', PostParams, { headers: { Authorization: authorization, 'Content-Type': 'application/json'} }).then(res => res.data)
       console.log("FormSubmit", FormSubmit)
       if(FormSubmit?.status == "ok") {
         toast.success(t(FormSubmit.msg) as string, {

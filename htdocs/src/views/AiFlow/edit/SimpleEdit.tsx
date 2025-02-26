@@ -127,7 +127,7 @@ const SimpleEdit = (props: any) => {
                                                 </Box>
                                             ) : (
                                                 <Box sx={{alignItems: 'center'}}>
-                                                    <Img alt={`${t(`Upload Avatar image`)}`} src={AppAvatar(authConfig.backEndApiHost, app.avatar)} sx={{width: '100%', borderRadius: '25px'}}/>
+                                                    <Img alt={`${t(`Upload Avatar image`)}`} src={AppAvatar(authConfig.backEndApiAiBaseUrl, app.avatar)} sx={{width: '100%', borderRadius: '25px'}}/>
                                                 </Box>
                                             )}
                                         </Box>

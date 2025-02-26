@@ -253,7 +253,7 @@ const AdvancedApp = () => {
       }
       const authorization = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
       const PostParams = {name: appNew.name, _id: appNew._id, teamId: appNew.teamId, intro: appNew.intro, avatar: appNew.avatar, type: appNew.type, groupTwo: appNew.groupTwo, permission: appNew.permission, data: appNew}
-      const FormSubmit: any = await axios.post(authConfig.backEndApiHost + '/api/editapp', PostParams, { headers: { Authorization: authorization, 'Content-Type': 'application/json'} }).then(res => res.data)
+      const FormSubmit: any = await axios.post(authConfig.backEndApiAiBaseUrl + '/api/editapp', PostParams, { headers: { Authorization: authorization, 'Content-Type': 'application/json'} }).then(res => res.data)
       console.log("FormSubmit", FormSubmit)
       toast.success(t('Update Success') as string, {
         duration: 2000
@@ -264,7 +264,7 @@ const AdvancedApp = () => {
   const fetchData = async function (id: string) {
     if (auth && auth.user && id) {
       const authorization = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
-      const CurrentAppDataTemp = await axios.post(authConfig.backEndApiHost + '/api/getapp', {appId: id}, { headers: { Authorization: authorization, 'Content-Type': 'application/json'} }).then(res=>res.data)
+      const CurrentAppDataTemp = await axios.post(authConfig.backEndApiAiBaseUrl + '/api/getapp', {appId: id}, { headers: { Authorization: authorization, 'Content-Type': 'application/json'} }).then(res=>res.data)
       const nodesInitial: Node<FlowModuleItemType, string | undefined>[] = CurrentAppDataTemp.modules
       const edgesInitial: Edge<any[]>[] = CurrentAppDataTemp.edges
       setEdges(edgesInitial)

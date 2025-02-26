@@ -63,7 +63,7 @@ const MyApp = () => {
     if(loadingAllData == false)  {
       setLoading(true)
       const authorization = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
-      const RS = await axios.post(authConfig.backEndApiHost + '/api/getdatasetpage/' + pageid + '/' + pagesize, {type, search},  {
+      const RS = await axios.post(authConfig.backEndApiAiBaseUrl + '/api/getdatasetpage/' + pageid + '/' + pagesize, {type, search},  {
         headers: { Authorization: authorization, 'Content-Type': 'application/json' },
       }).then(res => res.data);
       if(RS && RS.data) {
@@ -104,7 +104,7 @@ const MyApp = () => {
       setLoading(true)
       setIsDisabledButton(true)
       const authorization = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
-      const RS = await axios.post(authConfig.backEndApiHost + '/api/deletedataset', {datasetId: appId}, {
+      const RS = await axios.post(authConfig.backEndApiAiBaseUrl + '/api/deletedataset', {datasetId: appId}, {
         headers: { Authorization: authorization, 'Content-Type': 'application/json' },
       }).then(res => res.data);
       if(RS && RS.status && RS.status == 'ok') {
@@ -160,7 +160,7 @@ const MyApp = () => {
       }
       const authorization = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
       const PostParams = {name: simpleAppNewForm.name, _id: simpleAppNewForm._id, intro: simpleAppNewForm.intro, avatar: simpleAppNewForm.avatar, type: simpleAppNewForm.type, vectorModel: simpleAppNewForm.vectorModel, fileDealModel: simpleAppNewForm.fileDealModel}
-      const FormSubmit: any = await axios.post(authConfig.backEndApiHost + '/api/adddataset', PostParams, { headers: { Authorization: authorization, 'Content-Type': 'application/json'} }).then(res => res.data)
+      const FormSubmit: any = await axios.post(authConfig.backEndApiAiBaseUrl + '/api/adddataset', PostParams, { headers: { Authorization: authorization, 'Content-Type': 'application/json'} }).then(res => res.data)
       console.log("FormSubmit", FormSubmit)
       if(FormSubmit && FormSubmit.status == 'ok' && code)  {
         toast.success(t(FormSubmit.msg) as string, { duration: 2500, position: 'top-center' })

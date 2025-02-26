@@ -150,7 +150,7 @@ const AppModel = (props: any) => {
                               router.push('/dataset/collection/' + item._id)
                             }}>
                             <Box display="flex" alignItems="center">
-                              <Avatar src={authConfig.backEndApiHost + '/api/avatarfordataset/' + (item.avatar )} sx={{ mr: 3, width: 35, height: 35 }} />
+                              <Avatar src={authConfig.backEndApiAiBaseUrl + '/api/avatarfordataset/' + (item.avatar )} sx={{ mr: 3, width: 35, height: 35 }} />
                               <Typography 
                                   sx={{
                                       fontWeight: 500,
