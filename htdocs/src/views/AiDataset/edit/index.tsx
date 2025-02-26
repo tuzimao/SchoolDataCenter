@@ -22,6 +22,7 @@ import { useRouter } from 'next/router'
 import { useAuth } from 'src/hooks/useAuth'
 import { CheckPermission } from 'src/functions/ChatBook'
 import { useTranslation } from 'react-i18next'
+import { defaultConfig } from 'src/configs/auth'
 
 const EditDataSet = (props: any) => {
   // ** States
@@ -44,7 +45,8 @@ const EditDataSet = (props: any) => {
 
   const fetchData = async function (id: string) {
     if (auth && auth.user && id) {
-      const RS = await axios.get(authConfig.backEndApiHost + '/api/getdataset/' + id, { headers: { Authorization: 'auth.user?.token', 'Content-Type': 'application/json'} }).then(res=>res.data)
+      const authorization = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
+      const RS = await axios.get(authConfig.backEndApiHost + '/api/getdataset/' + id, { headers: { Authorization: authorization, 'Content-Type': 'application/json'} }).then(res=>res.data)
       setApp({...RS, openDelete: false})
     }
   }
@@ -71,12 +73,13 @@ const EditDataSet = (props: any) => {
         formData.append(`avatar`, file);
       });
 
+      const authorization = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
       const FormSubmit: any = await axios.post(
         authConfig.backEndApiHost + '/api/editdataset',
         formData,
         {
           headers: {
-            Authorization: 'auth.user?.token',
+            Authorization: authorization,
             'Content-Type': 'multipart/form-data', // Important: Use multipart/form-data for file uploads
           },
         }
@@ -100,7 +103,8 @@ const EditDataSet = (props: any) => {
         ...app
       }
       const PostParams = appNew
-      const FormSubmit: any = await axios.post(authConfig.backEndApiHost + '/api/deletedataset', PostParams, { headers: { Authorization: 'auth?.user?.token', 'Content-Type': 'application/json'} }).then(res => res.data)
+      const authorization = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
+      const FormSubmit: any = await axios.post(authConfig.backEndApiHost + '/api/deletedataset', PostParams, { headers: { Authorization: authorization, 'Content-Type': 'application/json'} }).then(res => res.data)
       console.log("FormSubmit", FormSubmit)
       if(FormSubmit?.status == "ok") {
         toast.success(t(FormSubmit.msg) as string, {

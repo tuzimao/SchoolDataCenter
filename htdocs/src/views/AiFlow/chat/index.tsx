@@ -17,6 +17,7 @@ import { authConfig } from 'src/configs/auth'
 import { useRouter } from 'next/router'
 import { useAuth } from 'src/hooks/useAuth'
 import { CheckPermission } from 'src/functions/ChatBook'
+import { defaultConfig } from 'src/configs/auth'
 
 const Chat = () => {
   // ** States
@@ -34,8 +35,8 @@ const Chat = () => {
   const getMyApp = async function (id: string) {
     if (auth && auth.user && id) {
       let authorization = null
-      if(auth.user && auth.user.id && auth.user.email && 'auth.user?.token')   {
-        authorization = 'auth.user?.token'
+      if(auth.user && auth.user.id && auth.user.email && authorization)   {
+        authorization = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
         setUserType('User')
         const RS = await axios.post(authConfig.backEndApiHost + '/api/getapp', {appId: id}, { headers: { Authorization: authorization, 'Content-Type': 'application/json'} }).then(res=>res.data)
         setApp(RS)

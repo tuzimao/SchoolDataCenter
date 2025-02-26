@@ -40,6 +40,8 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 // ** Third Party Components
 import toast from 'react-hot-toast'
 
+import { defaultConfig } from 'src/configs/auth'
+
 const DataTypesList:any[] = [
     {
       type: 'File',
@@ -145,8 +147,9 @@ const CollectionNewEdit = (props: any) => {
     
     const handleStartUpload = async () => {
         if (auth && auth.user && pageData) {
+            const authorization = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
             console.log("handleStartUpload pageData", pageData)
-            const FormSubmit: any = await axios.post(authConfig.backEndApiHost + '/api/uploadcollection', pageData, { headers: { Authorization: 'auth?.user?.token', 'Content-Type': 'application/json'} }).then(res => res.data)
+            const FormSubmit: any = await axios.post(authConfig.backEndApiHost + '/api/uploadcollection', pageData, { headers: { Authorization: authorization, 'Content-Type': 'application/json'} }).then(res => res.data)
             console.log("FormSubmit:", FormSubmit)
             if(FormSubmit?.status == "ok") {
                 toast.success(t(FormSubmit.msg) as string, { duration: 4000, position: 'top-center' })

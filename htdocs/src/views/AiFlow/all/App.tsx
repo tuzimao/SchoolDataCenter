@@ -8,6 +8,7 @@ import axios from 'axios'
 import { authConfig } from 'src/configs/auth'
 import { useAuth } from 'src/hooks/useAuth'
 import { getAnonymousUserId } from 'src/functions/ChatBook'
+import { defaultConfig } from 'src/configs/auth'
 
 const AllApp = () => {
 
@@ -41,8 +42,8 @@ const AllApp = () => {
   const getAppsPage = async function (type: string, search: string) {
     const pagesize = 20
     let authorization = null
-    if(auth.user && auth.user.id && auth.user.email && 'auth.user?.token')   {
-      authorization = 'auth.user?.token'
+    if(auth.user && auth.user.id && auth.user.email && authorization)   {
+      authorization = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
     }
     else {
       authorization = getAnonymousUserId()

@@ -28,6 +28,7 @@ import { authConfig } from 'src/configs/auth'
 import { useRouter } from 'next/router'
 import { useAuth } from 'src/hooks/useAuth'
 import { CheckPermission } from 'src/functions/ChatBook'
+import { defaultConfig } from 'src/configs/auth'
 
 const AppChat = (props: any) => {
   // ** Hook
@@ -55,7 +56,7 @@ const AppChat = (props: any) => {
     let authorization = null
     if(auth.user && auth.user.id && userType=='User')   {
       userId = auth.user.id
-      authorization = 'auth.user?.token'
+      authorization = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
     }
     if(userType=='Anonymous')   {
       userId = anonymousUserId
@@ -130,9 +131,10 @@ const AppChat = (props: any) => {
       setRefreshChatCounter(0)
       
       const data: any = {appId: app._id, userType: userType}
+      const authorization = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
       const RS = await axios.post(authConfig.backEndApiHost + '/api/app/chatlog/clear/', data, { 
         headers: { 
-          Authorization: userType=='User' ? 'auth?.user?.token' : anonymousUserId,
+          Authorization: userType=='User' ? authorization : anonymousUserId,
           'Content-Type': 'application/json'
         } 
       }).then(res=>res.data)
@@ -150,11 +152,11 @@ const AppChat = (props: any) => {
       const userId = userType=='User' ? auth.user.id : anonymousUserId
       DeleteChatChatByChatlogId(app.id, chatlogId)
       DeleteChatChatHistoryByChatlogId(userId, chatId, app.id, chatlogId)
-      
+      const authorization = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
       const data: any = {chatlogId: chatlogId, appId: app._id, userType: userType}
       const RS = await axios.post(authConfig.backEndApiHost + '/api/app/chatlog/delete', data, { 
                           headers: { 
-                            Authorization: userType=='User' ? 'auth.user?.token' : anonymousUserId,
+                            Authorization: userType=='User' ? authorization : anonymousUserId,
                             'Content-Type': 'application/json'
                           } 
                         }).then(res=>res.data)
@@ -368,9 +370,9 @@ const AppChat = (props: any) => {
   const sendMsg = async (Obj: any) => {
     let userId = null
     let authorization = ""
-    if(auth.user && auth.user.id && 'auth.user?.token' && userType=='User' && app && app.id)   {
+    if(auth.user && auth.user.id && authorization && userType=='User' && app && app.id)   {
       userId = auth.user.id
-      authorization = 'auth.user?.token'
+      authorization = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
     }
     if(userType=='Anonymous' && app && app.id)   {
       userId = anonymousUserId

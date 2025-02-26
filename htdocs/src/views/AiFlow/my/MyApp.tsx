@@ -15,6 +15,7 @@ import { getNanoid } from 'src/functions/app/string.tools'
 import { useRouter } from 'next/router'
 import { CheckPermission } from 'src/functions/ChatBook'
 import { simpleChat } from '../data/simpleChat'
+import { defaultConfig } from 'src/configs/auth'
 
 
 const MyApp = () => {
@@ -62,8 +63,9 @@ const MyApp = () => {
     const pagesize = 20
     if(loadingAllData == false)  {
       setLoading(true)
+      const authorization = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
       const RS = await axios.post(authConfig.backEndApiHost + '/api/getapppage/' + pageid + '/' + pagesize, {type, search},  {
-        headers: { Authorization: 'auth?.user?.token', 'Content-Type': 'application/json' },
+        headers: { Authorization: authorization, 'Content-Type': 'application/json' },
       }).then(res => res.data);
       if(RS && RS.data) {
         const appInitial: string[] = []
@@ -98,12 +100,13 @@ const MyApp = () => {
   }
 
   const handleDeleteApp = async function () {
-    if(auth && auth.user && 'auth.user?.token' && appId)    {
+    if(auth && auth.user && appId)    {
       setDeleteOpen(false)
       setLoading(true)
       setIsDisabledButton(true)
+      const authorization = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
       const RS = await axios.post(authConfig.backEndApiHost + '/api/deleteapp', {appId: appId}, {
-        headers: { Authorization: 'auth?.user?.token', 'Content-Type': 'application/json' },
+        headers: { Authorization: authorization, 'Content-Type': 'application/json' },
       }).then(res => res.data);
       if(RS && RS.status && RS.status == 'ok') {
         setLoading(false)
@@ -163,7 +166,8 @@ const MyApp = () => {
         }
       }
       const PostParams = {name: AppNewForm.name, _id: simpleChatNew._id, teamId: simpleChatNew.teamId, intro: simpleChatNew.intro, avatar: simpleChatNew.avatar, type: simpleChatNew.type, groupOne: AppNewForm.groupOne, groupTwo: AppNewForm.groupTwo, permission: simpleChatNew.permission, data: simpleChatNew}
-      const FormSubmit: any = await axios.post(authConfig.backEndApiHost + '/api/addapp', PostParams, { headers: { Authorization: 'auth.user?.token', 'Content-Type': 'application/json'} }).then(res => res.data)
+      const authorization = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
+      const FormSubmit: any = await axios.post(authConfig.backEndApiHost + '/api/addapp', PostParams, { headers: { Authorization: authorization, 'Content-Type': 'application/json'} }).then(res => res.data)
       console.log("FormSubmit", FormSubmit)
       if(FormSubmit && FormSubmit.status == 'ok' && code)  {
         toast.success(t(FormSubmit.msg) as string, { duration: 2500, position: 'top-center' })

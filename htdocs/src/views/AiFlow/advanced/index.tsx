@@ -51,6 +51,7 @@ import Fab from '@mui/material/Fab'
 import Box from '@mui/material/Box'
 import Icon from 'src/@core/components/icon'
 import Button from '@mui/material/Button'
+import { defaultConfig } from 'src/configs/auth'
 
 const edgeTypes = {
   bidirectional: BiDirectionalEdge,
@@ -250,8 +251,9 @@ const AdvancedApp = () => {
         modules: nodes,
         edges: edges
       }
+      const authorization = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
       const PostParams = {name: appNew.name, _id: appNew._id, teamId: appNew.teamId, intro: appNew.intro, avatar: appNew.avatar, type: appNew.type, groupTwo: appNew.groupTwo, permission: appNew.permission, data: appNew}
-      const FormSubmit: any = await axios.post(authConfig.backEndApiHost + '/api/editapp', PostParams, { headers: { Authorization: 'auth.user?.token', 'Content-Type': 'application/json'} }).then(res => res.data)
+      const FormSubmit: any = await axios.post(authConfig.backEndApiHost + '/api/editapp', PostParams, { headers: { Authorization: authorization, 'Content-Type': 'application/json'} }).then(res => res.data)
       console.log("FormSubmit", FormSubmit)
       toast.success(t('Update Success') as string, {
         duration: 2000
@@ -261,7 +263,8 @@ const AdvancedApp = () => {
 
   const fetchData = async function (id: string) {
     if (auth && auth.user && id) {
-      const CurrentAppDataTemp = await axios.post(authConfig.backEndApiHost + '/api/getapp', {appId: id}, { headers: { Authorization: 'auth.user?.token', 'Content-Type': 'application/json'} }).then(res=>res.data)
+      const authorization = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
+      const CurrentAppDataTemp = await axios.post(authConfig.backEndApiHost + '/api/getapp', {appId: id}, { headers: { Authorization: authorization, 'Content-Type': 'application/json'} }).then(res=>res.data)
       const nodesInitial: Node<FlowModuleItemType, string | undefined>[] = CurrentAppDataTemp.modules
       const edgesInitial: Edge<any[]>[] = CurrentAppDataTemp.edges
       setEdges(edgesInitial)

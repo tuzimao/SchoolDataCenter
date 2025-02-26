@@ -23,6 +23,7 @@ import IconButton from '@mui/material/IconButton'
 import CloseIcon from '@mui/icons-material/Close';
 
 import CustomCheckboxBasic from 'src/@core/components/custom-checkbox/basic'
+import { defaultConfig } from 'src/configs/auth'
 
 const MyDataset = (props: any) => {
     // ** Props
@@ -41,8 +42,9 @@ const MyDataset = (props: any) => {
 
     useEffect(() => {
         const fetchData = async () => {
-            if(auth && auth.user && 'auth.user?.token')  {
-                const MyDatasetListData = await GetAllMyDataset('auth.user?.token')
+            const authorization = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
+            if(auth && auth.user && authorization)  {
+                const MyDatasetListData = await GetAllMyDataset(authorization)
                 console.log("MyDatasetListData", MyDatasetListData)
                 const tempData: any[] = []
                 MyDatasetListData && MyDatasetListData.data && MyDatasetListData.data.length>0 && MyDatasetListData.data.map((item: any)=>{

@@ -30,6 +30,8 @@ import DropzoneWrapper from 'src/@core/styles/libs/react-dropzone'
 import { useTranslation } from 'react-i18next'
 import LinearProgress from '@mui/material/LinearProgress'
 
+import { defaultConfig } from 'src/configs/auth'
+
 interface FileProp {
   name: string
   type: string
@@ -154,7 +156,8 @@ const CollectionFilesUploader = (props: any) => {
   }
   
   const uploadMultiFiles = async (files: File[]) => {
-    if (auth && auth.user && 'auth.user?.token') {
+    const authorization = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
+    if (auth && auth.user && authorization) {
       console.log("uploadMultiFiles files", files)
 
       const NewProgress = {...CurrentUploadProgress}
@@ -167,7 +170,7 @@ const CollectionFilesUploader = (props: any) => {
           try {
             const FormSubmit: any = await axios.post(authConfig.backEndApiHost + '/api/uploadfiles', formData, {
               headers: {
-                Authorization: 'auth?.user?.token',
+                Authorization: authorization,
                 'Content-Type': 'multipart/form-data',
               },
               onUploadProgress: (progressEvent: any) => {

@@ -20,6 +20,7 @@ import Button from '@mui/material/Button'
 import IconButton from '@mui/material/IconButton'
 import CloseIcon from '@mui/icons-material/Close';
 import TextField2 from 'src/views/Enginee/components/TextField2'
+import { defaultConfig } from 'src/configs/auth'
 
 const DatasetPrompt = (props: any) => {
     // ** Props
@@ -36,7 +37,8 @@ const DatasetPrompt = (props: any) => {
 
     useEffect(() => {
         const fetchData = async () => {
-            if(auth && auth.user && 'auth.user?.token')  {
+            const authorization = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
+            if(auth && auth.user && authorization)  {
                 
             }
         };

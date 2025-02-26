@@ -20,6 +20,7 @@ import { useTranslation } from 'react-i18next'
 import { isMobile } from 'src/configs/functions'
 import { CheckPermission } from 'src/functions/ChatBook'
 import { formatTimestamp } from 'src/configs/functions'
+import { defaultConfig } from 'src/configs/auth'
 
 const ChatlogApp = (props: any) => {
   // ** Hook
@@ -50,7 +51,8 @@ const ChatlogApp = (props: any) => {
 
   const fetchData = async function (paginationModel: any) {
     if (auth && auth.user && appId) {
-      const RS = await axios.get(authConfig.backEndApiHost + '/api/chatlogstaticbyapp/' + appId + '/' + paginationModel.page + '/' + paginationModel.pageSize, { headers: { Authorization: 'auth.user?.token', 'Content-Type': 'application/json' }, params: { } }).then(res=>res.data)
+      const authorization = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
+      const RS = await axios.get(authConfig.backEndApiHost + '/api/chatlogstaticbyapp/' + appId + '/' + paginationModel.page + '/' + paginationModel.pageSize, { headers: { Authorization: authorization, 'Content-Type': 'application/json' }, params: { } }).then(res=>res.data)
       console.log("RS", RS, "appId", appId)
       setStore(RS)  
     }
