@@ -142,13 +142,6 @@ const MyApp = () => {
   const [NewOpen, setNewOpen] = useState<boolean>(false);
   const [AppNewForm, setAppNewForm] = useState<any>({name: t('My App'), flowType: 'simpleChat', groupTwo: "Default"})
 
-  useEffect(() => {
-    setAppNewForm((prevState: any)=>({
-      ...prevState,
-      name: t('My App') as string
-    }))
-  }, [t]); 
-
   const handleAddApp = async () => {
     console.log("AppNewForm", AppNewForm)
     
@@ -171,7 +164,7 @@ const MyApp = () => {
       console.log("FormSubmit", FormSubmit)
       if(FormSubmit && FormSubmit.status == 'ok' && code)  {
         toast.success(t(FormSubmit.msg) as string, { duration: 2500, position: 'top-center' })
-        router.push('/app/edit/' + code)
+        router.push('/flow/edit/' + code)
       }
     }
   }

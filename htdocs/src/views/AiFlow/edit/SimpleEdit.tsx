@@ -103,12 +103,12 @@ const SimpleEdit = (props: any) => {
 
                                     <Grid item xs={12}>
                                         <Button variant='outlined' sx={{mr: 1}} size="small" startIcon={<Icon icon='mingcute:file-export-fill' />} onClick={()=>{
-                                            router.push('/app/chat/' + app?._id)
+                                            router.push('/flow/chat/' + app?._id)
                                         }}>
                                         {t("Chat")}
                                         </Button>
                                         <Button variant='outlined' sx={{mr: 1}} size="small" startIcon={<Icon icon='material-symbols:chat' />} onClick={()=>{
-                                            router.push('/app/publish/' + app?._id)
+                                            router.push('/flow/publish/' + app?._id)
                                         }}>
                                         {t("Publish")}
                                         </Button>

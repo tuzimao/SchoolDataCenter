@@ -119,7 +119,7 @@ const EditApp = (props: any) => {
       setIsDisabledButton(false)
       if(FormSubmit?.status == "ok") {
           toast.success(t(FormSubmit.msg) as string, { duration: 4000, position: 'top-center' })
-          router.push('/app/my')
+          router.push('/flow/my')
       }
       else {
           toast.error(t(FormSubmit.msg) as string, { duration: 4000, position: 'top-center' })

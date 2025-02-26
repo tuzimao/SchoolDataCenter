@@ -140,7 +140,7 @@ const AppModel = (props: any) => {
                           <CardMedia image={`/images/cardmedia/cardmedia-${theme.palette.mode}.png`} sx={{ height: '11.25rem', objectFit: 'contain', borderRadius: 1 }}/>
                           <Box position="absolute" top={10} left={5} m={1} px={0.8} borderRadius={1}
                             onClick={()=>{
-                              router.push('/app/edit/' + item._id)
+                              router.push('/flow/edit/' + item._id)
                             }}
                             sx={{cursor: 'pointer'}}
                           >
@@ -175,7 +175,7 @@ const AppModel = (props: any) => {
                               WebkitBoxOrient: 'vertical',
                             }}
                             onClick={()=>{
-                              router.push('/app/edit/' + item._id)
+                              router.push('/flow/edit/' + item._id)
                             }}
                             >
                             <Typography variant='body2'>{item.intro}</Typography>

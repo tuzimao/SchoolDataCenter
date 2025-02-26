@@ -135,7 +135,7 @@ const LeftApp = (props: any) => {
           <List sx={{ mb: 4, p: 0 }}>{renderChats()}</List>
         </Box>
       </ScrollWrapper>
-      <Button variant="contained" color="primary" sx={{ m: 0 }} onClick={()=>router.push('/app/my')}>
+      <Button variant="contained" color="primary" sx={{ m: 0 }} onClick={()=>router.push('/flow/my')}>
         {t('My App')}
       </Button>
     </Box>
