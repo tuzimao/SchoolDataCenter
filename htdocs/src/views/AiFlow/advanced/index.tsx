@@ -323,7 +323,7 @@ const AdvancedApp = () => {
               </Box>
               <Box sx={{mt: 3}}>
                 <Fab color='primary' aria-label='add' size='small' onClick={() => { 
-                  router.push(`/app/edit/${id}`)
+                  router.push(`/flow/edit/${id}`)
                   }}>
                   <Icon icon='mdi:keyboard-return' />
                 </Fab>

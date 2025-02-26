@@ -48,7 +48,7 @@ const LeftApp = (props: any) => {
   const active = menuid
 
   const handleChatClick = (id: string, path: string) => {
-    router.push(`/app/${path}/${app.id}`)
+    router.push(`/flow/${path}/${app.id}`)
   }
 
   const renderChats = () => {

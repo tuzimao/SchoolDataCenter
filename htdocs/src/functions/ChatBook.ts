@@ -11,14 +11,14 @@ const ChatBookLanguage = "ChatBookLanguage"
 const ChatAnonymousUserId = "ChatAnonymousUserId"
 
 export async function GetLLMS() {
-    const response = await axios.get(authConfig.backEndApiHost + '/api/llms', { }).then(res=>res.data)
+    const response = await axios.get(authConfig.backEndApiAiBaseUrl + '/api/llms', { }).then(res=>res.data)
     
     return response
 }
 
 
 export async function GetAllMyDataset(token: string) {
-    const response = await axios.post(authConfig.backEndApiHost + '/api/getdatasetpage/0/100',
+    const response = await axios.post(authConfig.backEndApiAiBaseUrl + '/api/getdatasetpage/0/100',
         {},
         {
         headers: {
@@ -92,7 +92,7 @@ export async function ChatKnowledgeOutput(Message: string, Token: string, UserId
     }
     try {
         setProcessingMessage('')
-        const response = await fetch(authConfig.backEndApiHost + `/api/ChatOpenaiKnowledge`, {
+        const response = await fetch(authConfig.backEndApiAiBaseUrl + `/api/ChatOpenaiKnowledge`, {
           method: 'POST',
           headers: {
             Authorization: Token,

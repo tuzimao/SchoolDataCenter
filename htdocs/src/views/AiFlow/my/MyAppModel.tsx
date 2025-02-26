@@ -85,7 +85,7 @@ const AppModel = (props: any) => {
             component={Link}
             sx={{ '& svg': { mr: 2 } }}
             onClick={handleRowOptionsClose}
-            href={`/app/edit/${id}`}
+            href={`/flow/edit/${id}`}
           >
             <Icon icon='mdi:pencil-outline' fontSize={20} />
             {t('Edit')}
@@ -94,7 +94,7 @@ const AppModel = (props: any) => {
             component={Link}
             sx={{ '& svg': { mr: 2 } }}
             onClick={handleRowOptionsClose}
-            href={`/app/chat/${id}`}
+            href={`/flow/chat/${id}`}
           >
             <Icon icon='material-symbols:chat-bubble-outline' fontSize={20} />
             {t('Chat')}
