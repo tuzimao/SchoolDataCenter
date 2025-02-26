@@ -2,7 +2,6 @@
 require_once('../cors.php');
 header('Content-Type: text/event-stream');
 
-
 // Handle preflight requests
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit(0);

@@ -54,7 +54,7 @@ const AllApp = () => {
 
     if(loadingAllData == false && authorization)  {
       setLoading(true)
-      const RS = await axios.post(authConfig.backEndApiAiBaseUrl + '/api/getapppageall/' + pageid + '/' + pagesize, {type, search},  {
+      const RS = await axios.post(authConfig.backEndApiHost + '/aiagent/workflow.php?action=listallapp', {pageid, pagesize, type, search},  {
         headers: { Authorization: authorization, 'Content-Type': 'application/json' },
       }).then(res => res.data);
       if(RS && RS.data) {

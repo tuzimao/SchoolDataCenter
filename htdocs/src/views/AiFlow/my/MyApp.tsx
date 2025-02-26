@@ -64,7 +64,7 @@ const MyApp = () => {
     if(loadingAllData == false)  {
       setLoading(true)
       const authorization = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
-      const RS = await axios.post(authConfig.backEndApiAiBaseUrl + '/api/getapppage/' + pageid + '/' + pagesize, {type, search},  {
+      const RS = await axios.post(authConfig.backEndApiHost + '/aiagent/workflow.php?action=listmyapp', {pageid, pagesize, type, search},  {
         headers: { Authorization: authorization, 'Content-Type': 'application/json' },
       }).then(res => res.data);
       if(RS && RS.data) {
@@ -105,7 +105,7 @@ const MyApp = () => {
       setLoading(true)
       setIsDisabledButton(true)
       const authorization = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
-      const RS = await axios.post(authConfig.backEndApiAiBaseUrl + '/api/deleteapp', {appId: appId}, {
+      const RS = await axios.post(authConfig.backEndApiHost + '/aiagent/workflow.php?action=deletemyapp', {appId: appId}, {
         headers: { Authorization: authorization, 'Content-Type': 'application/json' },
       }).then(res => res.data);
       if(RS && RS.status && RS.status == 'ok') {
@@ -140,7 +140,7 @@ const MyApp = () => {
   }, [app]); 
 
   const [NewOpen, setNewOpen] = useState<boolean>(false);
-  const [AppNewForm, setAppNewForm] = useState<any>({name: t('My App'), flowType: 'simpleChat', groupTwo: "Default"})
+  const [AppNewForm, setAppNewForm] = useState<any>({name: t('My App'), flowType: 'simpleChat', groupOne: "通用", groupTwo: ""})
 
   const handleAddApp = async () => {
     console.log("AppNewForm", AppNewForm)
@@ -154,17 +154,16 @@ const MyApp = () => {
           ...simpleChat,
           id: code,
           _id: code,
-          teamId: code,
           updateTime: String(new Date(Date.now()).toLocaleString())
         }
       }
-      const PostParams = {name: AppNewForm.name, _id: simpleChatNew._id, teamId: simpleChatNew.teamId, intro: simpleChatNew.intro, avatar: simpleChatNew.avatar, type: simpleChatNew.type, groupOne: AppNewForm.groupOne, groupTwo: AppNewForm.groupTwo, permission: simpleChatNew.permission, data: simpleChatNew}
+      const PostParams = {AppName: AppNewForm.name, _id: simpleChatNew._id, AppIntro: simpleChatNew.intro, AppAvatar: simpleChatNew.avatar, AppType: simpleChatNew.type, GroupOne: AppNewForm.groupOne, GroupTwo: AppNewForm.groupTwo, IsPublic: simpleChatNew.permission, data: simpleChatNew}
       const authorization = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
-      const FormSubmit: any = await axios.post(authConfig.backEndApiAiBaseUrl + '/api/addapp', PostParams, { headers: { Authorization: authorization, 'Content-Type': 'application/json'} }).then(res => res.data)
+      const FormSubmit: any = await axios.post(authConfig.backEndApiHost + '/aiagent/workflow.php?action=addapp', PostParams, { headers: { Authorization: authorization, 'Content-Type': 'application/json'} }).then(res => res.data)
       console.log("FormSubmit", FormSubmit)
-      if(FormSubmit && FormSubmit.status == 'ok' && code)  {
+      if(FormSubmit && FormSubmit.status == 'ok' && FormSubmit.InsertID)  {
         toast.success(t(FormSubmit.msg) as string, { duration: 2500, position: 'top-center' })
-        router.push('/flow/edit/' + code)
+        router.push('/flow/edit/' + FormSubmit.InsertID)
       }
     }
   }

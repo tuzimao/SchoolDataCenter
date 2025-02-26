@@ -63,48 +63,47 @@ const NewApp = ({ NewOpen, setNewOpen, handleAddApp, AppNewForm, setAppNewForm }
                         }}
                     />
                 </Grid>
-                <Grid item sx={{pt: 0}} xs={12}>
-                    <Box display="flex" mb={1} alignItems="center">
-                        <Typography sx={{pb: 1}}>{t('groupOne') as string}</Typography>
-                        <span style={{ paddingTop: '5px', color: 'red', marginLeft: '3px' }}>*</span>
-                    </Box>
-                    <TextField
-                        size='small'
-                        InputProps={{ inputProps: { min: 0, max: 100 } }}
-                        value={AppNewForm.groupOne || 'General'}
-                        sx={{ width: '100%', resize: 'both', '& .MuiInputBase-input': { fontSize: '0.875rem' } }}
-                        onChange={(e: any) => {
-                            setAppNewForm((prevState: any)=>({
-                                ...prevState,
-                                groupOne: e.target.value as string
-                            }))
-                            console.log("e.target.value", e.target.value);
-                        }}
-                    />
-                </Grid>
                 <Grid item sx={{pt: 1}} xs={12}>
                     <Box display="flex" mb={1} alignItems="center">
-                        <Typography sx={{pb: 1}}>{t('groupTwo') as string}</Typography>
+                        <Typography sx={{pb: 1}}>{t('GroupOne') as string}</Typography>
                         <span style={{ paddingTop: '5px', color: 'red', marginLeft: '3px' }}>*</span>
                     </Box>
                     <Select 
                         size="small" 
-                        value={AppNewForm.groupTwo}
+                        value={AppNewForm.GroupOne}
                         fullWidth
                         onChange={(e: any) => {
                             if(e.target.value != null) {
                                 setAppNewForm((prevState: any)=>({
                                     ...prevState,
-                                    groupTwo: e.target.value as string
+                                    GroupOne: e.target.value as string
                                 }))
                             }
                         }}
                         >
-                        <MenuItem value={"Default"}>{t("Default")}</MenuItem>
                         {appGroupList.map((item: any, indexItem: number)=>{
                             return <MenuItem value={item} key={`${indexItem}`}>{item}</MenuItem>
                         })}
                     </Select>
+                </Grid>
+                <Grid item sx={{pt: 0}} xs={12}>
+                    <Box display="flex" mb={1} alignItems="center">
+                        <Typography sx={{pb: 1}}>{t('GroupTwo') as string}</Typography>
+                        <span style={{ paddingTop: '5px', color: 'red', marginLeft: '3px' }}>*</span>
+                    </Box>
+                    <TextField
+                        size='small'
+                        InputProps={{ inputProps: { min: 0, max: 100 } }}
+                        value={AppNewForm.GroupTwo || 'General'}
+                        sx={{ width: '100%', resize: 'both', '& .MuiInputBase-input': { fontSize: '0.875rem' } }}
+                        onChange={(e: any) => {
+                            setAppNewForm((prevState: any)=>({
+                                ...prevState,
+                                GroupTwo: e.target.value as string
+                            }))
+                            console.log("e.target.value", e.target.value);
+                        }}
+                    />
                 </Grid>
                 <Grid item sx={{pt: 1}} xs={12}>
                     <Box display="flex" mb={1} alignItems="center">

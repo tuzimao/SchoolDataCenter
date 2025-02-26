@@ -7,7 +7,6 @@ import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
 import Button from '@mui/material/Button'
 import CardMedia from '@mui/material/CardMedia'
-import { authConfig } from 'src/configs/auth'
 import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
 import Typography from '@mui/material/Typography'
@@ -16,7 +15,6 @@ import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import Link from 'next/link'
 
-import Avatar from '@mui/material/Avatar'
 import Container from '@mui/material/Container'
 import CircularProgress from '@mui/material/CircularProgress'
 import { useTheme } from '@mui/material/styles'
@@ -26,7 +24,6 @@ import { useRouter } from 'next/router'
 import Icon from 'src/@core/components/icon'
 
 import { useTranslation } from 'react-i18next'
-import { AppAvatar } from 'src/functions/ChatBook'
 
 
 const AppModel = (props: any) => {
@@ -145,21 +142,22 @@ const AppModel = (props: any) => {
                             sx={{cursor: 'pointer'}}
                           >
                             <Box display="flex" alignItems="center">
-                              <Avatar src={AppAvatar(authConfig.backEndApiAiBaseUrl, item.avatar)} sx={{ mr: 3, width: 35, height: 35 }} />
+                              <Icon icon={item.AppAvatar} color={theme.palette.primary.main} fontSize={35} />
                               <Typography 
                                   sx={{
                                       fontWeight: 500,
                                       lineHeight: 1.71,
                                       letterSpacing: '0.22px',
                                       fontSize: '1rem !important',
-                                      maxWidth: '200px',
+                                      maxWidth: '220px',
                                       overflow: 'hidden',
                                       textOverflow: 'ellipsis',
                                       whiteSpace: 'nowrap',
                                       flexGrow: 1,
+                                      pl: 1
                                   }}
                               >
-                                  {item.name}
+                                  {item.AppName}
                               </Typography>
                             </Box>
                           </Box>
@@ -178,10 +176,10 @@ const AppModel = (props: any) => {
                               router.push('/flow/edit/' + item._id)
                             }}
                             >
-                            <Typography variant='body2'>{item.intro}</Typography>
+                            <Typography variant='body2'>{item.AppIntro}</Typography>
                           </Box>
                           <Box position="absolute" bottom={0} left={1} m={1} px={0.8}>
-                            <Button  variant="text" size="small" startIcon={<Icon icon={item.permission == 'private' ? 'ri:git-repository-private-line' : 'material-symbols:share'} />} >
+                            <Button  variant="text" size="small" disabled sx={{textTransform: 'capitalize'}} startIcon={<Icon icon={item.IsPublic == '否' ? 'ri:git-repository-private-line' : 'material-symbols:share'} />} >
                               {t(item.permission)}
                             </Button>
                           </Box>
