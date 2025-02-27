@@ -159,7 +159,7 @@ const MyApp = () => {
       }
       const PostParams = {AppName: AppNewForm.name, _id: simpleChatNew._id, AppIntro: simpleChatNew.intro, AppAvatar: simpleChatNew.avatar, AppType: simpleChatNew.type, GroupOne: AppNewForm.groupOne, GroupTwo: AppNewForm.groupTwo, IsPublic: simpleChatNew.permission, data: simpleChatNew}
       const authorization = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
-      const FormSubmit: any = await axios.post(authConfig.backEndApiHost + '/aiagent/workflow.php?action=addapp', PostParams, { headers: { Authorization: authorization, 'Content-Type': 'application/json'} }).then(res => res.data)
+      const FormSubmit: any = await axios.post(authConfig.backEndApiHost + '/aiagent/workflow.php?action=addmyapp', PostParams, { headers: { Authorization: authorization, 'Content-Type': 'application/json'} }).then(res => res.data)
       console.log("FormSubmit", FormSubmit)
       if(FormSubmit && FormSubmit.status == 'ok' && FormSubmit.InsertID)  {
         toast.success(t(FormSubmit.msg) as string, { duration: 2500, position: 'top-center' })

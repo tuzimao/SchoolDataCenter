@@ -1,8 +1,16 @@
-import Secrets from 'secrets.js'
+import { toByteArray, fromByteArray } from 'base64-js';
 
-export function fromHex (data: string) { return Secrets.hex2str(data, 1) }
+export function base64_encode (str: string) {
+  const byteArray = new TextEncoder().encode(str);
+  
+  return fromByteArray(byteArray);
+}
 
-export function toHex (data: string) { return Secrets.str2hex(data, 1) }
+export function base64_decode (base64Str: string) {
+  const byteArray = toByteArray(base64Str);
+
+  return new TextDecoder().decode(byteArray);
+}
 
 export function hexToBase64 (hexString: string): string {
 	

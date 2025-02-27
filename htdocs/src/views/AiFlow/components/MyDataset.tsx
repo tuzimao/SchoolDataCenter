@@ -16,14 +16,14 @@ import Grid from '@mui/material/Grid'
 import Avatar from '@mui/material/Avatar'
 import Typography from '@mui/material/Typography'
 
-import { GetAllMyDataset } from 'src/functions/ChatBook'
+import axios from 'axios'
+import { defaultConfig, authConfig } from 'src/configs/auth'
 
 import Button from '@mui/material/Button'
 import IconButton from '@mui/material/IconButton'
 import CloseIcon from '@mui/icons-material/Close';
 
 import CustomCheckboxBasic from 'src/@core/components/custom-checkbox/basic'
-import { defaultConfig } from 'src/configs/auth'
 
 const MyDataset = (props: any) => {
     // ** Props
@@ -44,7 +44,10 @@ const MyDataset = (props: any) => {
         const fetchData = async () => {
             const authorization = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
             if(auth && auth.user && authorization)  {
-                const MyDatasetListData = await GetAllMyDataset(authorization)
+                const authorization = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
+                const MyDatasetListData = await axios.post(authConfig.backEndApiHost + '/aiagent/workflow.php?action=listdataset', {pageid: 0, pagesize: 100},  {
+                    headers: { Authorization: authorization, 'Content-Type': 'application/json' },
+                }).then(res => res.data);
                 console.log("MyDatasetListData", MyDatasetListData)
                 const tempData: any[] = []
                 MyDatasetListData && MyDatasetListData.data && MyDatasetListData.data.length>0 && MyDatasetListData.data.map((item: any)=>{

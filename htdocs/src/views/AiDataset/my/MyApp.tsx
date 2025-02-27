@@ -63,9 +63,10 @@ const MyApp = () => {
     if(loadingAllData == false)  {
       setLoading(true)
       const authorization = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
-      const RS = await axios.post(authConfig.backEndApiAiBaseUrl + '/api/getdatasetpage/' + pageid + '/' + pagesize, {type, search},  {
+      const RS = await axios.post(authConfig.backEndApiHost + '/aiagent/workflow.php?action=listdataset', {pageid, pagesize, type, search},  {
         headers: { Authorization: authorization, 'Content-Type': 'application/json' },
       }).then(res => res.data);
+
       if(RS && RS.data) {
         const appInitial: string[] = []
         RS.data.map((Item: any)=>{

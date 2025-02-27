@@ -253,7 +253,8 @@ const AdvancedApp = () => {
       }
       const authorization = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
       const PostParams = {name: appNew.name, _id: appNew._id, teamId: appNew.teamId, intro: appNew.intro, avatar: appNew.avatar, type: appNew.type, groupTwo: appNew.groupTwo, permission: appNew.permission, data: appNew}
-      const FormSubmit: any = await axios.post(authConfig.backEndApiAiBaseUrl + '/api/editapp', PostParams, { headers: { Authorization: authorization, 'Content-Type': 'application/json'} }).then(res => res.data)
+      const FormSubmit: any = await axios.post(authConfig.backEndApiHost + '/aiagent/workflow.php?action=editapp', PostParams, { headers: { Authorization: authorization, 'Content-Type': 'application/json'} }).then(res => res.data)
+
       console.log("FormSubmit", FormSubmit)
       toast.success(t('Update Success') as string, {
         duration: 2000

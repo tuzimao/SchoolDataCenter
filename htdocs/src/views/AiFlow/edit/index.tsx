@@ -48,9 +48,9 @@ const EditApp = (props: any) => {
   }, [])
 
   const getMyApp = async function (id: string) {
-    if (auth && auth.user && id) {
+    if (auth && auth.user && id && window) {
       const authorization = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
-      const RS = await axios.post(authConfig.backEndApiAiBaseUrl + '/api/getapp', {appId: id}, { headers: { Authorization: authorization, 'Content-Type': 'application/json'} }).then(res=>res.data)
+      const RS = await axios.post(authConfig.backEndApiHost + '/aiagent/workflow.php?action=getmyapp', {appId: id}, { headers: { Authorization: authorization, 'Content-Type': 'application/json'} }).then(res=>res.data)
       setApp(RS)
     }
   }
@@ -58,42 +58,36 @@ const EditApp = (props: any) => {
   const handleEditApp = async () => {
     console.log("handleEditApp app", app)
     setIsDisabledButton(true)
-    if (auth && auth.user) {
+    if (auth && auth.user && window) {
       const appNew = {
         ...app,
-        updateTime: String(new Date(Date.now()).toLocaleString()),
         mode: 'simple'
-      }
-      const formData = new FormData();
-      formData.append('name', appNew.name);
-      formData.append('_id', appNew._id);
-      formData.append('teamId', appNew.teamId);
-      formData.append('intro', appNew.intro);
-      formData.append('avatar', appNew.avatar); // Assuming appNew.avatar is the File object of the image
-      formData.append('type', appNew.type);
-      formData.append('groupTwo', appNew.groupTwo);
-      formData.append('permission', appNew.permission);
-      formData.append('data', JSON.stringify(appNew)); // Assuming appNew is an object
-
-      // Now you can append the image file(s) to the formData
-      avatarFiles.forEach((file: any) => {
-        formData.append(`avatar`, file);
-      });
-
-      const authorization = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
+      };
+      
+      const payload = {
+        appId: String(id),
+        name: appNew.name,
+        _id: appNew._id,
+        intro: appNew.intro,
+        avatar: appNew.avatar, // Assuming appNew.avatar is a URL or base64 string
+        type: appNew.type,
+        permission: appNew.permission,
+        data: appNew // Send the entire appNew object directly
+      };
+      
+      const authorization = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!;
+      
       const FormSubmit: any = await axios.post(
-        authConfig.backEndApiAiBaseUrl + '/api/editapp',
-        formData,
+        authConfig.backEndApiHost + '/aiagent/workflow.php?action=editapp',
+        payload, // Send the payload directly as JSON
         {
           headers: {
             Authorization: authorization,
-            'Content-Type': 'multipart/form-data', // Important: Use multipart/form-data for file uploads
+            'Content-Type': 'application/json', // Set Content-Type to application/json
           },
         }
       ).then(res => res.data);
 
-      //const PostParams = {name: appNew.name, _id: appNew._id, teamId: appNew.teamId, intro: appNew.intro, avatar: appNew.avatar, type: appNew.type, groupTwo: appNew.groupTwo, permission: appNew.permission, data: appNew}
-      //const FormSubmit: any = await axios.post(authConfig.backEndApiAiBaseUrl + '/api/editapp', PostParams, { headers: { Authorization: authorization, 'Content-Type': 'application/json'} }).then(res => res.data)
       console.log("FormSubmit", FormSubmit)
       setIsDisabledButton(false)
       if(FormSubmit?.status == "ok") {
@@ -111,7 +105,7 @@ const EditApp = (props: any) => {
   const handleDeleteApp = async () => {
     console.log("handleEditApp app", app)
     setIsDisabledButton(true)
-    if (auth && auth.user) {
+    if (auth && auth.user && window) {
       const authorization = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
       const PostParams = {appId: app._id}
       const FormSubmit: any = await axios.post(authConfig.backEndApiAiBaseUrl + '/api/deleteapp', PostParams, { headers: { Authorization: authorization, 'Content-Type': 'application/json'} }).then(res => res.data)

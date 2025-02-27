@@ -10,26 +10,6 @@ const ChatChatHistory = "ChatChatHistory"
 const ChatBookLanguage = "ChatBookLanguage"
 const ChatAnonymousUserId = "ChatAnonymousUserId"
 
-export async function GetLLMS() {
-    const response = await axios.get(authConfig.backEndApiAiBaseUrl + '/api/llms', { }).then(res=>res.data)
-    
-    return response
-}
-
-
-export async function GetAllMyDataset(token: string) {
-    const response = await axios.post(authConfig.backEndApiAiBaseUrl + '/api/getdatasetpage/0/100',
-        {},
-        {
-        headers: {
-            Authorization: token,
-            'Content-Type': 'application/json'
-        },
-        params: {}
-    }).then(res=>res.data);
-    
-    return response
-}
 
 
 export function ChatKnowledgeInit(MsgList: any) {

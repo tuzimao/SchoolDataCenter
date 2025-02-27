@@ -20,11 +20,12 @@ import Slider from '@mui/material/Slider'
 import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
 
-import { GetLLMS } from 'src/functions/ChatBook'
 
 import Button from '@mui/material/Button'
 import IconButton from '@mui/material/IconButton'
-import CloseIcon from '@mui/icons-material/Close';
+import CloseIcon from '@mui/icons-material/Close'
+import axios from 'axios'
+import { defaultConfig, authConfig } from 'src/configs/auth'
 
 const LLMModel = (props: any) => {
     // ** Props
@@ -42,7 +43,9 @@ const LLMModel = (props: any) => {
     const [llms, setLlms] = useState<any>()
     useEffect(() => {
         const fetchData = async () => {
-            setLlms(await GetLLMS())
+            const authorization = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
+            const response = await axios.get(authConfig.backEndApiHost + '/aiagent/workflow.php?action=llms', { headers: { Authorization: authorization, 'Content-Type': 'application/json'} }).then(res=>res.data)
+            setLlms(response)
         };
         fetchData();
     }, [])

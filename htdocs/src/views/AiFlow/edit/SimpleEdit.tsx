@@ -15,11 +15,9 @@ import InputLabel from '@mui/material/InputLabel'
 import FormControl from '@mui/material/FormControl'
 import TextField2 from 'src/views/Enginee/components/TextField2'
 import { styled } from '@mui/material/styles'
-import { authConfig } from 'src/configs/auth'
 
 // ** Axios Imports
 import { useRouter } from 'next/router'
-import { AppAvatar } from 'src/functions/ChatBook'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -33,7 +31,7 @@ import PerfectScrollbar from 'react-perfect-scrollbar'
 import SimpleEditApplication from 'src/views/AiFlow/edit/SimpleEditApplication'
 import SimpleEditAppDelete from 'src/views/AiFlow/edit/SimpleEditAppDelete'
 
-const WorkFlowPermissionList = ['private','team','public']
+const WorkFlowPermissionList = ['private', 'public']
 
 const ScrollWrapper = ({ children, hidden }: { children: ReactNode; hidden: boolean }) => {
     if (hidden) {
@@ -118,21 +116,23 @@ const SimpleEdit = (props: any) => {
                                         {t("Delete")}
                                         </Button>
                                     </Grid>
-                                    <Grid item xs={2}>
-                                        <Box {...getRootPropsAvatar({ className: 'dropzone' })} sx={{width: '38px', height: '38px', cursor: 'pointer'}}>
-                                            <input {...getInputPropsAvatar()} />
-                                            {avatarFiles && avatarFiles.length ? (
-                                                <Box  sx={{ alignItems: 'center'}}>
-                                                    <Img alt={`${t(`Upload Avatar image`)}`} src={URL.createObjectURL(avatarFiles[0] as any)} sx={{width: '100%', borderRadius: '25px'}}/>
-                                                </Box>
-                                            ) : (
-                                                <Box sx={{alignItems: 'center'}}>
-                                                    <Img alt={`${t(`Upload Avatar image`)}`} src={AppAvatar(authConfig.backEndApiAiBaseUrl, app.avatar)} sx={{width: '100%', borderRadius: '25px'}}/>
-                                                </Box>
-                                            )}
-                                        </Box>
+                                    <Grid item xs={4}>
+                                        <TextField
+                                            fullWidth
+                                            size="small"
+                                            label={`${t('Avatar')}`}
+                                            placeholder={`${t('Avatar')}`}
+                                            value={app?.avatar || ''}
+                                            onChange={(e: any) => {
+                                                setApp((prevState: any)=>({
+                                                    ...prevState,
+                                                    avatar: e.target.value as string
+                                                }))
+                                                console.log("e.target.value", e.target.value);
+                                            }}
+                                        />
                                     </Grid>
-                                    <Grid item xs={6}>
+                                    <Grid item xs={4}>
                                         <TextField
                                             fullWidth
                                             size="small"
