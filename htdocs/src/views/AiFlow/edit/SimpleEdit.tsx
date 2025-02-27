@@ -14,14 +14,12 @@ import MenuItem from '@mui/material/MenuItem'
 import InputLabel from '@mui/material/InputLabel'
 import FormControl from '@mui/material/FormControl'
 import TextField2 from 'src/views/Enginee/components/TextField2'
-import { styled } from '@mui/material/styles'
 
 // ** Axios Imports
 import { useRouter } from 'next/router'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
-import { useDropzone } from 'react-dropzone'
 
 // ** Third Party Import
 import { useTranslation } from 'react-i18next'
@@ -43,7 +41,7 @@ const ScrollWrapper = ({ children, hidden }: { children: ReactNode; hidden: bool
 
 const SimpleEdit = (props: any) => {
   // ** Props
-  const { app, setApp, handleEditApp, handleDeleteApp, isDisabledButton, deleteOpen, setDeleteOpen, avatarFiles, setAvatarFiles } = props
+  const { app, setApp, handleEditApp, handleDeleteApp, isDisabledButton, deleteOpen, setDeleteOpen } = props
   
   // ** Hook
   const { t } = useTranslation()
@@ -53,28 +51,6 @@ const SimpleEdit = (props: any) => {
     CheckPermission(auth, router, false)
   }, [])
 
-  // Styled component for the upload image inside the dropzone area
-  const Img = styled('img')(({ theme }) => ({
-    [theme.breakpoints.up('md')]: {
-        marginRight: theme.spacing(15.75)
-    },
-    [theme.breakpoints.down('md')]: {
-        marginBottom: theme.spacing(4)
-    },
-    [theme.breakpoints.down('sm')]: {
-        width: 38
-    }
-  }))
-
-  const { getRootProps: getRootPropsAvatar, getInputProps: getInputPropsAvatar } = useDropzone({
-    multiple: false,
-    accept: {
-      'image/*': ['.png', '.jpg', '.jpeg']
-    },
-    onDrop: (acceptedFiles: File[]) => {
-        setAvatarFiles(acceptedFiles.map((file: File) => Object.assign(file)))
-    }
-  })
 
   const hidden = false;
   
@@ -90,7 +66,7 @@ const SimpleEdit = (props: any) => {
                                 <Grid container spacing={5}>
                                     <Grid xs={12} sx={{m: 0, p: 0, zIndex: 999}}>
                                         <Typography sx={{ fontSize: '0.8rem', textAlign: 'right' }}>
-                                            Id: {`${t(app?._id || '')}`}
+                                            Id: {app.id.slice(0, 20)}...
                                         </Typography>
                                     </Grid>
                                     <Grid item xs={12} sx={{m:0, mt: -4, p: 0}}>
@@ -101,12 +77,12 @@ const SimpleEdit = (props: any) => {
 
                                     <Grid item xs={12}>
                                         <Button variant='outlined' sx={{mr: 1}} size="small" startIcon={<Icon icon='mingcute:file-export-fill' />} onClick={()=>{
-                                            router.push('/flow/chat/' + app?._id)
+                                            router.push('/flow/chat/' + app.id)
                                         }}>
                                         {t("Chat")}
                                         </Button>
                                         <Button variant='outlined' sx={{mr: 1}} size="small" startIcon={<Icon icon='material-symbols:chat' />} onClick={()=>{
-                                            router.push('/flow/publish/' + app?._id)
+                                            router.push('/flow/publish/' + app.id)
                                         }}>
                                         {t("Publish")}
                                         </Button>

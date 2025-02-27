@@ -153,15 +153,16 @@ if($action == "editapp" && $appId != '')   {
     }
 }
 
-$appId      = FilterString($_POST['appId']);
-if($action == "getmyapp" && $appId != '')   {
-    $appId  = DecryptID($appId);  
+$appId2      = FilterString($_POST['appId']);
+if($action == "getmyapp" && $appId2 != '')   {
+    $appId  = DecryptID($appId2);  
     if($appId>0) {
         $sql    = "select * from data_ai_app where id='".$appId."'";
         $rs     = $db->Execute($sql);
         $rs_a   = $rs->GetArray();
         $RS     = json_decode(base64_decode($rs_a[0]['AppData']), true);
         $RS['status']       = 'ok';
+        $RS['id']           = $appId2;
         print json_encode($RS);
         exit;
     }
