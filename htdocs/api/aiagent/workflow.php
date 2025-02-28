@@ -161,6 +161,12 @@ if($action == "getmyapp" && $appId2 != '')   {
         $rs     = $db->Execute($sql);
         $rs_a   = $rs->GetArray();
         $RS     = json_decode(base64_decode($rs_a[0]['AppData']), true);
+        //合并数据,兼容简单和高级两个AI聊天模式
+        foreach($rs_a[0] as $KEY => $VALUE) {
+            if($KEY != "AppData") {
+                $RS[$KEY] = $VALUE;
+            }
+        }
         $RS['status']       = 'ok';
         $RS['id']           = $appId2;
         print json_encode($RS);

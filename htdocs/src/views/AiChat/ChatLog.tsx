@@ -204,7 +204,6 @@ const ChatLog = (props: any) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, questionGuide, sendButtonDisable])
 
-
   return (
     <Box
         className='app-chat'
@@ -220,20 +219,25 @@ const ChatLog = (props: any) => {
         }}
       >
       <Box display="flex" alignItems="center" justifyContent="left" borderRadius="8px" px={3} my={1} >
-        <CustomAvatar
-          skin='light'
-          color={'primary'}
-          sx={{
-            width: '2rem',
-            height: '2rem',
-            fontSize: '0.875rem',
-          }}
-          {...{
-            src: app.avatar? AppAvatar(authConfig.backEndApiHost, app.avatar) : '/images/avatars/1.png',
-            alt: chatName
-          }}
-        >
-        </CustomAvatar>
+        {app.avatar && app.avatar.includes(':') ? 
+          <Icon icon={app.avatar} fontSize='inherit' />
+          : 
+          <CustomAvatar
+            skin='light'
+            color={'primary'}
+            sx={{
+              width: '2rem',
+              height: '2rem',
+              fontSize: '0.875rem',
+            }}
+            {...{
+              src: app.avatar? AppAvatar(authConfig.backEndApiHost, app.avatar) : '/images/avatars/1.png',
+              alt: chatName
+            }}
+          >
+          </CustomAvatar> 
+        }
+        
         <Typography
           sx={{
             width: 'fit-content',
@@ -406,11 +410,12 @@ const ChatLog = (props: any) => {
                 {item.messages.map((chat: ChatLogChatType, ChatIndex: number) => {
                   let ChatMsgType = 'Chat'
                   let ChatMsgContent: any
-                  if(chat.msg.includes('"type":"image"')) {
+                  console.log("ChatLogChatType", chat)
+                  if(chat.msg && chat.msg.includes('"type":"image"')) {
                     ChatMsgType = 'Image'
                     ChatMsgContent = JSON.parse(chat.msg)
                   }
-                  if(chat.msg.includes('"type":"audio"')) {
+                  if(chat.msg && chat.msg.includes('"type":"audio"')) {
                     ChatMsgType = 'Audio'
                     ChatMsgContent = JSON.parse(chat.msg)
                   }
