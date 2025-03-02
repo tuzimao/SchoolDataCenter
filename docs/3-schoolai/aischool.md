@@ -2,7 +2,7 @@
 icon: gauge-high
 ---
 
-#### AI仪表盘
+#### AI智搜
 
 利用AI技术，可以让用户使用自然语言，来从学校的数据库中获取想要的各种结果。
 
@@ -29,8 +29,8 @@ icon: gauge-high
 | <img src="./images/AIChat-27-2.png" > | <img src="./images/AIChat-28.png" > |
 | <img src="./images/AIChat-29.png" > | <img src="./images/AIChat-30.png" > |
 
-#### AI仪表盘配置
-1 在此可以设置AI仪表盘所对接的本地数据库
+#### AI智搜配置
+1 在此可以设置AI智搜所对接的本地数据库
 2 每一行对应一个本地的数据表
 3 可以在数据交换中配置本地数据源
 4 为每一行的数据项目配置对应的提示词语，然后交由AI生成想要的SQL语句
