@@ -616,7 +616,7 @@ const ChatLog = (props: any) => {
           )
         })
         }
-        {sendButtonDisable == true && app.AppName == "AI智能仪表盘" && (
+        {sendButtonDisable == true && app.AppName == "AI智搜" && (
           <Box display="flex" alignItems="center" justifyContent="left" borderRadius="8px" p={0} mb={1} pt={3} >
             <CustomAvatar
               skin='light'

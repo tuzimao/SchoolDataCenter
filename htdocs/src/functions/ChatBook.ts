@@ -301,7 +301,7 @@ export async function ChatAiOutputV1(authConfig: any, app: any, _id: string, Mes
     try {
         setProcessingMessage('')
         console.log("chatId", chatId)
-        if(app.AppName == "AI智能仪表盘")  {
+        if(app.AppName == "AI智搜")  {
           if(chatId && UserId)  {
             setStepingMessage('开始判断当前查询归属哪个模块,预计需要3-5秒')
             const startTime = performance.now()
@@ -327,8 +327,8 @@ export async function ChatAiOutputV1(authConfig: any, app: any, _id: string, Mes
             //流式输出, 通常用于显示文本信息
             //非流式输出, 支持显示: 图片, 图表, 表格等其它类型
             const responseRouterTextJSON = await responseRouter.json();
-            console.log("AI智能仪表盘 responseTextJSON", responseRouterTextJSON)
-            console.log("AI智能仪表盘 OpenAI Response object1:", responseRouterTextJSON.data)
+            console.log("AI智搜 responseTextJSON", responseRouterTextJSON)
+            console.log("AI智搜 OpenAI Response object1:", responseRouterTextJSON.data)
             if(responseRouterTextJSON && responseRouterTextJSON.message) {
               setStepingMessage('当前查询归属:' + responseRouterTextJSON.message + ', 准备下步骤: 数据查询')
               setTimeout(() => {
@@ -367,10 +367,10 @@ export async function ChatAiOutputV1(authConfig: any, app: any, _id: string, Mes
               //流式输出, 通常用于显示文本信息
               //非流式输出, 支持显示: 图片, 图表, 表格等其它类型
               const responseContentTextJSON = await responseContent.json();
-              console.log("AI智能仪表盘 responseTextJSON", responseContentTextJSON)
-              console.log("AI智能仪表盘 OpenAI Response object1:", responseContentTextJSON.data)
+              console.log("AI智搜 responseTextJSON", responseContentTextJSON)
+              console.log("AI智搜 OpenAI Response object1:", responseContentTextJSON.data)
               if(responseContentTextJSON && responseContentTextJSON.data) {
-                console.log("AI智能仪表盘 OpenAI Response string:", UserId, "")
+                console.log("AI智搜 OpenAI Response string:", UserId, "")
                 const endTime = performance.now()
                 const responseTime = Math.round((endTime - startTime) * 100 / 1000) / 100
                 ChatChatInput(appId, _id, Message, JSON.stringify(responseContentTextJSON), 999999, responseTime, History)

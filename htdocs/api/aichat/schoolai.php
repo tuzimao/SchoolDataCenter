@@ -28,7 +28,7 @@ $历史消息        = (array)$_POST['history'];
 $用户输入        = (string)$_POST['question'];
 $模块            = (string)$_POST['module'];
 
-$sql      = "select * from data_ai_app where AppName = 'AI智能仪表盘' ";
+$sql      = "select * from data_ai_app where AppName = 'AI智搜' ";
 $rs       = $db->Execute($sql);
 $rs_a     = $rs->GetArray();
 $应用配置  = $rs_a[0];
@@ -53,19 +53,30 @@ if($用户输入 != "" && $_GET['action'] == 'router')   {
     if($RS_Item['数据表结构'] == "" && $RS_Item['数据源'] != "")  {
       $sql = "select * from data_datasource where id='".$RS_Item['数据源']."'";
       $rs = $db->Execute($sql);
-      $rs_a = $rs->GetArray();
-      $Item = $rs_a[0];
-      $db_remote = NewADOConnection($DB_TYPE='mysqli');
-      $db_remote->connect($Item['数据库主机'], $Item['数据库用户名'], DecryptID($Item['数据库密码']), $Item['数据库名称']);
-      $db_remote->Execute("Set names utf8;");
-      $db_remote->setFetchMode(ADODB_FETCH_ASSOC);
-      if($db_remote->databaseName!="" && $db_remote->databaseName==$Item['数据库名称']) {
-          $sql = "SHOW CREATE TABLE `".$RS_Item['数据表']."`;";
-          $数据表结构RS = $db_remote->Execute($sql);
-          $CreateTable = $数据表结构RS->fields['Create Table'];
-          $sql = "update data_ai_dashboard set 数据表结构 = '".base64_encode($CreateTable)."' where id='".$RS_Item['id']."'";
-          $db->Execute($sql);
-          $rs_a[$i]['数据表结构'] = base64_encode($CreateTable);
+      $rsF_a = $rs->GetArray();
+      $Item = $rsF_a[0];
+      if($Item['数据库主机'] != "localhost") {
+        $db_remote = NewADOConnection($DB_TYPE='mysqli');
+        $db_remote->connect($Item['数据库主机'], $Item['数据库用户名'], DecryptID($Item['数据库密码']), $Item['数据库名称']);
+        $db_remote->Execute("Set names utf8;");
+        $db_remote->setFetchMode(ADODB_FETCH_ASSOC);
+        if($db_remote->databaseName!="" && $db_remote->databaseName==$Item['数据库名称']) {
+            $sql = "SHOW CREATE TABLE `".$RS_Item['数据表']."`;";
+            $数据表结构RS = $db_remote->Execute($sql);
+            $CreateTable = $数据表结构RS->fields['Create Table'];
+            $sql = "update data_ai_dashboard set 数据表结构 = '".base64_encode($CreateTable)."' where id='".$RS_Item['id']."'";
+            $db->Execute($sql);
+            $rs_a[$i]['数据表结构'] = base64_encode($CreateTable);
+        }
+      }
+      else {
+        //本地数据库
+        $sql = "SHOW CREATE TABLE `".$RS_Item['数据表']."`;";
+        $数据表结构RS = $db->Execute($sql);
+        $CreateTable = $数据表结构RS->fields['Create Table'];
+        $sql = "update data_ai_dashboard set 数据表结构 = '".base64_encode($CreateTable)."' where id='".$RS_Item['id']."'";
+        $db->Execute($sql);
+        $rs_a[$i]['数据表结构'] = base64_encode($CreateTable);
       }
     }
   }
@@ -148,8 +159,8 @@ if($用户输入 != "" && $_GET['action'] == 'content' && $模块 != '')   {
   $提示词语 = str_replace("[数据表结构]", base64_decode($Item['数据表结构']), $提示词语);
   $提示词语 = str_replace("[当前学期]", $当前学期, $提示词语);
   $提示词语 = str_replace("[当前日期]", date('Y-m-d'), $提示词语);
-  $提示词语 = str_replace("[我的用户名]", "810120", $提示词语);
-  $提示词语 = str_replace("[我的学号]", "230401001", $提示词语);
+  $提示词语 = str_replace("[我的用户名]", "admin", $提示词语);
+  $提示词语 = str_replace("[我的学号]", "20230101", $提示词语);
   $提示词语 = str_replace("[我管理的班级]", "", $提示词语);
   $提示词语 = str_replace("[我所教课的班级]", "", $提示词语);
   $提示词语 = str_replace("[我所教课的课程]", "", $提示词语);
@@ -218,11 +229,15 @@ if($用户输入 != "" && $_GET['action'] == 'content' && $模块 != '')   {
   $rs           = $db->Execute($sql) or print_R($Item);
   $rs_a         = $rs->GetArray();
   $Item         = $rs_a[0];
-  $db_remote = NewADOConnection($DB_TYPE='mysqli');
-  $db_remote->connect($Item['数据库主机'], $Item['数据库用户名'], DecryptID($Item['数据库密码']), $Item['数据库名称']);
-  $db_remote->Execute("Set names utf8;");
-  $db_remote->setFetchMode(ADODB_FETCH_ASSOC);
-
+  if($Item['数据库主机'] != "localhost") {
+    $db_remote = NewADOConnection($DB_TYPE='mysqli');
+    $db_remote->connect($Item['数据库主机'], $Item['数据库用户名'], DecryptID($Item['数据库密码']), $Item['数据库名称']);
+    $db_remote->Execute("Set names utf8;");
+    $db_remote->setFetchMode(ADODB_FETCH_ASSOC);
+  }
+  else {
+    $db_remote = $db;
+  }
   if(!$db_remote)  {
     $RS = [];
     $RS['data']     = [];
