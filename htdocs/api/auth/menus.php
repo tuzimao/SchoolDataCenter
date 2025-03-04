@@ -106,7 +106,12 @@ if($USER_TYPE=="User")    {
                     //Menu Three
                     $subChildren = [];
                     foreach($Line as $Name3=>$Line3)    {
-                        $subChildren[] = ['title' => $Line3['MenuThreeName'], 'path' => '/apps/'.$Line3['id'], 'Menu_Three_Icon' => $Line[0]['Menu_Three_Icon'], 'externalLink' => $Line3['NewWindow'] == "1" ? true : false, 'openInNewTab' => $Line3['NewWindow'] == "1" ? true : false ];
+                        if($Line3['FlowId']==0&&$Line3['MenuPath']!="") {
+                            $subChildren[] = ['title' => $Line3['MenuThreeName'], 'path' => $Line3['MenuPath'], 'Menu_Three_Icon' => $Line[0]['Menu_Three_Icon'], 'externalLink' => $Line3['NewWindow'] == "1" ? true : false, 'openInNewTab' => $Line3['NewWindow'] == "1" ? true : false ];
+                        }
+                        else {
+                            $subChildren[] = ['title' => $Line3['MenuThreeName'], 'path' => '/apps/'.$Line3['id'], 'Menu_Three_Icon' => $Line[0]['Menu_Three_Icon'], 'externalLink' => $Line3['NewWindow'] == "1" ? true : false, 'openInNewTab' => $Line3['NewWindow'] == "1" ? true : false ];
+                        }
                     }
                     $Menu['children'][] = ['title' => $Name, 'children' => $subChildren ,'allpath' => [], 'Menu_Three_Icon' => $Line[0]['Menu_Three_Icon'] ];
                 }

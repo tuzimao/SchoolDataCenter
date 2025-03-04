@@ -36,7 +36,7 @@ const IndexBottomFlowNode = (props: IndexBottomFlowNodeType) => {
                         <CardHeader title={ApprovalNodeTitle} />  
                         <CardContent>
                             <StepperWrapper>
-                            { ActiveStep ?
+                            { ActiveStep != undefined ?
                             <Stepper activeStep={ActiveStep}>
                                 {ApprovalNodeFields.map((node, index) => {
                                 const labelProps: {
