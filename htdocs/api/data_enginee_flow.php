@@ -18,10 +18,11 @@ require_once('data_enginee_function.php');
 //$Step = 1;
 
 global $GLOBAL_EXEC_KEY_SQL;
-$GLOBAL_EXEC_KEY_SQL = [];
-$AdditionalPermissionsSQL = "";
+$GLOBAL_EXEC_KEY_SQL        = [];
+$AdditionalPermissionsSQL   = "";
 
-$AdminFilterTipTextArray = [];
+$AdminFilterTipTextArray    = [];
+$AdminFilterOrTipTextArray  = [];
 
 //Get Form Flow Setting
 if($FlowId!="")  {

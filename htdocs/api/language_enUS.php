@@ -49,25 +49,37 @@ $MAP['like'] = 'Like';
 $MAP['<->'] = 'Range';
 
 $MAP['Page_Role_Name'] = 'Extra Role Restriction';
-$MAP['Extra_Priv_Filter_Field_One'] = 'Extra Filter Condition Field One';
-$MAP['Extra_Priv_Filter_Method_One'] = 'Extra Filter Condition Method One';
-$MAP['Extra_Priv_Filter_Value_One'] = 'Extra Filter Condition Value One';
+$MAP['Extra_Priv_Filter_Field_One'] = 'Extra Filter And Condition Field One';
+$MAP['Extra_Priv_Filter_Method_One'] = 'Extra Filter And Condition Method One';
+$MAP['Extra_Priv_Filter_Value_One'] = 'Extra Filter And Condition Value One';
 
-$MAP['Extra_Priv_Filter_Field_Two'] = 'Extra Filter Condition Field Two';
-$MAP['Extra_Priv_Filter_Method_Two'] = 'Extra Filter Condition Method Two';
-$MAP['Extra_Priv_Filter_Value_Two'] = 'Extra Filter Condition Value Two';
+$MAP['Extra_Priv_Filter_Field_Two'] = 'Extra Filter And Condition Field Two';
+$MAP['Extra_Priv_Filter_Method_Two'] = 'Extra Filter And Condition Method Two';
+$MAP['Extra_Priv_Filter_Value_Two'] = 'Extra Filter And Condition Value Two';
 
-$MAP['Extra_Priv_Filter_Field_Three'] = 'Extra Filter Condition Field Three';
-$MAP['Extra_Priv_Filter_Method_Three'] = 'Extra Filter Condition Method Three';
-$MAP['Extra_Priv_Filter_Value_Three'] = 'Extra Filter Condition Value Three';
+$MAP['Extra_Priv_Filter_Field_Three'] = 'Extra Filter And Condition Field Three';
+$MAP['Extra_Priv_Filter_Method_Three'] = 'Extra Filter And Condition Method Three';
+$MAP['Extra_Priv_Filter_Value_Three'] = 'Extra Filter And Condition Value Three';
 
-$MAP['Extra_Priv_Filter_Field_Four'] = 'Extra Filter Condition Field Four';
-$MAP['Extra_Priv_Filter_Method_Four'] = 'Extra Filter Condition Method Four';
-$MAP['Extra_Priv_Filter_Value_Four'] = 'Extra Filter Condition Value Four';
+$MAP['Extra_Priv_Filter_Field_Four'] = 'Extra Filter And Condition Field Four';
+$MAP['Extra_Priv_Filter_Method_Four'] = 'Extra Filter And Condition Method Four';
+$MAP['Extra_Priv_Filter_Value_Four'] = 'Extra Filter And Condition Value Four';
 
-$MAP['Extra_Priv_Filter_Field_Five'] = 'Extra Filter Condition Field Five';
-$MAP['Extra_Priv_Filter_Method_Five'] = 'Extra Filter Condition Method Five';
-$MAP['Extra_Priv_Filter_Value_Five'] = 'Extra Filter Condition Value Five';
+$MAP['Extra_Priv_Filter_Field_Five'] = 'Extra Filter And Condition Field Five';
+$MAP['Extra_Priv_Filter_Method_Five'] = 'Extra Filter And Condition Method Five';
+$MAP['Extra_Priv_Filter_Value_Five'] = 'Extra Filter And Condition Value Five';
+
+$MAP['Extra_Priv_Filter_Or_Field_One']  = 'Extra Filter Or Condition Field One';
+$MAP['Extra_Priv_Filter_Or_Method_One'] = 'Extra Filter Or Condition Method One';
+$MAP['Extra_Priv_Filter_Or_Value_One']  = 'Extra Filter Or Condition Value One';
+
+$MAP['Extra_Priv_Filter_Or_Field_Two']  = 'Extra Filter Or Condition Field Two';
+$MAP['Extra_Priv_Filter_Or_Method_Two'] = 'Extra Filter Or Condition Method Two';
+$MAP['Extra_Priv_Filter_Or_Value_Two']  = 'Extra Filter Or Condition Value Two';
+
+$MAP['Extra_Priv_Filter_Or_Field_Three']  = 'Extra Filter Or Condition Field Three';
+$MAP['Extra_Priv_Filter_Or_Method_Three'] = 'Extra Filter Or Condition Method Three';
+$MAP['Extra_Priv_Filter_Or_Value_Three']  = 'Extra Filter Or Condition Value Three';
 
 $MAP['Yes'] = 'Yes';
 $MAP['No'] = 'No';

@@ -48,25 +48,38 @@ $MAP['not in']          = '不包含';
 $MAP['like']            = '模糊';
 $MAP['<->']             = '区间';
 $MAP['Page_Role_Name']  = '额外限制权限';
-$MAP['Extra_Priv_Filter_Field_One'] = '额外过滤条件字段一';
-$MAP['Extra_Priv_Filter_Method_One'] = '额外过滤条件方法一';
-$MAP['Extra_Priv_Filter_Value_One'] = '额外过滤条件值一';
+$MAP['Extra_Priv_Filter_Field_One'] = '额外过滤并条件字段一';
+$MAP['Extra_Priv_Filter_Method_One'] = '额外过滤并条件方法一';
+$MAP['Extra_Priv_Filter_Value_One'] = '额外过滤并条件值一';
 
-$MAP['Extra_Priv_Filter_Field_Two'] = '额外过滤条件字段二';
-$MAP['Extra_Priv_Filter_Method_Two'] = '额外过滤条件方法二';
-$MAP['Extra_Priv_Filter_Value_Two'] = '额外过滤条件值二';
+$MAP['Extra_Priv_Filter_Field_Two'] = '额外过滤并条件字段二';
+$MAP['Extra_Priv_Filter_Method_Two'] = '额外过滤并条件方法二';
+$MAP['Extra_Priv_Filter_Value_Two'] = '额外过滤并条件值二';
 
-$MAP['Extra_Priv_Filter_Field_Three'] = '额外过滤条件字段三';
-$MAP['Extra_Priv_Filter_Method_Three'] = '额外过滤条件方法三';
-$MAP['Extra_Priv_Filter_Value_Three'] = '额外过滤条件值三';
+$MAP['Extra_Priv_Filter_Field_Three'] = '额外过滤并条件字段三';
+$MAP['Extra_Priv_Filter_Method_Three'] = '额外过滤并条件方法三';
+$MAP['Extra_Priv_Filter_Value_Three'] = '额外过滤并条件值三';
 
-$MAP['Extra_Priv_Filter_Field_Four'] = '额外过滤条件字段四';
-$MAP['Extra_Priv_Filter_Method_Four'] = '额外过滤条件方法四';
-$MAP['Extra_Priv_Filter_Value_Four'] = '额外过滤条件值四';
+$MAP['Extra_Priv_Filter_Field_Four'] = '额外过滤并条件字段四';
+$MAP['Extra_Priv_Filter_Method_Four'] = '额外过滤并条件方法四';
+$MAP['Extra_Priv_Filter_Value_Four'] = '额外过滤并条件值四';
 
-$MAP['Extra_Priv_Filter_Field_Five'] = '额外过滤条件字段五';
-$MAP['Extra_Priv_Filter_Method_Five'] = '额外过滤条件方法五';
-$MAP['Extra_Priv_Filter_Value_Five'] = '额外过滤条件值五';
+$MAP['Extra_Priv_Filter_Field_Five'] = '额外过滤并条件字段五';
+$MAP['Extra_Priv_Filter_Method_Five'] = '额外过滤并条件方法五';
+$MAP['Extra_Priv_Filter_Value_Five'] = '额外过滤并条件值五';
+
+$MAP['Extra_Priv_Filter_Or_Field_One']  = '额外过滤或条件字段一';
+$MAP['Extra_Priv_Filter_Or_Method_One'] = '额外过滤或条件方法一';
+$MAP['Extra_Priv_Filter_Or_Value_One']  = '额外过滤或条件值一';
+
+$MAP['Extra_Priv_Filter_Or_Field_Two']  = '额外过滤或条件字段二';
+$MAP['Extra_Priv_Filter_Or_Method_Two'] = '额外过滤或条件方法二';
+$MAP['Extra_Priv_Filter_Or_Value_Two']  = '额外过滤或条件值二';
+
+$MAP['Extra_Priv_Filter_Or_Field_Three']  = '额外过滤或条件字段三';
+$MAP['Extra_Priv_Filter_Or_Method_Three'] = '额外过滤或条件方法三';
+$MAP['Extra_Priv_Filter_Or_Value_Three']  = '额外过滤或条件值三';
+
 
 $MAP['Yes'] 	        = '是';
 $MAP['No'] 	            = '否';

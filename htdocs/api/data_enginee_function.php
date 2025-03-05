@@ -1286,92 +1286,186 @@ function getAllFields($AllFieldsFromTable, $AllShowTypesArray, $actionType, $Fil
 
 function Extra_Priv_Filter_Field_To_SQL() {
     global $AddSql;
+    global $AdminFilterTipTextArray;
+    global $AdminFilterOrTipTextArray;
     $AddSql .= Extra_Priv_Filter_Field_To_SQL_Item('One');
     $AddSql .= Extra_Priv_Filter_Field_To_SQL_Item('Two');
     $AddSql .= Extra_Priv_Filter_Field_To_SQL_Item('Three');
     $AddSql .= Extra_Priv_Filter_Field_To_SQL_Item('Four');
     $AddSql .= Extra_Priv_Filter_Field_To_SQL_Item('Five');
+    $OrSql   = [];
+    $SQL = Extra_Priv_Filter_Or_Field_To_SQL_Item('One');
+    if($SQL != "") $OrSql[] = $SQL;
+    $SQL = Extra_Priv_Filter_Or_Field_To_SQL_Item('Two');
+    if($SQL != "") $OrSql[] = $SQL;
+    $SQL = Extra_Priv_Filter_Or_Field_To_SQL_Item('Three');
+    if($SQL != "") $OrSql[] = $SQL;
+    if($OrSql[0] != "")   {
+        $AddSql .= " and (". join(" or ", $OrSql) .")";
+        $AdminFilterTipTextArray[] = "(" . join(" || ", $AdminFilterOrTipTextArray) . ")";
+    }
 }
 
 function Extra_Priv_Filter_Field_To_SQL_Item($Item) {
     global $db, $SettingMap, $MetaColumnNames;
-    global $AdminFilterTipTextArray;
     $AdminFilterTipTextOne  = "";
-    $tempsql_One            = "";
+    $tempsql_Text            = "";
     $Extra_Priv_Filter_Field_One  = $SettingMap['Extra_Priv_Filter_Field_'.$Item];
     $Extra_Priv_Filter_Method_One = $SettingMap['Extra_Priv_Filter_Method_'.$Item];
     $Extra_Priv_Filter_Value_One  = ForSqlInjection($SettingMap['Extra_Priv_Filter_Value_'.$Item]);
     if(in_array($Extra_Priv_Filter_Field_One, $MetaColumnNames))  {
         switch($Extra_Priv_Filter_Method_One)   {
             case '=':
-                $tempsql_One .= " and $Extra_Priv_Filter_Field_One = '".$Extra_Priv_Filter_Value_One."'";
+                $tempsql_Text .= " and $Extra_Priv_Filter_Field_One = '".$Extra_Priv_Filter_Value_One."'";
                 $AdminFilterTipTextOne .= "$Extra_Priv_Filter_Field_One = $Extra_Priv_Filter_Value_One ";
                 break;
             case '!=':
-                $tempsql_One .= " and $Extra_Priv_Filter_Field_One != '".$Extra_Priv_Filter_Value_One."'";
+                $tempsql_Text .= " and $Extra_Priv_Filter_Field_One != '".$Extra_Priv_Filter_Value_One."'";
                 $AdminFilterTipTextOne .= "$Extra_Priv_Filter_Field_One != $Extra_Priv_Filter_Value_One ";
                 break;
             case '>':
-                $tempsql_One .= " and $Extra_Priv_Filter_Field_One > '".$Extra_Priv_Filter_Value_One."'";
+                $tempsql_Text .= " and $Extra_Priv_Filter_Field_One > '".$Extra_Priv_Filter_Value_One."'";
                 $AdminFilterTipTextOne .= "$Extra_Priv_Filter_Field_One > $Extra_Priv_Filter_Value_One ";
                 break;
             case '>=':
-                $tempsql_One .= " and $Extra_Priv_Filter_Field_One >= '".$Extra_Priv_Filter_Value_One."'";
+                $tempsql_Text .= " and $Extra_Priv_Filter_Field_One >= '".$Extra_Priv_Filter_Value_One."'";
                 $AdminFilterTipTextOne .= "$Extra_Priv_Filter_Field_One >= $Extra_Priv_Filter_Value_One ";
                 break;
             case '<':
-                $tempsql_One .= " and $Extra_Priv_Filter_Field_One < '".$Extra_Priv_Filter_Value_One."'";
+                $tempsql_Text .= " and $Extra_Priv_Filter_Field_One < '".$Extra_Priv_Filter_Value_One."'";
                 $AdminFilterTipTextOne .= "$Extra_Priv_Filter_Field_One < $Extra_Priv_Filter_Value_One ";
                 break;
             case '<=':
-                $tempsql_One .= " and $Extra_Priv_Filter_Field_One <= '".$Extra_Priv_Filter_Value_One."'";
+                $tempsql_Text .= " and $Extra_Priv_Filter_Field_One <= '".$Extra_Priv_Filter_Value_One."'";
                 $AdminFilterTipTextOne .= "$Extra_Priv_Filter_Field_One <= $Extra_Priv_Filter_Value_One ";
                 break;
             case 'in':
-                $tempsql_One .= " and $Extra_Priv_Filter_Field_One in ('".join("','",explode(',',$Extra_Priv_Filter_Value_One))."')";
+                $tempsql_Text .= " and $Extra_Priv_Filter_Field_One in ('".join("','",explode(',',$Extra_Priv_Filter_Value_One))."')";
                 $AdminFilterTipTextOne .= "$Extra_Priv_Filter_Field_One in [".join(',',explode(',',$Extra_Priv_Filter_Value_One))."] ";
                 break;
             case 'not in':
-                $tempsql_One .= " and $Extra_Priv_Filter_Field_One not in ('".join("','",explode(',',$Extra_Priv_Filter_Value_One))."')";
+                $tempsql_Text .= " and $Extra_Priv_Filter_Field_One not in ('".join("','",explode(',',$Extra_Priv_Filter_Value_One))."')";
                 $AdminFilterTipTextOne .= "$Extra_Priv_Filter_Field_One not in [".join(',',explode(',',$Extra_Priv_Filter_Value_One))."] ";
                 break;
             case 'like':
-                $tempsql_One .= " and $Extra_Priv_Filter_Field_One like '".$Extra_Priv_Filter_Value_One."'";
+                $tempsql_Text .= " and $Extra_Priv_Filter_Field_One like '".$Extra_Priv_Filter_Value_One."'";
                 $AdminFilterTipTextOne .= "$Extra_Priv_Filter_Field_One 包含 $Extra_Priv_Filter_Value_One ";
                 break;
             case '<->':
                 $Extra_Priv_Filter_Value_One_Array = explode('-',$Extra_Priv_Filter_Value_One);
-                $tempsql_One .= " and ($Extra_Priv_Filter_Field_One >= '".$Extra_Priv_Filter_Value_One_Array[0]."' and $Extra_Priv_Filter_Field_One <= '".$Extra_Priv_Filter_Value_One_Array[1]."')";
+                $tempsql_Text .= " and ($Extra_Priv_Filter_Field_One >= '".$Extra_Priv_Filter_Value_One_Array[0]."' and $Extra_Priv_Filter_Field_One <= '".$Extra_Priv_Filter_Value_One_Array[1]."')";
                 $AdminFilterTipTextOne .= "$Extra_Priv_Filter_Field_One 范围 [".$Extra_Priv_Filter_Value_One_Array[0].", ".$Extra_Priv_Filter_Value_One_Array[1]."] ";
                 break;
             case 'Today':
-                $tempsql_One .= " and DATE_FORMAT($Extra_Priv_Filter_Field_One,'%Y-%m-%d') = '".Date("Y-m-d")."'";
+                $tempsql_Text .= " and DATE_FORMAT($Extra_Priv_Filter_Field_One,'%Y-%m-%d') = '".Date("Y-m-d")."'";
                 $AdminFilterTipTextOne .= "$Extra_Priv_Filter_Field_One = [今天] ";
                 break;
             case 'BeforeDays':
-                $tempsql_One .= " and DATE_FORMAT($Extra_Priv_Filter_Field_One,'%Y-%m-%d') >= '".Date("Y-m-d", strtotime(intval(0-$Extra_Priv_Filter_Value_One).' days'))."'";
+                $tempsql_Text .= " and DATE_FORMAT($Extra_Priv_Filter_Field_One,'%Y-%m-%d') >= '".Date("Y-m-d", strtotime(intval(0-$Extra_Priv_Filter_Value_One).' days'))."'";
                 $AdminFilterTipTextOne .= "$Extra_Priv_Filter_Field_One >= ".Date("Y-m-d", strtotime(intval(0-$Extra_Priv_Filter_Value_One).' days'))." ";
                 break;
             case 'AfterDays':
-                $tempsql_One .= " and DATE_FORMAT($Extra_Priv_Filter_Field_One,'%Y-%m-%d') <= '".Date("Y-m-d", strtotime(intval(0+$Extra_Priv_Filter_Value_One).' days'))."'";
+                $tempsql_Text .= " and DATE_FORMAT($Extra_Priv_Filter_Field_One,'%Y-%m-%d') <= '".Date("Y-m-d", strtotime(intval(0+$Extra_Priv_Filter_Value_One).' days'))."'";
                 $AdminFilterTipTextOne .= "$Extra_Priv_Filter_Field_One <= ".Date("Y-m-d", strtotime(intval(0+$Extra_Priv_Filter_Value_One).' days'))." ";
                 break;
             case 'BeforeAndAfterDays':
                 $Extra_Priv_Filter_Value_One_Array = explode('-',$Extra_Priv_Filter_Value_One);
-                $tempsql_One .= " and DATE_FORMAT($Extra_Priv_Filter_Field_One,'%Y-%m-%d') >= '".Date("Y-m-d", strtotime(intval(0-$Extra_Priv_Filter_Value_One_Array[0]).' days'))."' and DATE_FORMAT($Extra_Priv_Filter_Field_One,'%Y-%m-%d') <= '".Date("Y-m-d", strtotime(intval(0+$Extra_Priv_Filter_Value_One_Array[1]).' days'))."'";
+                $tempsql_Text .= " and DATE_FORMAT($Extra_Priv_Filter_Field_One,'%Y-%m-%d') >= '".Date("Y-m-d", strtotime(intval(0-$Extra_Priv_Filter_Value_One_Array[0]).' days'))."' and DATE_FORMAT($Extra_Priv_Filter_Field_One,'%Y-%m-%d') <= '".Date("Y-m-d", strtotime(intval(0+$Extra_Priv_Filter_Value_One_Array[1]).' days'))."'";
                 $AdminFilterTipTextOne .= "$Extra_Priv_Filter_Field_One 范围 [".Date("Y-m-d", strtotime(intval(0-$Extra_Priv_Filter_Value_One_Array[0]).' days')).", ".Date("Y-m-d", strtotime(intval(0+$Extra_Priv_Filter_Value_One_Array[1]).' days'))."] ";
                 break;
             case 'CurrentSemester':
                 global $CurrentSemester;
-                $tempsql_One .= " and $Extra_Priv_Filter_Field_One = '".$CurrentSemester."'";
+                $tempsql_Text .= " and $Extra_Priv_Filter_Field_One = '".$CurrentSemester."'";
                 $AdminFilterTipTextOne .= "$Extra_Priv_Filter_Field_One = $CurrentSemester ";
                 break;
         }
     }
     if($AdminFilterTipTextOne!="") {
+        global $AdminFilterTipTextArray;
         $AdminFilterTipTextArray[] = $AdminFilterTipTextOne;
     }
-    return $tempsql_One;
+    return $tempsql_Text;
+}
+
+function Extra_Priv_Filter_Or_Field_To_SQL_Item($Item) {
+    global $db, $SettingMap, $MetaColumnNames;
+    $AdminFilterTipTextOne   = "";
+    $tempsql_Text            = "";
+    $Extra_Priv_Filter_Field_One  = $SettingMap['Extra_Priv_Filter_Or_Field_'.$Item];
+    $Extra_Priv_Filter_Method_One = $SettingMap['Extra_Priv_Filter_Or_Method_'.$Item];
+    $Extra_Priv_Filter_Value_One  = ForSqlInjection($SettingMap['Extra_Priv_Filter_Or_Value_'.$Item]);
+    if(in_array($Extra_Priv_Filter_Field_One, $MetaColumnNames))  {
+        switch($Extra_Priv_Filter_Method_One)   {
+            case '=':
+                $tempsql_Text .= " $Extra_Priv_Filter_Field_One = '".$Extra_Priv_Filter_Value_One."'";
+                $AdminFilterTipTextOne .= "$Extra_Priv_Filter_Field_One = $Extra_Priv_Filter_Value_One ";
+                break;
+            case '!=':
+                $tempsql_Text .= " $Extra_Priv_Filter_Field_One != '".$Extra_Priv_Filter_Value_One."'";
+                $AdminFilterTipTextOne .= "$Extra_Priv_Filter_Field_One != $Extra_Priv_Filter_Value_One ";
+                break;
+            case '>':
+                $tempsql_Text .= " $Extra_Priv_Filter_Field_One > '".$Extra_Priv_Filter_Value_One."'";
+                $AdminFilterTipTextOne .= "$Extra_Priv_Filter_Field_One > $Extra_Priv_Filter_Value_One ";
+                break;
+            case '>=':
+                $tempsql_Text .= " $Extra_Priv_Filter_Field_One >= '".$Extra_Priv_Filter_Value_One."'";
+                $AdminFilterTipTextOne .= "$Extra_Priv_Filter_Field_One >= $Extra_Priv_Filter_Value_One ";
+                break;
+            case '<':
+                $tempsql_Text .= " $Extra_Priv_Filter_Field_One < '".$Extra_Priv_Filter_Value_One."'";
+                $AdminFilterTipTextOne .= "$Extra_Priv_Filter_Field_One < $Extra_Priv_Filter_Value_One ";
+                break;
+            case '<=':
+                $tempsql_Text .= " $Extra_Priv_Filter_Field_One <= '".$Extra_Priv_Filter_Value_One."'";
+                $AdminFilterTipTextOne .= "$Extra_Priv_Filter_Field_One <= $Extra_Priv_Filter_Value_One ";
+                break;
+            case 'in':
+                $tempsql_Text .= " $Extra_Priv_Filter_Field_One in ('".join("','",explode(',',$Extra_Priv_Filter_Value_One))."')";
+                $AdminFilterTipTextOne .= "$Extra_Priv_Filter_Field_One in [".join(',',explode(',',$Extra_Priv_Filter_Value_One))."] ";
+                break;
+            case 'not in':
+                $tempsql_Text .= " $Extra_Priv_Filter_Field_One not in ('".join("','",explode(',',$Extra_Priv_Filter_Value_One))."')";
+                $AdminFilterTipTextOne .= "$Extra_Priv_Filter_Field_One not in [".join(',',explode(',',$Extra_Priv_Filter_Value_One))."] ";
+                break;
+            case 'like':
+                $tempsql_Text .= " $Extra_Priv_Filter_Field_One like '".$Extra_Priv_Filter_Value_One."'";
+                $AdminFilterTipTextOne .= "$Extra_Priv_Filter_Field_One 包含 $Extra_Priv_Filter_Value_One ";
+                break;
+            case '<->':
+                $Extra_Priv_Filter_Value_One_Array = explode('-',$Extra_Priv_Filter_Value_One);
+                $tempsql_Text .= " ($Extra_Priv_Filter_Field_One >= '".$Extra_Priv_Filter_Value_One_Array[0]."' or $Extra_Priv_Filter_Field_One <= '".$Extra_Priv_Filter_Value_One_Array[1]."')";
+                $AdminFilterTipTextOne .= "$Extra_Priv_Filter_Field_One 范围 [".$Extra_Priv_Filter_Value_One_Array[0].", ".$Extra_Priv_Filter_Value_One_Array[1]."] ";
+                break;
+            case 'Today':
+                $tempsql_Text .= " DATE_FORMAT($Extra_Priv_Filter_Field_One,'%Y-%m-%d') = '".Date("Y-m-d")."'";
+                $AdminFilterTipTextOne .= "$Extra_Priv_Filter_Field_One = [今天] ";
+                break;
+            case 'BeforeDays':
+                $tempsql_Text .= " DATE_FORMAT($Extra_Priv_Filter_Field_One,'%Y-%m-%d') >= '".Date("Y-m-d", strtotime(intval(0-$Extra_Priv_Filter_Value_One).' days'))."'";
+                $AdminFilterTipTextOne .= "$Extra_Priv_Filter_Field_One >= ".Date("Y-m-d", strtotime(intval(0-$Extra_Priv_Filter_Value_One).' days'))." ";
+                break;
+            case 'AfterDays':
+                $tempsql_Text .= " DATE_FORMAT($Extra_Priv_Filter_Field_One,'%Y-%m-%d') <= '".Date("Y-m-d", strtotime(intval(0+$Extra_Priv_Filter_Value_One).' days'))."'";
+                $AdminFilterTipTextOne .= "$Extra_Priv_Filter_Field_One <= ".Date("Y-m-d", strtotime(intval(0+$Extra_Priv_Filter_Value_One).' days'))." ";
+                break;
+            case 'BeforeAndAfterDays':
+                $Extra_Priv_Filter_Value_One_Array = explode('-',$Extra_Priv_Filter_Value_One);
+                $tempsql_Text .= " DATE_FORMAT($Extra_Priv_Filter_Field_One,'%Y-%m-%d') >= '".Date("Y-m-d", strtotime(intval(0-$Extra_Priv_Filter_Value_One_Array[0]).' days'))."' or DATE_FORMAT($Extra_Priv_Filter_Field_One,'%Y-%m-%d') <= '".Date("Y-m-d", strtotime(intval(0+$Extra_Priv_Filter_Value_One_Array[1]).' days'))."'";
+                $AdminFilterTipTextOne .= "$Extra_Priv_Filter_Field_One 范围 [".Date("Y-m-d", strtotime(intval(0-$Extra_Priv_Filter_Value_One_Array[0]).' days')).", ".Date("Y-m-d", strtotime(intval(0+$Extra_Priv_Filter_Value_One_Array[1]).' days'))."] ";
+                break;
+            case 'CurrentSemester':
+                global $CurrentSemester;
+                $tempsql_Text .= " $Extra_Priv_Filter_Field_One = '".$CurrentSemester."'";
+                $AdminFilterTipTextOne .= "$Extra_Priv_Filter_Field_One = $CurrentSemester ";
+                break;
+        }
+    }
+    if($AdminFilterTipTextOne!="") {
+        global $AdminFilterOrTipTextArray;
+        $AdminFilterOrTipTextArray[] = $AdminFilterTipTextOne;
+    }
+    return $tempsql_Text;
 }
 
 function ArrayToColorStyle1($Array)                  {

@@ -1,3 +1,18 @@
 
 $MAP['ShowType_名称'] 	= 'ShowType_名称';
 $MAP['ShowType_名称'] 	= 'ShowType_名称';
+$MAP['Extra_Priv_Filter_Or_Field_One'] 	= 'Extra_Priv_Filter_Or_Field_One';
+$MAP['Extra_Priv_Filter_Or_Method_One'] 	= 'Extra_Priv_Filter_Or_Method_One';
+$MAP['Extra_Priv_Filter_Or_Value_One'] 	= 'Extra_Priv_Filter_Or_Value_One';
+$MAP['Extra_Priv_Filter_Or_Field_One'] 	= 'Extra_Priv_Filter_Or_Field_One';
+$MAP['Extra_Priv_Filter_Or_Method_One'] 	= 'Extra_Priv_Filter_Or_Method_One';
+$MAP['Extra_Priv_Filter_Or_Value_One'] 	= 'Extra_Priv_Filter_Or_Value_One';
+$MAP['Extra_Priv_Filter_Or_Field_One'] 	= 'Extra_Priv_Filter_Or_Field_One';
+$MAP['Extra_Priv_Filter_Or_Method_One'] 	= 'Extra_Priv_Filter_Or_Method_One';
+$MAP['Extra_Priv_Filter_Or_Value_One'] 	= 'Extra_Priv_Filter_Or_Value_One';
+$MAP['Extra_Priv_Filter_Or_Field_Two'] 	= 'Extra_Priv_Filter_Or_Field_Two';
+$MAP['Extra_Priv_Filter_Or_Method_Two'] 	= 'Extra_Priv_Filter_Or_Method_Two';
+$MAP['Extra_Priv_Filter_Or_Value_Two'] 	= 'Extra_Priv_Filter_Or_Value_Two';
+$MAP['Extra_Priv_Filter_Or_Field_Three'] 	= 'Extra_Priv_Filter_Or_Field_Three';
+$MAP['Extra_Priv_Filter_Or_Method_Three'] 	= 'Extra_Priv_Filter_Or_Method_Three';
+$MAP['Extra_Priv_Filter_Or_Value_Three'] 	= 'Extra_Priv_Filter_Or_Value_Three';
