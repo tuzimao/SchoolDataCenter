@@ -54,3 +54,4 @@
 /htdocs/webroot/*
 !/htdocs/webroot/.gitkeep
 
+/xampp/Attach

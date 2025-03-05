@@ -4358,7 +4358,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                         })}
 
                         {addEditStructInfo2.childtable && addEditStructInfo2.childtable.allFields && addEditStructInfo2.childtable.submittext ?
-                            <Card key={"ChildtableSection"} sx={{ mb: 2 }}>
+                            <Card key={"ChildtableSection"} sx={{ mb: 1 }}>
                                 <RepeaterWrapper>
                                     <Repeater count={childItemCounter}>
                                     {(i: number) => {
@@ -4373,7 +4373,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                         <Tag key={i} className='repeater-wrapper' {...(i !== 0 ? { in: true } : {})}>
                                             <Grid container>
                                             <RepeatingContent item xs={12}>
-                                                <Grid container sx={{ pl: 1, py: 2, pr: 1 }}>
+                                                <Grid container sx={{ pl: 1, pb: 1, pt: 0, pr: 1 }}>
                                                     {addEditStructInfo2.childtable.allFields.Default.map((FieldArray: any, FieldArray_index: number) => {
                                                         const NewFieldName = "ChildTable____" + i + "____" + FieldArray.name
                                                         const fieldError = errors[NewFieldName];
@@ -4387,8 +4387,8 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                             }
 
                                                             return (
-                                                                <Grid item xs={FieldArray.rules.xs} sm={FieldArray.rules.sm} key={"ChildAllFields_" + FieldArray_index} sx={{ml:1, mr:1}} >
-                                                                    <FormControl fullWidth sx={{ mr: 0, mt: 3, ml: 1 }}>
+                                                                <Grid item xs={FieldArray.rules.xs} sm={FieldArray.rules.sm} key={"ChildAllFields_" + FieldArray_index}>
+                                                                    <FormControl fullWidth sx={{ mr: 0, mt: 3, ml: 1, pl: 1 }}>
                                                                         <Controller
                                                                             name={NewFieldName}
                                                                             control={control}
@@ -4622,7 +4622,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
 
                                                             return (
                                                                 <Grid item xs={FieldArray.rules.xs} sm={FieldArray.rules.sm} key={"AllFields_" + FieldArray_index}>
-                                                                    <FormControl fullWidth sx={{ mr: 0, mt: 3, ml: 1 }}>
+                                                                    <FormControl fullWidth sx={{ mr: 0, mt: 3, ml: 1, pl: 1 }}>
                                                                         <Controller
                                                                             name={NewFieldName}
                                                                             control={control}
@@ -4844,13 +4844,13 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                     })}
 
                                                 </Grid>
-                                                {addEditStructInfo2.childtable && addEditStructInfo2.childtable.Delete ?
+                                                {addEditStructInfo2.childtable && addEditStructInfo2.childtable.Delete &&
                                                 <ChildTableRowAction>
                                                     <IconButton size='small' onClick={(event: SyntheticEvent)=>deleteChildTableItem(event, i)}>
                                                         <Icon icon='mdi:close' fontSize={20} />
                                                     </IconButton>
                                                 </ChildTableRowAction>
-                                                :''}
+                                                }
                                             </RepeatingContent>
                                             </Grid>
                                         </Tag>
@@ -4858,7 +4858,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                     }}
                                     </Repeater>
 
-                                    {addEditStructInfo2.childtable && addEditStructInfo2.childtable.Add ?
+                                    {addEditStructInfo2.childtable && addEditStructInfo2.childtable.Add &&
                                     <Grid container sx={{ mt: 4 }}>
                                         <Grid item xs={12} sx={{ px: 0 }}>
                                             <Button
@@ -4871,7 +4871,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                             </Button>
                                         </Grid>
                                     </Grid>
-                                    : ''}
+                                    }
                                 </RepeaterWrapper>
                             </Card>
                             : ''
