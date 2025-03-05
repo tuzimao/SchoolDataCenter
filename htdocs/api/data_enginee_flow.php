@@ -21,6 +21,8 @@ global $GLOBAL_EXEC_KEY_SQL;
 $GLOBAL_EXEC_KEY_SQL = [];
 $AdditionalPermissionsSQL = "";
 
+$AdminFilterTipTextArray = [];
+
 //Get Form Flow Setting
 if($FlowId!="")  {
 	$sql    = "select * from form_formflow where id='$FlowId'";
@@ -3045,7 +3047,13 @@ if($SettingMap['Debug_Sql_Show_On_Api']=="Yes" && in_array($GLOBAL_USER->USER_ID
     $RS['init_default']['sql']                              = $sqlList;
     $RS['init_default']['ApprovalNodeFields']['DebugSql']   = $sqlList;
 }
-$RS['init_default']['ApprovalNodeFields']['Memo']           = $SettingMap['Init_Action_Memo'];
+$RS['init_default']['ApprovalNodeFields']['Memo']               = $SettingMap['Init_Action_Memo'];
+if(in_array($GLOBAL_USER->USER_ID, ['admin', 'admin001']) && sizeof($AdminFilterTipTextArray) > 0) {
+    $RS['init_default']['ApprovalNodeFields']['AdminFilterTipText'] = "过滤条件: ".join(' & ', $AdminFilterTipTextArray);
+}
+else {
+    $RS['init_default']['ApprovalNodeFields']['AdminFilterTipText'] = "";
+}
 
 
 if($SettingMap['Init_Action_Value']=="edit_default_configsetting")   {

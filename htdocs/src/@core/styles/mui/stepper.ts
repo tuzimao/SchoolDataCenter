@@ -24,7 +24,7 @@ const StepperWrapper = styled(Box)<BoxProps>(({ theme }) => {
       },
       '& .step-number': {
         fontWeight: 'bold',
-        fontSize: '2.125rem',
+        fontSize: '1.5rem',
         marginRight: theme.spacing(2.5),
         color: theme.palette.text.primary
       },

@@ -7,8 +7,6 @@ import Step from '@mui/material/Step'
 import Stepper from '@mui/material/Stepper'
 import StepLabel from '@mui/material/StepLabel'
 import Typography from '@mui/material/Typography'
-import CardContent from '@mui/material/CardContent'
-import CardHeader from '@mui/material/CardHeader'
 
 // ** Custom Components Imports
 import IndexBottomFlowNodeDot from './IndexBottomFlowNodeDot'
@@ -23,60 +21,52 @@ interface IndexBottomFlowNodeType {
     ApprovalNodeTitle: string
     Memo:string
     DebugSql:string
+    AdminFilterTipText: string
   }
   
 const IndexBottomFlowNode = (props: IndexBottomFlowNodeType) => {
-    const { ApprovalNodeFields, ActiveStep, ApprovalNodeTitle, DebugSql, Memo } = props
+    const { ApprovalNodeFields, ActiveStep, ApprovalNodeTitle, DebugSql, Memo, AdminFilterTipText } = props
     
     return (
         <Fragment>
             <Card> 
                 { ApprovalNodeFields && ApprovalNodeTitle ? 
                     <Fragment>
-                        <CardHeader title={ApprovalNodeTitle} />  
-                        <CardContent>
-                            <StepperWrapper>
-                            { ActiveStep != undefined ?
-                            <Stepper activeStep={ActiveStep}>
-                                {ApprovalNodeFields.map((node, index) => {
-                                const labelProps: {
-                                    error?: boolean
-                                } = {}
-                                
-                                return (
-                                    <Step key={index}>
+                        <Typography sx={{pl: 2, ml: 3, my: 2}}>{ApprovalNodeTitle}</Typography>
+                        <StepperWrapper sx={{ml: 3, mb: 2}}>
+                        { ActiveStep != undefined ?
+                        <Stepper activeStep={ActiveStep}>
+                            {ApprovalNodeFields.map((node, index) => {
+                            const labelProps: {
+                                error?: boolean
+                            } = {}
+                            
+                            return (
+                                <Step key={index}>
                                     <StepLabel {...labelProps} StepIconComponent={IndexBottomFlowNodeDot}>
                                         <div className='step-label'>
-                                        <Typography className='step-number'>{`0${index + 1}`}</Typography>
-                                        <div>
-                                            <Typography className='step-title'>{node}</Typography>
-                                        </div>
+                                            <Typography className='step-number'>{`0${index + 1}`}</Typography>
+                                            <Typography className='step-title' sx={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{node}</Typography>
                                         </div>
                                     </StepLabel>
-                                    </Step>
-                                )
-                                })}
-                            </Stepper>
-                            :
-                            null
-                            }
-                            </StepperWrapper>
-                        </CardContent>
+                                </Step>
+                            )
+                            })}
+                        </Stepper>
+                        :
+                        null
+                        }
+                        </StepperWrapper>
                     </Fragment>
                     : '' 
                 }
-                { DebugSql ?
-                        <CardContent>
-                            <Typography >{DebugSql}</Typography>
-                        </CardContent>
-                    : '' 
-                }
-                { Memo ?
-                        <CardContent>
-                            <Typography >{Memo}</Typography>
-                        </CardContent>
-                    : '' 
-                }
+                
+                { DebugSql && <Typography sx={{pl: 2, ml: 3, mb: 2}}>{DebugSql}</Typography> }
+                
+                { Memo && <Typography sx={{pl: 2, ml: 3, mb: 2}}>{Memo}</Typography> }
+                
+                { AdminFilterTipText && <Typography sx={{pl: 2, ml: 3, mb: 2, fontSize: '0.875rem', color: 'text.secondary'}}>{AdminFilterTipText}</Typography> }
+
             </Card>
             
         </Fragment>

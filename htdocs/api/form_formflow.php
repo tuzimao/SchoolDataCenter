@@ -1536,6 +1536,7 @@ $RS['init_default']['params'] = ['FormGroup' => '', 'role' => '', 'status' => ''
 $RS['init_default']['sql'] = $sql;
 $RS['init_default']['ApprovalNodeFields']['DebugSql']   = "";
 $RS['init_default']['ApprovalNodeFields']['Memo']       = "";
+$RS['init_default']['ApprovalNodeFields']['AdminFilterTipText'] = "";
 
 
 $RS['init_default']['rowdelete'] = [];

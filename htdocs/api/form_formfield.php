@@ -771,6 +771,8 @@ $RS['init_default']['params'] = ['FormGroup' => '', 'role' => '', 'status' => ''
 $RS['init_default']['sql'] = $sql;
 $RS['init_default']['ApprovalNodeFields']['DebugSql']   = "";
 $RS['init_default']['ApprovalNodeFields']['Memo']       = "";
+$RS['init_default']['ApprovalNodeFields']['AdminFilterTipText'] = "";
+
 
 $RS['init_default']['rowdelete'] = [];
 $RS['init_default']['rowdelete'][] = ["text"=>__("Delete Item"),"action"=>"delete_array","title"=>__("Delete Item"),"content"=>__("Do you really want to delete this item? This operation will delete table and data in Database."),"memoname"=>"","inputmust"=>false,"inputmusttip"=>"","submit"=>__("Confirm Delete"),"cancel"=>__("Cancel")];
