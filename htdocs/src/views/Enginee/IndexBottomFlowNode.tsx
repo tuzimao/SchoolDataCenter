@@ -20,7 +20,7 @@ interface IndexBottomFlowNodeType {
     ActiveStep: number
     ApprovalNodeTitle: string
     Memo:string
-    DebugSql:string
+    DebugSql:string[]
     AdminFilterTipText: string
   }
   
@@ -61,8 +61,12 @@ const IndexBottomFlowNode = (props: IndexBottomFlowNodeType) => {
                     : '' 
                 }
                 
-                { DebugSql && <Typography sx={{pl: 2, ml: 3, mb: 2}}>{DebugSql}</Typography> }
-                
+                <Typography sx={{ pl: 2, ml: 3, mb: 2, whiteSpace: 'pre-wrap', overflowX: 'auto' }}>
+                {DebugSql.map((sql, index) => (
+                    <div key={index}>{sql}</div>
+                ))}
+                </Typography>
+
                 { Memo && <Typography sx={{pl: 2, ml: 3, mb: 2}}>{Memo}</Typography> }
                 
                 { AdminFilterTipText && <Typography sx={{pl: 2, ml: 3, mb: 2, fontSize: '0.875rem', color: 'text.secondary'}}>{AdminFilterTipText}</Typography> }
