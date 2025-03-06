@@ -301,24 +301,6 @@ if($_GET['action']=="edit_default_1"&&$id!='')         {
 //#########################################################################################################################
 $edit_default_2 = [];
 
-$sql    = "select MenuOneName from data_menuone order by SortNumber asc, MenuOneName asc";
-$rsf    = $db->Execute($sql);
-$rsf_a  = $rsf->GetArray();
-$MenuOneNameArray = [];
-foreach($rsf_a as $Item)  {
-    $MenuOneNameArray[] = ['value'=>$Item['MenuOneName'],'label'=>$Item['MenuOneName']];
-}
-$edit_default_2['Menu_Location'][] = ['name' => "Menu_One", 'show'=>true, 'type'=>'select', 'options'=>$MenuOneNameArray, 'label' => __("Menu_One"), 'value' => $MetaColumnNamesOptionsAll[1]['value'], 'placeholder' => "", 'helptext' => __("Allow_Repeat"), 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
-$edit_default_2['Menu_Location'][] = ['name' => "Menu_Two", 'show'=>true, 'type'=>"input", 'label' => __("Menu_Two"), 'value' => "", 'placeholder' => "", 'helptext' => __("Allow_Repeat"), 'rules' => ['required' => false,'xs'=>12, 'sm'=>4, 'disabled' => false]];
-$edit_default_2['Menu_Location'][] = ['name' => "Menu_Three", 'show'=>true, 'type'=>"input", 'label' => __("Menu_Three"), 'value' => "", 'placeholder' => "", 'helptext' => __("Optional"), 'rules' => ['required' => false,'xs'=>12, 'sm'=>4, 'disabled' => false]];
-$edit_default_2['Menu_Location'][] = ['name' => "FaceTo", 'show'=>true, 'type'=>'select', 'options'=>$FaceToOptions, 'label' => __("Face_To"), 'value' => "AuthUser", 'placeholder' => "", 'helptext' => __(""), 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
-$edit_default_2['Menu_Location'][] = ['name' => "Menu_Three_Icon", 'show'=>true, 'type'=>'autocompletemdi', 'options'=>[], 'label' => __("Menu_Three_Icon"), 'value' => "account-outline", 'placeholder' => "", 'helptext' => __(""), 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
-$MenuTab_Options = [];
-$MenuTab_Options[] = ['value'=>'Yes', 'label'=>__('Yes')];
-$MenuTab_Options[] = ['value'=>'No', 'label'=>__('No')];
-$edit_default_2['Menu_Location'][] = ['name' => "MenuTab", 'show'=>true, 'type'=>'select', 'options'=>$MenuTab_Options, 'label' => __("Menu_Tab"), 'value' => "Yes", 'placeholder' => "", 'helptext' => __(""), 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
-
-
 $edit_default_2['Tip_In_Interface'][] = ['name' => "List_Title_Name", 'show'=>true, 'type'=>"input", 'label' => __("List_Title_Name"), 'value' => $ShortNameTarget.__("List"), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true,'xs'=>12, 'sm'=>4, 'disabled' => false]];
 $edit_default_2['Tip_In_Interface'][] = ['name' => "Import_Title_Name", 'show'=>true, 'type'=>"input", 'label' => __("Import_Title_Name"), 'value' => __("Import")."".$ShortNameTarget, 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true,'xs'=>12, 'sm'=>4, 'disabled' => false]];
 $edit_default_2['Tip_In_Interface'][] = ['name' => "Export_Title_Name", 'show'=>true, 'type'=>"input", 'label' => __("Export_Title_Name"), 'value' => __("Export")."".$ShortNameTarget, 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true,'xs'=>12, 'sm'=>4, 'disabled' => false]];
@@ -344,123 +326,6 @@ $edit_default_2['Tip_In_Interface'][] = ['name' => "Tip_When_Delete_Success", 's
 $edit_default_2['Tip_In_Interface'][] = ['name' => "Tip_Title_When_Delete", 'show'=>true, 'type'=>"input", 'label' => __("Tip_Title_When_Delete"), 'value' => __("Delete Item"), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true,'xs'=>12, 'sm'=>6, 'disabled' => false]];
 $edit_default_2['Tip_In_Interface'][] = ['name' => "Tip_Content_When_Delete", 'show'=>true, 'type'=>"input", 'label' => __("Tip_Content_When_Delete"), 'value' => __("Do you really want to delete this item? This operation will delete table and data in Database."), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true,'xs'=>12, 'sm'=>6, 'disabled' => false]];
 $edit_default_2['Tip_In_Interface'][] = ['name' => "Tip_Button_When_Delete", 'show'=>true, 'type'=>"input", 'label' => __("Tip_Button_When_Delete"), 'value' => __("Confirm Delete"), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true,'xs'=>12, 'sm'=>6, 'disabled' => false]];
-
-$Rules_When_Import = [];
-$Rules_When_Import[] = ['value'=>"Import_And_Export", 'label'=>__("Import_And_Export")];
-$Rules_When_Import[] = ['value'=>"Only_Import", 'label'=>__("Only_Import")];
-$Rules_When_Import[] = ['value'=>"Only_Export", 'label'=>__("Only_Export")];
-$edit_default_2['Tip_In_Interface'][] = ['name' => "Rules_When_Import", 'show'=>true, 'type'=>'select', 'options'=>$Rules_When_Import, 'label' => __("Rules_When_Import"), 'value' => $Rules_When_Import[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
-
-$Page_Number_In_List = [];
-$Page_Number_In_List[] = ['value'=>10, 'label'=>10];
-$Page_Number_In_List[] = ['value'=>15, 'label'=>15];
-$Page_Number_In_List[] = ['value'=>20, 'label'=>20];
-$Page_Number_In_List[] = ['value'=>30, 'label'=>30];
-$Page_Number_In_List[] = ['value'=>40, 'label'=>40];
-$Page_Number_In_List[] = ['value'=>50, 'label'=>50];
-$Page_Number_In_List[] = ['value'=>100, 'label'=>100];
-$edit_default_2['Tip_In_Interface'][] = ['name' => "Page_Number_In_List", 'show'=>true, 'type'=>'select', 'options'=>$Page_Number_In_List, 'label' => __("Page_Number_In_List"), 'value' => $Page_Number_In_List[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
-
-$Actions_In_List_Header = [];
-$Actions_In_List_Header[] = ['value'=>"Add", 'label'=>__("Add")];
-$Actions_In_List_Header[] = ['value'=>"Export", 'label'=>__("Export")];
-$Actions_In_List_Header[] = ['value'=>"Import", 'label'=>__("Import")];
-$edit_default_2['Tip_In_Interface'][] = ['name' => "Actions_In_List_Header", 'show'=>true, 'type'=>'checkbox', 'options'=>$Actions_In_List_Header, 'label' => __("Actions_In_List_Header"), 'value' => "Add,Import,Export", 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'row'=>true, 'xs'=>12, 'sm'=>6]];
-
-$Actions_In_List_Row = [];
-$Actions_In_List_Row[] = ['value'=>"Edit", 'label'=>__("Edit")];
-$Actions_In_List_Row[] = ['value'=>"Delete", 'label'=>__("Delete")];
-$Actions_In_List_Row[] = ['value'=>"View", 'label'=>__("View")];
-$edit_default_2['Tip_In_Interface'][] = ['name' => "Actions_In_List_Row", 'show'=>true, 'type'=>'checkbox', 'options'=>$Actions_In_List_Row, 'label' => __("Actions_In_List_Row"), 'value' => "Edit,Delete,View", 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'row'=>true, 'xs'=>12, 'sm'=>6]];
-
-
-$Page_Role_Array = [];
-$Page_Role_Array[] = ['value'=>"None", 'label'=>__("None")];
-$Page_Role_Array[] = ['value'=>"Student", 'label'=>__("Student")];
-//$Page_Role_Array[] = ['value'=>"Parent", 'label'=>__("Parent")];
-$Page_Role_Array[] = ['value'=>"ClassMaster", 'label'=>__("ClassMaster")];
-$Page_Role_Array[] = ['value'=>"ClassTeacher", 'label'=>__("ClassTeacher")];
-$Page_Role_Array[] = ['value'=>"Faculty", 'label'=>__("Faculty")];
-$Page_Role_Array[] = ['value'=>"Dormitory", 'label'=>__("Dormitory")];
-$Page_Role_Array[] = ['value'=>"Department", 'label'=>__("Department")];
-$Page_Role_Array[] = ['value'=>"Vice-president", 'label'=>__("Vice-president")];
-$Page_Role_Array[] = ['value'=>"President", 'label'=>__("President")];
-
-$Extra_Priv_Filter_Method = [];
-$Extra_Priv_Filter_Method[] = ['value'=>"=", 'label'=>__("=")];
-$Extra_Priv_Filter_Method[] = ['value'=>"!=", 'label'=>__("!=")];
-$Extra_Priv_Filter_Method[] = ['value'=>">", 'label'=>__(">")];
-$Extra_Priv_Filter_Method[] = ['value'=>">=", 'label'=>__(">=")];
-$Extra_Priv_Filter_Method[] = ['value'=>"<", 'label'=>__("<")];
-$Extra_Priv_Filter_Method[] = ['value'=>"<=", 'label'=>__("<=")];
-$Extra_Priv_Filter_Method[] = ['value'=>"in", 'label'=>__("in")];
-$Extra_Priv_Filter_Method[] = ['value'=>"not in", 'label'=>__("not in")];
-$Extra_Priv_Filter_Method[] = ['value'=>"like", 'label'=>__("like")];
-$Extra_Priv_Filter_Method[] = ['value'=>"Today", 'label'=>__("Today")];
-$Extra_Priv_Filter_Method[] = ['value'=>"<->", 'label'=>__("<->")];
-$Extra_Priv_Filter_Method[] = ['value'=>"BeforeDays", 'label'=>__("BeforeDays")];
-$Extra_Priv_Filter_Method[] = ['value'=>"AfterDays", 'label'=>__("AfterDays")];
-$Extra_Priv_Filter_Method[] = ['value'=>"BeforeAndAfterDays", 'label'=>__("BeforeAndAfterDays")];
-$Extra_Priv_Filter_Method[] = ['value'=>"CurrentSemester", 'label'=>__("CurrentSemester")];
-
-$Faculty_Filter_Field = [];
-$Faculty_Filter_Field[] = ['value'=>"None", 'label'=>__("None")];
-$Faculty_Filter_Field[] = ['value'=>"学籍二级管理", 'label'=>__("学籍二级管理")];
-$Faculty_Filter_Field[] = ['value'=>"学生请假二级管理", 'label'=>__("学生请假二级管理")];
-$Faculty_Filter_Field[] = ['value'=>"奖惩补助二级管理", 'label'=>__("奖惩补助二级管理")];
-$Faculty_Filter_Field[] = ['value'=>"教学计划二级管理", 'label'=>__("教学计划二级管理")];
-$Faculty_Filter_Field[] = ['value'=>"量化考核二级管理", 'label'=>__("量化考核二级管理")];
-$Faculty_Filter_Field[] = ['value'=>"岗位实习二级管理", 'label'=>__("岗位实习二级管理")];
-$Faculty_Filter_Field[] = ['value'=>"学生考勤二级管理", 'label'=>__("学生考勤二级管理")];
-$Faculty_Filter_Field[] = ['value'=>"学生成绩二级管理", 'label'=>__("学生成绩二级管理")];
-$Faculty_Filter_Field[] = ['value'=>"班级事务二级管理", 'label'=>__("班级事务二级管理")];
-$Faculty_Filter_Field[] = ['value'=>"固定资产二级管理", 'label'=>__("固定资产二级管理")];
-
-$Dormitory_Filter_Field = [];
-$Dormitory_Filter_Field[] = ['value'=>"None", 'label'=>__("None")];
-$Dormitory_Filter_Field[] = ['value'=>"宿舍楼", 'label'=>__("宿舍楼")];
-$Dormitory_Filter_Field[] = ['value'=>"宿舍房间", 'label'=>__("宿舍房间")];
-
-$EnableFields = [];
-//$EnableFields['Faculty'] = ["Faculty_Filter_Field"];
-$DisableFields = [];
-$edit_default_2['Page_Role'][] = ['name' => "Page_Role_Name", 'show'=>true, 'type'=>'select', 'options'=>$Page_Role_Array, 'label' => __("Page_Role_Name"), 'value' => $Page_Role_Array[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>12], 'EnableFields'=>$EnableFields, 'DisableFields'=>$DisableFields];
-$edit_default_2['Page_Role'][] = ['name' => "Faculty_Filter_Field", 'show'=>true, 'type'=>'select', 'options'=>$Faculty_Filter_Field, 'label' => __("Faculty_Filter_Field"), 'value' => $Faculty_Filter_Field[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>6]];
-$edit_default_2['Page_Role'][] = ['name' => "Dormitory_Filter_Field", 'show'=>true, 'type'=>'select', 'options'=>$Dormitory_Filter_Field, 'label' => __("Dormitory_Filter_Field"), 'value' => $Dormitory_Filter_Field[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>6]];
-
-$edit_default_2['Page_Role'][] = ['name' => "Extra_Priv_Filter_Field_One", 'show'=>true, 'type'=>'select', 'options'=>$MetaColumnNamesOptionsAll, 'label' => __("Extra_Priv_Filter_Field_One"), 'value' => $MetaColumnNamesOptionsAll[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
-$edit_default_2['Page_Role'][] = ['name' => "Extra_Priv_Filter_Method_One", 'show'=>true, 'type'=>'select', 'options'=>$Extra_Priv_Filter_Method, 'label' => __("Extra_Priv_Filter_Method_One"), 'value' => $Extra_Priv_Filter_Method[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
-$edit_default_2['Page_Role'][] = ['name' => "Extra_Priv_Filter_Value_One", 'show'=>true, 'type'=>"input", 'label' => __("Extra_Priv_Filter_Value_One"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>4, 'disabled' => false]];
-
-$edit_default_2['Page_Role'][] = ['name' => "Extra_Priv_Filter_Field_Two", 'show'=>true, 'type'=>'select', 'options'=>$MetaColumnNamesOptionsAll, 'label' => __("Extra_Priv_Filter_Field_Two"), 'value' => $MetaColumnNamesOptionsAll[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
-$edit_default_2['Page_Role'][] = ['name' => "Extra_Priv_Filter_Method_Two", 'show'=>true, 'type'=>'select', 'options'=>$Extra_Priv_Filter_Method, 'label' => __("Extra_Priv_Filter_Method_Two"), 'value' => $Extra_Priv_Filter_Method[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
-$edit_default_2['Page_Role'][] = ['name' => "Extra_Priv_Filter_Value_Two", 'show'=>true, 'type'=>"input", 'label' => __("Extra_Priv_Filter_Value_Two"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>4, 'disabled' => false]];
-
-$edit_default_2['Page_Role'][] = ['name' => "Extra_Priv_Filter_Field_Three", 'show'=>true, 'type'=>'select', 'options'=>$MetaColumnNamesOptionsAll, 'label' => __("Extra_Priv_Filter_Field_Three"), 'value' => $MetaColumnNamesOptionsAll[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
-$edit_default_2['Page_Role'][] = ['name' => "Extra_Priv_Filter_Method_Three", 'show'=>true, 'type'=>'select', 'options'=>$Extra_Priv_Filter_Method, 'label' => __("Extra_Priv_Filter_Method_Three"), 'value' => $Extra_Priv_Filter_Method[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
-$edit_default_2['Page_Role'][] = ['name' => "Extra_Priv_Filter_Value_Three", 'show'=>true, 'type'=>"input", 'label' => __("Extra_Priv_Filter_Value_Three"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>4, 'disabled' => false]];
-
-$edit_default_2['Page_Role'][] = ['name' => "Extra_Priv_Filter_Field_Four", 'show'=>true, 'type'=>'select', 'options'=>$MetaColumnNamesOptionsAll, 'label' => __("Extra_Priv_Filter_Field_Four"), 'value' => $MetaColumnNamesOptionsAll[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
-$edit_default_2['Page_Role'][] = ['name' => "Extra_Priv_Filter_Method_Four", 'show'=>true, 'type'=>'select', 'options'=>$Extra_Priv_Filter_Method, 'label' => __("Extra_Priv_Filter_Method_Four"), 'value' => $Extra_Priv_Filter_Method[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
-$edit_default_2['Page_Role'][] = ['name' => "Extra_Priv_Filter_Value_Four", 'show'=>true, 'type'=>"input", 'label' => __("Extra_Priv_Filter_Value_Four"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>4, 'disabled' => false]];
-
-$edit_default_2['Page_Role'][] = ['name' => "Extra_Priv_Filter_Field_Five", 'show'=>true, 'type'=>'select', 'options'=>$MetaColumnNamesOptionsAll, 'label' => __("Extra_Priv_Filter_Field_Five"), 'value' => $MetaColumnNamesOptionsAll[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
-$edit_default_2['Page_Role'][] = ['name' => "Extra_Priv_Filter_Method_Five", 'show'=>true, 'type'=>'select', 'options'=>$Extra_Priv_Filter_Method, 'label' => __("Extra_Priv_Filter_Method_Five"), 'value' => $Extra_Priv_Filter_Method[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
-$edit_default_2['Page_Role'][] = ['name' => "Extra_Priv_Filter_Value_Five", 'show'=>true, 'type'=>"input", 'label' => __("Extra_Priv_Filter_Value_Five"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>4, 'disabled' => false]];
-
-
-$edit_default_2['Page_Role'][] = ['name' => "Extra_Priv_Filter_Or_Field_One", 'show'=>true, 'type'=>'select', 'options'=>$MetaColumnNamesOptionsAll, 'label' => __("Extra_Priv_Filter_Or_Field_One"), 'value' => $MetaColumnNamesOptionsAll[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
-$edit_default_2['Page_Role'][] = ['name' => "Extra_Priv_Filter_Or_Method_One", 'show'=>true, 'type'=>'select', 'options'=>$Extra_Priv_Filter_Method, 'label' => __("Extra_Priv_Filter_Or_Method_One"), 'value' => $Extra_Priv_Filter_Method[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
-$edit_default_2['Page_Role'][] = ['name' => "Extra_Priv_Filter_Or_Value_One", 'show'=>true, 'type'=>"input", 'label' => __("Extra_Priv_Filter_Or_Value_One"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>4, 'disabled' => false]];
-
-$edit_default_2['Page_Role'][] = ['name' => "Extra_Priv_Filter_Or_Field_Two", 'show'=>true, 'type'=>'select', 'options'=>$MetaColumnNamesOptionsAll, 'label' => __("Extra_Priv_Filter_Or_Field_Two"), 'value' => $MetaColumnNamesOptionsAll[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
-$edit_default_2['Page_Role'][] = ['name' => "Extra_Priv_Filter_Or_Method_Two", 'show'=>true, 'type'=>'select', 'options'=>$Extra_Priv_Filter_Method, 'label' => __("Extra_Priv_Filter_Or_Method_Two"), 'value' => $Extra_Priv_Filter_Method[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
-$edit_default_2['Page_Role'][] = ['name' => "Extra_Priv_Filter_Or_Value_Two", 'show'=>true, 'type'=>"input", 'label' => __("Extra_Priv_Filter_Or_Value_Two"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>4, 'disabled' => false]];
-
-$edit_default_2['Page_Role'][] = ['name' => "Extra_Priv_Filter_Or_Field_Three", 'show'=>true, 'type'=>'select', 'options'=>$MetaColumnNamesOptionsAll, 'label' => __("Extra_Priv_Filter_Or_Field_Three"), 'value' => $MetaColumnNamesOptionsAll[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
-$edit_default_2['Page_Role'][] = ['name' => "Extra_Priv_Filter_Or_Method_Three", 'show'=>true, 'type'=>'select', 'options'=>$Extra_Priv_Filter_Method, 'label' => __("Extra_Priv_Filter_Or_Method_Three"), 'value' => $Extra_Priv_Filter_Method[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
-$edit_default_2['Page_Role'][] = ['name' => "Extra_Priv_Filter_Or_Value_Three", 'show'=>true, 'type'=>"input", 'label' => __("Extra_Priv_Filter_Or_Value_Three"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>4, 'disabled' => false]];
-
 
 $edit_default_2['LimitEditAndDelete'][] = ['name' => "LimitEditAndDelete_Edit_Field_One", 'show'=>true, 'type'=>'select', 'options'=>$MetaColumnNamesOptionsAll, 'label' => __("LimitEditAndDelete_Edit_Field_One"), 'value' => $MetaColumnNamesOptionsAll[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false, 'disabled' => false, 'xs'=>12, 'sm'=>3]];
 $edit_default_2['LimitEditAndDelete'][] = ['name' => "LimitEditAndDelete_Edit_Value_One", 'show'=>true, 'type'=>'input', 'label' => __("LimitEditAndDelete_Edit_Value_One"), 'value' => '', 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false, 'disabled' => false, 'xs'=>12, 'sm'=>3]];
@@ -588,8 +453,6 @@ foreach($rsA as $Line) {
 $edit_default_2['Relative_Child_Table'][] = ['name' => "Relative_Child_Table", 'show'=>true, 'type'=>'select', 'options'=>$Relative_Child_Table, 'label' => __("Relative_Child_Table"), 'value' => $Relative_Child_Table[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
 $edit_default_2['Relative_Child_Table'][] = ['name' => "Relative_Child_Table_Field_Name", 'show'=>true, 'type'=>'input', 'label' => __("Relative_Child_Table_Field_Name"), 'value' => "", 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
 $edit_default_2['Relative_Child_Table'][] = ['name' => "Relative_Child_Table_Parent_Field_Name", 'show'=>true, 'type'=>'select', 'options'=>$MetaColumnNamesOptionsAll, 'label' => __("Relative_Child_Table_Parent_Field_Name"), 'value' => $MetaColumnNamesOptionsAll[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
-
-
 
 $defaultValues_2 = [];
 foreach($edit_default_2 as $ModeName=>$allFieldItem) {
@@ -1279,9 +1142,13 @@ if(($_GET['action']=="edit_default_6_data") && $id!="")     {
     }
 }
 
-if(($_GET['action']=="edit_default_1_data" || $_GET['action']=="edit_default_2_data" || $_GET['action']=="edit_default_3_data" || $_GET['action']=="edit_default_4_data" || $_GET['action']=="edit_default_5_data") && $id!="")     {
+if(($_GET['action']=="edit_default_1_data" || $_GET['action']=="edit_default_2_data" || $_GET['action']=="edit_default_3_data" || $_GET['action']=="edit_default_4_data" || $_GET['action']=="edit_default_5_data" || $_GET['action']=="edit_default_7_data") && $id!="")     {
 
-    if($_POST['Menu_One']!=""&&$_POST['Menu_Two']!=""&&$id!="")   {
+    if($id!=""&&$_POST['Node_Type']=="工作流")   {
+        $sql        = "delete from data_menutwo where FlowId = '$id'";
+        $rs         = $db->Execute($sql);
+    }
+    if($_POST['Menu_One']!=""&&$_POST['Menu_Two']!=""&&$id!=""&&$_POST['Node_Type']=="菜单")   {
         $FieldsArray = [];
         $FieldsArray['MenuOneName']    = $_POST['Menu_One'];
         $FieldsArray['MenuTwoName']    = $_POST['Menu_Two'];
@@ -1326,7 +1193,7 @@ require_once("../data_enginee_flow.php");
         }
     }
 
-    if($_POST['MobileEnd']!=""&&$id!="")   {
+    if($_POST['MobileEnd']!=""&&$id!=""&&$_POST['Node_Type']=="菜单")   {
       $FieldsArray                        = [];
       $FieldsArray['FlowId']              = $id;
       $FieldsArray['IsMobile']            = $_POST['MobileEnd'] == "No" ? "否" : "是";
@@ -1409,6 +1276,207 @@ require_once("../data_enginee_flow.php");
     }
 }
 
+
+//#########################################################################################################################
+//Interface################################################################################################################
+//#########################################################################################################################
+$edit_default_7 = [];
+
+$sql    = "select MenuOneName from data_menuone order by SortNumber asc, MenuOneName asc";
+$rsf    = $db->Execute($sql);
+$rsf_a  = $rsf->GetArray();
+$MenuOneNameArray = [];
+foreach($rsf_a as $Item)  {
+    $MenuOneNameArray[] = ['value'=>$Item['MenuOneName'],'label'=>$Item['MenuOneName']];
+}
+$Node_Type_Array    = [];
+$Node_Type_Array[]  = ['value'=>"工作流",'label'=>"工作流"];
+$Node_Type_Array[]  = ['value'=>"菜单",'label'=>"菜单"];
+
+$edit_default_7['Menu_Location'][] = ['name' => "Node_Type", 'show'=>true, 'type'=>'select', 'options'=>$Node_Type_Array, 'label' => __("Node_Type"), 'value' => $Node_Type_Array[1]['value'], 'placeholder' => "", 'helptext' => __("Node_Type"), 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>3]];
+$edit_default_7['Menu_Location'][] = ['name' => "Menu_One", 'show'=>true, 'type'=>'select', 'options'=>$MenuOneNameArray, 'label' => __("Menu_One"), 'value' => $MetaColumnNamesOptionsAll[1]['value'], 'placeholder' => "", 'helptext' => __("Allow_Repeat"), 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>3]];
+$edit_default_7['Menu_Location'][] = ['name' => "Menu_Two", 'show'=>true, 'type'=>"input", 'label' => __("Menu_Two"), 'value' => "", 'placeholder' => "", 'helptext' => __("Allow_Repeat"), 'rules' => ['required' => false,'xs'=>12, 'sm'=>3, 'disabled' => false]];
+$edit_default_7['Menu_Location'][] = ['name' => "Menu_Three", 'show'=>true, 'type'=>"input", 'label' => __("Menu_Three"), 'value' => "", 'placeholder' => "", 'helptext' => __("Optional"), 'rules' => ['required' => false,'xs'=>12, 'sm'=>3, 'disabled' => false]];
+$edit_default_7['Menu_Location'][] = ['name' => "FaceTo", 'show'=>true, 'type'=>'select', 'options'=>$FaceToOptions, 'label' => __("Face_To"), 'value' => "AuthUser", 'placeholder' => "", 'helptext' => __(""), 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
+$edit_default_7['Menu_Location'][] = ['name' => "Menu_Three_Icon", 'show'=>true, 'type'=>'autocompletemdi', 'options'=>[], 'label' => __("Menu_Three_Icon"), 'value' => "account-outline", 'placeholder' => "", 'helptext' => __(""), 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
+$MenuTab_Options = [];
+$MenuTab_Options[] = ['value'=>'Yes', 'label'=>__('Yes')];
+$MenuTab_Options[] = ['value'=>'No', 'label'=>__('No')];
+$edit_default_7['Menu_Location'][] = ['name' => "MenuTab", 'show'=>true, 'type'=>'select', 'options'=>$MenuTab_Options, 'label' => __("Menu_Tab"), 'value' => "Yes", 'placeholder' => "", 'helptext' => __(""), 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
+
+$Page_Role_Array = [];
+$Page_Role_Array[] = ['value'=>"None", 'label'=>__("None")];
+$Page_Role_Array[] = ['value'=>"Student", 'label'=>__("Student")];
+//$Page_Role_Array[] = ['value'=>"Parent", 'label'=>__("Parent")];
+$Page_Role_Array[] = ['value'=>"ClassMaster", 'label'=>__("ClassMaster")];
+$Page_Role_Array[] = ['value'=>"ClassTeacher", 'label'=>__("ClassTeacher")];
+$Page_Role_Array[] = ['value'=>"Faculty", 'label'=>__("Faculty")];
+$Page_Role_Array[] = ['value'=>"Dormitory", 'label'=>__("Dormitory")];
+$Page_Role_Array[] = ['value'=>"Department", 'label'=>__("Department")];
+$Page_Role_Array[] = ['value'=>"Vice-president", 'label'=>__("Vice-president")];
+$Page_Role_Array[] = ['value'=>"President", 'label'=>__("President")];
+
+$Extra_Priv_Filter_Method = [];
+$Extra_Priv_Filter_Method[] = ['value'=>"=", 'label'=>__("=")];
+$Extra_Priv_Filter_Method[] = ['value'=>"!=", 'label'=>__("!=")];
+$Extra_Priv_Filter_Method[] = ['value'=>">", 'label'=>__(">")];
+$Extra_Priv_Filter_Method[] = ['value'=>">=", 'label'=>__(">=")];
+$Extra_Priv_Filter_Method[] = ['value'=>"<", 'label'=>__("<")];
+$Extra_Priv_Filter_Method[] = ['value'=>"<=", 'label'=>__("<=")];
+$Extra_Priv_Filter_Method[] = ['value'=>"in", 'label'=>__("in")];
+$Extra_Priv_Filter_Method[] = ['value'=>"not in", 'label'=>__("not in")];
+$Extra_Priv_Filter_Method[] = ['value'=>"like", 'label'=>__("like")];
+$Extra_Priv_Filter_Method[] = ['value'=>"Today", 'label'=>__("Today")];
+$Extra_Priv_Filter_Method[] = ['value'=>"<->", 'label'=>__("<->")];
+$Extra_Priv_Filter_Method[] = ['value'=>"BeforeDays", 'label'=>__("BeforeDays")];
+$Extra_Priv_Filter_Method[] = ['value'=>"AfterDays", 'label'=>__("AfterDays")];
+$Extra_Priv_Filter_Method[] = ['value'=>"BeforeAndAfterDays", 'label'=>__("BeforeAndAfterDays")];
+$Extra_Priv_Filter_Method[] = ['value'=>"CurrentSemester", 'label'=>__("CurrentSemester")];
+
+$Faculty_Filter_Field = [];
+$Faculty_Filter_Field[] = ['value'=>"None", 'label'=>__("None")];
+$Faculty_Filter_Field[] = ['value'=>"学籍二级管理", 'label'=>__("学籍二级管理")];
+$Faculty_Filter_Field[] = ['value'=>"学生请假二级管理", 'label'=>__("学生请假二级管理")];
+$Faculty_Filter_Field[] = ['value'=>"奖惩补助二级管理", 'label'=>__("奖惩补助二级管理")];
+$Faculty_Filter_Field[] = ['value'=>"教学计划二级管理", 'label'=>__("教学计划二级管理")];
+$Faculty_Filter_Field[] = ['value'=>"量化考核二级管理", 'label'=>__("量化考核二级管理")];
+$Faculty_Filter_Field[] = ['value'=>"岗位实习二级管理", 'label'=>__("岗位实习二级管理")];
+$Faculty_Filter_Field[] = ['value'=>"学生考勤二级管理", 'label'=>__("学生考勤二级管理")];
+$Faculty_Filter_Field[] = ['value'=>"学生成绩二级管理", 'label'=>__("学生成绩二级管理")];
+$Faculty_Filter_Field[] = ['value'=>"班级事务二级管理", 'label'=>__("班级事务二级管理")];
+$Faculty_Filter_Field[] = ['value'=>"固定资产二级管理", 'label'=>__("固定资产二级管理")];
+
+$Dormitory_Filter_Field = [];
+$Dormitory_Filter_Field[] = ['value'=>"None", 'label'=>__("None")];
+$Dormitory_Filter_Field[] = ['value'=>"宿舍楼", 'label'=>__("宿舍楼")];
+$Dormitory_Filter_Field[] = ['value'=>"宿舍房间", 'label'=>__("宿舍房间")];
+
+$EnableFields = [];
+//$EnableFields['Faculty'] = ["Faculty_Filter_Field"];
+$DisableFields = [];
+$edit_default_7['Page_Role'][] = ['name' => "Page_Role_Name", 'show'=>true, 'type'=>'select', 'options'=>$Page_Role_Array, 'label' => __("Page_Role_Name"), 'value' => $Page_Role_Array[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>12], 'EnableFields'=>$EnableFields, 'DisableFields'=>$DisableFields];
+$edit_default_7['Page_Role'][] = ['name' => "Faculty_Filter_Field", 'show'=>true, 'type'=>'select', 'options'=>$Faculty_Filter_Field, 'label' => __("Faculty_Filter_Field"), 'value' => $Faculty_Filter_Field[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>6]];
+$edit_default_7['Page_Role'][] = ['name' => "Dormitory_Filter_Field", 'show'=>true, 'type'=>'select', 'options'=>$Dormitory_Filter_Field, 'label' => __("Dormitory_Filter_Field"), 'value' => $Dormitory_Filter_Field[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>6]];
+
+$edit_default_7['Page_Role'][] = ['name' => "Extra_Priv_Filter_Field_One", 'show'=>true, 'type'=>'select', 'options'=>$MetaColumnNamesOptionsAll, 'label' => __("Extra_Priv_Filter_Field_One"), 'value' => $MetaColumnNamesOptionsAll[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
+$edit_default_7['Page_Role'][] = ['name' => "Extra_Priv_Filter_Method_One", 'show'=>true, 'type'=>'select', 'options'=>$Extra_Priv_Filter_Method, 'label' => __("Extra_Priv_Filter_Method_One"), 'value' => $Extra_Priv_Filter_Method[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
+$edit_default_7['Page_Role'][] = ['name' => "Extra_Priv_Filter_Value_One", 'show'=>true, 'type'=>"input", 'label' => __("Extra_Priv_Filter_Value_One"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>4, 'disabled' => false]];
+
+$edit_default_7['Page_Role'][] = ['name' => "Extra_Priv_Filter_Field_Two", 'show'=>true, 'type'=>'select', 'options'=>$MetaColumnNamesOptionsAll, 'label' => __("Extra_Priv_Filter_Field_Two"), 'value' => $MetaColumnNamesOptionsAll[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
+$edit_default_7['Page_Role'][] = ['name' => "Extra_Priv_Filter_Method_Two", 'show'=>true, 'type'=>'select', 'options'=>$Extra_Priv_Filter_Method, 'label' => __("Extra_Priv_Filter_Method_Two"), 'value' => $Extra_Priv_Filter_Method[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
+$edit_default_7['Page_Role'][] = ['name' => "Extra_Priv_Filter_Value_Two", 'show'=>true, 'type'=>"input", 'label' => __("Extra_Priv_Filter_Value_Two"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>4, 'disabled' => false]];
+
+$edit_default_7['Page_Role'][] = ['name' => "Extra_Priv_Filter_Field_Three", 'show'=>true, 'type'=>'select', 'options'=>$MetaColumnNamesOptionsAll, 'label' => __("Extra_Priv_Filter_Field_Three"), 'value' => $MetaColumnNamesOptionsAll[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
+$edit_default_7['Page_Role'][] = ['name' => "Extra_Priv_Filter_Method_Three", 'show'=>true, 'type'=>'select', 'options'=>$Extra_Priv_Filter_Method, 'label' => __("Extra_Priv_Filter_Method_Three"), 'value' => $Extra_Priv_Filter_Method[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
+$edit_default_7['Page_Role'][] = ['name' => "Extra_Priv_Filter_Value_Three", 'show'=>true, 'type'=>"input", 'label' => __("Extra_Priv_Filter_Value_Three"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>4, 'disabled' => false]];
+
+$edit_default_7['Page_Role'][] = ['name' => "Extra_Priv_Filter_Field_Four", 'show'=>true, 'type'=>'select', 'options'=>$MetaColumnNamesOptionsAll, 'label' => __("Extra_Priv_Filter_Field_Four"), 'value' => $MetaColumnNamesOptionsAll[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
+$edit_default_7['Page_Role'][] = ['name' => "Extra_Priv_Filter_Method_Four", 'show'=>true, 'type'=>'select', 'options'=>$Extra_Priv_Filter_Method, 'label' => __("Extra_Priv_Filter_Method_Four"), 'value' => $Extra_Priv_Filter_Method[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
+$edit_default_7['Page_Role'][] = ['name' => "Extra_Priv_Filter_Value_Four", 'show'=>true, 'type'=>"input", 'label' => __("Extra_Priv_Filter_Value_Four"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>4, 'disabled' => false]];
+
+$edit_default_7['Page_Role'][] = ['name' => "Extra_Priv_Filter_Field_Five", 'show'=>true, 'type'=>'select', 'options'=>$MetaColumnNamesOptionsAll, 'label' => __("Extra_Priv_Filter_Field_Five"), 'value' => $MetaColumnNamesOptionsAll[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
+$edit_default_7['Page_Role'][] = ['name' => "Extra_Priv_Filter_Method_Five", 'show'=>true, 'type'=>'select', 'options'=>$Extra_Priv_Filter_Method, 'label' => __("Extra_Priv_Filter_Method_Five"), 'value' => $Extra_Priv_Filter_Method[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
+$edit_default_7['Page_Role'][] = ['name' => "Extra_Priv_Filter_Value_Five", 'show'=>true, 'type'=>"input", 'label' => __("Extra_Priv_Filter_Value_Five"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>4, 'disabled' => false]];
+
+
+$edit_default_7['Page_Role'][] = ['name' => "Extra_Priv_Filter_Or_Field_One", 'show'=>true, 'type'=>'select', 'options'=>$MetaColumnNamesOptionsAll, 'label' => __("Extra_Priv_Filter_Or_Field_One"), 'value' => $MetaColumnNamesOptionsAll[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
+$edit_default_7['Page_Role'][] = ['name' => "Extra_Priv_Filter_Or_Method_One", 'show'=>true, 'type'=>'select', 'options'=>$Extra_Priv_Filter_Method, 'label' => __("Extra_Priv_Filter_Or_Method_One"), 'value' => $Extra_Priv_Filter_Method[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
+$edit_default_7['Page_Role'][] = ['name' => "Extra_Priv_Filter_Or_Value_One", 'show'=>true, 'type'=>"input", 'label' => __("Extra_Priv_Filter_Or_Value_One"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>4, 'disabled' => false]];
+
+$edit_default_7['Page_Role'][] = ['name' => "Extra_Priv_Filter_Or_Field_Two", 'show'=>true, 'type'=>'select', 'options'=>$MetaColumnNamesOptionsAll, 'label' => __("Extra_Priv_Filter_Or_Field_Two"), 'value' => $MetaColumnNamesOptionsAll[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
+$edit_default_7['Page_Role'][] = ['name' => "Extra_Priv_Filter_Or_Method_Two", 'show'=>true, 'type'=>'select', 'options'=>$Extra_Priv_Filter_Method, 'label' => __("Extra_Priv_Filter_Or_Method_Two"), 'value' => $Extra_Priv_Filter_Method[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
+$edit_default_7['Page_Role'][] = ['name' => "Extra_Priv_Filter_Or_Value_Two", 'show'=>true, 'type'=>"input", 'label' => __("Extra_Priv_Filter_Or_Value_Two"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>4, 'disabled' => false]];
+
+$edit_default_7['Page_Role'][] = ['name' => "Extra_Priv_Filter_Or_Field_Three", 'show'=>true, 'type'=>'select', 'options'=>$MetaColumnNamesOptionsAll, 'label' => __("Extra_Priv_Filter_Or_Field_Three"), 'value' => $MetaColumnNamesOptionsAll[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
+$edit_default_7['Page_Role'][] = ['name' => "Extra_Priv_Filter_Or_Method_Three", 'show'=>true, 'type'=>'select', 'options'=>$Extra_Priv_Filter_Method, 'label' => __("Extra_Priv_Filter_Or_Method_Three"), 'value' => $Extra_Priv_Filter_Method[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
+$edit_default_7['Page_Role'][] = ['name' => "Extra_Priv_Filter_Or_Value_Three", 'show'=>true, 'type'=>"input", 'label' => __("Extra_Priv_Filter_Or_Value_Three"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>4, 'disabled' => false]];
+
+
+$defaultValues_7 = [];
+foreach($edit_default_7 as $ModeName=>$allFieldItem) {
+    foreach($allFieldItem as $ITEM) {
+        $defaultValues_7[$ITEM['name']] = $ITEM['value'];
+    }
+}
+
+$edit_default_7_mode[] = ['value'=>"Menu_Location", 'label'=>__("Menu_Location")];
+$edit_default_7_mode[] = ['value'=>"Page_Role", 'label'=>__("Page_Role")];
+
+if($_GET['action']=="edit_default_7"&&$id!='')         {
+    $sql    = "select * from form_formflow where id = '$id'";
+    $rs     = $db->Execute($sql);
+    $FlowName   = $rs->fields['FlowName'];
+    $Setting    = $rs->fields['Setting'];
+    $SettingMap = unserialize(base64_decode($Setting));
+    $FlowName   = $rs->fields['FlowName'];
+    if(is_array($SettingMap))   {
+        $defaultValues_7_keys = array_keys($defaultValues_7);
+        foreach($SettingMap as $value => $label)  {
+            if(in_array($value, $defaultValues_7_keys))  {
+                if($value=="Menu_Three" && strpos($label,"班主任")!==false) {
+                    $SettingMap['Menu_Three_Icon'] = "account-search";
+                }
+                else if($value=="Menu_Three" && strpos($label,"系部")!==false) {
+                    $SettingMap['Menu_Three_Icon'] = "account-settings";
+                }
+                else if($value=="Menu_Three" && strpos($label,"教务")!==false) {
+                    $SettingMap['Menu_Three_Icon'] = "account-multiple-plus";
+                }
+                else if($value=="Menu_Three" && strpos($label,"学工")!==false) {
+                    $SettingMap['Menu_Three_Icon'] = "account-settings-variant";
+                }
+                else if($value=="Menu_Three" && strpos($label,"分管校长")!==false) {
+                    $SettingMap['Menu_Three_Icon'] = "account-box-outline";
+                }
+                else if($value=="Menu_Three" && strpos($label,"校长")!==false) {
+                    $SettingMap['Menu_Three_Icon'] = "account-box";
+                }
+                else if($value=="Menu_Three" && strpos($label,"所有")!==false) {
+                    $SettingMap['Menu_Three_Icon'] = "table";
+                }
+            }
+        }
+        foreach($SettingMap as $value => $label)  {
+            if(in_array($value, $defaultValues_7_keys) && $value!="Init_Action_Page_ConfigSettingUrl")  {
+                $defaultValues_7[$value] = $label;
+            }
+        }
+    }
+
+    $EnableFields = [];
+    switch($defaultValues_7['Page_Role_Name']) {
+        case '院系':
+            $EnableFields[] = "Faculty_Filter_Field";
+            break;
+    }
+
+    //临时启用
+    //$defaultValues_7['Menu_One'] = $SettingMap['Menu_One'];
+    //$defaultValues_7['Menu_Two'] = $SettingMap['Menu_Two'];
+    //$defaultValues_7['Menu_Three'] = $SettingMap['Menu_Three'];
+    //$defaultValues_7['FaceTo'] = $SettingMap['FaceTo'];
+    $edit_default['allFields']      = $edit_default_7;
+    $edit_default['allFieldsMode']  = $edit_default_7_mode;
+    $edit_default['defaultValues']  = $defaultValues_7;
+    $edit_default['dialogContentHeight']  = "90%";
+    $edit_default['componentsize']  = "small";
+    $edit_default['submitaction']   = "edit_default_7_data";
+    $edit_default['submittext']     = __("Submit");
+    $edit_default['canceltext']     = __("Cancel");
+    $edit_default['titletext']      = __("Design Form Field Type");
+    $edit_default['titlememo']      = __("Manage All Form Fields in Table");
+    $edit_default['tablewidth']     = 550;
+
+    $RS['edit_default'] = $edit_default;
+    $RS['EnableFields'] = $EnableFields;
+    $RS['status'] = "OK";
+    $RS['data'] = $defaultValues_7;
+    $RS['sql'] = $sql;
+    $RS['msg'] = __("Get Data Success");
+    print_R(json_encode($RS));
+    exit;
+}
+
 if($_GET['action']=="updateone")  {
     $id     = ForSqlInjection($_POST['id']);
     $field  = ParamsFilter($_POST['field']);
@@ -1460,9 +1528,10 @@ $columnsactions[]   = ['action'=>'edit_default_6','text'=>__('Copy'),'mdi'=>'mdi
 $init_default_columns[] = ['flex' => 0.1, 'minWidth' => 120, 'sortable' => false, 'field' => "actions", 'headerName' => __("Actions"), 'show'=>true, 'type'=>'actions', 'actions' => $columnsactions];
 $columnName = "TableName";      $init_default_columns[] = ['flex' => 0.1, 'minWidth' => 200, 'maxWidth' => 300, 'field' => $columnName, 'headerName' => __($columnName), 'editable'=>false, 'show'=>true, 'type'=>'string', 'renderCell' => NULL];
 //$columnName = "FullName";    $init_default_columns[] = ['flex' => 0.1, 'minWidth' => 150, 'maxWidth' => 300, 'field' => $columnName, 'headerName' => __($columnName), 'editable'=>false, 'show'=>true, 'type'=>'string', 'renderCell' => NULL];
-$columnName = "Step";           $init_default_columns[] = ['flex' => 0.1, 'minWidth' => 50, 'maxWidth' => 300, 'field' => $columnName, 'headerName' => __($columnName), 'editable'=>false, 'show'=>true, 'type'=>'string', 'renderCell' => NULL];
+$columnName = "Step";           $init_default_columns[] = ['flex' => 0.1, 'minWidth' => 100, 'maxWidth' => 200, 'field' => $columnName, 'headerName' => __($columnName), 'editable'=>false, 'show'=>true, 'type'=>'string', 'renderCell' => NULL];
 $columnName = "FlowName";       $init_default_columns[] = ['flex' => 0.1, 'minWidth' => 150, 'maxWidth' => 300, 'field' => $columnName, 'headerName' => __($columnName), 'editable'=>true, 'show'=>true, 'type'=>'string', 'renderCell' => NULL];
 $columnName = "Field Type";     $init_default_columns[] = ['flex' => 0.1, 'minWidth' => 130, 'maxWidth' => 300, 'field' => $columnName, 'headerName' => __($columnName), 'editable'=>false, 'show'=>true, 'type'=>'api','apimdi'=>'mdi:chart-donut','apicolor'=>'success.main', 'apiaction' => "edit_default_1", 'renderCell' => NULL ];
+$columnName = "NodeSetting";    $init_default_columns[] = ['flex' => 0.1, 'minWidth' => 130, 'maxWidth' => 250, 'field' => $columnName, 'headerName' => __($columnName), 'editable'=>false, 'show'=>true, 'type'=>'api','apimdi'=>'hugeicons:flow','apicolor'=>'error.main', 'apiaction' => "edit_default_7", 'renderCell' => NULL ];
 $columnName = "Interface";      $init_default_columns[] = ['flex' => 0.1, 'minWidth' => 130, 'maxWidth' => 250, 'field' => $columnName, 'headerName' => __($columnName), 'editable'=>false, 'show'=>true, 'type'=>'api','apimdi'=>'mdi:cog-outline','apicolor'=>'warning.main', 'apiaction' => "edit_default_2", 'renderCell' => NULL ];
 $columnName = "Batch Approval";  $init_default_columns[] = ['flex' => 0.1, 'minWidth' => 130, 'maxWidth' => 250, 'field' => $columnName, 'headerName' => __($columnName), 'editable'=>false, 'show'=>true, 'type'=>'api','apimdi'=>'mdi:border-bottom','apicolor'=>'info.main', 'apiaction' => "edit_default_3", 'renderCell' => NULL ];
 $columnName = "MobileEnd";  $init_default_columns[] = ['flex' => 0.1, 'minWidth' => 100, 'maxWidth' => 250, 'field' => $columnName, 'headerName' => __($columnName), 'editable'=>false, 'show'=>true, 'type'=>'api','apimdi'=>'mdi:cellphone','apicolor'=>'info.main', 'apiaction' => "edit_default_5", 'renderCell' => NULL ];
@@ -1583,7 +1652,7 @@ $RS['edit_default_1']['tablewidth']  = 650;
 
 $RS['edit_default_2']['allFields']      = $edit_default_2;
 $RS['edit_default_2']['allFieldsMode']  = $edit_default_2_mode;
-$RS['edit_default_2']['defaultValues']  = $defaultValues_2;
+$RS['edit_default_2']['defaultValues']  = $defaultValues_7;
 $RS['edit_default_2']['dialogContentHeight']  = "850px";
 $RS['edit_default_2']['submitaction']  = "edit_default_2_data";
 $RS['edit_default_2']['componentsize'] = "small";
@@ -1660,6 +1729,18 @@ $RS['edit_default_6']['titletext']      = __("Copy Item");
 $RS['edit_default_6']['tablewidth']     = 550;
 $RS['edit_default_6']['submitloading']  = __("SubmitLoading");
 $RS['edit_default_6']['loading']        = __("Loading");
+
+$RS['edit_default_7']['allFields']      = $edit_default_7;
+$RS['edit_default_7']['allFieldsMode']  = $edit_default_7_mode;
+$RS['edit_default_7']['defaultValues']  = $defaultValues_7;
+$RS['edit_default_7']['dialogContentHeight']  = "850px";
+$RS['edit_default_7']['submitaction']  = "edit_default_7_data";
+$RS['edit_default_7']['componentsize'] = "small";
+$RS['edit_default_7']['submittext']    = __("Submit");
+$RS['edit_default_7']['canceltext']    = __("Cancel");
+$RS['edit_default_7']['titletext']  = __("Node Setting");
+$RS['edit_default_7']['titlememo']  = __("Set Node Information");
+$RS['edit_default_7']['tablewidth']  = 650;
 
 $RS['view_default'] = $RS['add_default'];
 $RS['view_default']['titletext']  = __("View Form");

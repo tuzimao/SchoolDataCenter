@@ -331,10 +331,16 @@ $MAP['Approval'] 							= '通过';
 $MAP['Refuse'] 								= '退回';
 $MAP['Cancel'] 								= '取消';
 $MAP['Interface'] 							= '界面设置';
+$MAP['NodeSetting'] 						= '节点设置';
 $MAP['Batch Approval'] 						= '批量审核';
 $MAP['Design Form Flow'] 					= '设计表单流程';
 $MAP['Submit Success'] 						= '提交成功!';
 $MAP['Design Form Field Type'] 				= '设计表单字段类型';
+$MAP['Node Setting'] 				        = '节点设置';
+$MAP['Set Node Information'] 				= '设置节点信息以及转入条件';
+$MAP['Node_Type'] 				            = '节点类型';
+
+
 
 $MAP['Field Name in Database'] 	= '字段名称';
 $MAP['English Name. E.g. English Description'] 	= '英文名称或描述';

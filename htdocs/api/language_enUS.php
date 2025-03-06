@@ -334,10 +334,14 @@ $MAP['Approval'] 									= 'Approve';
 $MAP['Refuse'] 										= 'Reject';
 $MAP['Cancel'] 										= 'Cancel';
 $MAP['Interface'] 									= 'Interface';
+$MAP['NodeSetting'] 						        = 'Node Setting';
 $MAP['Batch Approval'] 								= 'Batch Approval';
 $MAP['Design Form Flow'] 							= 'Design Form Flow';
 $MAP['Submit Success'] 								= 'Submission Successful!';
 $MAP['Design Form Field Type'] 						= 'Design Form Field Type';
+$MAP['Node Setting'] 				                = 'Node Setting';
+$MAP['Set Node Information'] 				        = 'Set Node Information';
+$MAP['Node_Type'] 				                    = 'Node Type';
 
 $MAP['Field Name in Database'] 						= 'Field Name in Database';
 $MAP['English Name. E.g. English Description'] 		= 'English Name (e.g., English Description)';
