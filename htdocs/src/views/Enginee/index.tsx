@@ -675,7 +675,7 @@ const UserList = ({ authConfig, backEndApi, externalId, handleActionInMobileApp,
         setAddEditActionOpen(!addEditActionOpen)
         handleActionInMobileApp && handleActionInMobileApp(action, store.edit_default_6.titletext, '')
         break;
-        case 'edit_default_7':
+      case 'edit_default_7':
           setAddEditActionName(action)
           setCSRF_TOKEN(CSRF_TOKEN)
           setAddEditActionId(id)
