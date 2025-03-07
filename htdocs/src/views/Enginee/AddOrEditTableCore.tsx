@@ -577,6 +577,9 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
             if(key in defaultValues) {
                 formData.append(key, (value=='请选择' || value == undefined) ? '' : value);
             }
+            else if(defaultValues['FieldName'] &&  key + "_" + defaultValues['FieldName'] in defaultValues) {
+                formData.append(key, (value=='请选择' || value == undefined) ? '' : value);
+            }
         }
         const allFilesMap = new Map(Object.entries(allFiles));
         for (const [key, value] of allFilesMap.entries()) {

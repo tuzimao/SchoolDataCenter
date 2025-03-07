@@ -11,7 +11,7 @@ require_once('cors.php');
 require_once('include.inc.php');
 
 $USER_ID    = ForSqlInjection($GLOBAL_USER->USER_ID);
-$USER_NAME    = ForSqlInjection($GLOBAL_USER->USER_NAME);
+$USER_NAME  = ForSqlInjection($GLOBAL_USER->USER_NAME);
 $DEPT_ID    = ForSqlInjection($GLOBAL_USER->DEPT_ID);
 
 $Page_Role_Name = $SettingMap['Page_Role_Name'];

@@ -13,7 +13,6 @@ require_once('include.inc.php');
 CheckAuthUserLoginStatus();
 CheckAuthUserRoleHaveMenu(0, "/form/formname");
 
-
 $columnNames = [];
 $sql = "show columns from form_formname";
 $rs = $db->Execute($sql);
@@ -26,12 +25,15 @@ foreach ($rs_a as $Line) {
 $allFieldsAdd = [];
 $allFieldsAdd[] = ['name' => 'TableName', 'show'=>true, 'type'=>'input', 'label' => __('TableName'), 'value' => '', 'placeholder' => 'Input your table name', 'helptext' => 'Only accepted lower case letters', 'rules' => ['required' => true,'xs'=>12, 'sm'=>12,'disabled' => false,'min'=>2,'max'=>50,'format'=>'onlylowerletter','invalidtext'=>__('Only accepted lower case letters')]];
 $allFieldsAdd[] = ['name' => 'FullName', 'show'=>true, 'type'=>'input', 'label' => __('FullName'), 'value' => '', 'placeholder' => 'Readable name, e.g. Chinese name', 'helptext' => 'Readable name, e.g. Chinese name', 'rules' => ['required' => true,'xs'=>12, 'sm'=>12,'disabled' => false,'min'=>2,'max'=>50]];
+
 $FormGroup = [];
-$FormGroup[] = ['value'=>'System', 'label'=>__('System')];
-$FormGroup[] = ['value'=>'User Create', 'label'=>__('User Create')];
-$FormGroup[] = ['value'=>'Student', 'label'=>__('Student')];
-$FormGroup[] = ['value'=>'中职数据标准', 'label'=>__('中职数据标准')];
-$FormGroup[] = ['value'=>'高职数据标准', 'label'=>__('高职数据标准')];
+$sql    = "select * from data_formgroup order by 排序 asc";
+$rs     = $db->Execute($sql);
+$rs_a   = $rs->GetArray();
+foreach($rs_a as $Element)  {  
+  $FormGroup[] = ['value'=>$Element['名称'], 'label'=>$Element['名称']];
+}
+
 $allFieldsAdd[] = ['name' => 'FormGroup', 'show'=>true, 'type'=>'select', 'options'=>$FormGroup, 'label' => __('FormGroup'), 'value' => $FormGroup[0], 'placeholder' => '', 'helptext' => 'Form group', 'rules' => ['required' => true,'xs'=>12, 'sm'=>12,'disabled' => false]];
 foreach($allFieldsAdd as $ITEM) {
     $defaultValues[$ITEM['name']] = $ITEM['value'];
@@ -41,13 +43,8 @@ foreach($allFieldsAdd as $ITEM) {
 $allFieldsEdit = [];
 $allFieldsEdit[] = ['name' => 'TableName', 'show'=>true, 'type'=>'input', 'label' => __('TableName'), 'value' => '', 'placeholder' => '', 'helptext' => 'Readonly for tablename', 'rules' => ['required' => true,'xs'=>12, 'sm'=>12,'disabled' => true]];
 $allFieldsEdit[] = ['name' => 'FullName', 'show'=>true, 'type'=>'input', 'label' => __('FullName'), 'value' => '', 'placeholder' => 'Readable name, e.g. Chinese name', 'helptext' => 'Readable name, e.g. Chinese name', 'rules' => ['required' => true,'xs'=>12, 'sm'=>12,'disabled' => false]];
-$FormGroup = [];
-$FormGroup[] = ['value'=>'System', 'label'=>'System'];
-$FormGroup[] = ['value'=>'User Create', 'label'=>'User Create'];
-$FormGroup[] = ['value'=>'Student', 'label'=>'Student'];
-$FormGroup[] = ['value'=>'中职数据标准', 'label'=>__('中职数据标准')];
-$FormGroup[] = ['value'=>'高职数据标准', 'label'=>__('高职数据标准')];
-$allFieldsEdit[] = ['name' => 'FormGroup', 'show'=>true, 'type'=>'select', 'options'=>$FormGroup, 'label' => __('FormGroup'), 'value' => $FormGroup[0], 'placeholder' => 'Form group', 'helptext' => 'Form group', 'rules' => ['required' => true,'disabled' => false]];
+
+$allFieldsEdit[] = ['name' => 'FormGroup', 'show'=>true, 'type'=>'select', 'options'=>$FormGroup, 'label' => __('FormGroup'), 'value' => $FormGroup[0], 'placeholder' => 'Form group', 'helptext' => 'Form group', 'rules' => ['required' => true,'xs'=>12, 'sm'=>12,'disabled' => false]];
 foreach($allFieldsEdit as $ITEM) {
     $defaultValues[$ITEM['name']] = $ITEM['value'];
 }
@@ -486,11 +483,11 @@ $rs_a = $rs->GetArray();
 array_unshift($rs_a,['name'=>__('All Data'), 'value'=>'All Data', 'num'=>$ALL_NUM]);
 $RS['init_default']['filter'][] = ['name' => 'FormGroup', 'text' => __('FormGroup'), 'list' => $rs_a, 'selected' => "All Data"];
 
-$FormGroup = ForSqlInjection($_REQUEST['FormGroup']);
-if ($FormGroup != "" && $FormGroup != "All Data") {
-    $AddSql .= " and (FormGroup = '" . $FormGroup . "')";
+$FormGroupText = ForSqlInjection($_REQUEST['FormGroup']);
+if ($FormGroupText != "" && $FormGroupText != "All Data") {
+    $AddSql .= " and (FormGroup = '" . $FormGroupText . "')";
 }
-else if ($FormGroup == "") {
+else if ($FormGroupText == "") {
     //$AddSql .= " and (FormGroup = '" . $rs_a[1]['name'] . "')";
 }
 
@@ -592,12 +589,7 @@ $RS['edit_default']['loading']          = __("Loading");
 $allFieldsEdit1 = [];
 $allFieldsEdit1[] = ['name' => 'TableName', 'show'=>true, 'type'=>'input', 'label' => __('TableName'), 'value' => '', 'placeholder' => '', 'helptext' => __('Input new table name'), 'rules' => ['required' => true,'xs'=>12, 'sm'=>12, 'disabled' => false]];
 $allFieldsEdit1[] = ['name' => 'FullName', 'show'=>true, 'type'=>'input', 'label' => __('FullName'), 'value' => '', 'placeholder' => 'Readable name, e.g. Chinese name', 'helptext' => __('New short name'), 'rules' => ['required' => true,'xs'=>12, 'sm'=>12, 'disabled' => false]];
-$FormGroup = [];
-$FormGroup[] = ['value'=>'System', 'label'=>'System'];
-$FormGroup[] = ['value'=>'User Create', 'label'=>'User Create'];
-$FormGroup[] = ['value'=>'Student', 'label'=>'Student'];
-$FormGroup[] = ['value'=>'中职数据标准', 'label'=>__('中职数据标准')];
-$FormGroup[] = ['value'=>'高职数据标准', 'label'=>__('高职数据标准')];
+
 $allFieldsEdit1[] = ['name' => 'FormGroup', 'show'=>true, 'type'=>'select', 'options'=>$FormGroup, 'label' => __('FormGroup'), 'value' => $FormGroup[0], 'placeholder' => 'Form group', 'helptext' => 'Form group', 'rules' => ['required' => true,'xs'=>12, 'sm'=>12, 'disabled' => false]];
 foreach($allFieldsEdit1 as $ITEM) {
     $defaultValues1[$ITEM['name']] = $ITEM['value'];

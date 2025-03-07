@@ -10,6 +10,7 @@ header("Content-Type: application/json");
 require_once('cors.php');
 require_once('include.inc.php');
 
+CheckAuthUserLoginStatus();
 $sql	= "select left(代码,2) as ProvinceID,行政区 as ProvinceName from edu_xingzhengdaima where right(代码,10)='0000000000'";
 $rs		= $db->Execute($sql);
 $rsp_a	= $rs->GetArray();

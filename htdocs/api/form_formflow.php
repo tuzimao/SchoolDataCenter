@@ -328,6 +328,34 @@ $edit_default_2['Tip_In_Interface'][] = ['name' => "Tip_Title_When_Delete", 'sho
 $edit_default_2['Tip_In_Interface'][] = ['name' => "Tip_Content_When_Delete", 'show'=>true, 'type'=>"input", 'label' => __("Tip_Content_When_Delete"), 'value' => __("Do you really want to delete this item? This operation will delete table and data in Database."), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true,'xs'=>12, 'sm'=>6, 'disabled' => false]];
 $edit_default_2['Tip_In_Interface'][] = ['name' => "Tip_Button_When_Delete", 'show'=>true, 'type'=>"input", 'label' => __("Tip_Button_When_Delete"), 'value' => __("Confirm Delete"), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true,'xs'=>12, 'sm'=>6, 'disabled' => false]];
 
+$Rules_When_Import = [];
+$Rules_When_Import[] = ['value'=>"Import_And_Export", 'label'=>__("Import_And_Export")];
+$Rules_When_Import[] = ['value'=>"Only_Import", 'label'=>__("Only_Import")];
+$Rules_When_Import[] = ['value'=>"Only_Export", 'label'=>__("Only_Export")];
+$edit_default_2['Tip_In_Interface'][] = ['name' => "Rules_When_Import", 'show'=>true, 'type'=>'select', 'options'=>$Rules_When_Import, 'label' => __("Rules_When_Import"), 'value' => $Rules_When_Import[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
+
+$Page_Number_In_List = [];
+$Page_Number_In_List[] = ['value'=>10, 'label'=>10];
+$Page_Number_In_List[] = ['value'=>15, 'label'=>15];
+$Page_Number_In_List[] = ['value'=>20, 'label'=>20];
+$Page_Number_In_List[] = ['value'=>30, 'label'=>30];
+$Page_Number_In_List[] = ['value'=>40, 'label'=>40];
+$Page_Number_In_List[] = ['value'=>50, 'label'=>50];
+$Page_Number_In_List[] = ['value'=>100, 'label'=>100];
+$edit_default_2['Tip_In_Interface'][] = ['name' => "Page_Number_In_List", 'show'=>true, 'type'=>'select', 'options'=>$Page_Number_In_List, 'label' => __("Page_Number_In_List"), 'value' => $Page_Number_In_List[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
+
+$Actions_In_List_Header = [];
+$Actions_In_List_Header[] = ['value'=>"Add", 'label'=>__("Add")];
+$Actions_In_List_Header[] = ['value'=>"Export", 'label'=>__("Export")];
+$Actions_In_List_Header[] = ['value'=>"Import", 'label'=>__("Import")];
+$edit_default_2['Tip_In_Interface'][] = ['name' => "Actions_In_List_Header", 'show'=>true, 'type'=>'checkbox', 'options'=>$Actions_In_List_Header, 'label' => __("Actions_In_List_Header"), 'value' => "Add,Import,Export", 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'row'=>true, 'xs'=>12, 'sm'=>4]];
+
+$Actions_In_List_Row = [];
+$Actions_In_List_Row[] = ['value'=>"Edit", 'label'=>__("Edit")];
+$Actions_In_List_Row[] = ['value'=>"Delete", 'label'=>__("Delete")];
+$Actions_In_List_Row[] = ['value'=>"View", 'label'=>__("View")];
+$edit_default_2['Tip_In_Interface'][] = ['name' => "Actions_In_List_Row", 'show'=>true, 'type'=>'checkbox', 'options'=>$Actions_In_List_Row, 'label' => __("Actions_In_List_Row"), 'value' => "Edit,Delete,View", 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'row'=>true, 'xs'=>12, 'sm'=>4]];
+
 $edit_default_2['LimitEditAndDelete'][] = ['name' => "LimitEditAndDelete_Edit_Field_One", 'show'=>true, 'type'=>'select', 'options'=>$MetaColumnNamesOptionsAll, 'label' => __("LimitEditAndDelete_Edit_Field_One"), 'value' => $MetaColumnNamesOptionsAll[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false, 'disabled' => false, 'xs'=>12, 'sm'=>3]];
 $edit_default_2['LimitEditAndDelete'][] = ['name' => "LimitEditAndDelete_Edit_Value_One", 'show'=>true, 'type'=>'input', 'label' => __("LimitEditAndDelete_Edit_Value_One"), 'value' => '', 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false, 'disabled' => false, 'xs'=>12, 'sm'=>3]];
 $edit_default_2['LimitEditAndDelete'][] = ['name' => "LimitEditAndDelete_Edit_Field_Two", 'show'=>true, 'type'=>'select', 'options'=>$MetaColumnNamesOptionsAll, 'label' => __("LimitEditAndDelete_Edit_Field_Two"), 'value' => $MetaColumnNamesOptionsAll[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false, 'disabled' => false, 'xs'=>12, 'sm'=>3]];
@@ -1539,7 +1567,7 @@ $columnName = "TableName";      $init_default_columns[] = ['flex' => 0.1, 'minWi
 $columnName = "Step";           $init_default_columns[] = ['flex' => 0.1, 'minWidth' => 100, 'maxWidth' => 200, 'field' => $columnName, 'headerName' => __($columnName), 'editable'=>false, 'show'=>true, 'type'=>'string', 'renderCell' => NULL];
 $columnName = "FlowName";       $init_default_columns[] = ['flex' => 0.1, 'minWidth' => 150, 'maxWidth' => 300, 'field' => $columnName, 'headerName' => __($columnName), 'editable'=>true, 'show'=>true, 'type'=>'string', 'renderCell' => NULL];
 $columnName = "Field Type";     $init_default_columns[] = ['flex' => 0.1, 'minWidth' => 130, 'maxWidth' => 300, 'field' => $columnName, 'headerName' => __($columnName), 'editable'=>false, 'show'=>true, 'type'=>'api','apimdi'=>'mdi:chart-donut','apicolor'=>'success.main', 'apiaction' => "edit_default_1", 'renderCell' => NULL ];
-$columnName = "NodeSetting";    $init_default_columns[] = ['flex' => 0.1, 'minWidth' => 130, 'maxWidth' => 250, 'field' => $columnName, 'headerName' => __($columnName), 'editable'=>false, 'show'=>true, 'type'=>'api','apimdi'=>'hugeicons:flow','apicolor'=>'error.main', 'apiaction' => "edit_default_7", 'renderCell' => NULL ];
+$columnName = "NodeType";    $init_default_columns[] = ['flex' => 0.1, 'minWidth' => 130, 'maxWidth' => 250, 'field' => $columnName, 'headerName' => __($columnName), 'editable'=>false, 'show'=>true, 'type'=>'apivalue','apimdi'=>'hugeicons:flow','apicolor'=>'error.main', 'apiaction' => "edit_default_7", 'renderCell' => NULL ];
 $columnName = "Interface";      $init_default_columns[] = ['flex' => 0.1, 'minWidth' => 130, 'maxWidth' => 250, 'field' => $columnName, 'headerName' => __($columnName), 'editable'=>false, 'show'=>true, 'type'=>'api','apimdi'=>'mdi:cog-outline','apicolor'=>'warning.main', 'apiaction' => "edit_default_2", 'renderCell' => NULL ];
 $columnName = "Batch Approval";  $init_default_columns[] = ['flex' => 0.1, 'minWidth' => 130, 'maxWidth' => 250, 'field' => $columnName, 'headerName' => __($columnName), 'editable'=>false, 'show'=>true, 'type'=>'api','apimdi'=>'mdi:border-bottom','apicolor'=>'info.main', 'apiaction' => "edit_default_3", 'renderCell' => NULL ];
 $columnName = "MobileEnd";  $init_default_columns[] = ['flex' => 0.1, 'minWidth' => 100, 'maxWidth' => 250, 'field' => $columnName, 'headerName' => __($columnName), 'editable'=>false, 'show'=>true, 'type'=>'api','apimdi'=>'mdi:cellphone','apicolor'=>'info.main', 'apiaction' => "edit_default_5", 'renderCell' => NULL ];

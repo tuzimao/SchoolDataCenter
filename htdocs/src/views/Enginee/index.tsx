@@ -963,6 +963,22 @@ const UserList = ({ authConfig, backEndApi, externalId, handleActionInMobileApp,
       )
       columns_for_datagrid[column_index] = columnRenderCell
     }
+    else if (column && column.type == "apivalue") {
+      const columnRenderCell = { ...column }
+      columnRenderCell['renderCell'] = ({ row }: any) => (
+        <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 1, color: column.apicolor } }}>
+          <Tooltip title={column.headerName}>
+            <IconButton sx={{ borderRadius: 1, py: 0.5 }} size='small' onClick={() => togglePageActionDrawer(column.apiaction, row.id, store.init_default.CSRF_TOKEN)}>
+              <Icon icon={column.apimdi} fontSize={20} />
+              <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize', pt: 0, pb: 0 }}>
+                {row[column.field]}
+              </Typography>
+            </IconButton>
+          </Tooltip>
+        </Box>
+      )
+      columns_for_datagrid[column_index] = columnRenderCell
+    }
     else if (column && column.type == "avatar") {
       const columnRenderCell = { ...column }
       columnRenderCell['renderCell'] = ({ row }: any) => {

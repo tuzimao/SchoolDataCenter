@@ -12,7 +12,7 @@ require_once('include.inc.php');
 
 //$externalId = 16;
 
-//CheckAuthUserLoginStatus();
+CheckAuthUserLoginStatus();
 $DATA = DecryptID($_GET['DATA']);
 $DATA = unserialize($DATA);
 
