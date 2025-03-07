@@ -100,7 +100,10 @@ foreach($AllFieldsFromTable as $Item)  {
     $LocaleFieldArray[$Item['ChineseName']] = $Item['FieldName'];
 }
 //print "TIME EXCEUTE 4:".(time()-$TIME_BEGIN)."<BR>\n";
-
+if($TableName == null) {
+    print "TableName is null";
+    exit;
+}
 $MetaColumnNames    = GLOBAL_MetaColumnNames($TableName);
 $UniqueKey          = $MetaColumnNames[1];
 

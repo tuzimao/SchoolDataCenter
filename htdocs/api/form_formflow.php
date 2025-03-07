@@ -291,6 +291,7 @@ if($_GET['action']=="edit_default_1"&&$id!='')         {
     $RS['status'] = "OK";
     $RS['data'] = $defaultValues_1;
     $RS['sql'] = $sql;
+    $RS['forceuse'] = true;
     $RS['msg'] = __("Get Data Success");
     print_R(json_encode($RS));
     exit;
@@ -461,9 +462,7 @@ foreach($edit_default_2 as $ModeName=>$allFieldItem) {
     }
 }
 
-$edit_default_2_mode[] = ['value'=>"Menu_Location", 'label'=>__("Menu_Location")];
 $edit_default_2_mode[] = ['value'=>"Tip_In_Interface", 'label'=>__("Tip_In_Interface")];
-$edit_default_2_mode[] = ['value'=>"Page_Role", 'label'=>__("Page_Role")];
 $edit_default_2_mode[] = ['value'=>"LimitEditAndDelete", 'label'=>__("LimitEditAndDelete")];
 $edit_default_2_mode[] = ['value'=>"OperationAfterSubmit", 'label'=>__("OperationAfterSubmit")];
 $edit_default_2_mode[] = ['value'=>"Columns_Pinned", 'label'=>__("Columns_Pinned")];
@@ -543,6 +542,7 @@ if($_GET['action']=="edit_default_2"&&$id!='')         {
     $RS['status'] = "OK";
     $RS['data'] = $defaultValues_2;
     $RS['sql'] = $sql;
+    $RS['forceuse'] = true;
     $RS['msg'] = __("Get Data Success");
     print_R(json_encode($RS));
     exit;
@@ -996,6 +996,7 @@ if($_GET['action']=="edit_default_3"&&$id!='')         {
     $RS['status'] = "OK";
     $RS['data'] = $defaultValues_3;
     $RS['sql'] = $sql;
+    $RS['forceuse'] = true;
     $RS['msg'] = __("Get Data Success");
     print_R(json_encode($RS));
     exit;
@@ -1032,6 +1033,7 @@ if($_GET['action']=="edit_default_4"&&$id!='')         {
     $RS['status'] = "OK";
     $RS['data'] = $defaultValues_4;
     $RS['sql'] = $sql;
+    $RS['forceuse'] = true;
     $RS['msg'] = __("Get Data Success");
     print_R(json_encode($RS));
     exit;
@@ -1106,6 +1108,7 @@ if($_GET['action']=="edit_default_5"&&$id!='')         {
     $RS['status'] = "OK";
     $RS['data'] = $defaultValues_5;
     $RS['sql'] = $sql;
+    $RS['forceuse'] = true;
     $RS['msg'] = __("Get Data Success");
     print_R(json_encode($RS));
     exit;
@@ -1161,6 +1164,7 @@ if(($_GET['action']=="edit_default_1_data" || $_GET['action']=="edit_default_2_d
         $FieldsArray['SortNumber']     = $id;
         $FieldsArray['Creator']        = "admin";
         $FieldsArray['CreateTime']     = date("Y-m-d H:i:s");
+        $FieldsArray['NodeType']       = "菜单";
         [$rs,$sql] = InsertOrUpdateTableByArray("data_menutwo",$FieldsArray,'FlowId',0);
         //Write Interface File In Apps Dir
         $sql        = "select id from data_menutwo where FlowId = '$id'";
@@ -1474,7 +1478,8 @@ if($_GET['action']=="edit_default_7"&&$id!='')         {
     $RS['EnableFields'] = $EnableFields;
     $RS['status'] = "OK";
     $RS['data'] = $defaultValues_7;
-    $RS['sql'] = $sql;
+    $RS['sql']  = $sql;
+    $RS['forceuse'] = true;
     $RS['msg'] = __("Get Data Success");
     print_R(json_encode($RS));
     exit;

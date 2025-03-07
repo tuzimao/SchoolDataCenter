@@ -424,7 +424,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
     const defaultValues:{ [key:string]:any } = addEditStructInfo2.defaultValues;
     const componentsize = addEditStructInfo2.componentsize;
 
-    //console.log("addEditStructInfo2",addEditStructInfo2)
+    //console.log("defaultValues",defaultValues)
     //console.log("allFieldsMode",allFieldsMode)
     //console.log("defaultValues",defaultValues)
     //console.log("defaultValuesNew",defaultValuesNew)
@@ -566,7 +566,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
             return
         }
 
-        console.log("data", data)
+        console.log("Menu_Three_Icon data", data)
         console.log("loopModelDataStorage", loopModelDataStorage)
 
         //upload file
@@ -574,7 +574,9 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
 
         const dataMap = new Map(Object.entries({...data, ...loopModelDataStorage}));
         for (const [key, value] of dataMap.entries()) {
-            formData.append(key, value=='请选择'?'':value);
+            if(key in defaultValues) {
+                formData.append(key, (value=='请选择' || value == undefined) ? '' : value);
+            }
         }
         const allFilesMap = new Map(Object.entries(allFiles));
         for (const [key, value] of allFilesMap.entries()) {
@@ -1525,7 +1527,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                                 labelId='validation-basic-select'
                                                                                 aria-describedby='validation-basic-select'
                                                                             >
-                                                                                {FieldArray.options.map((ItemArray: any, ItemArray_index: number) => {
+                                                                                {FieldArray && FieldArray.options && FieldArray.options.map((ItemArray: any, ItemArray_index: number) => {
                                                                                     return <MenuItem value={ItemArray.value} key={ItemArray_index}>{ItemArray.label}</MenuItem>
                                                                                 })}
                                                                             </Select>
@@ -2480,7 +2482,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                                     }
                                                                                 }}
                                                                             >
-                                                                                {FieldArray.options.map((ItemArray: any, ItemArray_index: number) => {
+                                                                                {FieldArray && FieldArray.options && FieldArray.options.map((ItemArray: any, ItemArray_index: number) => {
 
                                                                                   return (
                                                                                         <FormControlLabel
@@ -2536,7 +2538,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                                 row={FieldArray.rules.row}
                                                                                 {...field}
                                                                                 aria-label={FieldArray.label}>
-                                                                                {FieldArray.options.map((ItemArray: any, ItemArray_index: number) => {
+                                                                                {FieldArray && FieldArray.options && FieldArray.options.map((ItemArray: any, ItemArray_index: number) => {
                                                                                     const TempValueArray = defaultValuesNew[FieldArray.name].split(",")
 
                                                                                     return (
