@@ -126,7 +126,7 @@ const App = (props: ExtendedAppProps) => {
           <meta name='keywords' content='Chives React Admin, MUI, Admin Template, React Admin Template' />
           <meta name='viewport' content='initial-scale=1, width=device-width' />
           <meta name='version' content={`${defaultConfig.AppVersion}`} />
-          <meta http-equiv='Cache-Control' content='max-age=14400' />
+          <meta httpEquiv='Cache-Control' content='max-age=14400' />
         </Head>
         
         <AuthProvider>
