@@ -47,6 +47,8 @@ import ReactHotToast from 'src/@core/styles/libs/react-hot-toast'
 // ** Utils Imports
 import { createEmotionCache } from 'src/@core/utils/create-emotion-cache'
 
+import {defaultConfig} from 'src/configs/auth'
+
 // ** Prismjs Styles
 import 'prismjs'
 import 'prismjs/themes/prism-tomorrow.css'
@@ -120,14 +122,13 @@ const App = (props: ExtendedAppProps) => {
       <CacheProvider value={emotionCache}>
         <Head>
           <title>{`${themeConfig.templateName}`}</title>
-          <meta
-            name='description'
-            content={`${themeConfig.templateName}`}
-          />
+          <meta name='description' content={`${themeConfig.templateName}`} />
           <meta name='keywords' content='Chives React Admin, MUI, Admin Template, React Admin Template' />
           <meta name='viewport' content='initial-scale=1, width=device-width' />
+          <meta name='version' content={`${defaultConfig.AppVersion}`} />
+          <meta http-equiv='Cache-Control' content='max-age=14400' />
         </Head>
-
+        
         <AuthProvider>
           <SettingsProvider {...(setConfig ? { pageSettings: setConfig() } : {})}>
             <SettingsConsumer>

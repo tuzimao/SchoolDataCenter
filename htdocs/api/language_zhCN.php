@@ -338,8 +338,7 @@ $MAP['Submit Success'] 						= '提交成功!';
 $MAP['Design Form Field Type'] 				= '设计表单字段类型';
 $MAP['Node Setting'] 				        = '节点设置';
 $MAP['Set Node Information'] 				= '设置节点信息以及转入条件';
-$MAP['Node_Type'] 				            = '节点类型';
-
+$MAP['NodeType'] 				            = '节点类型';
 
 
 $MAP['Field Name in Database'] 	= '字段名称';

@@ -1144,11 +1144,11 @@ if(($_GET['action']=="edit_default_6_data") && $id!="")     {
 
 if(($_GET['action']=="edit_default_1_data" || $_GET['action']=="edit_default_2_data" || $_GET['action']=="edit_default_3_data" || $_GET['action']=="edit_default_4_data" || $_GET['action']=="edit_default_5_data" || $_GET['action']=="edit_default_7_data") && $id!="")     {
 
-    if($id!=""&&$_POST['Node_Type']=="工作流")   {
+    if($id!=""&&$_POST['NodeType']=="工作流")   {
         $sql        = "delete from data_menutwo where FlowId = '$id'";
         $rs         = $db->Execute($sql);
     }
-    if($_POST['Menu_One']!=""&&$_POST['Menu_Two']!=""&&$id!=""&&$_POST['Node_Type']=="菜单")   {
+    if($_POST['Menu_One']!=""&&$_POST['Menu_Two']!=""&&$id!=""&&$_POST['NodeType']=="菜单")   {
         $FieldsArray = [];
         $FieldsArray['MenuOneName']    = $_POST['Menu_One'];
         $FieldsArray['MenuTwoName']    = $_POST['Menu_Two'];
@@ -1193,7 +1193,7 @@ require_once("../data_enginee_flow.php");
         }
     }
 
-    if($_POST['MobileEnd']!=""&&$id!=""&&$_POST['Node_Type']=="菜单")   {
+    if($_POST['MobileEnd']!=""&&$id!=""&&$_POST['NodeType']=="菜单")   {
       $FieldsArray                        = [];
       $FieldsArray['FlowId']              = $id;
       $FieldsArray['IsMobile']            = $_POST['MobileEnd'] == "No" ? "否" : "是";
@@ -1253,6 +1253,9 @@ require_once("../data_enginee_flow.php");
     if($_POST['MobileEnd']!="")  {
         $FieldsArray['MobileEnd']   = $_POST['MobileEnd'];
     }
+    if($_POST['NodeType']!="")  {
+        $FieldsArray['NodeType']   = $_POST['NodeType'];
+    }
     $FieldsArray['Setting']     = base64_encode(serialize($SettingMap));
     $FieldsArray['Creator']     = "admin";
     $FieldsArray['CreateTime'] = date("Y-m-d H:i:s");
@@ -1289,11 +1292,11 @@ $MenuOneNameArray = [];
 foreach($rsf_a as $Item)  {
     $MenuOneNameArray[] = ['value'=>$Item['MenuOneName'],'label'=>$Item['MenuOneName']];
 }
-$Node_Type_Array    = [];
-$Node_Type_Array[]  = ['value'=>"工作流",'label'=>"工作流"];
-$Node_Type_Array[]  = ['value'=>"菜单",'label'=>"菜单"];
+$NodeType_Array    = [];
+$NodeType_Array[]  = ['value'=>"工作流",'label'=>"工作流"];
+$NodeType_Array[]  = ['value'=>"菜单",'label'=>"菜单"];
 
-$edit_default_7['Menu_Location'][] = ['name' => "Node_Type", 'show'=>true, 'type'=>'select', 'options'=>$Node_Type_Array, 'label' => __("Node_Type"), 'value' => $Node_Type_Array[1]['value'], 'placeholder' => "", 'helptext' => __("Node_Type"), 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>3]];
+$edit_default_7['Menu_Location'][] = ['name' => "NodeType", 'show'=>true, 'type'=>'select', 'options'=>$NodeType_Array, 'label' => __("NodeType"), 'value' => $NodeType_Array[1]['value'], 'placeholder' => "", 'helptext' => __("NodeType"), 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>3]];
 $edit_default_7['Menu_Location'][] = ['name' => "Menu_One", 'show'=>true, 'type'=>'select', 'options'=>$MenuOneNameArray, 'label' => __("Menu_One"), 'value' => $MetaColumnNamesOptionsAll[1]['value'], 'placeholder' => "", 'helptext' => __("Allow_Repeat"), 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>3]];
 $edit_default_7['Menu_Location'][] = ['name' => "Menu_Two", 'show'=>true, 'type'=>"input", 'label' => __("Menu_Two"), 'value' => "", 'placeholder' => "", 'helptext' => __("Allow_Repeat"), 'rules' => ['required' => false,'xs'=>12, 'sm'=>3, 'disabled' => false]];
 $edit_default_7['Menu_Location'][] = ['name' => "Menu_Three", 'show'=>true, 'type'=>"input", 'label' => __("Menu_Three"), 'value' => "", 'placeholder' => "", 'helptext' => __("Optional"), 'rules' => ['required' => false,'xs'=>12, 'sm'=>3, 'disabled' => false]];
