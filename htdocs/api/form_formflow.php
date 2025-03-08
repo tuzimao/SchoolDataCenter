@@ -774,31 +774,31 @@ for($i=1;$i<=$MaxMsgSections;$i++)     {
 
     $edit_default_4['Msg_Reminder_Rule_'.$i][] = ['name' => "divider", 'show'=>true, 'type'=>"divider", 'label' => __("divider"), 'value' => "", 'placeholder' => "", 'helptext' => __(""), 'rules' => ['required' => false,'xs'=>12, 'sm'=>12, 'disabled' => false]];
     $FieldName = "";
-    $CurrentFieldTypeArray = explode(":","autocompletemulti:data_user:1:2:admin");
-    $TableNameTemp      = $CurrentFieldTypeArray[1];
-    $KeyField           = $CurrentFieldTypeArray[2];
-    $ValueField         = $CurrentFieldTypeArray[3];
-    $DefaultValue       = $CurrentFieldTypeArray[4];
-    $WhereField         = ForSqlInjection($CurrentFieldTypeArray[5]);
-    $WhereValue         = ForSqlInjection($CurrentFieldTypeArray[6]);
+    $CurrentUserFieldTypeArray = explode(":","autocompletemulti:data_user:1:2:admin");
+    $TableNameTemp      = $CurrentUserFieldTypeArray[1];
+    $KeyField           = $CurrentUserFieldTypeArray[2];
+    $ValueField         = $CurrentUserFieldTypeArray[3];
+    $DefaultValue       = $CurrentUserFieldTypeArray[4];
+    $WhereField         = ForSqlInjection($CurrentUserFieldTypeArray[5]);
+    $WhereValue         = ForSqlInjection($CurrentUserFieldTypeArray[6]);
     $MetaColumnNamesTemp    = GLOBAL_MetaColumnNames($TableNameTemp);
-    if($TableNameTemp=="form_formdict" && sizeof($CurrentFieldTypeArray)==7)   {
+    if($TableNameTemp=="form_formdict" && sizeof($CurrentUserFieldTypeArray)==7)   {
         $sql = "select `".$MetaColumnNamesTemp[$KeyField]."` as value, `".$MetaColumnNamesTemp[$ValueField]."` as label,ExtraControl from $TableNameTemp where $AddSqlTemp $WhereField = '".$WhereValue."' order by SortNumber asc, `".$MetaColumnNamesTemp[$ValueField]."` asc";
     }
-    elseif(sizeof($CurrentFieldTypeArray)==7)   {
+    elseif(sizeof($CurrentUserFieldTypeArray)==7)   {
         $sql = "select `".$MetaColumnNamesTemp[$KeyField]."` as value, `".$MetaColumnNamesTemp[$ValueField]."` as label from $TableNameTemp where $AddSqlTemp $WhereField = '".$WhereValue."' order by SortNumber asc, `".$MetaColumnNamesTemp[$ValueField]."` asc";
     }
-    elseif(sizeof($CurrentFieldTypeArray)==5||sizeof($CurrentFieldTypeArray)==4)   {
+    elseif(sizeof($CurrentUserFieldTypeArray)==5||sizeof($CurrentUserFieldTypeArray)==4)   {
         $sql = "select `".$MetaColumnNamesTemp[$KeyField]."` as value, `".$MetaColumnNamesTemp[$ValueField]."` as label from $TableNameTemp where 1=1 $AddSqlTemp order by `".$MetaColumnNamesTemp[$ValueField]."` asc, id asc";
     }
     else {
         print "autocompletemulti para error!";exit;
     }
     $rs = $db->Execute($sql) or print($sql);
-    $FieldType = $rs->GetArray();
+    $UserRecords = $rs->GetArray();
     $DefaultValueTemp = $SettingMap["Msg_Reminder_Object_Select_Users_{$i}"];
     $FieldCodeName = $FieldName;
-    $edit_default_4['Msg_Reminder_Rule_'.$i][] = ['name' => "Msg_Reminder_Object_Select_Users_{$i}", 'code' => "Msg_Reminder_Object_Select_Users_{$i}", 'FieldTypeArray'=>$CurrentFieldTypeArray, 'show'=>true, 'type'=>"autocompletemulti", 'options'=>$FieldType, 'label' => __("Msg_Reminder_Object_Select_Users"), 'value' => $DefaultValueTemp, 'placeholder' => __(""), 'helptext' => __(""), 'rules' => ['required' => false,'xs'=>12, 'sm'=>12,'disabled' => false]];
+    $edit_default_4['Msg_Reminder_Rule_'.$i][] = ['name' => "Msg_Reminder_Object_Select_Users_{$i}", 'code' => "Msg_Reminder_Object_Select_Users_{$i}", 'FieldTypeArray'=>$CurrentUserFieldTypeArray, 'show'=>true, 'type'=>"autocompletemulti", 'options'=>$UserRecords, 'label' => __("Msg_Reminder_Object_Select_Users"), 'value' => $DefaultValueTemp, 'placeholder' => __(""), 'helptext' => __(""), 'rules' => ['required' => false,'xs'=>12, 'sm'=>12,'disabled' => false]];
     $edit_default_4['Msg_Reminder_Rule_'.$i][] = ['name' => "divider", 'show'=>true, 'type'=>"divider", 'label' => __("divider"), 'value' => "", 'placeholder' => "", 'helptext' => __(""), 'rules' => ['required' => false,'xs'=>12, 'sm'=>12, 'disabled' => false]];
 
     $edit_default_4['Msg_Reminder_Rule_'.$i][] = ['name' => "Msg_Reminder_Rule_Storage_StudentCode_{$i}", 'show'=>true, 'type'=>'select', 'options'=>$MetaColumnNamesOptionsAll, 'label' => __("Msg_Reminder_Rule_Storage_StudentCode"), 'value' => $MetaColumnNamesOptionsAll[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false, 'disabled' => false, 'xs'=>12, 'sm'=>6]];
@@ -874,7 +874,7 @@ $edit_default_5['MenuAndIcon'][] = ['name' => "MobileEndShowType", 'show'=>true,
 
 $edit_default_5['MenuAndIcon'][] = ['name' => "MobileEndShowSearch", 'show'=>true, 'type'=>'select', 'options'=>$YesOrNotOptions, 'label' => __("MobileEndShowSearch"), 'value' => 'Yes', 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false, 'disabled' => false, 'xs'=>12, 'sm'=>6]];
 $edit_default_5['MenuAndIcon'][] = ['name' => "MobileEndShowGroupFilter", 'show'=>true, 'type'=>'select', 'options'=>$YesOrNotOptions, 'label' => __("MobileEndShowGroupFilter"), 'value' => 'Yes', 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false, 'disabled' => false, 'xs'=>12, 'sm'=>6]];
-//$edit_default_5['MenuAndIcon'][] = ['name' => "MobileEndShowBanners", 'show'=>true, 'FieldTypeArray'=>$CurrentFieldTypeArray, 'type'=>'files', 'label' => __("MobileEndShowBanners"), 'value' => "", 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>12, 'disabled' => false], 'RemoveAll'=>__('RemoveAll') ];
+//$edit_default_5['MenuAndIcon'][] = ['name' => "MobileEndShowBanners", 'show'=>true, 'FieldTypeArray'=>$CurrentUserFieldTypeArray, 'type'=>'files', 'label' => __("MobileEndShowBanners"), 'value' => "", 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>12, 'disabled' => false], 'RemoveAll'=>__('RemoveAll') ];
 
 $edit_default_5['MenuAndIcon'][] = ['name' => "MobileEndIconName", 'show'=>true, 'type'=>"input", 'label' => __("IconName"), 'value' => $SettingMap['Menu_Three'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>6, 'disabled' => false]];
 // Loading all images as the wechat app icons
@@ -1291,14 +1291,14 @@ require_once("../data_enginee_flow.php");
     if($_POST['NextStep']!="")  {
         $FieldsArray['NextStep']   = $_POST['NextStep'];
     }
-    if($_POST['AuthorizedUser']!="")  {
-        $FieldsArray['AuthorizedUser']   = $_POST['AuthorizedUser'];
+    if($_POST['NodeFlow_AuthorizedUser']!="")  {
+        $FieldsArray['AuthorizedUser']   = $_POST['NodeFlow_AuthorizedUser'];
     }
-    if($_POST['AuthorizedDept']!="")  {
-        $FieldsArray['AuthorizedDept']   = $_POST['AuthorizedDept'];
+    if($_POST['NodeFlow_AuthorizedDept']!="")  {
+        $FieldsArray['AuthorizedDept']   = $_POST['NodeFlow_AuthorizedDept'];
     }
-    if($_POST['AuthorizedRole']!="")  {
-        $FieldsArray['AuthorizedRole']   = $_POST['AuthorizedRole'];
+    if($_POST['NodeFlow_AuthorizedRole']!="")  {
+        $FieldsArray['AuthorizedRole']   = $_POST['NodeFlow_AuthorizedRole'];
     }
     $FieldsArray['Setting']     = base64_encode(serialize($SettingMap));
     $FieldsArray['Creator']     = "admin";
@@ -1439,6 +1439,44 @@ $edit_default_7['Page_Role'][] = ['name' => "Extra_Priv_Filter_Or_Field_Three", 
 $edit_default_7['Page_Role'][] = ['name' => "Extra_Priv_Filter_Or_Method_Three", 'show'=>true, 'type'=>'select', 'options'=>$Extra_Priv_Filter_Method, 'label' => __("Extra_Priv_Filter_Or_Method_Three"), 'value' => $Extra_Priv_Filter_Method[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
 $edit_default_7['Page_Role'][] = ['name' => "Extra_Priv_Filter_Or_Value_Three", 'show'=>true, 'type'=>"input", 'label' => __("Extra_Priv_Filter_Or_Value_Three"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>4, 'disabled' => false]];
 
+$edit_default_7['AuthorizedControl'][] = ['name' => "divider", 'show'=>true, 'type'=>"divider", 'label' => __("divider"), 'value' => "", 'placeholder' => "", 'helptext' => __(""), 'rules' => ['required' => false,'xs'=>12, 'sm'=>12, 'disabled' => false]];
+$edit_default_7['AuthorizedControl'][] = ['name' => "NodeFlow_AuthorizedUser", 'code' => "NodeFlow_AuthorizedUser_Code", 'FieldTypeArray'=>$CurrentUserFieldTypeArray, 'show'=>true, 'type'=>"autocompletemulti", 'options'=>$UserRecords, 'label' => __("NodeFlow_AuthorizedUser"), 'value' => '', 'placeholder' => __(""), 'helptext' => __("NodeFlow_AuthorizedHelpText"), 'rules' => ['required' => false,'xs'=>12, 'sm'=>12,'disabled' => false]];
+
+$CurrentDepartmentFieldTypeArray = explode(":","autocompletemulti:data_department:0:1:");
+$TableNameTemp      = $CurrentDepartmentFieldTypeArray[1];
+$KeyField           = $CurrentDepartmentFieldTypeArray[2];
+$ValueField         = $CurrentDepartmentFieldTypeArray[3];
+$DefaultValue       = $CurrentDepartmentFieldTypeArray[4];
+$WhereField         = ForSqlInjection($CurrentDepartmentFieldTypeArray[5]);
+$WhereValue         = ForSqlInjection($CurrentDepartmentFieldTypeArray[6]);
+$MetaColumnNamesTemp    = GLOBAL_MetaColumnNames($TableNameTemp);
+if(sizeof($CurrentDepartmentFieldTypeArray)==5||sizeof($CurrentDepartmentFieldTypeArray)==4)   {
+    $sql = "select `".$MetaColumnNamesTemp[$KeyField]."` as value, `".$MetaColumnNamesTemp[$ValueField]."` as label from $TableNameTemp where 1=1 $AddSqlTemp order by `".$MetaColumnNamesTemp[$ValueField]."` asc, id asc";
+}
+else {
+    print "autocompletemulti para error!";exit;
+}
+$rs = $db->Execute($sql) or print($sql);
+$DepartmentRecords = $rs->GetArray();
+$edit_default_7['AuthorizedControl'][] = ['name' => "NodeFlow_AuthorizedDept", 'code' => "NodeFlow_AuthorizedDept_Code", 'FieldTypeArray'=>$CurrentDepartmentFieldTypeArray, 'show'=>true, 'type'=>"autocompletemulti", 'options'=>$DepartmentRecords, 'label' => __("NodeFlow_AuthorizedDept"), 'value' => '', 'placeholder' => __(""), 'helptext' => __("NodeFlow_AuthorizedHelpText"), 'rules' => ['required' => false,'xs'=>12, 'sm'=>12,'disabled' => false]];
+
+$CurrentRoleFieldTypeArray = explode(":","autocompletemulti:data_role:0:1:");
+$TableNameTemp      = $CurrentRoleFieldTypeArray[1];
+$KeyField           = $CurrentRoleFieldTypeArray[2];
+$ValueField         = $CurrentRoleFieldTypeArray[3];
+$DefaultValue       = $CurrentRoleFieldTypeArray[4];
+$WhereField         = ForSqlInjection($CurrentRoleFieldTypeArray[5]);
+$WhereValue         = ForSqlInjection($CurrentRoleFieldTypeArray[6]);
+$MetaColumnNamesTemp    = GLOBAL_MetaColumnNames($TableNameTemp);
+if(sizeof($CurrentRoleFieldTypeArray)==5||sizeof($CurrentRoleFieldTypeArray)==4)   {
+    $sql = "select `".$MetaColumnNamesTemp[$KeyField]."` as value, `".$MetaColumnNamesTemp[$ValueField]."` as label from $TableNameTemp where 1=1 $AddSqlTemp order by `".$MetaColumnNamesTemp[$ValueField]."` asc, id asc";
+}
+else {
+    print "autocompletemulti para error!";exit;
+}
+$rs = $db->Execute($sql) or print($sql);
+$RoleRecords = $rs->GetArray();
+$edit_default_7['AuthorizedControl'][] = ['name' => "NodeFlow_AuthorizedRole", 'code' => "NodeFlow_AuthorizedRole_Code", 'FieldTypeArray'=>$CurrentRoleFieldTypeArray, 'show'=>true, 'type'=>"autocompletemulti", 'options'=>$RoleRecords, 'label' => __("NodeFlow_AuthorizedRole"), 'value' => '', 'placeholder' => __(""), 'helptext' => __("NodeFlow_AuthorizedHelpText"), 'rules' => ['required' => false,'xs'=>12, 'sm'=>12,'disabled' => false]];
 
 $defaultValues_7 = [];
 foreach($edit_default_7 as $ModeName=>$allFieldItem) {
@@ -1448,6 +1486,7 @@ foreach($edit_default_7 as $ModeName=>$allFieldItem) {
 }
 
 $edit_default_7_mode[] = ['value'=>"Menu_Location", 'label'=>__("Menu_Location")];
+$edit_default_7_mode[] = ['value'=>"AuthorizedControl", 'label'=>__("AuthorizedControl")];
 $edit_default_7_mode[] = ['value'=>"Page_Role", 'label'=>__("Page_Role")];
 
 if($_GET['action']=="edit_default_7"&&$id!='')         {

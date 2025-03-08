@@ -79,6 +79,11 @@ $MAP['Extra_Priv_Filter_Or_Value_Two']  = '额外过滤或条件值二';
 $MAP['Extra_Priv_Filter_Or_Field_Three']  = '额外过滤或条件字段三';
 $MAP['Extra_Priv_Filter_Or_Method_Three'] = '额外过滤或条件方法三';
 $MAP['Extra_Priv_Filter_Or_Value_Three']  = '额外过滤或条件值三';
+$MAP['AuthorizedControl']               = '授权访问';
+$MAP['NodeFlow_AuthorizedUser']         = '授权允许访问的用户';
+$MAP['NodeFlow_AuthorizedDept']         = '授权允许访问的部门';
+$MAP['NodeFlow_AuthorizedRole']         = '授权允许访问的角色';
+$MAP['NodeFlow_AuthorizedHelpText']     = '如果不填写,则表示不启用此项限制';
 
 
 $MAP['Yes'] 	        = '是';

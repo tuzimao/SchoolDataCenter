@@ -80,6 +80,12 @@ $MAP['Extra_Priv_Filter_Or_Value_Two']  = 'Extra Filter Or Condition Value Two';
 $MAP['Extra_Priv_Filter_Or_Field_Three']  = 'Extra Filter Or Condition Field Three';
 $MAP['Extra_Priv_Filter_Or_Method_Three'] = 'Extra Filter Or Condition Method Three';
 $MAP['Extra_Priv_Filter_Or_Value_Three']  = 'Extra Filter Or Condition Value Three';
+$MAP['AuthorizedControl']               = '授权访问';
+$MAP['NodeFlow_AuthorizedUser']         = '授权允许访问的用户';
+$MAP['NodeFlow_AuthorizedDept']         = '授权允许访问的部门';
+$MAP['NodeFlow_AuthorizedRole']         = '授权允许访问的角色';
+$MAP['NodeFlow_AuthorizedHelpText']     = '如果不填写,则表示不启用此项限制';
+
 
 $MAP['Yes'] = 'Yes';
 $MAP['No'] = 'No';
