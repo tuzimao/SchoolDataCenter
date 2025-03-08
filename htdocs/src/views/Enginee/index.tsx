@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback, Fragment } from 'react'
 
 // ** Next Imports
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -115,6 +116,7 @@ const ImgStyled = styled('img')(() => ({
 
 const UserList = ({ authConfig, backEndApi, externalId, handleActionInMobileApp, actionInMobileApp, handleSetRightButtonIconOriginal, viewPageShareStatus, handSetViewPageShareStatus }: AddTableType) => {
   // ** Props
+  const router = useRouter()
   const storedToken = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
   const AccessKey = window.localStorage.getItem(defaultConfig.storageAccessKeyName)!
 
@@ -1168,11 +1170,16 @@ const UserList = ({ authConfig, backEndApi, externalId, handleActionInMobileApp,
       {store.init_action.action == 'init_default' && isMobileData == false && store.init_action.actionValue == "" ?
       <Grid item xs={12}>
         <Card>
-          {store.init_default.returnButton && store.init_default.returnButton.status ?
+          {((store.init_default.returnButton1 && store.init_default.returnButton1.status) || (store.init_default.returnButton2 && store.init_default.returnButton2.status)) ?
             <Grid sx={{ pr: 3, pb: 0, display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
               <CardHeader title={store.init_default.searchtitle} />
               <Grid sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
-                <Button sx={{ mb: 2 }} variant='outlined' size='small' onClick={() => { window.history.back(); }}>{store.init_default.returnButton.text}</Button>
+                {store.init_default.returnButton1.status && (
+                  <Button sx={{ mb: 2, mr: 2 }} variant='outlined' size='small' onClick={() => { window.history.back(); }}>{store.init_default.returnButton1.text}</Button>
+                )}
+                {store.init_default.returnButton2.status && store.init_default.returnButton2.url && (
+                  <Button sx={{ mb: 2, mr: 2 }} variant='contained' size='small' onClick={() => { router.push(store.init_default.returnButton2.url + externalId) }}>{store.init_default.returnButton2.text}</Button>
+                )}
               </Grid>
             </Grid>
             :

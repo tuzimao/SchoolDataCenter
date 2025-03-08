@@ -1288,6 +1288,18 @@ require_once("../data_enginee_flow.php");
     if($_POST['NodeType']!="")  {
         $FieldsArray['NodeType']   = $_POST['NodeType'];
     }
+    if($_POST['NextStep']!="")  {
+        $FieldsArray['NextStep']   = $_POST['NextStep'];
+    }
+    if($_POST['AuthorizedUser']!="")  {
+        $FieldsArray['AuthorizedUser']   = $_POST['AuthorizedUser'];
+    }
+    if($_POST['AuthorizedDept']!="")  {
+        $FieldsArray['AuthorizedDept']   = $_POST['AuthorizedDept'];
+    }
+    if($_POST['AuthorizedRole']!="")  {
+        $FieldsArray['AuthorizedRole']   = $_POST['AuthorizedRole'];
+    }
     $FieldsArray['Setting']     = base64_encode(serialize($SettingMap));
     $FieldsArray['Creator']     = "admin";
     $FieldsArray['CreateTime'] = date("Y-m-d H:i:s");
@@ -1328,10 +1340,11 @@ $NodeType_Array    = [];
 $NodeType_Array[]  = ['value'=>"工作流",'label'=>"工作流"];
 $NodeType_Array[]  = ['value'=>"菜单",'label'=>"菜单"];
 
-$edit_default_7['Menu_Location'][] = ['name' => "NodeType", 'show'=>true, 'type'=>'select', 'options'=>$NodeType_Array, 'label' => __("NodeType"), 'value' => $NodeType_Array[1]['value'], 'placeholder' => "", 'helptext' => __("NodeType"), 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>3]];
-$edit_default_7['Menu_Location'][] = ['name' => "Menu_One", 'show'=>true, 'type'=>'select', 'options'=>$MenuOneNameArray, 'label' => __("Menu_One"), 'value' => $MetaColumnNamesOptionsAll[1]['value'], 'placeholder' => "", 'helptext' => __("Allow_Repeat"), 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>3]];
-$edit_default_7['Menu_Location'][] = ['name' => "Menu_Two", 'show'=>true, 'type'=>"input", 'label' => __("Menu_Two"), 'value' => "", 'placeholder' => "", 'helptext' => __("Allow_Repeat"), 'rules' => ['required' => false,'xs'=>12, 'sm'=>3, 'disabled' => false]];
-$edit_default_7['Menu_Location'][] = ['name' => "Menu_Three", 'show'=>true, 'type'=>"input", 'label' => __("Menu_Three"), 'value' => "", 'placeholder' => "", 'helptext' => __("Optional"), 'rules' => ['required' => false,'xs'=>12, 'sm'=>3, 'disabled' => false]];
+$edit_default_7['Menu_Location'][] = ['name' => "NodeType", 'show'=>true, 'type'=>'select', 'options'=>$NodeType_Array, 'label' => __("NodeType"), 'value' => $NodeType_Array[1]['value'], 'placeholder' => "", 'helptext' => __("NodeTypeHelpText"), 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>6]];
+$edit_default_7['Menu_Location'][] = ['name' => "NextStep", 'show'=>true, 'type'=>"input", 'label' => __("NextStep"), 'value' => "", 'placeholder' => "", 'helptext' => __("NextStepHelpText"), 'rules' => ['required' => false,'xs'=>12, 'sm'=>6, 'disabled' => false]];
+$edit_default_7['Menu_Location'][] = ['name' => "Menu_One", 'show'=>true, 'type'=>'select', 'options'=>$MenuOneNameArray, 'label' => __("Menu_One"), 'value' => $MetaColumnNamesOptionsAll[1]['value'], 'placeholder' => "", 'helptext' => __("Allow_Repeat"), 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
+$edit_default_7['Menu_Location'][] = ['name' => "Menu_Two", 'show'=>true, 'type'=>"input", 'label' => __("Menu_Two"), 'value' => "", 'placeholder' => "", 'helptext' => __("Allow_Repeat"), 'rules' => ['required' => false,'xs'=>12, 'sm'=>4, 'disabled' => false]];
+$edit_default_7['Menu_Location'][] = ['name' => "Menu_Three", 'show'=>true, 'type'=>"input", 'label' => __("Menu_Three"), 'value' => "", 'placeholder' => "", 'helptext' => __("Optional"), 'rules' => ['required' => false,'xs'=>12, 'sm'=>4, 'disabled' => false]];
 $edit_default_7['Menu_Location'][] = ['name' => "FaceTo", 'show'=>true, 'type'=>'select', 'options'=>$FaceToOptions, 'label' => __("Face_To"), 'value' => "AuthUser", 'placeholder' => "", 'helptext' => __(""), 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
 $edit_default_7['Menu_Location'][] = ['name' => "Menu_Three_Icon", 'show'=>true, 'type'=>'autocompletemdi', 'options'=>[], 'label' => __("Menu_Three_Icon"), 'value' => "account-outline", 'placeholder' => "", 'helptext' => __(""), 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
 $MenuTab_Options = [];
@@ -1607,7 +1620,7 @@ $fromRecord = $page * $pageSize;
 $sql    = "select count(*) AS NUM from form_formflow " . $AddSql . "";
 $rs     = $db->Execute($sql);
 $RS['init_default']['total']        = intval($rs->fields['NUM']);
-$RS['init_default']['searchtitle']  = __("Design Form Flow");
+$RS['init_default']['searchtitle']  = $ShortNameTarget . " - " . __("Design Flow");
 $RS['init_default']['primarykey']   = $columnNames[0];
 if(!in_array($_REQUEST['sortColumn'], $columnNames)) {
     $_REQUEST['sortColumn']         = $columnNames[0];
@@ -1785,8 +1798,11 @@ $RS['view_default']['titlememo']  = __("View All Form Fields in Table");
 $RS['export_default'] = [];
 $RS['import_default'] = [];
 
-$RS['init_default']['returnButton']['status']  = true;
-$RS['init_default']['returnButton']['text']  = __("return");
+$RS['init_default']['returnButton1']['status']  = true;
+$RS['init_default']['returnButton1']['text']    = __("return");
+$RS['init_default']['returnButton2']['status']  = true;
+$RS['init_default']['returnButton2']['text']    = __("转到表单");
+$RS['init_default']['returnButton2']['url']     = "/form/formname/formfield/?FormId=";
 $RS['init_default']['rowHeight']        = 38;
 $RS['init_default']['dialogContentHeight']  = "850px";
 $RS['init_default']['dialogMaxWidth']   = "md";// xl lg md sm xs

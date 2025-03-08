@@ -333,12 +333,18 @@ $MAP['Cancel'] 								= '取消';
 $MAP['Interface'] 							= '界面设置';
 $MAP['NodeSetting'] 						= '节点设置';
 $MAP['Batch Approval'] 						= '批量审核';
-$MAP['Design Form Flow'] 					= '设计表单流程';
+$MAP['Design Form'] 					    = '设计表单';
+$MAP['Design Flow'] 					    = '设计流程';
 $MAP['Submit Success'] 						= '提交成功!';
 $MAP['Design Form Field Type'] 				= '设计表单字段类型';
 $MAP['Node Setting'] 				        = '节点设置';
 $MAP['Set Node Information'] 				= '设置节点信息以及转入条件';
 $MAP['NodeType'] 				            = '节点类型';
+$MAP['NodeTypeHelpText'] 				    = "类型为'菜单'时,会加入系统菜单,需额外分配权限";
+$MAP['NextStepHelpText'] 	                = '请输入步骤ID, 结束节点: [结束]';
+$MAP['转到表单'] 				             = '转到表单';
+$MAP['转到流程'] 				             = '节点设置';
+$MAP['NextStep'] 	                        = '下一步骤';
 
 
 $MAP['Field Name in Database'] 	= '字段名称';

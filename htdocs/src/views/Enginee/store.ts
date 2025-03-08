@@ -29,7 +29,7 @@ export const appUsersSlice = createSlice({
     filter: [],
     columns: [{field:''}],
     init_action: {action:'',id:-1},
-    init_default: {searchtitle:'',pinnedColumns:{},rowdelete:[''],dataGridLanguageCode:'',ForbiddenViewRow:[''],ForbiddenEditRow:[''],ForbiddenDeleteRow:[''],ForbiddenSelectRow:'',returnButton:'',searchFieldText:'',rowHeight:'',checkboxSelection:'',searchFieldArray:[{value:''}],multireview:{multireview:[{}]},},
+    init_default: {searchtitle:'',pinnedColumns:{},rowdelete:[''],dataGridLanguageCode:'',ForbiddenViewRow:[''],ForbiddenEditRow:[''],ForbiddenDeleteRow:[''],ForbiddenSelectRow:'',returnButton1:'',returnButton2:'',searchFieldText:'',rowHeight:'',checkboxSelection:'',searchFieldArray:[{value:''}],multireview:{multireview:[{}]},},
     add_default: {defaultValues:{},allFields:[],allFieldsMode:[],titletext:'',titlememo:'',},
     edit_default: {defaultValues:{}},
     edit_default_configsetting: [],

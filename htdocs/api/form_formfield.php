@@ -720,7 +720,7 @@ $sql    = "select count(*) AS NUM from form_formfield " . $AddSql . "";
 $rs     = $db->Execute($sql);
 $RS['init_default']['total'] = intval($rs->fields['NUM']);
 if($FromInfo['TableName']!="")   {
-    $RS['init_default']['searchtitle']  = $FromInfo['FullName'];
+    $RS['init_default']['searchtitle']  = $FromInfo['FullName'] . " - " . __("Design Form");
 }
 else {
     $RS['init_default']['searchtitle']  = "Unknown Form";
@@ -816,8 +816,11 @@ $RS['view_default']['titlememo']  = __("View All Form Fields in Table");
 $RS['export_default'] = [];
 $RS['import_default'] = [];
 
-$RS['init_default']['returnButton']['status']  = true;
-$RS['init_default']['returnButton']['text']  = __("return");
+$RS['init_default']['returnButton1']['status']  = true;
+$RS['init_default']['returnButton1']['text']  = __("return");
+$RS['init_default']['returnButton2']['status']  = true;
+$RS['init_default']['returnButton2']['text']    = __("转到流程");
+$RS['init_default']['returnButton2']['url']     = "/form/formname/formflow/?FormId=";
 $RS['init_default']['rowHeight']        = 38;
 $RS['init_default']['dialogContentHeight']  = "850px";
 $RS['init_default']['dialogMaxWidth']   = "md";// xl lg md sm xs

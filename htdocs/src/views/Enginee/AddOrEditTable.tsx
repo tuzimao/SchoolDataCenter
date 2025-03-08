@@ -70,7 +70,7 @@ const AddOrEditTable = (props: AddOrEditTableType) => {
         onClose={handleClose}
         TransitionComponent={Transition}
       >
-        <DialogContent sx={{ pb: 8, px: { xs: 8, sm: 15 }, pt: { xs: 8, sm: 12.5 }, position: 'relative' }} style={{ height: `${addEditStructInfo.dialogContentHeight}`, width: '100%' }}>
+        <DialogContent sx={{ pb: 5, px: 10, pt: 8, position: 'relative' }} style={{ height: `${addEditStructInfo.dialogContentHeight}`, width: '100%' }}>
           <IconButton
             size='small'
             onClick={handleClose}

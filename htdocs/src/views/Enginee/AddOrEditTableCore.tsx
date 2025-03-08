@@ -1089,11 +1089,11 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
     return (
         <Fragment>
             {isMobileData == false && titletext && titletext != "" && !isLoading && (
-                <Box sx={{ mb: 2, textAlign: 'center' }}>
-                    <Typography variant='h5' sx={{ mb: 3 }}>
+                <Box sx={{ mt: -3, mb: 0, textAlign: 'center' }}>
+                    <Typography variant='h5' sx={{ mb: 2 }}>
                         {titletext}
                     </Typography>
-                    <Typography variant='body2'>{addEditStructInfo2.titlememo ? addEditStructInfo2.titlememo : ''}</Typography>
+                    <Typography variant='body2' sx={{mt: 0}}>{addEditStructInfo2.titlememo ? addEditStructInfo2.titlememo : ''}</Typography>
                 </Box>
             )}
             <Fragment>
@@ -1254,10 +1254,10 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                         )}
                                                                     />
                                                                     {FieldArray.helptext && FieldArray.helptext.length>12 && (
-                                                                        <FormHelperText>
+                                                                        <FormHelperText sx={{mx: 0.5}}>
                                                                             <Tooltip title={<Fragment>{FieldArray.helptext}</Fragment>} >
-                                                                                <IconButton style={{ padding: 0, margin: 0 }}>
-                                                                                    <HelpIcon />
+                                                                                <IconButton style={{ padding: 0, margin: 0, fontSize: '1rem', marginTop: -3, marginRight: 1 }}>
+                                                                                    <HelpIcon fontSize="inherit"/>
                                                                                 </IconButton>
                                                                             </Tooltip>
                                                                             {FieldArray.helptext.substring(0,FieldArray.rules.sm==12?56:(FieldArray.rules.sm==6?24:12))}
@@ -1337,10 +1337,10 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                         )}
                                                                     />
                                                                     {FieldArray.helptext && FieldArray.helptext.length>12 && (
-                                                                        <FormHelperText>
+                                                                        <FormHelperText sx={{mx: 0.5}}>
                                                                             <Tooltip title={<Fragment>{FieldArray.helptext}</Fragment>} >
-                                                                                <IconButton style={{ padding: 0, margin: 0 }}>
-                                                                                    <HelpIcon />
+                                                                                <IconButton style={{ padding: 0, margin: 0, fontSize: '1rem', marginTop: -3, marginRight: 1 }}>
+                                                                                    <HelpIcon fontSize="inherit"/>
                                                                                 </IconButton>
                                                                             </Tooltip>
                                                                             {FieldArray.helptext.substring(0,FieldArray.rules.sm==12?56:(FieldArray.rules.sm==6?24:12))}
@@ -1401,10 +1401,10 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                         )}
                                                                     />
                                                                     {FieldArray.helptext && FieldArray.helptext.length>12 && (
-                                                                        <FormHelperText>
+                                                                        <FormHelperText sx={{mx: 0.5}}>
                                                                             <Tooltip title={<Fragment>{FieldArray.helptext}</Fragment>} >
-                                                                                <IconButton style={{ padding: 0, margin: 0 }}>
-                                                                                    <HelpIcon />
+                                                                                <IconButton style={{ padding: 0, margin: 0, fontSize: '1rem', marginTop: -3, marginRight: 1 }}>
+                                                                                    <HelpIcon fontSize="inherit"/>
                                                                                 </IconButton>
                                                                             </Tooltip>
                                                                             {FieldArray.helptext.substring(0,FieldArray.rules.sm==12?56:(FieldArray.rules.sm==6?24:12))}
@@ -1467,10 +1467,10 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                         )}
                                                                     />
                                                                     {FieldArray.helptext && FieldArray.helptext.length>12 && (
-                                                                        <FormHelperText>
+                                                                        <FormHelperText sx={{mx: 0.5}}>
                                                                             <Tooltip title={<Fragment>{FieldArray.helptext}</Fragment>} >
-                                                                                <IconButton style={{ padding: 0, margin: 0 }}>
-                                                                                    <HelpIcon />
+                                                                                <IconButton style={{ padding: 0, margin: 0, fontSize: '1rem', marginTop: -3, marginRight: 1 }}>
+                                                                                    <HelpIcon fontSize="inherit"/>
                                                                                 </IconButton>
                                                                             </Tooltip>
                                                                             {FieldArray.helptext.substring(0,FieldArray.rules.sm==12?56:(FieldArray.rules.sm==6?24:12))}
@@ -1537,10 +1537,10 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                         )}
                                                                     />
                                                                     {FieldArray.helptext && FieldArray.helptext.length>12 && (
-                                                                        <FormHelperText>
+                                                                        <FormHelperText sx={{mx: 0.5}}>
                                                                             <Tooltip title={<Fragment>{FieldArray.helptext}</Fragment>} >
-                                                                                <IconButton style={{ padding: 0, margin: 0 }}>
-                                                                                    <HelpIcon />
+                                                                                <IconButton style={{ padding: 0, margin: 0, fontSize: '1rem', marginTop: -3, marginRight: 1 }}>
+                                                                                    <HelpIcon fontSize="inherit"/>
                                                                                 </IconButton>
                                                                             </Tooltip>
                                                                             {FieldArray.helptext.substring(0,FieldArray.rules.sm==12?56:(FieldArray.rules.sm==6?24:12))}
@@ -2062,10 +2062,10 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                         )}
                                                                     />
                                                                     {FieldArray.helptext && FieldArray.helptext.length>12 && (
-                                                                        <FormHelperText>
+                                                                        <FormHelperText sx={{mx: 0.5}}>
                                                                             <Tooltip title={<Fragment>{FieldArray.helptext}</Fragment>} >
-                                                                                <IconButton style={{ padding: 0, margin: 0 }}>
-                                                                                    <HelpIcon />
+                                                                                <IconButton style={{ padding: 0, margin: 0, fontSize: '1rem', marginTop: -3, marginRight: 1 }}>
+                                                                                    <HelpIcon fontSize="inherit"/>
                                                                                 </IconButton>
                                                                             </Tooltip>
                                                                             {FieldArray.helptext.substring(0,FieldArray.rules.sm==12?56:(FieldArray.rules.sm==6?24:12))}
@@ -2127,10 +2127,10 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                         )}
                                                                     />
                                                                     {FieldArray.helptext && FieldArray.helptext.length>12 && (
-                                                                        <FormHelperText>
+                                                                        <FormHelperText sx={{mx: 0.5}}>
                                                                             <Tooltip title={<Fragment>{FieldArray.helptext}</Fragment>} >
-                                                                                <IconButton style={{ padding: 0, margin: 0 }}>
-                                                                                    <HelpIcon />
+                                                                                <IconButton style={{ padding: 0, margin: 0, fontSize: '1rem', marginTop: -3, marginRight: 1 }}>
+                                                                                    <HelpIcon fontSize="inherit"/>
                                                                                 </IconButton>
                                                                             </Tooltip>
                                                                             {FieldArray.helptext.substring(0,FieldArray.rules.sm==12?56:(FieldArray.rules.sm==6?24:12))}
@@ -2192,10 +2192,10 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                         )}
                                                                     />
                                                                     {FieldArray.helptext && FieldArray.helptext.length>12 && (
-                                                                        <FormHelperText>
+                                                                        <FormHelperText sx={{mx: 0.5}}>
                                                                             <Tooltip title={<Fragment>{FieldArray.helptext}</Fragment>} >
-                                                                                <IconButton style={{ padding: 0, margin: 0 }}>
-                                                                                    <HelpIcon />
+                                                                                <IconButton style={{ padding: 0, margin: 0, fontSize: '1rem', marginTop: -3, marginRight: 1 }}>
+                                                                                    <HelpIcon fontSize="inherit"/>
                                                                                 </IconButton>
                                                                             </Tooltip>
                                                                             {FieldArray.helptext.substring(0,FieldArray.rules.sm==12?56:(FieldArray.rules.sm==6?24:12))}
@@ -2294,10 +2294,10 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                         }}
                                                                     />
                                                                     {FieldArray.helptext && FieldArray.helptext.length>12 && (
-                                                                        <FormHelperText>
+                                                                        <FormHelperText sx={{mx: 0.5}}>
                                                                             <Tooltip title={<Fragment>{FieldArray.helptext}</Fragment>} >
-                                                                                <IconButton style={{ padding: 0, margin: 0 }}>
-                                                                                    <HelpIcon />
+                                                                                <IconButton style={{ padding: 0, margin: 0, fontSize: '1rem', marginTop: -3, marginRight: 1 }}>
+                                                                                    <HelpIcon fontSize="inherit"/>
                                                                                 </IconButton>
                                                                             </Tooltip>
                                                                             {FieldArray.helptext.substring(0,FieldArray.rules.sm==12?56:(FieldArray.rules.sm==6?24:12))}
@@ -2413,10 +2413,10 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                         )}
                                                                     />
                                                                     {FieldArray.helptext && FieldArray.helptext.length>12 && (
-                                                                        <FormHelperText>
+                                                                        <FormHelperText sx={{mx: 0.5}}>
                                                                             <Tooltip title={<Fragment>{FieldArray.helptext}</Fragment>} >
-                                                                                <IconButton style={{ padding: 0, margin: 0 }}>
-                                                                                    <HelpIcon />
+                                                                                <IconButton style={{ padding: 0, margin: 0, fontSize: '1rem', marginTop: -3, marginRight: 1 }}>
+                                                                                    <HelpIcon fontSize="inherit"/>
                                                                                 </IconButton>
                                                                             </Tooltip>
                                                                             {FieldArray.helptext.substring(0,FieldArray.rules.sm==12?56:(FieldArray.rules.sm==6?24:12))}
@@ -2591,10 +2591,10 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                         )}
                                                                     />
                                                                     {FieldArray.helptext && FieldArray.helptext.length>12 && (
-                                                                        <FormHelperText>
+                                                                        <FormHelperText sx={{mx: 0.5}}>
                                                                             <Tooltip title={<Fragment>{FieldArray.helptext}</Fragment>} >
-                                                                                <IconButton style={{ padding: 0, margin: 0 }}>
-                                                                                    <HelpIcon />
+                                                                                <IconButton style={{ padding: 0, margin: 0, fontSize: '1rem', marginTop: -3, marginRight: 1 }}>
+                                                                                    <HelpIcon fontSize="inherit"/>
                                                                                 </IconButton>
                                                                             </Tooltip>
                                                                             {FieldArray.helptext.substring(0,FieldArray.rules.sm==12?56:(FieldArray.rules.sm==6?24:12))}
@@ -2649,10 +2649,10 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                         )}
                                                                     />
                                                                     {FieldArray.helptext && FieldArray.helptext.length>12 && (
-                                                                        <FormHelperText>
+                                                                        <FormHelperText sx={{mx: 0.5}}>
                                                                             <Tooltip title={<Fragment>{FieldArray.helptext}</Fragment>} >
-                                                                                <IconButton style={{ padding: 0, margin: 0 }}>
-                                                                                    <HelpIcon />
+                                                                                <IconButton style={{ padding: 0, margin: 0, fontSize: '1rem', marginTop: -3, marginRight: 1 }}>
+                                                                                    <HelpIcon fontSize="inherit"/>
                                                                                 </IconButton>
                                                                             </Tooltip>
                                                                             {FieldArray.helptext.substring(0,FieldArray.rules.sm==12?56:(FieldArray.rules.sm==6?24:12))}
@@ -2723,10 +2723,10 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                         )}
                                                                     />
                                                                     {FieldArray.helptext && FieldArray.helptext.length>12 && (
-                                                                        <FormHelperText>
+                                                                        <FormHelperText sx={{mx: 0.5}}>
                                                                             <Tooltip title={<Fragment>{FieldArray.helptext}</Fragment>} >
-                                                                                <IconButton style={{ padding: 0, margin: 0 }}>
-                                                                                    <HelpIcon />
+                                                                                <IconButton style={{ padding: 0, margin: 0, fontSize: '1rem', marginTop: -3, marginRight: 1 }}>
+                                                                                    <HelpIcon fontSize="inherit"/>
                                                                                 </IconButton>
                                                                             </Tooltip>
                                                                             {FieldArray.helptext.substring(0,FieldArray.rules.sm==12?56:(FieldArray.rules.sm==6?24:12))}
@@ -2797,10 +2797,10 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                         )}
                                                                     />
                                                                     {FieldArray.helptext && FieldArray.helptext.length>12 && (
-                                                                        <FormHelperText>
+                                                                        <FormHelperText sx={{mx: 0.5}}>
                                                                             <Tooltip title={<Fragment>{FieldArray.helptext}</Fragment>} >
-                                                                                <IconButton style={{ padding: 0, margin: 0 }}>
-                                                                                    <HelpIcon />
+                                                                                <IconButton style={{ padding: 0, margin: 0, fontSize: '1rem', marginTop: -3, marginRight: 1 }}>
+                                                                                    <HelpIcon fontSize="inherit"/>
                                                                                 </IconButton>
                                                                             </Tooltip>
                                                                             {FieldArray.helptext.substring(0,FieldArray.rules.sm==12?56:(FieldArray.rules.sm==6?24:12))}
@@ -2870,10 +2870,10 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                         )}
                                                                     />
                                                                     {FieldArray.helptext && FieldArray.helptext.length>12 && (
-                                                                        <FormHelperText>
+                                                                        <FormHelperText sx={{mx: 0.5}}>
                                                                             <Tooltip title={<Fragment>{FieldArray.helptext}</Fragment>} >
-                                                                                <IconButton style={{ padding: 0, margin: 0 }}>
-                                                                                    <HelpIcon />
+                                                                                <IconButton style={{ padding: 0, margin: 0, fontSize: '1rem', marginTop: -3, marginRight: 1 }}>
+                                                                                    <HelpIcon fontSize="inherit"/>
                                                                                 </IconButton>
                                                                             </Tooltip>
                                                                             {FieldArray.helptext.substring(0,FieldArray.rules.sm==12?56:(FieldArray.rules.sm==6?24:12))}
@@ -2943,10 +2943,10 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                         )}
                                                                     />
                                                                     {FieldArray.helptext && FieldArray.helptext.length>12 && (
-                                                                        <FormHelperText>
+                                                                        <FormHelperText sx={{mx: 0.5}}>
                                                                             <Tooltip title={<Fragment>{FieldArray.helptext}</Fragment>} >
-                                                                                <IconButton style={{ padding: 0, margin: 0 }}>
-                                                                                    <HelpIcon />
+                                                                                <IconButton style={{ padding: 0, margin: 0, fontSize: '1rem', marginTop: -3, marginRight: 1 }}>
+                                                                                    <HelpIcon fontSize="inherit"/>
                                                                                 </IconButton>
                                                                             </Tooltip>
                                                                             {FieldArray.helptext.substring(0,FieldArray.rules.sm==12?56:(FieldArray.rules.sm==6?24:12))}
@@ -3016,10 +3016,10 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                         )}
                                                                     />
                                                                     {FieldArray.helptext && FieldArray.helptext.length>12 && (
-                                                                        <FormHelperText>
+                                                                        <FormHelperText sx={{mx: 0.5}}>
                                                                             <Tooltip title={<Fragment>{FieldArray.helptext}</Fragment>} >
-                                                                                <IconButton style={{ padding: 0, margin: 0 }}>
-                                                                                    <HelpIcon />
+                                                                                <IconButton style={{ padding: 0, margin: 0, fontSize: '1rem', marginTop: -3, marginRight: 1 }}>
+                                                                                    <HelpIcon fontSize="inherit"/>
                                                                                 </IconButton>
                                                                             </Tooltip>
                                                                             {FieldArray.helptext.substring(0,FieldArray.rules.sm==12?56:(FieldArray.rules.sm==6?24:12))}
@@ -3112,10 +3112,10 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                         }
                                                                     />
                                                                     {FieldArray.helptext && FieldArray.helptext.length>12 && (
-                                                                        <FormHelperText>
+                                                                        <FormHelperText sx={{mx: 0.5}}>
                                                                             <Tooltip title={<Fragment>{FieldArray.helptext}</Fragment>} >
-                                                                                <IconButton style={{ padding: 0, margin: 0 }}>
-                                                                                    <HelpIcon />
+                                                                                <IconButton style={{ padding: 0, margin: 0, fontSize: '1rem', marginTop: -3, marginRight: 1 }}>
+                                                                                    <HelpIcon fontSize="inherit"/>
                                                                                 </IconButton>
                                                                             </Tooltip>
                                                                             {FieldArray.helptext.substring(0,FieldArray.rules.sm==12?56:(FieldArray.rules.sm==6?24:12))}
@@ -3192,10 +3192,10 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                         )}
                                                                     />
                                                                     {FieldArray.helptext && FieldArray.helptext.length>12 && (
-                                                                        <FormHelperText>
+                                                                        <FormHelperText sx={{mx: 0.5}}>
                                                                             <Tooltip title={<Fragment>{FieldArray.helptext}</Fragment>} >
-                                                                                <IconButton style={{ padding: 0, margin: 0 }}>
-                                                                                    <HelpIcon />
+                                                                                <IconButton style={{ padding: 0, margin: 0, fontSize: '1rem', marginTop: -3, marginRight: 1 }}>
+                                                                                    <HelpIcon fontSize="inherit"/>
                                                                                 </IconButton>
                                                                             </Tooltip>
                                                                             {FieldArray.helptext.substring(0,FieldArray.rules.sm==12?56:(FieldArray.rules.sm==6?24:12))}
@@ -3260,10 +3260,10 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                         />
                                                                     </DatePickerWrapper>
                                                                     {FieldArray.helptext && FieldArray.helptext.length>12 && (
-                                                                        <FormHelperText>
+                                                                        <FormHelperText sx={{mx: 0.5}}>
                                                                             <Tooltip title={<Fragment>{FieldArray.helptext}</Fragment>} >
-                                                                                <IconButton style={{ padding: 0, margin: 0 }}>
-                                                                                    <HelpIcon />
+                                                                                <IconButton style={{ padding: 0, margin: 0, fontSize: '1rem', marginTop: -3, marginRight: 1 }}>
+                                                                                    <HelpIcon fontSize="inherit"/>
                                                                                 </IconButton>
                                                                             </Tooltip>
                                                                             {FieldArray.helptext.substring(0,FieldArray.rules.sm==12?56:(FieldArray.rules.sm==6?24:12))}
@@ -3343,10 +3343,10 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                         ) : null}
                                                                     </DropzoneWrapper>
                                                                     {FieldArray.helptext && FieldArray.helptext.length>12 && (
-                                                                        <FormHelperText>
+                                                                        <FormHelperText sx={{mx: 0.5}}>
                                                                             <Tooltip title={<Fragment>{FieldArray.helptext}</Fragment>} >
-                                                                                <IconButton style={{ padding: 0, margin: 0 }}>
-                                                                                    <HelpIcon />
+                                                                                <IconButton style={{ padding: 0, margin: 0, fontSize: '1rem', marginTop: -3, marginRight: 1 }}>
+                                                                                    <HelpIcon fontSize="inherit"/>
                                                                                 </IconButton>
                                                                             </Tooltip>
                                                                             {FieldArray.helptext.substring(0,FieldArray.rules.sm==12?56:(FieldArray.rules.sm==6?24:12))}
@@ -3426,10 +3426,10 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                         ) : null}
                                                                     </DropzoneWrapper>
                                                                     {FieldArray.helptext && FieldArray.helptext.length>12 && (
-                                                                        <FormHelperText>
+                                                                        <FormHelperText sx={{mx: 0.5}}>
                                                                             <Tooltip title={<Fragment>{FieldArray.helptext}</Fragment>} >
-                                                                                <IconButton style={{ padding: 0, margin: 0 }}>
-                                                                                    <HelpIcon />
+                                                                                <IconButton style={{ padding: 0, margin: 0, fontSize: '1rem', marginTop: -3, marginRight: 1 }}>
+                                                                                    <HelpIcon fontSize="inherit"/>
                                                                                 </IconButton>
                                                                             </Tooltip>
                                                                             {FieldArray.helptext.substring(0,FieldArray.rules.sm==12?56:(FieldArray.rules.sm==6?24:12))}
@@ -3496,10 +3496,10 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                         ) : null}
                                                                         </DropzoneWrapper>
                                                                     {FieldArray.helptext && FieldArray.helptext.length>12 && (
-                                                                        <FormHelperText>
+                                                                        <FormHelperText sx={{mx: 0.5}}>
                                                                             <Tooltip title={<Fragment>{FieldArray.helptext}</Fragment>} >
-                                                                                <IconButton style={{ padding: 0, margin: 0 }}>
-                                                                                    <HelpIcon />
+                                                                                <IconButton style={{ padding: 0, margin: 0, fontSize: '1rem', marginTop: -3, marginRight: 1 }}>
+                                                                                    <HelpIcon fontSize="inherit"/>
                                                                                 </IconButton>
                                                                             </Tooltip>
                                                                             {FieldArray.helptext.substring(0,FieldArray.rules.sm==12?56:(FieldArray.rules.sm==6?24:12))}
@@ -3566,10 +3566,10 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                         ) : null}
                                                                         </DropzoneWrapper>
                                                                     {FieldArray.helptext && FieldArray.helptext.length>12 && (
-                                                                        <FormHelperText>
+                                                                        <FormHelperText sx={{mx: 0.5}}>
                                                                             <Tooltip title={<Fragment>{FieldArray.helptext}</Fragment>} >
-                                                                                <IconButton style={{ padding: 0, margin: 0 }}>
-                                                                                    <HelpIcon />
+                                                                                <IconButton style={{ padding: 0, margin: 0, fontSize: '1rem', marginTop: -3, marginRight: 1 }}>
+                                                                                    <HelpIcon fontSize="inherit"/>
                                                                                 </IconButton>
                                                                             </Tooltip>
                                                                             {FieldArray.helptext.substring(0,FieldArray.rules.sm==12?56:(FieldArray.rules.sm==6?24:12))}
@@ -3729,10 +3729,10 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                         ) : null}
                                                                     </DropzoneWrapper>
                                                                     {FieldArray.helptext && FieldArray.helptext.length>12 && (
-                                                                        <FormHelperText>
+                                                                        <FormHelperText sx={{mx: 0.5}}>
                                                                             <Tooltip title={<Fragment>{FieldArray.helptext}</Fragment>} >
-                                                                                <IconButton style={{ padding: 0, margin: 0 }}>
-                                                                                    <HelpIcon />
+                                                                                <IconButton style={{ padding: 0, margin: 0, fontSize: '1rem', marginTop: -3, marginRight: 1 }}>
+                                                                                    <HelpIcon fontSize="inherit"/>
                                                                                 </IconButton>
                                                                             </Tooltip>
                                                                             {FieldArray.helptext.substring(0,FieldArray.rules.sm==12?56:(FieldArray.rules.sm==6?24:12))}
@@ -3822,10 +3822,10 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                         ) : null}
                                                                     </DropzoneWrapper>
                                                                     {FieldArray.helptext && FieldArray.helptext.length>12 && (
-                                                                        <FormHelperText>
+                                                                        <FormHelperText sx={{mx: 0.5}}>
                                                                             <Tooltip title={<Fragment>{FieldArray.helptext}</Fragment>} >
-                                                                                <IconButton style={{ padding: 0, margin: 0 }}>
-                                                                                    <HelpIcon />
+                                                                                <IconButton style={{ padding: 0, margin: 0, fontSize: '1rem', marginTop: -3, marginRight: 1 }}>
+                                                                                    <HelpIcon fontSize="inherit"/>
                                                                                 </IconButton>
                                                                             </Tooltip>
                                                                             {FieldArray.helptext.substring(0,FieldArray.rules.sm==12?56:(FieldArray.rules.sm==6?24:12))}
@@ -3968,10 +3968,10 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                         </div>
                                                                     </Box>
                                                                     {FieldArray.helptext && FieldArray.helptext.length>12 && (
-                                                                        <FormHelperText>
+                                                                        <FormHelperText sx={{mx: 0.5}}>
                                                                             <Tooltip title={<Fragment>{FieldArray.helptext}</Fragment>} >
-                                                                                <IconButton style={{ padding: 0, margin: 0 }}>
-                                                                                    <HelpIcon />
+                                                                                <IconButton style={{ padding: 0, margin: 0, fontSize: '1rem', marginTop: -3, marginRight: 1 }}>
+                                                                                    <HelpIcon fontSize="inherit"/>
                                                                                 </IconButton>
                                                                             </Tooltip>
                                                                             {FieldArray.helptext.substring(0,FieldArray.rules.sm==12?56:(FieldArray.rules.sm==6?24:12))}
@@ -4006,10 +4006,10 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                         }
                                                                     </Box>
                                                                     {FieldArray.helptext && FieldArray.helptext.length>12 && (
-                                                                        <FormHelperText>
+                                                                        <FormHelperText sx={{mx: 0.5}}>
                                                                             <Tooltip title={<Fragment>{FieldArray.helptext}</Fragment>} >
-                                                                                <IconButton style={{ padding: 0, margin: 0 }}>
-                                                                                    <HelpIcon />
+                                                                                <IconButton style={{ padding: 0, margin: 0, fontSize: '1rem', marginTop: -3, marginRight: 1 }}>
+                                                                                    <HelpIcon fontSize="inherit"/>
                                                                                 </IconButton>
                                                                             </Tooltip>
                                                                             {FieldArray.helptext.substring(0,FieldArray.rules.sm==12?56:(FieldArray.rules.sm==6?24:12))}
@@ -4067,10 +4067,10 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                         )}
                                                                     />
                                                                     {FieldArray.helptext && FieldArray.helptext.length>12 && (
-                                                                        <FormHelperText>
+                                                                        <FormHelperText sx={{mx: 0.5}}>
                                                                             <Tooltip title={<Fragment>{FieldArray.helptext}</Fragment>} >
-                                                                                <IconButton style={{ padding: 0, margin: 0 }}>
-                                                                                    <HelpIcon />
+                                                                                <IconButton style={{ padding: 0, margin: 0, fontSize: '1rem', marginTop: -3, marginRight: 1 }}>
+                                                                                    <HelpIcon fontSize="inherit"/>
                                                                                 </IconButton>
                                                                             </Tooltip>
                                                                             {FieldArray.helptext.substring(0,FieldArray.rules.sm==12?56:(FieldArray.rules.sm==6?24:12))}
@@ -4126,10 +4126,10 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                         )}
                                                                     />
                                                                     {FieldArray.helptext && FieldArray.helptext.length>12 && (
-                                                                        <FormHelperText>
+                                                                        <FormHelperText sx={{mx: 0.5}}>
                                                                             <Tooltip title={<Fragment>{FieldArray.helptext}</Fragment>} >
-                                                                                <IconButton style={{ padding: 0, margin: 0 }}>
-                                                                                    <HelpIcon />
+                                                                                <IconButton style={{ padding: 0, margin: 0, fontSize: '1rem', marginTop: -3, marginRight: 1 }}>
+                                                                                    <HelpIcon fontSize="inherit"/>
                                                                                 </IconButton>
                                                                             </Tooltip>
                                                                             {FieldArray.helptext.substring(0,FieldArray.rules.sm==12?56:(FieldArray.rules.sm==6?24:12))}
