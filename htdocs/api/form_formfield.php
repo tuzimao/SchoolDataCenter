@@ -720,7 +720,7 @@ $sql    = "select count(*) AS NUM from form_formfield " . $AddSql . "";
 $rs     = $db->Execute($sql);
 $RS['init_default']['total'] = intval($rs->fields['NUM']);
 if($FromInfo['TableName']!="")   {
-    $RS['init_default']['searchtitle']  = $FromInfo['FullName'] . " - " . __("Design Form");
+    $RS['init_default']['searchtitle']  = $FromInfo['FullName'] . " - " . __("Design Form") . " - " . $FromInfo['TableName'];
 }
 else {
     $RS['init_default']['searchtitle']  = "Unknown Form";
