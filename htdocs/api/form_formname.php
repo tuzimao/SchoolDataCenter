@@ -314,8 +314,8 @@ if($_GET['action']=="edit_default_1_data"&&$_GET['id']!="")  {
 
 if($_GET['action']=="updateone")  {
     $id     = ForSqlInjection($_POST['id']);
-    $field  = ParamsFilter($_POST['field']);
-    $value  = ParamsFilter($_POST['value']);
+    $field  = FilterString($_POST['field']);
+    $value  = FilterString($_POST['value']);
     $primary_key = $columnNames[0];
     if($id!=""&&$field!=""&&in_array($field,$columnNames)&&$primary_key!=$field) {
         $sql    = "update form_formname set $field = '$value' where $primary_key = '$id'";

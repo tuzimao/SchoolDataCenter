@@ -573,12 +573,14 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
         const formData = new FormData();
 
         const dataMap = new Map(Object.entries({...data, ...loopModelDataStorage}));
-        console.log("Menu_Three_Icon dataMap", dataMap)
         for (const [key, value] of dataMap.entries()) {
             if(key in defaultValues) {
                 formData.append(key, (value=='请选择' || value == undefined) ? '' : value);
             }
             else if(defaultValues['FieldName'] &&  key + "_" + defaultValues['FieldName'] in defaultValues) {
+                formData.append(key, (value=='请选择' || value == undefined) ? '' : value);
+            }
+            else if(key + "_名称" in defaultValues) {
                 formData.append(key, (value=='请选择' || value == undefined) ? '' : value);
             }
         }

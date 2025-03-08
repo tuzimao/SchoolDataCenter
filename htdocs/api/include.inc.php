@@ -152,30 +152,9 @@ function DecryptIDStorage($data, $EncryptAESKey) {
 	$data = $dataArray[0];
 	$iv = base64_safe_decode($dataArray[1]);
 	$cipher = "SM4-CBC";
-  $options = OPENSSL_RAW_DATA;
-  $decrypted = openssl_decrypt(base64_safe_decode($data), $cipher, $EncryptAESKey, $options, $iv);
-  return strval($decrypted);
-}
-
-function ParamsFilter($str) {
-	$str  = addslashes($str);
-	// $str  = str_replace("'","",$str);
-	// $str  = str_replace('"',"",$str);
-	// $str  = str_replace('#',"",$str);
-	// $str  = str_replace('--',"",$str);
-
-	// $str  = str_replace('?',"",$str);
-	// $str  = str_replace('$',"",$str);
-	// $str  = str_replace('%',"",$str);
-	// $str  = str_replace('^',"",$str);
-	// $str  = str_replace('&',"",$str);
-	// $str  = str_replace('(',"",$str);
-	// $str  = str_replace(')',"",$str);
-	// $str  = str_replace('+',"",$str);
-	// $str  = str_replace("<","",$str);
-	// $str  = str_replace(">","",$str);
-	// $str  = str_replace("\\","",$str);
-  return $str;
+	$options = OPENSSL_RAW_DATA;
+	$decrypted = openssl_decrypt(base64_safe_decode($data), $cipher, $EncryptAESKey, $options, $iv);
+	return strval($decrypted);
 }
 
 function FilterString($str) {
@@ -190,7 +169,7 @@ function FilterString($str) {
 	// $str  = str_replace("<","",$str);
 	// $str  = str_replace(">","",$str);
 	// $str  = str_replace("\\","",$str);
-  return $str;
+  	return $str;
 }
 
 function ForSqlInjection($str) 			{

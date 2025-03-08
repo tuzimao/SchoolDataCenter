@@ -1815,8 +1815,8 @@ if( ( ($_GET['action']=="view_default"&&in_array('View',$Actions_In_List_Row_Arr
 
 if($_GET['action']=="updateone")  {
     $id     = intval(DecryptID($_POST['id']));
-    $field  = ParamsFilter($_POST['field']);
-    $value  = ParamsFilter($_POST['value']);
+    $field  = FilterString($_POST['field']);
+    $value  = FilterString($_POST['value']);
     $primary_key = $MetaColumnNames[0];
     //Check Field Valid
     if($id>0&&$field!=""&&in_array($field,$MetaColumnNames)&&$primary_key!=$field&&($SettingMap['FieldEditable_'.$field]=='true' || $SettingMap['FieldEditable_'.$field]=='1')) {

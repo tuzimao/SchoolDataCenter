@@ -47,7 +47,7 @@ function FilesUploadToDisk($FieldName='图片') {
         $ATTACHMENT_NAME_LIST = [];
         $ATTACHMENT_ID_LIST = [];
         for($i=0;$i<sizeof($ImageInfor['name']);$i++)    {
-            $ATTACHMENT_NAME            = ParamsFilter($ImageInfor['name'][$i]);
+            $ATTACHMENT_NAME            = FilterString($ImageInfor['name'][$i]);
             $ATTACHMENT_NAME		    = str_replace("=","",$ATTACHMENT_NAME);
             $ATTACHMENT_NAME		    = str_replace(",","",$ATTACHMENT_NAME);
             $ATTACHMENT_NAME		    = str_replace(" ","",$ATTACHMENT_NAME);
@@ -165,7 +165,7 @@ function ImageUploadToDisk($FieldName='图片') {
     }
     $ImageInfor                 = $_FILES[$FieldName];
     if(is_array($ImageInfor))    {
-        $ATTACHMENT_NAME            = ParamsFilter($ImageInfor['name']);
+        $ATTACHMENT_NAME            = FilterString($ImageInfor['name']);
         $ATTACHMENT_NAME		    = str_replace("=","",$ATTACHMENT_NAME);
         $ATTACHMENT_NAME		    = str_replace(",","",$ATTACHMENT_NAME);
         $ATTACHMENT_NAME		    = str_replace(" ","",$ATTACHMENT_NAME);
@@ -1933,7 +1933,7 @@ function UpdateOtherTableFieldAfterFormSubmit($id)  {
                     $sql    = "select * from $TableName where ".$MetaColumnNames[0]." = '$id'";
                     $rs     = $db->Execute($sql);
                     $Line   = $rs->fields;
-                    $OperationAfterSubmit_Need_Update_Table_Field_Value = ParamsFilter($OperationAfterSubmit_Need_Update_Table_Field_Value);
+                    $OperationAfterSubmit_Need_Update_Table_Field_Value = FilterString($OperationAfterSubmit_Need_Update_Table_Field_Value);
                     foreach($Line as $TempField=>$TempValue)  {
                         $OperationAfterSubmit_Need_Update_Table_Field_Value = str_replace("[$TempField]",$TempValue,$OperationAfterSubmit_Need_Update_Table_Field_Value);
                     }
