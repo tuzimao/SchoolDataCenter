@@ -486,7 +486,12 @@ $edit_default_2['Relative_Child_Table'][] = ['name' => "Relative_Child_Table_Par
 $defaultValues_2 = [];
 foreach($edit_default_2 as $ModeName=>$allFieldItem) {
     foreach($allFieldItem as $ITEM) {
-        $defaultValues_2[$ITEM['name']] = $ITEM['value'];
+        if($ITEM['type'] == "autocompletemulti")  {
+            $defaultValues_2[$ITEM['code']] = $ITEM['value'];
+        }
+        else {
+            $defaultValues_2[$ITEM['name']] = $ITEM['value'];
+        }
     }
 }
 
@@ -741,7 +746,12 @@ $edit_default_3['Batch_Cancel'][]  = ['name' => "Change_Into_Value_When_Batch_Ca
 $defaultValues_3 = [];
 foreach($edit_default_3 as $ModeName=>$allFieldItem) {
     foreach($allFieldItem as $ITEM) {
-        $defaultValues_3[$ITEM['name']] = $ITEM['value'];
+        if($ITEM['type'] == "autocompletemulti")  {
+            $defaultValues_3[$ITEM['code']] = $ITEM['value'];
+        }
+        else {
+            $defaultValues_3[$ITEM['name']] = $ITEM['value'];
+        }
     }
 }
 
@@ -982,14 +992,24 @@ $edit_default_5['Schoolmate'][] = ['name' => "MobileEndSchoolmateLastActivity", 
 $defaultValues_4 = [];
 foreach($edit_default_4 as $ModeName=>$allFieldItem) {
     foreach($allFieldItem as $ITEM) {
-        $defaultValues_4[$ITEM['name']] = $ITEM['value'];
+        if($ITEM['type'] == "autocompletemulti")  {
+            $defaultValues_4[$ITEM['code']] = $ITEM['value'];
+        }
+        else {
+            $defaultValues_4[$ITEM['name']] = $ITEM['value'];
+        }
     }
 }
 
 $defaultValues_5 = [];
 foreach($edit_default_5 as $ModeName=>$allFieldItem) {
     foreach($allFieldItem as $ITEM) {
-        $defaultValues_5[$ITEM['name']] = $ITEM['value'];
+        if($ITEM['type'] == "autocompletemulti")  {
+            $defaultValues_5[$ITEM['code']] = $ITEM['value'];
+        }
+        else {
+            $defaultValues_5[$ITEM['name']] = $ITEM['value'];
+        }
     }
 }
 
@@ -1440,7 +1460,7 @@ $edit_default_7['Page_Role'][] = ['name' => "Extra_Priv_Filter_Or_Method_Three",
 $edit_default_7['Page_Role'][] = ['name' => "Extra_Priv_Filter_Or_Value_Three", 'show'=>true, 'type'=>"input", 'label' => __("Extra_Priv_Filter_Or_Value_Three"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>4, 'disabled' => false]];
 
 $edit_default_7['AuthorizedControl'][] = ['name' => "divider", 'show'=>true, 'type'=>"divider", 'label' => __("divider"), 'value' => "", 'placeholder' => "", 'helptext' => __(""), 'rules' => ['required' => false,'xs'=>12, 'sm'=>12, 'disabled' => false]];
-$edit_default_7['AuthorizedControl'][] = ['name' => "NodeFlow_AuthorizedUser", 'code' => "NodeFlow_AuthorizedUser_Code", 'FieldTypeArray'=>$CurrentUserFieldTypeArray, 'show'=>true, 'type'=>"autocompletemulti", 'options'=>$UserRecords, 'label' => __("NodeFlow_AuthorizedUser"), 'value' => '', 'placeholder' => __(""), 'helptext' => __("NodeFlow_AuthorizedHelpText"), 'rules' => ['required' => false,'xs'=>12, 'sm'=>12,'disabled' => false]];
+$edit_default_7['AuthorizedControl'][] = ['name' => "NodeFlow_AuthorizedUser_名称", 'code' => "NodeFlow_AuthorizedUser", 'FieldTypeArray'=>$CurrentUserFieldTypeArray, 'show'=>true, 'type'=>"autocompletemulti", 'options'=>$UserRecords, 'label' => __("NodeFlow_AuthorizedUser"), 'value' => '', 'placeholder' => __(""), 'helptext' => __("NodeFlow_AuthorizedHelpText"), 'rules' => ['required' => false,'xs'=>12, 'sm'=>12,'disabled' => false]];
 
 $CurrentDepartmentFieldTypeArray = explode(":","autocompletemulti:data_department:0:1:");
 $TableNameTemp      = $CurrentDepartmentFieldTypeArray[1];
@@ -1458,7 +1478,7 @@ else {
 }
 $rs = $db->Execute($sql) or print($sql);
 $DepartmentRecords = $rs->GetArray();
-$edit_default_7['AuthorizedControl'][] = ['name' => "NodeFlow_AuthorizedDept", 'code' => "NodeFlow_AuthorizedDept_Code", 'FieldTypeArray'=>$CurrentDepartmentFieldTypeArray, 'show'=>true, 'type'=>"autocompletemulti", 'options'=>$DepartmentRecords, 'label' => __("NodeFlow_AuthorizedDept"), 'value' => '', 'placeholder' => __(""), 'helptext' => __("NodeFlow_AuthorizedHelpText"), 'rules' => ['required' => false,'xs'=>12, 'sm'=>12,'disabled' => false]];
+$edit_default_7['AuthorizedControl'][] = ['name' => "NodeFlow_AuthorizedDept_名称", 'code' => "NodeFlow_AuthorizedDept", 'FieldTypeArray'=>$CurrentDepartmentFieldTypeArray, 'show'=>true, 'type'=>"autocompletemulti", 'options'=>$DepartmentRecords, 'label' => __("NodeFlow_AuthorizedDept"), 'value' => '', 'placeholder' => __(""), 'helptext' => __("NodeFlow_AuthorizedHelpText"), 'rules' => ['required' => false,'xs'=>12, 'sm'=>12,'disabled' => false]];
 
 $CurrentRoleFieldTypeArray = explode(":","autocompletemulti:data_role:0:1:");
 $TableNameTemp      = $CurrentRoleFieldTypeArray[1];
@@ -1476,18 +1496,23 @@ else {
 }
 $rs = $db->Execute($sql) or print($sql);
 $RoleRecords = $rs->GetArray();
-$edit_default_7['AuthorizedControl'][] = ['name' => "NodeFlow_AuthorizedRole", 'code' => "NodeFlow_AuthorizedRole_Code", 'FieldTypeArray'=>$CurrentRoleFieldTypeArray, 'show'=>true, 'type'=>"autocompletemulti", 'options'=>$RoleRecords, 'label' => __("NodeFlow_AuthorizedRole"), 'value' => '', 'placeholder' => __(""), 'helptext' => __("NodeFlow_AuthorizedHelpText"), 'rules' => ['required' => false,'xs'=>12, 'sm'=>12,'disabled' => false]];
+$edit_default_7['AuthorizedControl'][] = ['name' => "NodeFlow_AuthorizedRole_名称", 'code' => "NodeFlow_AuthorizedRole", 'FieldTypeArray'=>$CurrentRoleFieldTypeArray, 'show'=>true, 'type'=>"autocompletemulti", 'options'=>$RoleRecords, 'label' => __("NodeFlow_AuthorizedRole"), 'value' => '', 'placeholder' => __(""), 'helptext' => __("NodeFlow_AuthorizedHelpText"), 'rules' => ['required' => false,'xs'=>12, 'sm'=>12,'disabled' => false]];
 
 $defaultValues_7 = [];
 foreach($edit_default_7 as $ModeName=>$allFieldItem) {
     foreach($allFieldItem as $ITEM) {
-        $defaultValues_7[$ITEM['name']] = $ITEM['value'];
+        if($ITEM['type'] == "autocompletemulti")  {
+            $defaultValues_7[$ITEM['code']] = $ITEM['value'];
+        }
+        else {
+            $defaultValues_7[$ITEM['name']] = $ITEM['value'];
+        }
     }
 }
 
 $edit_default_7_mode[] = ['value'=>"Menu_Location", 'label'=>__("Menu_Location")];
-$edit_default_7_mode[] = ['value'=>"AuthorizedControl", 'label'=>__("AuthorizedControl")];
 $edit_default_7_mode[] = ['value'=>"Page_Role", 'label'=>__("Page_Role")];
+$edit_default_7_mode[] = ['value'=>"AuthorizedControl", 'label'=>__("AuthorizedControl")];
 
 if($_GET['action']=="edit_default_7"&&$id!='')         {
     $sql    = "select * from form_formflow where id = '$id'";
