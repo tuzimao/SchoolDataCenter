@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from 'react';
+import React, { useState, useEffect, Fragment, ChangeEvent } from 'react';
 import {
   Box,
   TextField,
@@ -21,9 +21,13 @@ import {
   DesignServices,
   Description,
   Info,
+  Folder,
 } from '@mui/icons-material';
 import CircularProgress from '@mui/material/CircularProgress'
 import { authConfig, defaultConfig } from 'src/configs/auth'
+
+import Link from 'next/link'
+
 
 const WorkList = () => {
   interface WorkItem {
@@ -64,7 +68,7 @@ const WorkList = () => {
     setCurrentWorkItems(allWorkItems[category]);
   };
 
-  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearch = (event: ChangeEvent<HTMLInputElement>) => {
     // 处理搜索逻辑
     console.log('搜索:', event.target.value);
   };
@@ -133,7 +137,10 @@ const WorkList = () => {
                       selected={selectedCategory === category}
                       onClick={() => handleCategoryClick(category)}
                     >
-                      <ListItemText primary={category} />
+                      <ListItemIcon>
+                        <Description />
+                      </ListItemIcon>
+                      <ListItemText primary={category} />                      
                     </ListItemButton>
                   ))}
                 </List>
@@ -144,27 +151,46 @@ const WorkList = () => {
                 <List>
                   {currentWorkItems.length > 0 ? (
                     currentWorkItems.map((item, index) => (
-                      <React.Fragment key={index}>
-                        <ListItem button>
-                          <ListItemText 
-                            primary={item.FlowName} 
-                            secondary={item.Memo || '暂无描述'} 
-                          />
-                          <ListItemIcon>
-                            <Tooltip title="流程设计">
-                              <IconButton onClick={() => handleActionClick('流程设计')}>
-                                <DesignServices />
-                              </IconButton>
-                            </Tooltip>
-                            <Tooltip title="流程表单">
-                              <IconButton onClick={() => handleActionClick('流程表单')}>
-                                <Description />
-                              </IconButton>
-                            </Tooltip>
-                          </ListItemIcon>
+                      <Fragment key={index}>
+                        <ListItem sx={{my: 1, py: 0}}>
+                          <Grid container alignItems="center" spacing={2}>
+                            <Grid item xs={4}>
+                              <ListItemText  sx={{my: 1}}
+                                primary={item.FlowName} 
+                                secondary={item.Memo || '暂无描述'} 
+                              />
+                            </Grid>
+                            <Grid container xs={4} justifyContent="flex-start">
+                              <Box display="flex" justifyContent="center">
+                                <Tooltip title="流程设计" sx={{borderRadius: 1}}>
+                                  <IconButton onClick={() => handleActionClick('流程设计')}>
+                                    <DesignServices />
+                                    <Typography>流程设计</Typography>
+                                  </IconButton>
+                                </Tooltip>
+                                <Tooltip title="流程表单" sx={{borderRadius: 1}}>
+                                  <IconButton onClick={() => handleActionClick('流程表单')}>
+                                    <Description />
+                                    <Typography>流程表单</Typography>
+                                  </IconButton>
+                                </Tooltip>
+                              </Box>
+                            </Grid>
+                            <Grid container xs={4} justifyContent="flex-end">
+                              <Button 
+                                size="small" 
+                                href='/' 
+                                component={Link} 
+                                variant='contained' 
+                                sx={{ px: 5.5 }}
+                              >
+                                {'新建工作'}
+                              </Button>
+                            </Grid>
+                          </Grid>
                         </ListItem>
                         {index < currentWorkItems.length - 1 && <Divider />}
-                      </React.Fragment>
+                      </Fragment>
                     ))
                   ) : (
                     <Box display="flex" justifyContent="center" alignItems="center" height={200}>
