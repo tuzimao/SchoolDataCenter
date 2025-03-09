@@ -15,17 +15,9 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import {
-  Add,
-  Search,
-  DesignServices,
-  Description,
-  Info,
-  Folder,
-} from '@mui/icons-material';
+import { Search, DesignServices, Description, } from '@mui/icons-material';
 import CircularProgress from '@mui/material/CircularProgress'
-import { authConfig, defaultConfig } from 'src/configs/auth'
-
+import { authConfig } from 'src/configs/auth'
 import Link from 'next/link'
 
 
@@ -35,13 +27,15 @@ const WorkList = () => {
     FormId: string;
     Memo: string;
     FormGroup: string;
+    FlowId: string
   }
 
-  const [selectedCategory, setSelectedCategory] = useState('常用工作');
+  const [selectedCategory, setSelectedCategory] = useState('资产');
   const [currentWorkItems, setCurrentWorkItems] = useState<WorkItem[]>([]);
   const [allWorkItems, setAllWorkItems] = useState<{[key: string]: WorkItem[]}>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [hoveredItem, setHoveredItem] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchWorkItems = async () => {
@@ -68,14 +62,24 @@ const WorkList = () => {
     setCurrentWorkItems(allWorkItems[category]);
   };
 
-  const handleSearch = (event: ChangeEvent<HTMLInputElement>) => {
-    // 处理搜索逻辑
-    console.log('搜索:', event.target.value);
-  };
-
-  const handleNewWork = () => {
-    // 处理新建工作逻辑
-    console.log('新建工作');
+  const handleSearch = async (event: ChangeEvent<HTMLInputElement>) => {
+    const searchTerm = event.target.value;
+    
+    try {
+      const response = await fetch(
+        `${authConfig.backEndApiHost}workflow/start.php?action=SearchWorkflow&keyword=${encodeURIComponent(searchTerm)}`
+      );
+      
+      if (!response.ok) {
+        throw new Error('搜索失败');
+      }
+      
+      const data = await response.json();
+      setAllWorkItems(data.data);
+      setCurrentWorkItems(data.data['资产'] || []);
+    } catch (err) {
+      console.error('搜索出错:', err);
+    }
   };
 
   const handleActionClick = (action: string) => {
@@ -123,7 +127,7 @@ const WorkList = () => {
                 InputProps={{
                   endAdornment: <Search />,
                 }}
-                sx={{ my: 1}}
+                sx={{ mb: 1, my: 2}}
               />
             </Grid>
           </Grid>
@@ -152,7 +156,11 @@ const WorkList = () => {
                   {currentWorkItems.length > 0 ? (
                     currentWorkItems.map((item, index) => (
                       <Fragment key={index}>
-                        <ListItem sx={{my: 1, py: 0}}>
+                        <ListItem 
+                          sx={{my: 1, py: 0}}
+                          onMouseEnter={() => setHoveredItem(index)}
+                          onMouseLeave={() => setHoveredItem(null)}
+                        >
                           <Grid container alignItems="center" spacing={2}>
                             <Grid item xs={4}>
                               <ListItemText  sx={{my: 1}}
@@ -165,27 +173,29 @@ const WorkList = () => {
                                 <Tooltip title="流程设计" sx={{borderRadius: 1}}>
                                   <IconButton onClick={() => handleActionClick('流程设计')}>
                                     <DesignServices />
-                                    <Typography>流程设计</Typography>
+                                    <Typography sx={{ color: 'text.secondary'}}>流程设计</Typography>
                                   </IconButton>
                                 </Tooltip>
                                 <Tooltip title="流程表单" sx={{borderRadius: 1}}>
                                   <IconButton onClick={() => handleActionClick('流程表单')}>
                                     <Description />
-                                    <Typography>流程表单</Typography>
+                                    <Typography sx={{ color: 'text.secondary'}}>流程表单</Typography>
                                   </IconButton>
                                 </Tooltip>
                               </Box>
                             </Grid>
                             <Grid container xs={4} justifyContent="flex-end">
-                              <Button 
-                                size="small" 
-                                href='/' 
-                                component={Link} 
-                                variant='contained' 
-                                sx={{ px: 5.5 }}
-                              >
-                                {'新建工作'}
-                              </Button>
+                              {hoveredItem === index && (
+                                <Button 
+                                  size="small" 
+                                  href={'/workflow/start/' + item.FlowId} 
+                                  component={Link} 
+                                  variant='contained' 
+                                  sx={{ px: 5.5 }}
+                                >
+                                  {'新建工作'}
+                                </Button>
+                              )}
                             </Grid>
                           </Grid>
                         </ListItem>
