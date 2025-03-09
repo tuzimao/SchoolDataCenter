@@ -127,7 +127,7 @@ const WorkList = () => {
                 InputProps={{
                   endAdornment: <Search />,
                 }}
-                sx={{ mb: 1, my: 2}}
+                sx={{ mb: 1, my: 2, pr: 2}}
               />
             </Grid>
           </Grid>
