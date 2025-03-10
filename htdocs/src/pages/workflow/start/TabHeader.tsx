@@ -63,9 +63,9 @@ const App = () => {
       {/* 内容区域 (包括侧边栏和中间滚动区域) */}
       <Box sx={{ display: 'flex', flexGrow: 1 }}>
         {/* 左侧固定侧边栏 */}
-        <Sidebar>
+        <Sidebar sx={{ borderRadius: 0 }}>
           <List>
-            {['首页', '设置'].map((text, index) => (
+            {['表单', '附件', '会签', '流程'].map((text, index) => (
               <ListItem key={text} disablePadding>
                 <ListItemButton sx={{ flexDirection: 'column', alignItems: 'center' }}>
                   <ListItemIcon sx={{ minWidth: 'auto', mb: 0 }}>
