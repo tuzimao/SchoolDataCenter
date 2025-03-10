@@ -11,6 +11,9 @@ require_once('../include.inc.php');
 
 //CheckAuthUserLoginStatus();
 
+$payload        = file_get_contents('php://input');
+$_POST          = json_decode($payload,true);
+
 if($_GET['action'] == 'MyNewWorkflow')      {
     $sql = "select form_formflow.id as FlowId, form_formflow.FlowName, form_formflow.FormId, form_formname.Memo, form_formname.FormGroup from form_formflow, form_formname 
             where 
@@ -26,7 +29,8 @@ if($_GET['action'] == 'MyNewWorkflow')      {
     //重置数组
     $MAP = [];
     foreach($rs_a as $Item) {
-        $MAP[$Item['FormGroup']][] = $Item;
+        $Item['FlowId']             = EncryptID($Item['FlowId']);
+        $MAP[$Item['FormGroup']][]  = $Item;
     }
     $MAP['办公用品'] = $MAP['资产'];
     $MAP['学生工作'] = $MAP['资产'];
@@ -58,7 +62,8 @@ if($_GET['action'] == 'SearchWorkflow' && $keyword != '')      {
     //重置数组
     $MAP = [];
     foreach($rs_a as $Item) {
-        $MAP[$Item['FormGroup']][] = $Item;
+        $Item['FlowId']             = EncryptID($Item['FlowId']);
+        $MAP[$Item['FormGroup']][]  = $Item;
     }
     $MAP['办公用品'] = $MAP['资产'];
     $MAP['学生工作'] = $MAP['资产'];
@@ -73,8 +78,25 @@ if($_GET['action'] == 'SearchWorkflow' && $keyword != '')      {
     exit;
 }
 
-
-
+$FlowId = intval(DecryptID($_POST['FlowId']));
+if($_GET['action'] == 'GetWorkflowStep' && $FlowId > 0)      {
+    $sql = "select form_formflow.id as FlowId, form_formflow.FlowName, form_formflow.FormId from form_formflow 
+            where  id = '$FlowId'
+            order by form_formflow.Step asc
+            ";
+    $rs     = $db->Execute($sql);
+    $rs_a   = $rs->GetArray();
+    $RS     = [];
+    $data   = $rs_a[0];
+    $data['Title']      = "No. 100884 100884-课程标准审批表-总务处/信息中心-管理员001"; 
+    $data['FormName']   = "广东省高新技术高级技工学校课程标准审批表"; 
+    $data['StepName']   = "主办(第1步： 专业负责人发起)"; 
+    $data['FlowType']   = "普通";
+    $RS['data']     = $data;
+    $RS['status']   = 'ok';
+    print_R(json_encode($RS));
+    exit;
+}
 
 
 
