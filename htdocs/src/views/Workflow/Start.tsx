@@ -43,7 +43,7 @@ const Sidebar = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(2),
 }));
 
-const StartModel = ({ FlowId }: {FlowId: string}) => {
+const StartModel = ({ FlowId, handleReturnButton }: any) => {
 
   const [loading, setLoading] = useState(true);
   const [flowInfor, setFlowInfor] = useState<any>(null);
@@ -52,7 +52,7 @@ const StartModel = ({ FlowId }: {FlowId: string}) => {
     const fetchWorkItems = async () => {
       try {
         const storedToken = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
-        const response = await axios.post(authConfig.backEndApiHost + 'workflow/start.php?action=GetWorkflowStep', { FlowId }, {
+        const response = await axios.post(authConfig.backEndApiHost + 'workflow/start.php?action=NewWorkflow', { FlowId }, {
           headers: {
             Authorization: storedToken,
             'Content-Type': 'application/json'
@@ -69,10 +69,19 @@ const StartModel = ({ FlowId }: {FlowId: string}) => {
       }
     };
 
-    fetchWorkItems();
-  }, []);
+    FlowId && FlowId != undefined && fetchWorkItems();
+
+  }, [FlowId]);
 
   console.log("flowInfor", flowInfor)
+
+  const handleSaveData = () => {
+    console.log("handleSaveData", "handleSaveData")    
+  }
+
+  const handleToNextStep = () => {
+    console.log("handleToNextStep", "handleToNextStep")    
+  }
 
   return (
     <Fragment>
@@ -90,10 +99,10 @@ const StartModel = ({ FlowId }: {FlowId: string}) => {
           <AppBar position="static">
             <Toolbar>
               <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                {flowInfor.Title}
+                {flowInfor.工作名称}
               </Typography>
               <Typography variant="body2">
-                {flowInfor.StepName}
+                {flowInfor.步骤名称}
               </Typography>
             </Toolbar>
           </AppBar>
@@ -132,13 +141,20 @@ const StartModel = ({ FlowId }: {FlowId: string}) => {
               <Button variant="contained" size="small" sx={{ ml: 'auto' }}>
                 转文下一步
               </Button>
-              <Button variant="outlined" size="small" sx={{ ml: 2 }}>
+              <Button variant="outlined" size="small" sx={{ ml: 2 }} onClick={()=>{
+                handleSaveData()
+              }}>
                 保存
               </Button>
-              <Button variant="outlined" size="small" sx={{ ml: 2 }}>
+              <Button variant="outlined" size="small" sx={{ ml: 2 }} onClick={()=>{
+                handleSaveData()
+                handleReturnButton()
+              }}>
                 保存返回
               </Button>
-              <Button variant="outlined" size="small" sx={{ ml: 2 }}>
+              <Button variant="outlined" size="small" sx={{ ml: 2 }} onClick={()=>{
+                handleReturnButton()
+              }}>
                 返回
               </Button>
             </Toolbar>

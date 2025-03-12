@@ -21,6 +21,8 @@ import CircularProgress from '@mui/material/CircularProgress'
 import { authConfig, defaultConfig } from 'src/configs/auth'
 import Link from 'next/link'
 
+import StartModel from 'src/views/Workflow/Start'
+
 
 const NewModel = () => {
   interface WorkItem {
@@ -37,6 +39,8 @@ const NewModel = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [hoveredItem, setHoveredItem] = useState<number | null>(null);
+  const [pageModel, setPageModel] = useState('New');
+  const [flowId, setFlowId] = useState<string>('');
 
   useEffect(() => {
     const fetchWorkItems = async () => {
@@ -87,133 +91,148 @@ const NewModel = () => {
     console.log('点击操作:', action);
   };
 
+  const handleReturnButton = () => {
+    setPageModel('New')
+    setFlowId('')
+  }
+
+
   return (
-    <Box sx={{ p: 2 }}>
-      {loading ? (
-        <Grid item xs={12} sm={12} container justifyContent="space-around">
-            <Box sx={{ mt: 6, mb: 6, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-                <CircularProgress size={45} />
-                <Typography sx={{ mt: 6, mb: 6 }}>加载中...</Typography>
+    <Fragment>
+      {pageModel == "New" && (
+        <Box sx={{ p: 2 }}>
+          {loading ? (
+            <Grid item xs={12} sm={12} container justifyContent="space-around">
+                <Box sx={{ mt: 6, mb: 6, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+                    <CircularProgress size={45} />
+                    <Typography sx={{ mt: 6, mb: 6 }}>加载中...</Typography>
+                </Box>
+            </Grid>
+          ) : error ? (
+            <Box display="flex" justifyContent="center" alignItems="center" height={200}>
+              <Typography color="error">{error}</Typography>
             </Box>
-        </Grid>
-      ) : error ? (
-        <Box display="flex" justifyContent="center" alignItems="center" height={200}>
-          <Typography color="error">{error}</Typography>
-        </Box>
-      ) : (
-        <Fragment>
-          <Grid container alignItems="center" marginBottom={2} sx={{ backgroundColor: 'background.paper', borderRadius: 1 }}>
-            <Grid item xs={4}>
-              <Typography
-                variant="body1"
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  p: 2,
-                  width: '100%',
-                  fontSize: 18
-                }}
-              >
-                新建工作
-              </Typography>
-            </Grid>
-            <Grid item xs={8}>
-              <TextField
-                label="请输入流程名称"
-                variant="outlined"
-                size="small"
-                fullWidth
-                onChange={handleSearch}
-                InputProps={{
-                  endAdornment: <Search />,
-                }}
-                sx={{ mb: 1, my: 2, pr: 2}}
-              />
-            </Grid>
-          </Grid>
-          <Grid container spacing={2}>
-            <Grid item xs={2}>
-              <Paper sx={{ height: '100%', backgroundColor: 'background.paper' }}>
-                <List>
-                  {Object.keys(allWorkItems).map((category) => (
-                    <ListItemButton
-                      key={category}
-                      selected={selectedCategory === category}
-                      onClick={() => handleCategoryClick(category)}
-                    >
-                      <ListItemIcon>
-                        <Description />
-                      </ListItemIcon>
-                      <ListItemText primary={category} />                      
-                    </ListItemButton>
-                  ))}
-                </List>
-              </Paper>
-            </Grid>
-            <Grid item xs={10}>
-              <Paper>
-                <List>
-                  {currentWorkItems.length > 0 ? (
-                    currentWorkItems.map((item, index) => (
-                      <Fragment key={index}>
-                        <ListItem 
-                          sx={{my: 1, py: 0}}
-                          onMouseEnter={() => setHoveredItem(index)}
-                          onMouseLeave={() => setHoveredItem(null)}
+          ) : (
+            <Fragment>
+              <Grid container alignItems="center" marginBottom={2} sx={{ backgroundColor: 'background.paper', borderRadius: 1 }}>
+                <Grid item xs={4}>
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      p: 2,
+                      width: '100%',
+                      fontSize: 18
+                    }}
+                  >
+                    新建工作
+                  </Typography>
+                </Grid>
+                <Grid item xs={8}>
+                  <TextField
+                    label="请输入流程名称"
+                    variant="outlined"
+                    size="small"
+                    fullWidth
+                    onChange={handleSearch}
+                    InputProps={{
+                      endAdornment: <Search />,
+                    }}
+                    sx={{ mb: 1, my: 2, pr: 2}}
+                  />
+                </Grid>
+              </Grid>
+              <Grid container spacing={2}>
+                <Grid item xs={2}>
+                  <Paper sx={{ height: '100%', backgroundColor: 'background.paper' }}>
+                    <List>
+                      {Object.keys(allWorkItems).map((category) => (
+                        <ListItemButton
+                          key={category}
+                          selected={selectedCategory === category}
+                          onClick={() => handleCategoryClick(category)}
                         >
-                          <Grid container alignItems="center" spacing={2}>
-                            <Grid item xs={4}>
-                              <ListItemText  sx={{my: 1}}
-                                primary={item.FlowName} 
-                                secondary={item.Memo || '暂无描述'} 
-                              />
-                            </Grid>
-                            <Grid container xs={4} justifyContent="flex-start">
-                              <Box display="flex" justifyContent="center">
-                                <Tooltip title="流程设计" sx={{borderRadius: 1}}>
-                                  <IconButton onClick={() => handleActionClick('流程设计')}>
-                                    <DesignServices />
-                                    <Typography sx={{ color: 'text.secondary'}}>流程设计</Typography>
-                                  </IconButton>
-                                </Tooltip>
-                                <Tooltip title="流程表单" sx={{borderRadius: 1}}>
-                                  <IconButton onClick={() => handleActionClick('流程表单')}>
-                                    <Description />
-                                    <Typography sx={{ color: 'text.secondary'}}>流程表单</Typography>
-                                  </IconButton>
-                                </Tooltip>
-                              </Box>
-                            </Grid>
-                            <Grid container xs={4} justifyContent="flex-end">
-                              {hoveredItem === index && (
-                                <Button 
-                                  size="small" 
-                                  href={'/workflow/start/' + item.FlowId} 
-                                  component={Link} 
-                                  variant='contained' 
-                                  sx={{ px: 5.5 }}
-                                >
-                                  {'新建工作'}
-                                </Button>
-                              )}
-                            </Grid>
-                          </Grid>
-                        </ListItem>
-                        {index < currentWorkItems.length - 1 && <Divider />}
-                      </Fragment>
-                    ))
-                  ) : (
-                    <Box display="flex" justifyContent="center" alignItems="center" height={200}>
-                      <Typography>暂无数据</Typography>
-                    </Box>
-                  )}
-                </List>
-              </Paper>
-            </Grid>
-          </Grid>
-        </Fragment>
+                          <ListItemIcon>
+                            <Description />
+                          </ListItemIcon>
+                          <ListItemText primary={category} />                      
+                        </ListItemButton>
+                      ))}
+                    </List>
+                  </Paper>
+                </Grid>
+                <Grid item xs={10}>
+                  <Paper>
+                    <List>
+                      {currentWorkItems.length > 0 ? (
+                        currentWorkItems.map((item, index) => (
+                          <Fragment key={index}>
+                            <ListItem 
+                              sx={{my: 1, py: 0}}
+                              onMouseEnter={() => setHoveredItem(index)}
+                              onMouseLeave={() => setHoveredItem(null)}
+                            >
+                              <Grid container alignItems="center" spacing={2}>
+                                <Grid item xs={4}>
+                                  <ListItemText  sx={{my: 1}}
+                                    primary={item.FlowName} 
+                                    secondary={item.Memo || '暂无描述'} 
+                                  />
+                                </Grid>
+                                <Grid container xs={4} justifyContent="flex-start">
+                                  <Box display="flex" justifyContent="center">
+                                    <Tooltip title="流程设计" sx={{borderRadius: 1}}>
+                                      <IconButton onClick={() => handleActionClick('流程设计')}>
+                                        <DesignServices />
+                                        <Typography sx={{ color: 'text.secondary'}}>流程设计</Typography>
+                                      </IconButton>
+                                    </Tooltip>
+                                    <Tooltip title="流程表单" sx={{borderRadius: 1}}>
+                                      <IconButton onClick={() => handleActionClick('流程表单')}>
+                                        <Description />
+                                        <Typography sx={{ color: 'text.secondary'}}>流程表单</Typography>
+                                      </IconButton>
+                                    </Tooltip>
+                                  </Box>
+                                </Grid>
+                                <Grid container xs={4} justifyContent="flex-end">
+                                  {hoveredItem === index && (
+                                    <Button 
+                                      size="small" 
+                                      onClick={()=>{
+                                        setFlowId(item.FlowId)
+                                        setPageModel('Start')
+                                      }}
+                                      variant='contained' 
+                                      sx={{ px: 5.5 }}
+                                    >
+                                      {'新建工作'}
+                                    </Button>
+                                  )}
+                                </Grid>
+                              </Grid>
+                            </ListItem>
+                            {index < currentWorkItems.length - 1 && <Divider />}
+                          </Fragment>
+                        ))
+                      ) : (
+                        <Box display="flex" justifyContent="center" alignItems="center" height={200}>
+                          <Typography>暂无数据</Typography>
+                        </Box>
+                      )}
+                    </List>
+                  </Paper>
+                </Grid>
+              </Grid>
+            </Fragment>
+          )}
+        </Box>
       )}
-    </Box>
+      {pageModel == "Start" && (
+        <StartModel FlowId={flowId} handleReturnButton={handleReturnButton} />
+      )}
+    </Fragment>
   );
 };
 
