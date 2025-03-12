@@ -267,6 +267,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                             }
                             setFieldArrayShow(fieldArrayShowTemp)
                         }
+                        console.log("dataJson", dataJson)
                         if (dataJson.data)              {
                             if(dataJson.forceuse) {
                               setAaddEditStructInfo2(dataJson.edit_default)
@@ -424,11 +425,11 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
     const defaultValues:{ [key:string]:any } = addEditStructInfo2.defaultValues;
     const componentsize = addEditStructInfo2.componentsize;
 
-    //console.log("defaultValues",defaultValues)
-    //console.log("allFieldsMode",allFieldsMode)
-    //console.log("defaultValues",defaultValues)
-    //console.log("defaultValuesNew",defaultValuesNew)
-    //console.log("allFields",allFields)
+    console.log("defaultValues",defaultValues)
+    console.log("allFieldsMode",allFieldsMode)
+    console.log("defaultValues",defaultValues)
+    console.log("defaultValuesNew",defaultValuesNew)
+    console.log("allFields",allFields)
 
     const chinaIdCardCheck = (value:string|undefined) => {
         if(value==undefined)  {

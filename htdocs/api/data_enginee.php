@@ -12,6 +12,9 @@ require_once('include.inc.php');
 
 //$externalId = 16;
 
+//限制特定文件不能在URL中使用
+if($externalId == "") exit;
+
 CheckAuthUserLoginStatus();
 
 //Get Table Infor

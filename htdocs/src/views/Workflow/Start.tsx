@@ -128,7 +128,7 @@ const StartModel = ({ FlowId, handleReturnButton }: any) => {
             {/* 中间滚动区域 */}
             <ScrollableContent>
               <Paper sx={{ padding: 2 }}>
-                <Grid container spacing={2}>
+                <Grid sx={{ mx: 2, px: 2, pb: 2}}>
                   <AddOrEditTableCore authConfig={authConfig} externalId={0} id={idValue} action={'edit_default'} addEditStructInfo={{allFields:{}, }} open={true} toggleAddTableDrawer={toggleAddTableDrawer} addUserHandleFilter={addUserHandleFilter} backEndApi={backEndApi} editViewCounter={1} IsGetStructureFromEditDefault={1} AddtionalParams={{"AddtionalParams":"AddtionalParams"}} CSRF_TOKEN={""} dataGridLanguageCode={'zhCN'} toggleImagesPreviewListDrawer={toggleImagesPreviewListDrawer} handleIsLoadingTipChange={handleIsLoadingTipChange} setForceUpdate={setForceUpdate} additionalParameters={null}/>
                 </Grid>
               </Paper>

@@ -9,7 +9,7 @@
 
 global $WholePageModel;
 
-$WholePageModel = "PageFunction";
+$WholePageModel = "Workflow";
 
 require_once('data_enginee_flow_lib.php');
 
