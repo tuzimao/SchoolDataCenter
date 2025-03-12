@@ -1,34 +1,11 @@
 import { useState, useEffect, Fragment } from 'react';
 import axios from 'axios';
-import {
-  Box,
-  Toolbar,
-  AppBar,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  Typography,
-  Paper,
-  Button,
-  Grid,
-  styled,
-} from '@mui/material';
-import {
-  Menu,
-  Home,
-  Settings,
-  Add,
-  Search,
-  DesignServices,
-  Description,
-  Info,
-  AttachFile,
-} from '@mui/icons-material';
+import { Box,Toolbar,AppBar,List,ListItem,ListItemButton,ListItemIcon,ListItemText,Typography,Paper,Button,Grid,styled, } from '@mui/material';
+import { Menu, Home, Settings, Add, Search, DesignServices, Description, Info, AttachFile } from '@mui/icons-material';
 import { authConfig, defaultConfig } from 'src/configs/auth'
 import CircularProgress from '@mui/material/CircularProgress'
 
+import AddOrEditTableCore from 'src/views/Enginee/AddOrEditTableCore'
 
 // 自定义滚动区域样式
 const ScrollableContent = styled(Box)(({ theme }) => ({
@@ -83,6 +60,29 @@ const StartModel = ({ FlowId, handleReturnButton }: any) => {
     console.log("handleToNextStep", "handleToNextStep")    
   }
 
+  const toggleAddTableDrawer = () => {
+
+  }
+
+  const addUserHandleFilter = () => {
+
+  }
+
+  const toggleImagesPreviewListDrawer = () => {
+
+  }
+
+  const handleIsLoadingTipChange = () => {
+
+  }
+
+  const setForceUpdate = () => {
+
+  }
+  
+  const backEndApi = "/apps/apps_253.php";
+  const idValue = "dlpTRmdZcVZIaU0wcE1FUGN4MmxrZ3x8Ojo2TVhVWHJSMjFuQVlqTEFpRWxHMXJ3fHw|"
+
   return (
     <Fragment>
       {loading == true && (
@@ -129,7 +129,7 @@ const StartModel = ({ FlowId, handleReturnButton }: any) => {
             <ScrollableContent>
               <Paper sx={{ padding: 2 }}>
                 <Grid container spacing={2}>
-                  {/* ... (中间内容保持不变) */}
+                  <AddOrEditTableCore authConfig={authConfig} externalId={0} id={idValue} action={'edit_default'} addEditStructInfo={{allFields:{}, }} open={true} toggleAddTableDrawer={toggleAddTableDrawer} addUserHandleFilter={addUserHandleFilter} backEndApi={backEndApi} editViewCounter={1} IsGetStructureFromEditDefault={1} AddtionalParams={{"AddtionalParams":"AddtionalParams"}} CSRF_TOKEN={""} dataGridLanguageCode={'zhCN'} toggleImagesPreviewListDrawer={toggleImagesPreviewListDrawer} handleIsLoadingTipChange={handleIsLoadingTipChange} setForceUpdate={setForceUpdate} additionalParameters={null}/>
                 </Grid>
               </Paper>
             </ScrollableContent>

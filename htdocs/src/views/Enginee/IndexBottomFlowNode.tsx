@@ -62,7 +62,7 @@ const IndexBottomFlowNode = (props: IndexBottomFlowNodeType) => {
                 }
                 
                 <Typography sx={{ pl: 2, ml: 3, mb: 2, whiteSpace: 'pre-wrap', overflowX: 'auto' }}>
-                {DebugSql.map((sql, index) => (
+                {DebugSql && DebugSql.length > 0 && DebugSql.map((sql, index) => (
                     <div key={index}>{sql}</div>
                 ))}
                 </Typography>

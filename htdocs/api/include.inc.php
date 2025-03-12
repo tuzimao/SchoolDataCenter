@@ -291,49 +291,49 @@ function CheckAuthUserRoleHaveMenu($FlowId, $MenuPath='')  {
 	global $SystemMark;
 	if($HavePermisstion==0 && $SystemMark=="Individual")    {
 		$RS['status'] 		= "ERROR";
-    $RS['error'] 		= "Not Have Permisstion";
+    	$RS['error'] 		= "Not Have Permisstion";
 		$RS['status'] 		= "ERROR";
 		$RS['RoleArray'] 	= $RoleArray;
 		$RS['MenuTwoId'] 	= $MenuTwoId;
 		$RS['FlowId'] 		= $FlowId;
-    print_r(json_encode($RS));
+    	print_r(json_encode($RS));
 		exit;
 	}
 }
 
 function CheckCsrsToken() {
 	//此函数限制过于严格
-  $accessTokenArray   = explode('::::',$_SERVER['HTTP_AUTHORIZATION']);
+  	$accessTokenArray   = explode('::::',$_SERVER['HTTP_AUTHORIZATION']);
 	$HTTP_CSRF_TOKEN    = $accessTokenArray[1];
 	$HTTP_CSRF_TOKEN_DATA = DecryptID($HTTP_CSRF_TOKEN);
 	$HTTP_CSRF_TOKEN_DATA = unserialize($HTTP_CSRF_TOKEN_DATA);
 
-  global $SettingMap;
-  $Actions_In_List_Row_Array    = explode(',',$SettingMap['Actions_In_List_Row']);
-  $Actions_In_List_Header_Array = explode(',',$SettingMap['Actions_In_List_Header']);
+	global $SettingMap;
+	$Actions_In_List_Row_Array    = explode(',',$SettingMap['Actions_In_List_Row']);
+	$Actions_In_List_Header_Array = explode(',',$SettingMap['Actions_In_List_Header']);
 
 	switch($_GET['action'])  {
 		case 'view_default':
-      if(!in_array($SettingMap['Except_CSRF_Actions'], ['view_default','edit_view','add_edit_view','add_edit_view_delete']))   {
-        $DiffTime = time() - $HTTP_CSRF_TOKEN_DATA['Time'];
-        if(!is_array($Actions_In_List_Row_Array) || !in_array('View',$Actions_In_List_Row_Array)) {
-          $RS           = [];
-          $RS['status'] = "ERROR";
-          $RS['msg']    = __("View not permisstion");
-          print json_encode($RS);
-          exit;
-        }
-        $id = DecryptID($_GET['id']);
-        if(!is_array($HTTP_CSRF_TOKEN_DATA['GetAllIDList']) || !in_array($id,$HTTP_CSRF_TOKEN_DATA['GetAllIDList'])) {
-          $RS           = [];
-          $RS['status'] = "ERROR";
-          $RS['id']     = $id;
-          $RS['msg']    = __("ID is invalid");
-          $RS['GetAllIDList'] 	= $HTTP_CSRF_TOKEN_DATA['GetAllIDList'];
-          print json_encode($RS);
-          exit;
-        }
-      }
+			if(!in_array($SettingMap['Except_CSRF_Actions'], ['view_default','edit_view','add_edit_view','add_edit_view_delete']))   {
+				$DiffTime = time() - $HTTP_CSRF_TOKEN_DATA['Time'];
+				if(!is_array($Actions_In_List_Row_Array) || !in_array('View',$Actions_In_List_Row_Array)) {
+				$RS           = [];
+				$RS['status'] = "ERROR";
+				$RS['msg']    = __("View not permisstion");
+				print json_encode($RS);
+				exit;
+				}
+				$id = DecryptID($_GET['id']);
+				if(!is_array($HTTP_CSRF_TOKEN_DATA['GetAllIDList']) || !in_array($id,$HTTP_CSRF_TOKEN_DATA['GetAllIDList'])) {
+				$RS           = [];
+				$RS['status'] = "ERROR";
+				$RS['id']     = $id;
+				$RS['msg']    = __("ID is invalid");
+				$RS['GetAllIDList'] 	= $HTTP_CSRF_TOKEN_DATA['GetAllIDList'];
+				print json_encode($RS);
+				exit;
+				}
+			}
 			break;
 		case 'edit_default':
 		case 'edit_default_data':
