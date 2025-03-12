@@ -6,10 +6,19 @@
 * Copyright (c) 2007-2025
 * License: 商业授权
 */
+header("Content-Type: application/json");
+$TIME_BEGIN = time();
+require_once('cors.php');
+require_once('include.inc.php');
+
 
 global $WholePageModel;
 
 $WholePageModel = "Workflow";
+
+$FlowId = intval(DecryptID($_GET['FlowId']));
+
+$_GET['id'] = "alZJdVRHNHBOQnZHNEVCSUptM3dYZ3x8OjpBQnJzY1lLdDdfQWZ5RDh6THoyN2lRfHw|";
 
 require_once('data_enginee_flow_lib.php');
 

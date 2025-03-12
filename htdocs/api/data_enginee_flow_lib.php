@@ -20,7 +20,7 @@ require_once('data_enginee_function.php');
 //限制特定文件不能在URL中使用
 $CurrentUrlFileName = basename($_SERVER['PHP_SELF']);
 $ForbiddenAccessUrlList = ['data_enginee_flow.php','data_enginee_flow_lib.php'];
-if($FormId == "" || $Step == "" || in_array($CurrentUrlFileName, $ForbiddenAccessUrlList)) exit;
+if(in_array($CurrentUrlFileName, $ForbiddenAccessUrlList)) exit;
 
 global $GLOBAL_EXEC_KEY_SQL;
 $GLOBAL_EXEC_KEY_SQL        = [];
@@ -30,19 +30,20 @@ $AdminFilterTipTextArray    = [];
 $AdminFilterOrTipTextArray  = [];
 
 //Get Form Flow Setting
-if($FlowId!="")  {
+$FlowId     = intval($FlowId);
+if($FlowId > 0)  {
 	$sql    = "select * from form_formflow where id='$FlowId'";
 }
 else {
 	$sql    = "select * from form_formflow where FormId='$FormId' and Step='$Step'";
 }
-$rs         = $db->Execute($sql);
-$FromInfo   = $rs->fields;
+$rs           = $db->Execute($sql);
+$FromInfo     = $rs->fields;
 $FormId  	  = $FromInfo['FormId'];
 $FlowId  	  = $FromInfo['id'];
-$FlowName  	= $FromInfo['FlowName'];
+$FlowName  	  = $FromInfo['FlowName'];
 $Step  		  = $FromInfo['Step'];
-$Setting  	= $FromInfo['Setting'];
+$Setting  	  = $FromInfo['Setting'];
 $FaceTo  	  = $FromInfo['FaceTo'];
 
 //print "TIME EXCEUTE 1:".(time()-$TIME_BEGIN)."<BR>\n";

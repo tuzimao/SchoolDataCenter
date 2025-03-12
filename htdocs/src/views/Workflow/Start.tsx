@@ -80,8 +80,9 @@ const StartModel = ({ FlowId, handleReturnButton }: any) => {
 
   }
   
-  const backEndApi = "/apps/apps_253.php";
+  const backEndApi = "/data_workflow.php";
   const idValue = "dlpTRmdZcVZIaU0wcE1FUGN4MmxrZ3x8Ojo2TVhVWHJSMjFuQVlqTEFpRWxHMXJ3fHw|"
+  const AddtionalParams = { FlowId }
 
   return (
     <Fragment>
@@ -129,7 +130,7 @@ const StartModel = ({ FlowId, handleReturnButton }: any) => {
             <ScrollableContent>
               <Paper sx={{ padding: 2 }}>
                 <Grid sx={{ mx: 2, px: 2, pb: 2}}>
-                  <AddOrEditTableCore authConfig={authConfig} externalId={0} id={idValue} action={'edit_default'} addEditStructInfo={{allFields:{}, }} open={true} toggleAddTableDrawer={toggleAddTableDrawer} addUserHandleFilter={addUserHandleFilter} backEndApi={backEndApi} editViewCounter={1} IsGetStructureFromEditDefault={1} AddtionalParams={{"AddtionalParams":"AddtionalParams"}} CSRF_TOKEN={""} dataGridLanguageCode={'zhCN'} toggleImagesPreviewListDrawer={toggleImagesPreviewListDrawer} handleIsLoadingTipChange={handleIsLoadingTipChange} setForceUpdate={setForceUpdate} additionalParameters={null}/>
+                  <AddOrEditTableCore authConfig={authConfig} externalId={0} id={idValue} action={'edit_default'} addEditStructInfo={{allFields:{}, }} open={true} toggleAddTableDrawer={toggleAddTableDrawer} addUserHandleFilter={addUserHandleFilter} backEndApi={backEndApi} editViewCounter={1} IsGetStructureFromEditDefault={1} AddtionalParams={AddtionalParams} CSRF_TOKEN={""} dataGridLanguageCode={'zhCN'} toggleImagesPreviewListDrawer={toggleImagesPreviewListDrawer} handleIsLoadingTipChange={handleIsLoadingTipChange} setForceUpdate={setForceUpdate} additionalParameters={AddtionalParams}/>
                 </Grid>
               </Paper>
             </ScrollableContent>
