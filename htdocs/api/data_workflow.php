@@ -16,7 +16,8 @@ global $WholePageModel;
 
 $WholePageModel = "Workflow";
 
-$FlowId = intval(DecryptID($_GET['FlowId']));
+if($_GET['FlowId'] != "")       $FlowId = intval(DecryptID($_GET['FlowId']));       //edit_default
+if($_POST['FlowId'] != "")      $FlowId = intval(DecryptID($_POST['FlowId']));      //edit_default_data
 
 $_GET['id'] = "alZJdVRHNHBOQnZHNEVCSUptM3dYZ3x8OjpBQnJzY1lLdDdfQWZ5RDh6THoyN2lRfHw|";
 

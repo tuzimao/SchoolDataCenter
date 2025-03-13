@@ -1351,6 +1351,77 @@ if( ( ($_GET['action']=="edit_default"&&in_array('Edit',$Actions_In_List_Row_Arr
     $RS['edit_default'] = $edit_default;
     if($_GET['IsGetStructureFromEditDefault']==1)  {
         $RS['forceuse'] = true;
+        
+        //Relative Child Table Support
+        $Relative_Child_Table                   = $SettingMap['Relative_Child_Table'];
+        $Relative_Child_Table_Field_Name        = $SettingMap['Relative_Child_Table_Field_Name'];
+        $Relative_Child_Table_Parent_Field_Name = $SettingMap['Relative_Child_Table_Parent_Field_Name'];
+        if($Relative_Child_Table>0 && $Relative_Child_Table_Parent_Field_Name!="" && in_array($Relative_Child_Table_Parent_Field_Name,$MetaColumnNames)) {
+            $ChildSettingMap = returntablefield("form_formflow",'id',$Relative_Child_Table,'Setting')['Setting'];
+            $ChildSettingMap = unserialize(base64_decode($ChildSettingMap));
+            $ChildFormId                = returntablefield("form_formflow",'id',$Relative_Child_Table,'FormId')['FormId'];
+            $ChildTableName             = returntablefield("form_formname",'id',$ChildFormId,'TableName')['TableName'];
+            $ChildMetaColumnNames       = GLOBAL_MetaColumnNames($ChildTableName);
+            if($Relative_Child_Table_Field_Name!="" && in_array($Relative_Child_Table_Field_Name, $ChildMetaColumnNames) ) {
+                //Get All Fields
+                $sql                        = "select * from form_formfield where FormId='$ChildFormId' and IsEnable='1' order by SortNumber asc, id asc";
+                $rs                         = $db->Execute($sql);
+                $ChildAllFieldsFromTable    = $rs->GetArray();
+                $ChildAllFieldsMap = [];
+                foreach($ChildAllFieldsFromTable as $Item)  {
+                    $ChildAllFieldsMap[$Item['FieldName']] = $Item;
+                    $ChildLocaleFieldArray[$Item['EnglishName']] = $Item['FieldName'];
+                    $ChildLocaleFieldArray[$Item['ChineseName']] = $Item['FieldName'];
+                }
+                $defaultValuesAddChild  = [];
+                $defaultValuesEditChild = [];
+                $allFieldsAdd   = getAllFields($ChildAllFieldsFromTable, $AllShowTypesArray, 'ADD', true, $ChildSettingMap);
+                foreach($allFieldsAdd as $ModeName=>$allFieldItem) {
+                    foreach($allFieldItem as $ITEM) {
+                        $defaultValuesAddChild[$ITEM['name']] = $ITEM['value'];
+                        if($ITEM['code']!="") {
+                            $defaultValuesAddChild[$ITEM['code']] = $ITEM['value'];
+                        }
+                    }
+                }
+                $RS['add_default']['childtable']['allFields']        = $allFieldsAdd;
+                $RS['add_default']['childtable']['defaultValues']    = $defaultValuesAddChild;
+                $RS['add_default']['childtable']['submittext']       = __("NewItem");
+                $RS['add_default']['childtable']['Add']                = strpos($ChildSettingMap['Actions_In_List_Header'],'Add')===false?false:true;
+                $RS['add_default']['childtable']['Edit']               = strpos($ChildSettingMap['Actions_In_List_Row'],'Edit')===false?false:true;
+                $RS['add_default']['childtable']['Delete']             = strpos($ChildSettingMap['Actions_In_List_Row'],'Delete')===false?false:true;
+
+                $allFieldsEdit   = getAllFields($ChildAllFieldsFromTable, $AllShowTypesArray, 'EDIT', true, $ChildSettingMap);
+                foreach($allFieldsEdit as $ModeName=>$allFieldItem) {
+                    $allFieldItemIndex = 0;
+                    foreach($allFieldItem as $ITEM) {
+                        $defaultValuesEditChild[$ITEM['name']] = $ITEM['value'];
+                        if($ITEM['code']!="") {
+                            $defaultValuesEditChild[$ITEM['code']] = $ITEM['value'];
+                        }
+                        if(strpos($ChildSettingMap['Actions_In_List_Row'],'Edit')===false) {
+                            $allFieldsEdit[$ModeName][$allFieldItemIndex]['rules']['disabled'] = true;
+                        }
+                        $allFieldItemIndex ++;
+                    }
+                }
+                if(is_array($ChildSettingMap))   {
+                    foreach($ChildSettingMap as $ModeName=>$allFieldItem) {
+                        $defaultValuesEditChild[$ModeName] = $allFieldItem;
+                    }
+                }
+                $RS['edit_default']['childtable']['allFields']          = $allFieldsEdit;
+                $RS['edit_default']['childtable']['defaultValues']      = $defaultValuesEditChild;
+                $RS['edit_default']['childtable']['submittext']         = __("NewItem");
+                $RS['edit_default']['childtable']['Add']                = strpos($ChildSettingMap['Actions_In_List_Header'],'Add')===false?false:true;
+                $RS['edit_default']['childtable']['Edit']               = strpos($ChildSettingMap['Actions_In_List_Row'],'Edit')===false?false:true;
+                $RS['edit_default']['childtable']['Delete']             = strpos($ChildSettingMap['Actions_In_List_Row'],'Delete')===false?false:true;
+                global $WholePageModel;
+                if($WholePageModel == "Workflow")  {
+                    $RS['edit_default']['submittext']                   = '';
+                }
+            }
+        }
     }
 
     //Filter Data For Readonly Edit

@@ -165,11 +165,13 @@ interface AddOrEditTableType {
     handleIsLoadingTipChange: (status: boolean, showText: string) => void
     setForceUpdate: (value: any) => void
     additionalParameters: any
+    submitCounter: number
+    setSubmitCounter: (value: any) => void
 }
 
 const AddOrEditTableCore = (props: AddOrEditTableType) => {
     // ** Props
-    const { authConfig, externalId, id, action, addEditStructInfo, toggleAddTableDrawer, addUserHandleFilter, backEndApi, editViewCounter, IsGetStructureFromEditDefault, AddtionalParams, CSRF_TOKEN, dataGridLanguageCode, toggleImagesPreviewListDrawer, handleIsLoadingTipChange, setForceUpdate, additionalParameters } = props
+    const { authConfig, externalId, id, action, addEditStructInfo, toggleAddTableDrawer, addUserHandleFilter, backEndApi, editViewCounter, IsGetStructureFromEditDefault, AddtionalParams, CSRF_TOKEN, dataGridLanguageCode, toggleImagesPreviewListDrawer, handleIsLoadingTipChange, setForceUpdate, additionalParameters, submitCounter, setSubmitCounter } = props
 
     const i18n: any = {language: 'zh'}
 
@@ -196,7 +198,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
     const addEditorDefault:{[key:string]:EditorState} = {}
     const [allEditorValues, setAllEditorValues] = useState(addEditorDefault)
     const [allFields, setAllFields] = useState(addEditStructInfo.allFields)
-    const [addEditStructInfo2, setAaddEditStructInfo2] = useState(addEditStructInfo)
+    const [addEditStructInfo2, setAddEditStructInfo2] = useState(addEditStructInfo)
     const [uploadFilesReadonly, setUploadFilesReadonly] = useState<File[] | FileUrl[]>([])
     const [childItemCounter, setChildItemCounter] = useState<number>(1)
     const [deleteChildTableItemArray, setDeleteChildTableItemArray] = useState<number[]>([])
@@ -270,7 +272,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                         console.log("dataJson", dataJson)
                         if (dataJson.data)              {
                             if(dataJson.forceuse) {
-                              setAaddEditStructInfo2(dataJson.edit_default)
+                              setAddEditStructInfo2(dataJson.edit_default)
                               setAllFields(dataJson.edit_default.allFields)
                             }
                             const allEditorValuesTemp = { ...allEditorValues }
@@ -757,6 +759,13 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
     }
 
     useEffect(() => {
+        if(submitCounter == 1 && handleSubmit) {
+            handleSubmit(onSubmit)();
+        }
+    }, [submitCounter, handleSubmit]);
+    
+
+    useEffect(() => {
         Mousetrap.bind(['alt+s', 'command+s', 'command+enter'], () => {handleSubmit(onSubmit)();});
         Mousetrap.bind(['alt+c', 'command+c'], handleClose);
 
@@ -1089,6 +1098,8 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
             }
         })
     }, [allFieldsMode])
+
+    console.log("addEditStructInfo2", addEditStructInfo2)
 
     return (
         <Fragment>
