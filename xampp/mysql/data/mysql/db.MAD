@@ -1,4 +1,5 @@
-2025-02-20 14:08:38 0 [ERROR] InnoDB: Page [page id: space=0, page number=358] log sequence number 475440633 is in the future! Current system log sequence number 469648614.
+2025-03-07 16:09:08 0 [Note] InnoDB: Buffer pool(s) load completed at 250307 16:09:08
+ence number 475440633 is in the future! Current system log sequence number 469648614.
 2025-02-20 14:08:38 0 [ERROR] InnoDB: Your database may be corrupt or you may have copied the InnoDB tablespace but not the InnoDB log files. Please refer to https://mariadb.com/kb/en/library/innodb-recovery-modes/ for information about forcing recovery.
 2025-02-20 14:08:38 0 [ERROR] InnoDB: Page [page id: space=0, page number=362] log sequence number 472988143 is in the future! Current system log sequence number 469648614.
 2025-02-20 14:08:38 0 [ERROR] InnoDB: Your database may be corrupt or you may have copied the InnoDB tablespace but not the InnoDB log files. Please refer to https://mariadb.com/kb/en/library/innodb-recovery-modes/ for information about forcing recovery.
@@ -36,13 +37,14 @@
 2025-02-20 14:08:38 0 [ERROR] InnoDB: Your database may be corrupt or you may have copied the InnoDB tablespace but not the InnoDB log files. Please refer to https://mariadb.com/kb/en/library/innodb-recovery-modes/ for information about forcing recovery.
 2025-02-20 14:08:38 0 [ERROR] InnoDB: Page [page id: space=0, page number=711] log sequence number 474708378 is in the future! Current system log sequence number 469648614.
 2025-02-20 14:08:38 0 [ERROR] InnoDB: Your database may be corrupt or you may have copied the InnoDB tablespace but not the InnoDB log files. Please refer to https://mariadb.com/kb/en/library/innodb-recovery-modes/ for information about forcing recovery.
-2025-02-20 14:08:38 0 2025-02-24  9:11:06 0 [Note] Reading of all Master_info entries succeeded
-2025-02-24  9:11:06 0 [Note] Added new Master_info '' to hash table
-2025-02-24  9:11:06 0 [Note] d:\schooldatacenter\xampp\mysql\bin\mysqld.exe: ready for connections.
+2025-02-20 14:08:38 0 2025-03-07 16:09:08 0 [Note] Reading of all Master_info entries succeeded
+2025-03-07 16:09:08 0 [Note] Added new Master_info '' to hash table
+2025-03-07 16:09:08 0 [Note] d:\schooldatacenter\xampp\mysql\bin\mysqld.exe: ready for connections.
 Version: '10.4.28-MariaDB'  socket: ''  port: 3386  mariadb.org binary distribution
-/mariadb.com/kb/en/library/innodb-recovery-modes/ for information about forcing recovery.
-2025-02-20 14:08:38 0 [ERROR] InnoDB: Page [page id: space=0, page number=728] log sequence number 472951925 is in the future! Current system log sequence number 469648614.
-2025-02-20 14:08:38 0 [ERROR] InnoDB: Your database may be corrupt or you may have copied the InnoDB tablespace but not the InnoDB log files. Please refer to https://mariadb.com/kb/en/library/innodb-recovery-modes/ for information about forcing recovery.
+2025-03-08  2:01:10 20 [Warning] Aborted connection 20 to db: 'myedu' user: 'root' host: 'localhost' (Got timeout reading communication packets)
+2025-03-08  2:01:10 22 [Warning] Aborted connection 22 to db: 'myedu' user: 'root' host: 'localhost' (Got timeout reading communication packets)
+2025-03-08  2:01:10 21 [Warning] Aborted connection 21 to db: 'myedu' user: 'root' host: 'localhost' (Got timeout reading communication packets)
+.com/kb/en/library/innodb-recovery-modes/ for information about forcing recovery.
 2025-02-20 14:08:38 0 [ERROR] InnoDB: Page [page id: space=0, page number=729] log sequence number 475634997 is in the future! Current system log sequence number 469648614.
 2025-02-20 14:08:38 0 [ERROR] InnoDB: Your database may be corrupt or you may have copied the InnoDB tablespace but not the InnoDB log files. Please refer to https://mariadb.com/kb/en/library/innodb-recovery-modes/ for information about forcing recovery.
 2025-02-20 14:08:38 0 [ERROR] InnoDB: Page [page id: space=0, page number=730] log sequence number 476706034 is in the future! Current system log sequence number 469648614.
