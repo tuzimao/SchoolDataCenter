@@ -59,6 +59,7 @@ const StartModel = ({ FlowId, handleReturnButton }: any) => {
   }
 
   const handleToNextStep = () => {
+    setSubmitCounter(0)
     console.log("handleToNextStep", "handleToNextStep")    
   }
 
@@ -141,7 +142,9 @@ const StartModel = ({ FlowId, handleReturnButton }: any) => {
           {/* 底部固定 Toolbar */}
           <AppBar position="static" color="default" sx={{ top: 'auto', bottom: 0 }}>
             <Toolbar>
-              <Button variant="contained" size="small" sx={{ ml: 'auto' }}>
+              <Button variant="contained" size="small" sx={{ ml: 'auto' }} onClick={()=>{
+                handleToNextStep()
+              }}>
                 转文下一步
               </Button>
               <Button variant="outlined" size="small" sx={{ ml: 2 }} onClick={()=>{

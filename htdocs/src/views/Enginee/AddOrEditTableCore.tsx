@@ -539,6 +539,18 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                 }
             })
         })
+        console.log("deleteChildTableItemArray", deleteChildTableItemArray, childItemCounter)
+        if(addEditStructInfo2 && addEditStructInfo2.childtable && addEditStructInfo2.childtable.allFields)   {
+            for (let i = 0; i < childItemCounter; i++) {
+                if(!deleteChildTableItemArray.includes(i))   {
+                    addEditStructInfo2.childtable.allFields.Default.map((FieldArray: any) => {
+                        const NewFieldName = "ChildTable____" + i + "____" + FieldArray.name
+                        yupCheckMap[NewFieldName] = yup.string().required()
+                        console.log("NewFieldName", NewFieldName, childItemCounter)
+                    })
+                }
+            }
+        }
     }
 
     const yupCheckMapSchema = yup.object().shape(yupCheckMap)
@@ -577,6 +589,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
 
         const dataMap = new Map(Object.entries({...data, ...loopModelDataStorage}));
         for (const [key, value] of dataMap.entries()) {
+            console.log("ChildTable key", key, value)
             if(key in defaultValues) {
                 formData.append(key, (value=='请选择' || value == undefined) ? '' : value);
             }
@@ -584,6 +597,9 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                 formData.append(key, (value=='请选择' || value == undefined) ? '' : value);
             }
             else if(key + "_名称" in defaultValues) {
+                formData.append(key, (value=='请选择' || value == undefined) ? '' : value);
+            }
+            else if(key.startsWith('ChildTable____')) {
                 formData.append(key, (value=='请选择' || value == undefined) ? '' : value);
             }
         }

@@ -19,7 +19,6 @@ import {
 import { Search, DesignServices, Description, } from '@mui/icons-material';
 import CircularProgress from '@mui/material/CircularProgress'
 import { authConfig, defaultConfig } from 'src/configs/auth'
-import Link from 'next/link'
 
 import StartModel from 'src/views/Workflow/Start'
 
@@ -180,36 +179,40 @@ const NewModel = () => {
                                     secondary={item.Memo || '暂无描述'} 
                                   />
                                 </Grid>
-                                <Grid container xs={4} justifyContent="flex-start">
-                                  <Box display="flex" justifyContent="center">
-                                    <Tooltip title="流程设计" sx={{borderRadius: 1}}>
-                                      <IconButton onClick={() => handleActionClick('流程设计')}>
-                                        <DesignServices />
-                                        <Typography sx={{ color: 'text.secondary'}}>流程设计</Typography>
-                                      </IconButton>
-                                    </Tooltip>
-                                    <Tooltip title="流程表单" sx={{borderRadius: 1}}>
-                                      <IconButton onClick={() => handleActionClick('流程表单')}>
-                                        <Description />
-                                        <Typography sx={{ color: 'text.secondary'}}>流程表单</Typography>
-                                      </IconButton>
-                                    </Tooltip>
-                                  </Box>
+                                <Grid item xs={4}>
+                                  <Grid container justifyContent="flex-start">
+                                    <Box display="flex" justifyContent="center">
+                                      <Tooltip title="流程设计" sx={{borderRadius: 1}}>
+                                        <IconButton onClick={() => handleActionClick('流程设计')}>
+                                          <DesignServices />
+                                          <Typography sx={{ color: 'text.secondary'}}>流程设计</Typography>
+                                        </IconButton>
+                                      </Tooltip>
+                                      <Tooltip title="流程表单" sx={{borderRadius: 1}}>
+                                        <IconButton onClick={() => handleActionClick('流程表单')}>
+                                          <Description />
+                                          <Typography sx={{ color: 'text.secondary'}}>流程表单</Typography>
+                                        </IconButton>
+                                      </Tooltip>
+                                    </Box>
+                                  </Grid>
                                 </Grid>
-                                <Grid container xs={4} justifyContent="flex-end">
-                                  {hoveredItem === index && (
-                                    <Button 
-                                      size="small" 
-                                      onClick={()=>{
-                                        setFlowId(item.FlowId)
-                                        setPageModel('Start')
-                                      }}
-                                      variant='contained' 
-                                      sx={{ px: 5.5 }}
-                                    >
-                                      {'新建工作'}
-                                    </Button>
-                                  )}
+                                <Grid item xs={4}>
+                                  <Grid container justifyContent="flex-end">
+                                    {hoveredItem === index && (
+                                      <Button 
+                                        size="small" 
+                                        onClick={()=>{
+                                          setFlowId(item.FlowId)
+                                          setPageModel('Start')
+                                        }}
+                                        variant='contained' 
+                                        sx={{ px: 5.5 }}
+                                      >
+                                        {'新建工作'}
+                                      </Button>
+                                    )}
+                                  </Grid>
                                 </Grid>
                               </Grid>
                             </ListItem>

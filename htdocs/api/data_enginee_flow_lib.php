@@ -16,7 +16,7 @@ require_once('data_enginee_function.php');
 //print "TIME EXCEUTE 0:".(time()-$TIME_BEGIN)."<BR>\n";
 //$FormId = 16;
 //$Step = 1;
-
+//print_R($_POST);exit;
 //限制特定文件不能在URL中使用
 $CurrentUrlFileName = basename($_SERVER['PHP_SELF']);
 $ForbiddenAccessUrlList = ['data_enginee_flow.php','data_enginee_flow_lib.php'];
