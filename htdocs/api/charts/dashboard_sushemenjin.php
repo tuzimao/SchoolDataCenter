@@ -59,7 +59,7 @@ $AnalyticsDepositWithdraw['加分']['Title']             = "出";
 $AnalyticsDepositWithdraw['加分']['TopRightButton']    = [];
 $AnalyticsDepositWithdraw['加分']['data']              = $rs_a;
 
-$sql = "select 宿舍楼,concat(地点, ' ', DATE_FORMAT(时间, '%m-%d %H:%i'))  as 二级指标, 事件 as 积分分值, concat(姓名, ' ', 班级) as 积分项目, 房间 from data_dorm_menjin where 1=1 $whereSql and 事件='入' order by 时间 desc limit 5";
+$sql = "select 宿舍楼,concat(地点, ' ', DATE_FORMAT(时间, '%m-%d %H:%i'))  as 二级指标, 事件 as 积分分值, concat(姓名, ' ', 班级) as 积分项目, 房间 from data_dorm_menjin where 1=1 $whereSql and 事件='进' order by 时间 desc limit 5";
 $rs = $db->Execute($sql);
 $rs_a = $rs->GetArray();
 for($i=0;$i<sizeof($rs_a);$i++) {
@@ -67,7 +67,7 @@ for($i=0;$i<sizeof($rs_a);$i++) {
     $rs_a[$i]['图标颜色'] = 'success';
     $rs_a[$i]['积分分值'] = $rs_a[$i]['积分分值'];
 }
-$AnalyticsDepositWithdraw['扣分']['Title']              = "入";
+$AnalyticsDepositWithdraw['扣分']['Title']              = "进";
 $AnalyticsDepositWithdraw['扣分']['TopRightButton']     = [];
 $AnalyticsDepositWithdraw['扣分']['data']               = $rs_a;
 $AnalyticsDepositWithdraw['grid']                       = 8;
@@ -87,7 +87,7 @@ for($i=0;$i<sizeof($rs_a);$i++) {
     $rs_a[$i]['图标颜色']   = $colorArray[$i];
     $rs_a[$i]['头像']       = '/images/avatars/'.(($i)+1).'.png';
 }
-$AnalyticsSalesByCountries['Title']       = "出入最多的闸机";
+$AnalyticsSalesByCountries['Title']       = "进出最多的闸机";
 $AnalyticsSalesByCountries['SubTitle']    = "";
 $AnalyticsSalesByCountries['data']        = $rs_a;
 $AnalyticsSalesByCountries['TopRightOptions']      = $TopRightOptions;
@@ -132,8 +132,8 @@ $dataY = [];
 $dataX = array_keys($输出数据);
 $dataY[] = ["name"=>"班级总积分百分比","data"=>array_values($输出数据)];
 
-$ApexDonutChart['Title']       = "宿舍楼统计出入次数";
-$ApexDonutChart['SubTitle']    = "按宿舍楼统计出入次数的百分比";
+$ApexDonutChart['Title']       = "宿舍楼统计进出次数";
+$ApexDonutChart['SubTitle']    = "按宿舍楼统计进出次数的百分比";
 $ApexDonutChart['dataX']       = $dataX;
 $ApexDonutChart['dataY']       = $dataY;
 $ApexDonutChart['sql']         = $sql;
