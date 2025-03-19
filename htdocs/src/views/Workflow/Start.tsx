@@ -1,7 +1,7 @@
 import { useState, useEffect, Fragment } from 'react';
 import axios from 'axios';
 import { Box,Toolbar,AppBar,List,ListItem,ListItemButton,ListItemIcon,ListItemText,Typography,Paper,Button,Grid,styled, } from '@mui/material';
-import { Menu, Home, Settings, Add, Search, DesignServices, Description, Info, AttachFile } from '@mui/icons-material';
+import { Home, Settings } from '@mui/icons-material';
 import { authConfig, defaultConfig } from 'src/configs/auth'
 import CircularProgress from '@mui/material/CircularProgress'
 
@@ -64,23 +64,23 @@ const StartModel = ({ FlowId, handleReturnButton }: any) => {
   }
 
   const toggleAddTableDrawer = () => {
-
+    console.log("toggleAddTableDrawer")
   }
 
   const addUserHandleFilter = () => {
-
+    console.log("toggleAddTableDrawer")
   }
 
   const toggleImagesPreviewListDrawer = () => {
-
+    console.log("toggleAddTableDrawer")
   }
 
   const handleIsLoadingTipChange = () => {
-
+    console.log("toggleAddTableDrawer")
   }
 
   const setForceUpdate = () => {
-
+    console.log("toggleAddTableDrawer")
   }
   
   const backEndApi = "/data_workflow.php";

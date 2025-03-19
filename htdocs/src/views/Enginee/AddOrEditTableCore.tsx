@@ -171,7 +171,7 @@ interface AddOrEditTableType {
 
 const AddOrEditTableCore = (props: AddOrEditTableType) => {
     // ** Props
-    const { authConfig, externalId, id, action, addEditStructInfo, toggleAddTableDrawer, addUserHandleFilter, backEndApi, editViewCounter, IsGetStructureFromEditDefault, AddtionalParams, CSRF_TOKEN, dataGridLanguageCode, toggleImagesPreviewListDrawer, handleIsLoadingTipChange, setForceUpdate, additionalParameters, submitCounter, setSubmitCounter } = props
+    const { authConfig, externalId, id, action, addEditStructInfo, toggleAddTableDrawer, addUserHandleFilter, backEndApi, editViewCounter, IsGetStructureFromEditDefault, AddtionalParams, CSRF_TOKEN, dataGridLanguageCode, toggleImagesPreviewListDrawer, handleIsLoadingTipChange, setForceUpdate, additionalParameters, submitCounter } = props
 
     const i18n: any = {language: 'zh'}
 

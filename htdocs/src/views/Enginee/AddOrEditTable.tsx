@@ -1,5 +1,5 @@
 // ** React Imports
-import { forwardRef, Fragment, ReactElement, Ref } from 'react'
+import { forwardRef, Fragment, ReactElement, Ref, useState } from 'react'
 
 // ** MUI Imports
 import IconButton from '@mui/material/IconButton'
@@ -55,11 +55,13 @@ const AddOrEditTable = (props: AddOrEditTableType) => {
     addEditStructInfoNew.canceltext = ""
   }
 
+  const [submitCounter, setSubmitCounter] = useState<number>(0)
+
   return (
     <Fragment>
     {addEditViewShowInWindow ?
       <Grid sx={{ pb: 2, px: 1, mt: -2, position: 'relative' }} style={{ width: '100%' }}>
-        <AddOrEditTableCore authConfig={authConfig} externalId={externalId} id={id} action={action} addEditStructInfo={addEditStructInfoNew} open={open} toggleAddTableDrawer={toggleAddTableDrawer} addUserHandleFilter={addUserHandleFilter} backEndApi={backEndApi} editViewCounter={editViewCounter + 1} IsGetStructureFromEditDefault={IsGetStructureFromEditDefault} AddtionalParams={{"AddtionalParams":"AddtionalParams"}} CSRF_TOKEN={CSRF_TOKEN} dataGridLanguageCode={dataGridLanguageCode} toggleImagesPreviewListDrawer={toggleImagesPreviewListDrawer} handleIsLoadingTipChange={handleIsLoadingTipChange} setForceUpdate={setForceUpdate} additionalParameters={additionalParameters}/>
+        <AddOrEditTableCore authConfig={authConfig} externalId={externalId} id={id} action={action} addEditStructInfo={addEditStructInfoNew} open={open} toggleAddTableDrawer={toggleAddTableDrawer} addUserHandleFilter={addUserHandleFilter} backEndApi={backEndApi} editViewCounter={editViewCounter + 1} IsGetStructureFromEditDefault={IsGetStructureFromEditDefault} AddtionalParams={{"AddtionalParams":"AddtionalParams"}} CSRF_TOKEN={CSRF_TOKEN} dataGridLanguageCode={dataGridLanguageCode} toggleImagesPreviewListDrawer={toggleImagesPreviewListDrawer} handleIsLoadingTipChange={handleIsLoadingTipChange} setForceUpdate={setForceUpdate} additionalParameters={additionalParameters} submitCounter={submitCounter} setSubmitCounter={setSubmitCounter}/>
       </Grid>
       :
       <Dialog
@@ -78,7 +80,7 @@ const AddOrEditTable = (props: AddOrEditTableType) => {
           >
             <Icon icon='mdi:close' />
           </IconButton>
-          <AddOrEditTableCore authConfig={authConfig} externalId={externalId} id={id} action={action} addEditStructInfo={addEditStructInfo} open={open} toggleAddTableDrawer={toggleAddTableDrawer} addUserHandleFilter={addUserHandleFilter} backEndApi={backEndApi} editViewCounter={editViewCounter + 1} IsGetStructureFromEditDefault={0} AddtionalParams={{"AddtionalParams":"AddtionalParams"}} CSRF_TOKEN={CSRF_TOKEN} dataGridLanguageCode={dataGridLanguageCode} toggleImagesPreviewListDrawer={toggleImagesPreviewListDrawer} handleIsLoadingTipChange={handleIsLoadingTipChange} setForceUpdate={setForceUpdate} additionalParameters={additionalParameters}/>
+          <AddOrEditTableCore authConfig={authConfig} externalId={externalId} id={id} action={action} addEditStructInfo={addEditStructInfo} open={open} toggleAddTableDrawer={toggleAddTableDrawer} addUserHandleFilter={addUserHandleFilter} backEndApi={backEndApi} editViewCounter={editViewCounter + 1} IsGetStructureFromEditDefault={0} AddtionalParams={{"AddtionalParams":"AddtionalParams"}} CSRF_TOKEN={CSRF_TOKEN} dataGridLanguageCode={dataGridLanguageCode} toggleImagesPreviewListDrawer={toggleImagesPreviewListDrawer} handleIsLoadingTipChange={handleIsLoadingTipChange} setForceUpdate={setForceUpdate} additionalParameters={additionalParameters} submitCounter={submitCounter} setSubmitCounter={setSubmitCounter}/>
         </DialogContent>
       </Dialog>
     }
