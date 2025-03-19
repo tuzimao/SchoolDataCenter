@@ -545,8 +545,16 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                 if(!deleteChildTableItemArray.includes(i))   {
                     addEditStructInfo2.childtable.allFields.Default.map((FieldArray: any) => {
                         const NewFieldName = "ChildTable____" + i + "____" + FieldArray.name
-                        yupCheckMap[NewFieldName] = yup.string().required()
-                        console.log("NewFieldName", NewFieldName, childItemCounter)
+                        switch(FieldArray.type) {
+                            case 'input':
+                            case 'number':
+                                yupCheckMap[NewFieldName] = yup.string().required().label(FieldArray.label)
+                                console.log("NewFieldName", NewFieldName, FieldArray.type)
+                                break;
+                            case 'autocomplete':
+                            case 'jumpwindow':
+                                break;
+                        }
                     })
                 }
             }
@@ -775,7 +783,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
     }
 
     useEffect(() => {
-        if(submitCounter == 1 && handleSubmit) {
+        if(submitCounter > 0 && handleSubmit) {
             handleSubmit(onSubmit)();
         }
     }, [submitCounter, handleSubmit]);
@@ -4394,9 +4402,9 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                         })}
 
                         {addEditStructInfo2.childtable && addEditStructInfo2.childtable.allFields && addEditStructInfo2.childtable.submittext ?
-                            <Card key={"ChildtableSection"} sx={{ mb: 1 }}>
-                                <RepeaterWrapper>
-                                    <Repeater count={childItemCounter}>
+                            <Card key={"ChildtableSection"} sx={{ mb: 1, mx: 0, p:0 }}>
+                                <RepeaterWrapper sx={{ mx: 0 }}>
+                                    <Repeater count={childItemCounter} >
                                     {(i: number) => {
                                         const Tag = i === 0 ? Box : Collapse
                                         const NewRowId = "ChildTable____" + i + "____id"
@@ -4409,7 +4417,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                         <Tag key={i} className='repeater-wrapper' {...(i !== 0 ? { in: true } : {})}>
                                             <Grid container>
                                             <RepeatingContent item xs={12}>
-                                                <Grid container sx={{ pl: 1, pb: 1, pt: 0, pr: 1 }}>
+                                                <Grid container sx={{ pl: 0.5, pb: 1, pt: 0, pr: 1 }}>
                                                     {addEditStructInfo2.childtable.allFields.Default.map((FieldArray: any, FieldArray_index: number) => {
                                                         const NewFieldName = "ChildTable____" + i + "____" + FieldArray.name
                                                         const fieldError = errors[NewFieldName];
@@ -4423,7 +4431,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                             }
 
                                                             return (
-                                                                <Grid item xs={FieldArray.rules.xs} sm={FieldArray.rules.sm} key={"ChildAllFields_" + FieldArray_index}>
+                                                                <Grid item xs={FieldArray.rules.xs} sm={FieldArray.rules.sm} key={"ChildAllFields_" + FieldArray_index} sx={{ minWidth: '40px' }}>
                                                                     <FormControl fullWidth sx={{ mr: 0, mt: 3, ml: 1, pl: 1 }}>
                                                                         <Controller
                                                                             name={NewFieldName}
@@ -4562,7 +4570,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                             console.log("defaultValuesNew[NewFieldName]", NewFieldName, defaultValuesNew[NewFieldName])
 
                                                             return (
-                                                                <Grid item xs={FieldArray.rules.xs} sm={FieldArray.rules.sm} key={"ChildAllFields_" + FieldArray_index} sx={{ml:1, mr:1}} >
+                                                                <Grid item xs={FieldArray.rules.xs} sm={FieldArray.rules.sm} key={"ChildAllFields_" + FieldArray_index} sx={{ml:1, mr:1, minWidth: '40px'}} >
                                                                     <FormControl fullWidth sx={{ mr: 0, mt: 3, ml: 1 }}>
                                                                         <Controller
                                                                             name={NewFieldName}

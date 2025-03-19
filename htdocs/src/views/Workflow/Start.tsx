@@ -54,7 +54,7 @@ const StartModel = ({ FlowId, handleReturnButton }: any) => {
   console.log("flowInfor", flowInfor)
 
   const handleSaveData = () => {
-    setSubmitCounter(1)
+    setSubmitCounter(submitCounter+1)
     console.log("handleSaveData", "handleSaveData")    
   }
 
@@ -100,8 +100,8 @@ const StartModel = ({ FlowId, handleReturnButton }: any) => {
       {loading == false && (        
         <Box sx={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 64px)' }}>
           {/* 顶部 AppBar */}
-          <AppBar position="static">
-            <Toolbar>
+          <AppBar position="static" sx={{minHeight: '50px'}}>
+            <Toolbar sx={{minHeight: '50px'}}>
               <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                 {flowInfor.工作名称}
               </Typography>
@@ -114,7 +114,7 @@ const StartModel = ({ FlowId, handleReturnButton }: any) => {
           {/* 内容区域 (包括侧边栏和中间滚动区域) */}
           <Box sx={{ display: 'flex', flexGrow: 1 }}>
             {/* 左侧固定侧边栏 */}
-            <Sidebar sx={{ borderRadius: 0 }}>
+            <Sidebar sx={{ borderRadius: 0, minWidth: '60px' }}>
               <List>
                 {['表单', '附件', '会签', '流程'].map((text, index) => (
                   <ListItem key={text} disablePadding>
@@ -140,8 +140,8 @@ const StartModel = ({ FlowId, handleReturnButton }: any) => {
           </Box>
   
           {/* 底部固定 Toolbar */}
-          <AppBar position="static" color="default" sx={{ top: 'auto', bottom: 0 }}>
-            <Toolbar>
+          <AppBar position="static" color="default" sx={{ top: 'auto', bottom: 0, minHeight: '50px' }}>
+            <Toolbar sx={{minHeight: '50px'}}>
               <Button variant="contained" size="small" sx={{ ml: 'auto' }} onClick={()=>{
                 handleToNextStep()
               }}>

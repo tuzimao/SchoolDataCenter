@@ -789,9 +789,9 @@ if( $_GET['action']=="edit_default_data" && in_array('Edit',$Actions_In_List_Row
         if($_POST[$FieldName]!="") {
             $IsExecutionSQL = 1;
         }
-        if($_POST['ChildItemCounter']>0) {
-            $IsExecutionSQLChildTable = 1;
-        }
+    }
+    if($_POST['ChildItemCounter']>0) {
+        $IsExecutionSQLChildTable = 1;
     }
     //Check Permission For This Record
     //LimitEditAndDelete
@@ -894,7 +894,8 @@ if( $_GET['action']=="edit_default_data" && in_array('Edit',$Actions_In_List_Row
         }
     }
 
-    if($IsExecutionSQL || $IsExecutionSQLChildTable)   {
+    if($IsExecutionSQL && $IsExecutionSQLChildTable)   {
+        //先更新主表,再更新子表
         [$Record,$sql]  = InsertOrUpdateTableByArray($TableName, $FieldsArray, 'id', 0, "Update");
         if($Record->EOF) {
             UpdateOtherTableFieldAfterFormSubmit($FieldsArray['id']);
@@ -1012,6 +1013,84 @@ if( $_GET['action']=="edit_default_data" && in_array('Edit',$Actions_In_List_Row
             print_R(EncryptApiData($RS, $GLOBAL_USER));
             exit;
         }
+    }
+    else if($IsExecutionSQL == 0 && $IsExecutionSQLChildTable == 1)   {
+        //只更新子表, 不更新主表
+        //Relative Child Table Support
+        $Relative_Child_Table                   = $SettingMap['Relative_Child_Table'];
+        $Relative_Child_Table_Field_Name        = $SettingMap['Relative_Child_Table_Field_Name'];
+        $Relative_Child_Table_Parent_Field_Name = $SettingMap['Relative_Child_Table_Parent_Field_Name'];
+        $RS['status']   = "OK";
+        $RS['msg']      = $SettingMap['Tip_When_Edit_Success'];
+        if($Relative_Child_Table>0 && $Relative_Child_Table_Parent_Field_Name!="" && in_array($Relative_Child_Table_Parent_Field_Name,$MetaColumnNames)) {
+            $ChildSettingMap = returntablefield("form_formflow",'id',$Relative_Child_Table,'Setting')['Setting'];
+            $ChildSettingMap = unserialize(base64_decode($ChildSettingMap));
+            $ChildFormId                = returntablefield("form_formflow",'id',$Relative_Child_Table,'FormId')['FormId'];
+            $ChildTableName             = returntablefield("form_formname",'id',$ChildFormId,'TableName')['TableName'];
+            $ChildMetaColumnNames       = GLOBAL_MetaColumnNames($ChildTableName);
+            if($Relative_Child_Table_Field_Name!="" && in_array($Relative_Child_Table_Field_Name, $ChildMetaColumnNames) &&strpos($ChildSettingMap['Actions_In_List_Row'],'Edit')!==false) {
+                //Get All Fields
+                $readonlyIdArray            = explode(',',ForSqlInjection($_POST['readonlyIdArray']));
+                $db->BeginTrans();
+                $MultiSql                   = [];
+                $sql                        = "delete from $ChildTableName where $Relative_Child_Table_Parent_Field_Name = '".$RecordOriginal->fields[$Relative_Child_Table_Parent_Field_Name]."' and id not in ('".join("','",$readonlyIdArray)."');";
+                $db->Execute($sql);
+                $MultiSql[]                 = $sql;
+                $sql                        = "select * from form_formfield where FormId='$ChildFormId' and IsEnable='1' order by SortNumber asc, id asc";
+                $rs                         = $db->Execute($sql);
+                $ChildAllFieldsFromTable    = $rs->GetArray();
+                $ChildAllFieldsMap          = [];
+                $ChildItemCounter           = $_POST['ChildItemCounter'];
+                for($X=0;$X<$ChildItemCounter;$X++)                    {
+                    $ChildElement = [];
+                    foreach($ChildAllFieldsFromTable as $Item)  {
+                        $ChildFieldName = $Item['FieldName'];
+                        switch($Item['ShowType']) {
+                            case 'Hidden:Createtime':
+                                $ChildElement[$ChildFieldName] = date('Y-m-d H:i:s');
+                                break;
+                            case 'Hidden:CurrentUserIdAdd':
+                            case 'Hidden:CurrentUserIdAddEdit':
+                                $ChildElement[$ChildFieldName] = $GLOBAL_USER->USER_ID;
+                                break;
+                            case 'Hidden:CurrentStudentCodeAdd':
+                            case 'Hidden:CurrentStudentCodeAddEdit':
+                                if($GLOBAL_USER->学号=="") $GLOBAL_USER->学号 = $GLOBAL_USER->USER_ID;
+                                $ChildElement[$ChildFieldName] = $GLOBAL_USER->学号;
+                                break;
+                            default:
+                                $ChildElement[$ChildFieldName] = ForSqlInjection($_POST['ChildTable____'.$X.'____'.$ChildFieldName]);
+                                break;
+                        }
+                    }
+                    $deleteChildTableItemArray = explode(',',$_POST['deleteChildTableItemArray']);
+                    if(!in_array($X, $deleteChildTableItemArray)) {
+                        $ChildElement[$Relative_Child_Table_Parent_Field_Name] = $RecordOriginal->fields[$Relative_Child_Table_Parent_Field_Name];
+                        $ChildKeys      = array_keys($ChildElement);
+                        $ChildValues    = array_values($ChildElement);
+                        $sql            = "insert into $ChildTableName (".join(',',$ChildKeys).") values('".join("','",$ChildValues)."');";
+                        $db->Execute($sql);
+                        $MultiSql[]     = $sql;
+                    }
+                }
+                $db->CommitTrans();
+                $RS['MultiSql'] = $MultiSql;
+            }
+        }
+
+        //functionNameIndividual
+        $functionNameIndividual = "plugin_".$TableName."_".$Step."_edit_default_data_after_submit";
+        if(function_exists($functionNameIndividual))  {
+            $functionNameIndividual($id);
+        }
+        //SystemLogRecord
+        if(in_array($SettingMap['OperationLogGrade'],["EditAndDeleteOperation","AddEditAndDeleteOperation","AllOperation"]))  {
+            $sql            = "select * from $TableName where ".$MetaColumnNames[0]." = '$id'";
+            $Record         = $db->Execute($sql);
+            SystemLogRecord("edit_default_data", json_encode($RecordOriginal->fields), json_encode($Record->fields));
+        }
+        print_R(EncryptApiData($RS, $GLOBAL_USER));
+        exit;
     }
     else {
         $RS = [];
