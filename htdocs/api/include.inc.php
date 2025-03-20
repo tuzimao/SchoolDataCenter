@@ -757,6 +757,37 @@ function getCurrentXueQi() {
 	return $selected;
 }
 
+
+function AddOneRecordToTable($TableName, $FormId, $DefaultValue) {
+    global $TableName, $db, $GLOBAL_USER;
+    $DefaultFieldValue = $DefaultValue;
+    $sql        = "select * from form_formfield where FormId='$FormId' and IsEnable='1' order by SortNumber asc, id asc";
+    $rs         = $db->Execute($sql);
+    $AllFieldsFromTable   = $rs->GetArray();
+    $AllFieldsMap = [];
+    foreach($AllFieldsFromTable as $Item)  {
+        $Item['Setting']    = json_decode($Item['Setting'],true);
+        $FieldName  = $Item['FieldName'];
+        $ShowType   = $Item['ShowType'];
+        switch($ShowType) {
+            case 'Input:Increasement[Fromat1]':
+                $DefaultFieldValue[$FieldName] = $DefaultValue['id'];
+                break;
+            case 'Hidden:Createtime':
+                $DefaultFieldValue[$FieldName] = date('Y-m-d H:i:s');
+                break;
+            case 'Hidden:CurrentUserIdAdd':
+                $DefaultFieldValue[$FieldName] = $GLOBAL_USER->USER_ID;
+                break;
+            case 'Hidden:CurrentStudentCodeAdd':
+                if($GLOBAL_USER->学号=="") $GLOBAL_USER->学号 = $GLOBAL_USER->USER_ID;
+                $DefaultFieldValue[$FieldName] = $GLOBAL_USER->学号;
+                break;
+        }
+    }
+    [$rs,$sql] = InsertOrUpdateTableByArray($TableName, $DefaultFieldValue, "工作ID,FlowId", 0, 'Insert');
+}
+
 if(is_file("function.xmjs.php")) {
 	require_once('function.xmjs.php');
 }

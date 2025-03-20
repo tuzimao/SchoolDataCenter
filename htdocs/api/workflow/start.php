@@ -9,6 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 require_once('../include.inc.php');
 
+
 CheckAuthUserLoginStatus();
 
 $payload        = file_get_contents('php://input');
@@ -18,7 +19,7 @@ if($_GET['action'] == 'MyNewWorkflow')      {
     $sql = "select form_formflow.id as FlowId, form_formflow.FlowName, form_formflow.FormId, form_formname.Memo, form_formname.FormGroup from form_formflow, form_formname 
             where 
                 form_formflow.NodeType = '工作流' and 
-                form_formflow.Step >= '1' and 
+                form_formflow.Step = '1' and 
                 form_formflow.FaceTo = 'AuthUser' and 
                 form_formflow.FormId = form_formname.id
             order by 
@@ -93,7 +94,8 @@ if($_GET['action'] == 'NewWorkflow' && $FlowId > 0)      {
     $sql        = "select * from form_formname where id='$FormId'";
     $rs         = $db->Execute($sql);
     $FromInfo   = $rs->fields;
-    $FormName   = $FromInfo['FullName'];
+    $FormName       = $FromInfo['FullName'];
+    $TableName      = $FromInfo['TableName'];
 
     //获得ID
     $sql        = "select MAX(id) AS NUM from form_flow_run where FlowId='$FlowId'";
@@ -129,7 +131,13 @@ if($_GET['action'] == 'NewWorkflow' && $FlowId > 0)      {
     $Element['工作创建时间']    = date('Y-m-d H:i:s');
     [$rs,$sql] = InsertOrUpdateTableByArray("form_flow_run_process",$Element,"工作ID,用户ID,流程步骤ID",0,'Insert');
 
-    $data                  = [];
+    //业务数据表-初始化一条记录进去
+    $DefaultValue['id'] = $工作ID;
+    AddOneRecordToTable($TableName, $FormId, $DefaultValue);
+
+    $data                   = [];
+    $data['id']             = EncryptID($工作ID); 
+    $data['工作ID']         = $工作ID; 
     $data['工作名称']       = $工作名称; 
     $data['表单名称']       = $FormName; 
     $data['步骤名称']       = "主办(第1步： ".$FlowName.")"; 
@@ -140,10 +148,5 @@ if($_GET['action'] == 'NewWorkflow' && $FlowId > 0)      {
     print_R(json_encode($RS));
     exit;
 }
-
-
-
-
-
 
 ?>

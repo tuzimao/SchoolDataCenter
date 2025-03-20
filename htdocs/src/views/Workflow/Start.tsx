@@ -84,7 +84,6 @@ const StartModel = ({ FlowId, handleReturnButton }: any) => {
   }
   
   const backEndApi = "/data_workflow.php";
-  const idValue = "dlpTRmdZcVZIaU0wcE1FUGN4MmxrZ3x8Ojo2TVhVWHJSMjFuQVlqTEFpRWxHMXJ3fHw|"
   const AddtionalParams = { FlowId }
 
   return (
@@ -133,7 +132,7 @@ const StartModel = ({ FlowId, handleReturnButton }: any) => {
             <ScrollableContent>
               <Paper sx={{ padding: 2 }}>
                 <Grid sx={{ mx: 2, px: 2, pb: 2}}>
-                  <AddOrEditTableCore authConfig={authConfig} externalId={0} id={idValue} action={'edit_default'} addEditStructInfo={{allFields:{}, }} open={true} toggleAddTableDrawer={toggleAddTableDrawer} addUserHandleFilter={addUserHandleFilter} backEndApi={backEndApi} editViewCounter={1} IsGetStructureFromEditDefault={1} AddtionalParams={AddtionalParams} CSRF_TOKEN={""} dataGridLanguageCode={'zhCN'} toggleImagesPreviewListDrawer={toggleImagesPreviewListDrawer} handleIsLoadingTipChange={handleIsLoadingTipChange} setForceUpdate={setForceUpdate} additionalParameters={AddtionalParams} submitCounter={submitCounter} setSubmitCounter={setSubmitCounter}/>
+                  <AddOrEditTableCore authConfig={authConfig} externalId={0} id={flowInfor.id} action={'edit_default'} addEditStructInfo={{allFields:{}, }} open={true} toggleAddTableDrawer={toggleAddTableDrawer} addUserHandleFilter={addUserHandleFilter} backEndApi={backEndApi} editViewCounter={1} IsGetStructureFromEditDefault={1} AddtionalParams={AddtionalParams} CSRF_TOKEN={""} dataGridLanguageCode={'zhCN'} toggleImagesPreviewListDrawer={toggleImagesPreviewListDrawer} handleIsLoadingTipChange={handleIsLoadingTipChange} setForceUpdate={setForceUpdate} additionalParameters={AddtionalParams} submitCounter={submitCounter} setSubmitCounter={setSubmitCounter}/>
                 </Grid>
               </Paper>
             </ScrollableContent>
@@ -145,7 +144,7 @@ const StartModel = ({ FlowId, handleReturnButton }: any) => {
               <Button variant="contained" size="small" sx={{ ml: 'auto' }} onClick={()=>{
                 handleToNextStep()
               }}>
-                转文下一步
+                转交下一步
               </Button>
               <Button variant="outlined" size="small" sx={{ ml: 2 }} onClick={()=>{
                 handleSaveData()

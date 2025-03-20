@@ -896,7 +896,12 @@ if( $_GET['action']=="edit_default_data" && in_array('Edit',$Actions_In_List_Row
 
     if($IsExecutionSQL && $IsExecutionSQLChildTable)   {
         //先更新主表,再更新子表
-        [$Record,$sql]  = InsertOrUpdateTableByArray($TableName, $FieldsArray, 'id', 0, "Update");
+        if($IsExecutionSQLChildTable == 1)  {
+            [$Record,$sql]  = InsertOrUpdateTableByArray($TableName, $FieldsArray, 'id', 0, "InsertOrUpdate");
+        }
+        else {
+            [$Record,$sql]  = InsertOrUpdateTableByArray($TableName, $FieldsArray, 'id', 0, "Update");
+        }
         if($Record->EOF) {
             UpdateOtherTableFieldAfterFormSubmit($FieldsArray['id']);
             $Msg_Reminder_Object_From_Add_Or_Edit_Result = Msg_Reminder_Object_From_Add_Or_Edit($TableName, $FieldsArray['id']);
