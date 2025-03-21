@@ -149,4 +149,28 @@ if($_GET['action'] == 'NewWorkflow' && $FlowId > 0)      {
     exit;
 }
 
+
+if($_GET['action'] == 'GetMyWorkList')      {
+    $sql    = "select count(*) as NUM from form_flow_run where 发起用户='".$GLOBAL_USER->USER_ID."'";
+    $rs     = $db->Execute($sql);
+    $rs_a   = $rs->GetArray();
+    $totalCount = $rs_a[0]['NUM'];
+
+    $pageid     = intval($_POST['pageid']);
+    $pageSize   = intval($_POST['pageSize']);
+    if($pageSize<=0)    $pageSize   = 15;
+    $From   = $pageid * $pageSize;
+    $To     = $pageSize;
+    $sql    = "select id,工作ID,工作名称,开始时间,删除标记,是否归档,工作等级 from form_flow_run where 发起用户='".$GLOBAL_USER->USER_ID."' order by id desc limit $From, $To";
+    $rs     = $db->Execute($sql);
+    $rs_a   = $rs->GetArray();
+    $RS     = [];
+    $RS['data']         = $rs_a;
+    $RS['totalCount']   = $totalCount;
+    $RS['status']       = 'ok';
+    print_R(json_encode($RS));
+    exit;
+}
+
+
 ?>
