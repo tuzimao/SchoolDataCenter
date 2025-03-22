@@ -1,55 +1,42 @@
-import { useState, useEffect, ChangeEvent } from 'react';
-import axios from 'axios';
+import { useState, useEffect, ChangeEvent } from 'react'
+import axios from 'axios'
 import { authConfig, defaultConfig } from 'src/configs/auth'
 import CircularProgress from '@mui/material/CircularProgress'
-import {
-  Grid, 
-  Box,
-  Paper,
-  Typography
-} from '@mui/material';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { Grid, Box, Paper, Typography, Button, TextField } from '@mui/material'
+import { DataGrid, GridColDef } from '@mui/x-data-grid'
+import { useRouter } from 'next/router'
 
-
-interface WorkItem {
-  serialNumber: string;
-  workId: string;
-  workName: string;
-  startTime: string;
-  isDeleted: boolean;
-  isArchived: boolean;
-  workLevel: number;
-  [key: string]: string | boolean | number; // Index signature
-}
 
 const columns: GridColDef[] = [
-  { field: 'id', headerName: '流水号', width: 120, headerAlign: 'center', align: 'center' },
   { field: '工作ID', headerName: '工作ID', width: 120, headerAlign: 'center', align: 'center' },
-  { field: '工作名称', headerName: '工作名称', width: 200, headerAlign: 'center', align: 'center' },
-  { field: '开始时间', headerName: '开始时间', width: 150, headerAlign: 'center', align: 'center' },
-  { field: '删除标记', headerName: '删除标记', width: 100, headerAlign: 'center', align: 'center',
-    valueFormatter: (params) => params.value ? '是' : '否' 
-  },
-  { field: '是否归档', headerName: '是否归档', width: 100, headerAlign: 'center', align: 'center',
-    valueFormatter: (params) => params.value ? '是' : '否'
-  },
-  { field: '工作等级', headerName: '工作等级', width: 100, headerAlign: 'center', align: 'center' }
+  { field: '工作名称', headerName: '工作名称', width: 400, headerAlign: 'center', align: 'center' },
+  { field: '我经办的步骤', headerName: '我经办的步骤(流程图)', width: 400, headerAlign: 'center', align: 'center' },
+  { field: '发起人', headerName: '发起人', width: 200, headerAlign: 'center', align: 'center' },
+  { field: '状态', headerName: '状态', width: 200, headerAlign: 'center', align: 'center' },
+  { field: '到达时间', headerName: '到达时间', width: 200, headerAlign: 'center', align: 'center' }
 ];
 
 const MyModel = () => {
-  const [data, setData] = useState<WorkItem[]>([]);
-  const [paginationModel, setPaginationModel] = useState({
-    page: 0,
-    pageSize: 10,
-  });
+  const [data, setData] = useState<any[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(false);
+
+  const [pageSize, setPageSize] = useState<number>(15)
+  const [page, setPage] = useState<number>(0)
+  const [search, setSearch] = useState<string>('')
+  const [workType, setWorkType] = useState<string>('todo')
+  const [buttonToDo, setButtonToDo] = useState<string>('contained')
+  const [buttonDone, setButtonDone] = useState<string>('outlined')
+  const [buttonAll, setButtonAll] = useState<string>('outlined')
+  const [counter, setCounter] = useState<number>(0)
+  
+  const router = useRouter()
 
   const fetchData = async () => {
     setLoading(true);
     try {
       const storedToken = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
-      const response = await axios.post(authConfig.backEndApiHost + 'workflow/start.php?action=GetMyWorkList', { pageid: paginationModel.page, pageSize: paginationModel.pageSize }, {
+      const response = await axios.post(authConfig.backEndApiHost + 'workflow/start.php?action=GetMyWorkList', { pageid: page, pageSize, search, workType, counter }, {
         headers: {
           Authorization: storedToken,
           'Content-Type': 'application/json'
@@ -67,10 +54,51 @@ const MyModel = () => {
 
   useEffect(() => {
     fetchData();
-  }, [paginationModel]);
+  }, [page, pageSize, search, counter, workType]);
 
   return (
     <Box sx={{ height: 600, width: '100%' }}>
+      <Grid item xs={12} lg={12} sx={{ display: 'flex' }}>
+        <Button sx={{ my: 3, mr: 5 }} size="small" variant='outlined' onClick={()=>{
+          router.push('new')
+        }}>新建工作</Button>
+        <Button sx={{ my: 3, mr: 5 }} size="small" variant={buttonToDo as any} onClick={()=>{
+          setButtonToDo('contained')
+          setButtonDone('outlined')
+          setButtonAll('outlined')
+          setWorkType('todo')
+          setSearch('')
+        }}>待办工作</Button>
+        <Button sx={{ my: 3, mr: 5 }} size="small" variant={buttonDone as any} onClick={()=>{
+          setButtonToDo('outlined')
+          setButtonDone('contained')
+          setButtonAll('outlined')
+          setWorkType('done')
+          setSearch('')
+        }}>办结工作</Button>
+        <Button sx={{ my: 3, mr: 5 }} size="small" variant={buttonAll as any} onClick={()=>{
+          setButtonToDo('outlined')
+          setButtonDone('outlined')
+          setButtonAll('contained')
+          setWorkType('all')
+          setSearch('')
+        }}>全部工作</Button>
+        <Button sx={{ my: 3, mr: 5 }} size="small" variant='outlined' onClick={()=>{
+          setCounter(counter+1)
+        }}>刷新</Button>
+        <TextField
+          value={search}
+          label={'搜索'}
+          onChange={(event) => setSearch(event.target.value)}
+          sx={{mt: 3}}
+          InputProps={{
+            style: { height: '32px' }
+          }}
+          InputLabelProps={{
+            shrink: true
+          }}
+        />
+      </Grid>
       <DataGrid
           autoHeight
           rows={data}
@@ -81,9 +109,11 @@ const MyModel = () => {
           filterMode="server"
           loading={loading}
           rowsPerPageOptions={[10, 15, 20, 30]}
-          page={paginationModel.page} // 使用 page 替代 paginationModel
-          pageSize={paginationModel.pageSize} // 使用 pageSize 替代 paginationModel
+          page={page}
+          pageSize={pageSize}
           disableColumnMenu={true}
+          onPageChange={newPage => setPage(newPage)}
+          onPageSizeChange={(newPageSize: number) => setPageSize(newPageSize)}
       />
     </Box>
   );
