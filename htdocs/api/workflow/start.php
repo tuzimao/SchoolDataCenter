@@ -110,7 +110,8 @@ if($_GET['action'] == 'NewWorkflow' && $FlowId > 0)      {
     $Element['FlowId'] = $FlowId;
     $Element['工作ID'] = $工作ID;
     $Element['工作名称'] = $工作名称;
-    $Element['发起用户'] = $GLOBAL_USER->USER_ID;
+    $Element['发起人'] = $GLOBAL_USER->USER_ID;
+    $Element['发起人姓名'] = $GLOBAL_USER->USER_NAME;
     $Element['发起部门'] = $GLOBAL_USER->DEPT_ID;
     $Element['开始时间'] = date('Y-m-d H:i:s');
     $Element['FormId'] = $FormId;
@@ -121,12 +122,14 @@ if($_GET['action'] == 'NewWorkflow' && $FlowId > 0)      {
     $Element = []; 
     $Element['FormId'] = $FormId;
     $Element['FlowId'] = $FlowId;
+    $Element['FlowName'] = $FlowName;
+    $Element['经办步骤'] = "(第".$Step."步： ".$FlowName.")"; 
     $Element['RunId']  = $InsertID;
     $Element['用户ID'] = $GLOBAL_USER->USER_ID;
     $Element['工作ID'] = $工作ID;
     $Element['工作接收时间']    = date('Y-m-d H:i:s');
     $Element['工作转交办结']    = "";
-    $Element['步骤状态']        = "";
+    $Element['步骤状态']        = "办理中";
     $Element['流程步骤ID']      = $Step;
     $Element['工作创建时间']    = date('Y-m-d H:i:s');
     [$rs,$sql] = InsertOrUpdateTableByArray("form_flow_run_process",$Element,"工作ID,用户ID,流程步骤ID",0,'Insert');
@@ -165,15 +168,30 @@ if($_GET['action'] == 'GetMyWorkList')      {
         $AddSql = "";
     }
 
-    $sql    = "select count(*) as NUM from form_flow_run where 发起用户='".$GLOBAL_USER->USER_ID."' $AddSql ";
+    $sql    = "select count(*) as NUM from form_flow_run where 发起人='".$GLOBAL_USER->USER_ID."' $AddSql ";
     $rs     = $db->Execute($sql);
     $rs_a   = $rs->GetArray();
     $totalCount = $rs_a[0]['NUM'];
 
-    $sql    = "select id,工作ID,工作名称,开始时间,删除标记,是否归档,工作等级 from form_flow_run where 发起用户='".$GLOBAL_USER->USER_ID."' $AddSql order by id desc limit $From, $To";
+    $sql    = "select 
+                    form_flow_run.id,form_flow_run.工作ID,工作名称,开始时间,删除标记,是否归档,工作等级,发起人,发起人姓名,
+                    form_flow_run_process.工作接收时间,
+                    form_flow_run_process.流程步骤ID ,
+                    form_flow_run_process.工作转交办结 ,
+                    form_flow_run_process.步骤状态 ,
+                    form_flow_run_process.经办步骤 ,
+                    form_flow_run_process.id as processid
+                from 
+                    form_flow_run, form_flow_run_process
+                where 
+                    form_flow_run.工作ID = form_flow_run_process.工作ID
+                    and form_flow_run_process.用户ID='".$GLOBAL_USER->USER_ID."' 
+                    $AddSql 
+                order by id desc limit $From, $To";
     $rs     = $db->Execute($sql);
     $rs_a   = $rs->GetArray();
     $RS     = [];
+    $RS['sql']          = $sql;
     $RS['data']         = $rs_a;
     $RS['totalCount']   = $totalCount;
     $RS['status']       = 'ok';

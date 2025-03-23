@@ -10,10 +10,10 @@ import { useRouter } from 'next/router'
 const columns: GridColDef[] = [
   { field: '工作ID', headerName: '工作ID', width: 120, headerAlign: 'center', align: 'center' },
   { field: '工作名称', headerName: '工作名称', width: 400, headerAlign: 'center', align: 'center' },
-  { field: '我经办的步骤', headerName: '我经办的步骤(流程图)', width: 400, headerAlign: 'center', align: 'center' },
-  { field: '发起人', headerName: '发起人', width: 200, headerAlign: 'center', align: 'center' },
-  { field: '状态', headerName: '状态', width: 200, headerAlign: 'center', align: 'center' },
-  { field: '到达时间', headerName: '到达时间', width: 200, headerAlign: 'center', align: 'center' }
+  { field: '经办步骤', headerName: '我经办的步骤(流程图)', width: 300, headerAlign: 'center', align: 'center' },
+  { field: '发起人姓名', headerName: '发起人', width: 120, headerAlign: 'center', align: 'center' },
+  { field: '步骤状态', headerName: '步骤状态', width: 120, headerAlign: 'center', align: 'center' },
+  { field: '工作接收时间', headerName: '到达时间', width: 200, headerAlign: 'center', align: 'center' }
 ];
 
 const MyModel = () => {
