@@ -19,6 +19,8 @@ const ChatIndexAPP = () => {
     const AiChatId = 1
     const wholePage = true
 
+    const QuestionGuideTemplate = '你是一个AI智能助手，可以回答和解决我的问题。请结合前面的对话记录，以用户自己的角度，帮用户生成 3 个问题，用于引导用户来进行继续提问。要求提问的角度要站在用户的角度生成提问句子。问题的长度应小于20个字符，要求使用UTF-8编码，按 JSON 格式返回: ["问题1", "问题2", "问题3"]'
+
     const fetchData = async () => {
         setLoading(true);
         try {
@@ -30,7 +32,7 @@ const ChatIndexAPP = () => {
             }
           });
           const data = response.data;
-          setApp(data.data);
+          setApp({...data.data, id: "ChatApp-" + data.data.id, AppName2: data.data.AppModel, avatar: '1.png', Model: {}, QuestionGuideTemplate })
           setPageModel("main")
         } catch (error) {
           console.error('Error fetching data:', error);
