@@ -22,7 +22,7 @@ const ChatIndex = (props: any) => {
   // ** Hook
   const { t } = useTranslation()
   const auth = useAuth()
-  const { app, authConfig, setHistoryCounter, setPageModel } = props
+  const { app, authConfig, setHistoryCounter, setPageModel, wholePage } = props
 
   const [refreshChatCounter, setRefreshChatCounter] = useState<number>(1)
   const [chatId, setChatId] = useState<number | string>(-1)
@@ -261,13 +261,15 @@ const ChatIndex = (props: any) => {
     }
   }
 
-  const [innerHeight, setInnerHeight] = useState<number | string>(window.innerHeight - 72)
+  const minusHeight = wholePage ? 0 : 72
+
+  const [innerHeight, setInnerHeight] = useState<number | string>(window.innerHeight - minusHeight)
   console.log("innerHeight innerHeight", innerHeight)
   console.log("innerHeight innerWidth", window.innerWidth)
 
   useEffect(() => {
     const handleResize = () => {
-        setInnerHeight(window.innerHeight - 72);
+        setInnerHeight(window.innerHeight - minusHeight);
     };
     handleResize();
   }, []);
@@ -291,6 +293,7 @@ const ChatIndex = (props: any) => {
       maxRows={maxRows}
       setStopMsg={setStopMsg}
       stepingMessage={stepingMessage}
+      wholePage={wholePage}
       />
     </Box>
   )

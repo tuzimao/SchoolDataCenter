@@ -33,4 +33,18 @@ if($_GET['action'] == 'getAppList')  {
   exit;
 }
 
+if($_GET['action'] == 'getApp')  {
+  $id           = intval($_POST['id']);
+  $sql          = "select * from data_ai_app where id = '$id'";
+  $rs           = $db->Execute($sql);
+  $rs_a         = (array)$rs->GetArray();
+  $rs_a[0]['id2'] = EncryptID($rs_a[0]['id']);
+  $RS           = [];
+  $RS['data']   = $rs_a[0];
+  $RS['status'] = "OK";
+  $RS['msg']    = __("Success");
+  print json_encode($RS);
+  exit;
+}
+
 ?>

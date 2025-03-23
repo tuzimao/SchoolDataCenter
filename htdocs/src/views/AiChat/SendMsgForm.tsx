@@ -62,7 +62,7 @@ const SendMsgForm = (props: any) => {
   };
 
   return (
-    <Box sx={{ width: '100%', }} >
+    <Box sx={{ width: '100%', border: 1, borderColor: 'rgba(150, 150, 150, 0.5)', borderStyle: 'dashed', borderRadius: 0.8 }} >
       <Form onSubmit={handleSendMsg} sx={{mb: 0, pb: 1, mx: 0, px: 0, borderRadius: theme.shape.borderRadius, backgroundColor: theme.palette.background.paper,}}>
         <Box sx={{ display: 'flex', position: 'relative', flexGrow: 1 }}>
           <TextareaAutosize
@@ -93,7 +93,7 @@ const SendMsgForm = (props: any) => {
             <CircularProgress size={20} color="inherit"/>
           </Box>
           :
-          <Button type='submit' variant='contained' disabled={sendButtonDisable}  sx={{ bottom: -1.5, right: 0, position: 'absolute', whiteSpace: 'nowrap' }} >
+          <Button type='submit' variant='contained' disabled={sendButtonDisable}  sx={{ bottom: -3.5, right: 0, position: 'absolute', whiteSpace: 'nowrap' }} >
             {sendButtonText}
           </Button>
           }

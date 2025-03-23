@@ -97,7 +97,7 @@ const ChatLog = (props: any) => {
   // ** Props
   const { t } = useTranslation()
   const { authConfig, data, chatName, app, sendButtonDisable, handleDeleteOneChatLogById, sendMsg, store, questionGuide, setClearButtonClickEvent, setPageModel,
-          sendButtonLoading, sendButtonText, sendInputText, rowInMsg, handleSetRowInMsg, maxRows, setStopMsg, stepingMessage
+          sendButtonLoading, sendButtonText, sendInputText, rowInMsg, handleSetRowInMsg, maxRows, setStopMsg, stepingMessage, wholePage
         } = props
 
   const handleSendMsg = (msg: string) => {
@@ -276,11 +276,13 @@ const ChatLog = (props: any) => {
           }}>
             <Icon icon='lineicons:trash-3' fontSize='inherit' />
           </IconButton>
-          <IconButton aria-label='capture screenshot' color='secondary' onClick={()=>{
-            setPageModel("Main")
-          }}>
-            <Icon icon='ic:twotone-keyboard-arrow-left' fontSize='inherit' />
-          </IconButton>
+          {wholePage == false && (
+            <IconButton aria-label='capture screenshot' color='secondary' onClick={()=>{
+              setPageModel("Main")
+            }}>
+              <Icon icon='ic:twotone-keyboard-arrow-left' fontSize='inherit' />
+            </IconButton>
+          )}
         </Box>
       </Box>
       <Box ref={chatArea} sx={{ height: '100%', width: '100%', p: 3, pb: 6, overflowY: 'auto', overflowX: 'hidden' }}>

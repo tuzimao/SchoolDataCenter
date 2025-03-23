@@ -178,7 +178,7 @@ const AppAiChatList = (props: any) => {
           )}
           {pageModel == "ChatWithApp" && (
             <Fragment>
-              <ChatIndex authConfig={authConfig} app={app} historyCounter={historyCounter} setHistoryCounter={setHistoryCounter} setPageModel={setPageModel}/>
+              <ChatIndex authConfig={authConfig} app={app} historyCounter={historyCounter} setHistoryCounter={setHistoryCounter} setPageModel={setPageModel} wholePage={false} />
             </Fragment>
           )}
         </Grid>
