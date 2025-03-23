@@ -10,7 +10,6 @@ $USER_ID = $GLOBAL_USER->USER_ID;
 $payload        = file_get_contents('php://input');
 $_POST          = json_decode($payload,true);
 
-
 if($_GET['action'] == 'getAppList')  {
   $sql          = "select * from data_ai_app order by OrderId asc";
   $rs           = $db->Execute($sql);
@@ -24,7 +23,6 @@ if($_GET['action'] == 'getAppList')  {
   foreach($Data as $Key=>$Value) {
     $AppList[] = ['title'=>$Key, 'children'=>$Value];
   }
-
   $RS           = [];
   $RS['data']   = $AppList;
   $RS['status'] = "OK";

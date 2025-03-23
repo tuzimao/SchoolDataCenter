@@ -9,7 +9,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 require_once('../include.inc.php');
 
-
 CheckAuthUserLoginStatus();
 
 $payload        = file_get_contents('php://input');
@@ -79,8 +78,10 @@ if($_GET['action'] == 'SearchWorkflow' && $keyword != '')      {
     exit;
 }
 
-$FlowId = intval(DecryptID($_POST['FlowId']));
-if($_GET['action'] == 'NewWorkflow' && $FlowId > 0)      {
+$FlowId     = intval(DecryptID($_POST['FlowId']));
+$processid  = intval($_POST['processid']);
+$runid      = intval($_POST['runid']);
+if($_GET['action'] == 'NewWorkflow' && $FlowId > 0 && $processid == 0)      {
     $sql        = "select * from form_formflow where id='$FlowId'";
     $rs         = $db->Execute($sql);
     $FromInfo   = $rs->fields;
@@ -174,7 +175,11 @@ if($_GET['action'] == 'GetMyWorkList')      {
     $totalCount = $rs_a[0]['NUM'];
 
     $sql    = "select 
-                    form_flow_run.id,form_flow_run.工作ID,工作名称,开始时间,删除标记,是否归档,工作等级,发起人,发起人姓名,
+                    form_flow_run.id,
+                    form_flow_run.FormId,
+                    form_flow_run.FlowId,
+                    form_flow_run.工作ID,
+                    工作名称,开始时间,删除标记,是否归档,工作等级,发起人,发起人姓名,
                     form_flow_run_process.工作接收时间,
                     form_flow_run_process.流程步骤ID ,
                     form_flow_run_process.工作转交办结 ,
@@ -190,9 +195,15 @@ if($_GET['action'] == 'GetMyWorkList')      {
                 order by id desc limit $From, $To";
     $rs     = $db->Execute($sql);
     $rs_a   = $rs->GetArray();
+    $NewRsa = [];
+    foreach($rs_a as $Item) {
+        $Item['FlowId'] = EncryptID($Item['FlowId']);
+        $Item['工作ID2'] = EncryptID($Item['工作ID']);
+        $NewRsa[]       = $Item;
+    }
     $RS     = [];
     $RS['sql']          = $sql;
-    $RS['data']         = $rs_a;
+    $RS['data']         = $NewRsa;
     $RS['totalCount']   = $totalCount;
     $RS['status']       = 'ok';
     print_R(json_encode($RS));

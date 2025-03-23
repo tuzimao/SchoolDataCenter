@@ -233,7 +233,7 @@ const NewModel = () => {
         </Box>
       )}
       {pageModel == "Start" && (
-        <StartModel FlowId={flowId} handleReturnButton={handleReturnButton} />
+        <StartModel FlowId={flowId} handleReturnButton={handleReturnButton} flowRecord={null} />
       )}
     </Fragment>
   );

@@ -20,7 +20,7 @@ const Sidebar = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(2),
 }));
 
-const StartModel = ({ FlowId, handleReturnButton }: any) => {
+const StartModel = ({ FlowId, handleReturnButton, flowRecord }: any) => {
 
   const [loading, setLoading] = useState(true);
   const [flowInfor, setFlowInfor] = useState<any>(null);
@@ -47,7 +47,11 @@ const StartModel = ({ FlowId, handleReturnButton }: any) => {
       }
     };
 
-    FlowId && FlowId != undefined && fetchWorkItems();
+    FlowId && FlowId != undefined && flowRecord == null && fetchWorkItems();
+    if(flowRecord) {
+      setLoading(false)
+      setFlowInfor({...flowRecord, id: flowRecord.工作ID2})
+    }
 
   }, [FlowId]);
 
@@ -99,7 +103,7 @@ const StartModel = ({ FlowId, handleReturnButton }: any) => {
       {loading == false && (        
         <Box sx={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 64px)' }}>
           {/* 顶部 AppBar */}
-          <AppBar position="static" sx={{minHeight: '50px'}}>
+          <AppBar position="static" color="default" sx={{minHeight: '50px', borderTopLeftRadius: '8px', borderTopRightRadius: '8px' }}>
             <Toolbar sx={{minHeight: '50px'}}>
               <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
                 {flowInfor.工作名称}
@@ -111,7 +115,7 @@ const StartModel = ({ FlowId, handleReturnButton }: any) => {
           </AppBar>
   
           {/* 内容区域 (包括侧边栏和中间滚动区域) */}
-          <Box sx={{ display: 'flex', flexGrow: 1 }}>
+          <Box sx={{ display: 'flex', flexGrow: 1 }} color="default" >
             {/* 左侧固定侧边栏 */}
             <Sidebar sx={{ borderRadius: 0, minWidth: '60px' }}>
               <List>
