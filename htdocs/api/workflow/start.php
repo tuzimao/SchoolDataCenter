@@ -84,19 +84,19 @@ $runid      = intval($_POST['runid']);
 if($_GET['action'] == 'NewWorkflow' && $FlowId > 0 && $processid == 0)      {
     $sql        = "select * from form_formflow where id='$FlowId'";
     $rs         = $db->Execute($sql);
-    $FromInfo   = $rs->fields;
-    $FormId     = $FromInfo['FormId'];
-    $FlowId     = $FromInfo['id'];
-    $FlowName   = $FromInfo['FlowName'];
-    $Step       = $FromInfo['Step'];
-    $Setting    = $FromInfo['Setting'];
-    $FaceTo     = $FromInfo['FaceTo'];
+    $FormInfo   = $rs->fields;
+    $FormId     = $FormInfo['FormId'];
+    $FlowId     = $FormInfo['id'];
+    $FlowName   = $FormInfo['FlowName'];
+    $Step       = $FormInfo['Step'];
+    $Setting    = $FormInfo['Setting'];
+    $FaceTo     = $FormInfo['FaceTo'];
 
     $sql        = "select * from form_formname where id='$FormId'";
     $rs         = $db->Execute($sql);
-    $FromInfo   = $rs->fields;
-    $FormName       = $FromInfo['FullName'];
-    $TableName      = $FromInfo['TableName'];
+    $FormInfo   = $rs->fields;
+    $FormName       = $FormInfo['FullName'];
+    $TableName      = $FormInfo['TableName'];
 
     //获得ID
     $sql        = "select MAX(id) AS NUM from form_flow_run where FlowId='$FlowId'";
@@ -153,6 +153,101 @@ if($_GET['action'] == 'NewWorkflow' && $FlowId > 0 && $processid == 0)      {
     exit;
 }
 
+$processid  = intval($_POST['processid']);
+if($_GET['action'] == 'GetNextApprovalUsers' && $FlowId > 0 && $processid > 0)      {
+    $sql        = "select * from form_formflow where id='$FlowId'";
+    $rs         = $db->Execute($sql);
+    $FormInfo   = $rs->fields;
+    $FormId     = $FormInfo['FormId'];
+    $FlowId     = $FormInfo['id'];
+    $FlowName   = $FormInfo['FlowName'];
+    $Step       = $FormInfo['Step'];
+    $Setting    = $FormInfo['Setting'];
+    $FaceTo     = $FormInfo['FaceTo'];
+    $SettingMap = unserialize(base64_decode($Setting));
+
+    //得到所有用户信息 
+    $sql    = "select id, USER_ID, USER_NAME, DEPT_ID, USER_PRIV from data_user";
+    $rs		= $db->Execute($sql);
+    $rs_a   = $rs->GetArray();
+    $USER_MAP = [];
+    $USER_MAP_DEPT = [];
+    $USER_MAP_PRIV = [];
+    foreach($rs_a as $item) {
+        $USER_MAP[$item['USER_ID']] = $item;
+        $USER_MAP_DEPT[$item['DEPT_ID']][] = $item;
+        $USER_MAP_PRIV[$item['USER_PRIV']][] = $item;
+    }
+
+    $NextStep = $SettingMap['NextStep']; 
+    if($NextStep != "") {
+        $NextStepArray = explode(',', $NextStep);
+        $sql        = "select * from form_formflow where step in ('".join("','", $NextStepArray)."') and FormId = '$FormId'";
+        $rs         = $db->Execute($sql);
+        $rs_a       = $rs->GetArray();
+        $下一步骤可选节点 = [];
+        foreach($rs_a as $item) {
+            $SettingData        = unserialize(base64_decode($item['Setting']));
+            $可选节点            = [];
+            $NodeFlow_AuthorizedUser = [];
+            if($SettingData['NodeFlow_AuthorizedUser'] == null) {
+                $NodeFlow_AuthorizedUser = array_values($USER_MAP);
+            }
+            else {
+                $NodeFlow_AuthorizedUser_Array = explode(',', $SettingData['NodeFlow_AuthorizedUser']);
+                foreach($NodeFlow_AuthorizedUser_Array as $itemX) {
+                    $NodeFlow_AuthorizedUser[] = $USER_MAP[$itemX];
+                }
+            }
+
+            $NodeFlow_AuthorizedDept = [];
+            if($SettingData['NodeFlow_AuthorizedDept'] != null) {
+                $NodeFlow_AuthorizedDept_Array = explode(',', $SettingData['NodeFlow_AuthorizedDept']);
+                foreach($NodeFlow_AuthorizedDept_Array as $itemX) {
+                    $NodeFlow_AuthorizedDept = [...$NodeFlow_AuthorizedDept, ...(array)$USER_MAP_DEPT[$itemX]];
+                }
+            }
+            
+            $NodeFlow_AuthorizedRole = [];
+            if($SettingData['NodeFlow_AuthorizedRole'] != null) {
+                $NodeFlow_AuthorizedRole_Array = explode(',', $SettingData['NodeFlow_AuthorizedRole']);
+                foreach($NodeFlow_AuthorizedRole_Array as $itemX) {
+                    $NodeFlow_AuthorizedRole = [...$NodeFlow_AuthorizedRole, ...(array)$USER_MAP_PRIV[$itemX]];
+                }
+            }
+            
+            //过滤重复数据 
+            $ApprovalUsers = [];
+            foreach($NodeFlow_AuthorizedUser as $itemF) {
+                $ApprovalUsers[$itemF['USER_ID']] = $itemF;
+            }
+            foreach($NodeFlow_AuthorizedDept as $itemF) {
+                $ApprovalUsers[$itemF['USER_ID']] = $itemF;
+            }
+            foreach($NodeFlow_AuthorizedRole as $itemF) {
+                $ApprovalUsers[$itemF['USER_ID']] = $itemF;
+            }
+            $可选节点['授权允许访问的用户']          = $NodeFlow_AuthorizedUser; 
+            $可选节点['授权允许访问的部门']          = $NodeFlow_AuthorizedDept; 
+            $可选节点['授权允许访问的角色']          = $NodeFlow_AuthorizedRole;
+            $可选节点['NodeFlow_AuthorizedUser']   = array_values($ApprovalUsers); 
+            $可选节点['经办步骤']                   = $item['Step'] . " - ". $item['FlowName'];
+            $可选节点['经办步骤id']                 = $item['id'];
+            $可选节点['经办步骤Step']               = $item['Step'];
+            $下一步骤可选节点[] = $可选节点;
+        }
+
+    }
+
+    $data               = [];
+    $data['下一步骤']    = $下一步骤可选节点; 
+    $RS             = [];
+    $RS['data']     = $data;
+    $RS['status']   = 'ok';
+    print_R(json_encode($RS));
+    exit;
+}
+
 
 if($_GET['action'] == 'GetMyWorkList')      {
 
@@ -169,7 +264,12 @@ if($_GET['action'] == 'GetMyWorkList')      {
         $AddSql = "";
     }
 
-    $sql    = "select count(*) as NUM from form_flow_run where 发起人='".$GLOBAL_USER->USER_ID."' $AddSql ";
+    $sql    = "select count(form_flow_run.id) as NUM from 
+                    form_flow_run, form_flow_run_process
+                where 
+                    form_flow_run.工作ID = form_flow_run_process.工作ID
+                    and form_flow_run_process.用户ID='".$GLOBAL_USER->USER_ID."' 
+                    $AddSql ";
     $rs     = $db->Execute($sql);
     $rs_a   = $rs->GetArray();
     $totalCount = $rs_a[0]['NUM'];

@@ -1,4 +1,4 @@
-import { useState, useEffect, Fragment } from 'react';
+import { useState, useEffect, Fragment, forwardRef, ReactElement, Ref } from 'react';
 import axios from 'axios';
 import { Box,Toolbar,AppBar,List,ListItem,ListItemButton,ListItemIcon,ListItemText,Typography,Paper,Button,Grid,styled, } from '@mui/material';
 import { Home, Settings } from '@mui/icons-material';
@@ -6,6 +6,21 @@ import { authConfig, defaultConfig } from 'src/configs/auth'
 import CircularProgress from '@mui/material/CircularProgress'
 
 import AddOrEditTableCore from 'src/views/Enginee/AddOrEditTableCore'
+import GetNextApprovalUsers from './GetNextApprovalUsers'
+
+import Icon from 'src/@core/components/icon'
+import IconButton from '@mui/material/IconButton'
+import Dialog from '@mui/material/Dialog'
+import DialogContent from '@mui/material/DialogContent'
+import Fade, { FadeProps } from '@mui/material/Fade'
+import { Breakpoint } from '@mui/system';
+
+const Transition = forwardRef(function Transition(
+  props: FadeProps & { children?: ReactElement<any, any> },
+  ref: Ref<unknown>
+) {
+  return <Fade ref={ref} {...props} />
+})
 
 // 自定义滚动区域样式
 const ScrollableContent = styled(Box)(({ theme }) => ({
@@ -25,7 +40,8 @@ const StartModel = ({ FlowId, handleReturnButton, flowRecord }: any) => {
   const [loading, setLoading] = useState(true);
   const [flowInfor, setFlowInfor] = useState<any>(null);
   const [submitCounter, setSubmitCounter] = useState<number>(0)
-
+  const [nextApprovalUsersDialog, setNextApprovalUsersDialog] = useState<boolean>(false);
+  
   useEffect(() => {
     const fetchWorkItems = async () => {
       try {
@@ -62,9 +78,10 @@ const StartModel = ({ FlowId, handleReturnButton, flowRecord }: any) => {
     console.log("handleSaveData", "handleSaveData")    
   }
 
-  const handleToNextStep = () => {
+  const handleToNextStep = async () => {
     setSubmitCounter(0)
-    console.log("handleToNextStep", "handleToNextStep")    
+    setNextApprovalUsersDialog(true)
+    console.log("flowRecord", flowRecord)    
   }
 
   const toggleAddTableDrawer = () => {
@@ -86,6 +103,11 @@ const StartModel = ({ FlowId, handleReturnButton, flowRecord }: any) => {
   const setForceUpdate = () => {
     console.log("toggleAddTableDrawer")
   }
+
+  const handleNextApprovalUsersDialogClose = () => {
+    setNextApprovalUsersDialog(false)
+  }
+
   
   const backEndApi = "/data_workflow.php";
   const AddtionalParams = { FlowId }
@@ -109,7 +131,7 @@ const StartModel = ({ FlowId, handleReturnButton, flowRecord }: any) => {
                 {flowInfor.工作名称}
               </Typography>
               <Typography variant="body2">
-                {flowInfor.步骤名称}
+                主办 {flowInfor.经办步骤}
               </Typography>
             </Toolbar>
           </AppBar>
@@ -117,7 +139,7 @@ const StartModel = ({ FlowId, handleReturnButton, flowRecord }: any) => {
           {/* 内容区域 (包括侧边栏和中间滚动区域) */}
           <Box sx={{ display: 'flex', flexGrow: 1 }} color="default" >
             {/* 左侧固定侧边栏 */}
-            <Sidebar sx={{ borderRadius: 0, minWidth: '60px' }}>
+            <Sidebar sx={{ borderRadius: 0, width: '60px' }}>
               <List>
                 {['表单', '附件', '会签', '流程'].map((text, index) => (
                   <ListItem key={text} disablePadding>
@@ -156,12 +178,6 @@ const StartModel = ({ FlowId, handleReturnButton, flowRecord }: any) => {
                 保存
               </Button>
               <Button variant="outlined" size="small" sx={{ ml: 2 }} onClick={()=>{
-                handleSaveData()
-                handleReturnButton()
-              }}>
-                保存返回
-              </Button>
-              <Button variant="outlined" size="small" sx={{ ml: 2 }} onClick={()=>{
                 handleReturnButton()
               }}>
                 返回
@@ -169,6 +185,26 @@ const StartModel = ({ FlowId, handleReturnButton, flowRecord }: any) => {
             </Toolbar>
           </AppBar>
         </Box>
+      )}
+      {nextApprovalUsersDialog && (
+        <Dialog
+          fullWidth
+          open={nextApprovalUsersDialog}
+          scroll='body'
+          onClose={handleNextApprovalUsersDialogClose}
+          TransitionComponent={Transition}
+        >
+          <DialogContent sx={{ pb: 8, pl: { xs: 4, sm: 6 }, pr: { xs: 0, sm: 6 }, pt: { xs: 8, sm: 12.5 }, position: 'relative' }}>
+            <IconButton
+              size='small'
+              onClick={handleNextApprovalUsersDialogClose}
+              sx={{ position: 'absolute', right: '1rem', top: '1rem' }}
+            >
+              <Icon icon='mdi:close' />
+            </IconButton>
+            <GetNextApprovalUsers FlowId={FlowId} handleReturnButton={null} flowRecord={flowRecord} />
+          </DialogContent>
+        </Dialog >
       )}
     </Fragment>
   );
