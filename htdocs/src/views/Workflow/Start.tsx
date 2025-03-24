@@ -202,7 +202,7 @@ const StartModel = ({ FlowId, handleReturnButton, flowRecord }: any) => {
             >
               <Icon icon='mdi:close' />
             </IconButton>
-            <GetNextApprovalUsers FlowId={FlowId} handleReturnButton={null} flowRecord={flowRecord} />
+            <GetNextApprovalUsers FlowId={FlowId} handleReturnButton={handleReturnButton} flowRecord={flowRecord} />
           </DialogContent>
         </Dialog >
       )}

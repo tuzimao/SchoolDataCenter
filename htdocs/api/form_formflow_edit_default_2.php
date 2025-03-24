@@ -194,6 +194,14 @@ $edit_default_2['Relative_Child_Table'][] = ['name' => "Relative_Child_Table", '
 $edit_default_2['Relative_Child_Table'][] = ['name' => "Relative_Child_Table_Field_Name", 'show'=>true, 'type'=>'input', 'label' => __("Relative_Child_Table_Field_Name"), 'value' => "", 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
 $edit_default_2['Relative_Child_Table'][] = ['name' => "Relative_Child_Table_Parent_Field_Name", 'show'=>true, 'type'=>'select', 'options'=>$MetaColumnNamesOptionsAll, 'label' => __("Relative_Child_Table_Parent_Field_Name"), 'value' => $MetaColumnNamesOptionsAll[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
 
+$Relative_Child_Table_Approval_Fields = [];
+$Relative_Child_Table_Approval_Fields[] = ['value'=>"Yes", 'label'=>__("Yes")];
+$Relative_Child_Table_Approval_Fields[] = ['value'=>"No", 'label'=>__("No")];
+
+$edit_default_2['Relative_Child_Table'][] = ['name' => "Relative_Child_Table_Add_Priv", 'show'=>true, 'type'=>'select', 'options'=>$Relative_Child_Table_Approval_Fields, 'label' => __("Relative_Child_Table_Add_Priv"), 'value' => $Relative_Child_Table_Approval_Fields[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
+$edit_default_2['Relative_Child_Table'][] = ['name' => "Relative_Child_Table_Edit_Priv", 'show'=>true, 'type'=>'select', 'options'=>$Relative_Child_Table_Approval_Fields, 'label' => __("Relative_Child_Table_Edit_Priv"), 'value' => $Relative_Child_Table_Approval_Fields[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
+$edit_default_2['Relative_Child_Table'][] = ['name' => "Relative_Child_Table_Delete_Priv", 'show'=>true, 'type'=>'select', 'options'=>$Relative_Child_Table_Approval_Fields, 'label' => __("Relative_Child_Table_Delete_Priv"), 'value' => $Relative_Child_Table_Approval_Fields[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
+
 $defaultValues_2 = [];
 foreach($edit_default_2 as $ModeName=>$allFieldItem) {
     foreach($allFieldItem as $ITEM) {

@@ -234,6 +234,7 @@ if($_GET['action'] == 'GetNextApprovalUsers' && $FlowId > 0 && $processid > 0)  
             $可选节点['经办步骤']                   = "(第".$item['Step']."步： ".$item['FlowName'].")";
             $可选节点['经办步骤id']                 = $item['id'];
             $可选节点['经办步骤Step']               = $item['Step'];
+            $可选节点['经办步骤FlowId']             = $item['id'];
             $下一步骤可选节点[] = $可选节点;
         }
 
@@ -269,7 +270,8 @@ if($_GET['action'] == 'GoToNextStep' && $FlowId > 0 && $processid > 0 && $select
         $rs         = $db->Execute($sql);
         $rs_a       = $rs->GetArray();
         foreach($rs_a as $item) {
-            $流程名称MAP[$item['Step']] = "(第".$item['Step']."步： ".$item['FlowName'].")"; ;
+            $流程名称MAP[$item['Step']]['FlowName'] = "(第".$item['Step']."步： ".$item['FlowName'].")"; ;
+            $流程名称MAP[$item['Step']]['FlowId']   = $item['id'];
         }
     }
 
@@ -281,7 +283,7 @@ if($_GET['action'] == 'GoToNextStep' && $FlowId > 0 && $processid > 0 && $select
             //print_R($User);
             $NewProcess = [];
             $NewProcess['FormId'] = $ProcessInfo['FormId'];
-            $NewProcess['FlowId'] = $ProcessInfo['FlowId'];
+            $NewProcess['FlowId'] = $流程名称MAP[$Step]['FlowId'];
             $NewProcess['RunId'] = $ProcessInfo['RunId'];
             $NewProcess['用户ID'] = $User['USER_ID'];
             $NewProcess['工作ID'] = $ProcessInfo['工作ID'];
@@ -293,8 +295,8 @@ if($_GET['action'] == 'GoToNextStep' && $FlowId > 0 && $processid > 0 && $select
             $NewProcess['是否超时'] = "否";
             $NewProcess['工作创建时间'] = date("Y-m-d H:i:s");
             $NewProcess['FlowName'] = $ProcessInfo['FlowName'];
-            $NewProcess['经办步骤'] = $流程名称MAP[$Step];
-            [$rs,$sql] = InsertOrUpdateTableByArray("form_flow_run_process",$NewProcess,"工作ID,用户ID,流程步骤ID",0);
+            $NewProcess['经办步骤'] = $流程名称MAP[$Step]['FlowName'];
+            [$rs,$sql] = InsertOrUpdateTableByArray("form_flow_run_process",$NewProcess,"工作ID,用户ID,流程步骤ID,FlowId",0);
             //print $sql;
         }
     }
@@ -304,15 +306,14 @@ if($_GET['action'] == 'GoToNextStep' && $FlowId > 0 && $processid > 0 && $select
     //print $sql;
 
     $RS             = [];
-    $RS['data']     = $下一步骤可选节点;
+    $RS['msg']      = "工作办理成功";
     $RS['status']   = 'ok';
     print_R(json_encode($RS));
     exit;
 }
 
-
-if($_GET['action'] == 'GetMyWorkList')      {
-
+$workType = FilterString($_POST['workType']);
+if($_GET['action'] == 'GetMyWorkList' && $workType != '')      {
     $pageid     = intval($_POST['pageid']);
     $pageSize   = intval($_POST['pageSize']);
     if($pageSize<=0)    $pageSize   = 15;
@@ -320,10 +321,22 @@ if($_GET['action'] == 'GetMyWorkList')      {
     $To     = $pageSize;
     $search = FilterString($_POST['search']);
     if($search != "")  {
-        $AddSql = " and 工作名称 like '%$search%'";
+        $AddSql = " and 工作名称 like '%$search%' ";
     }
     else {
         $AddSql = "";
+    }
+
+    switch($workType) {
+        case 'todo':
+            $AddSql .= " and form_flow_run_process.步骤状态 != '办结' "; 
+            break;
+        case 'done':
+            $AddSql .= " and form_flow_run_process.步骤状态 = '办结' "; 
+            break;
+        case 'all':
+            $AddSql .= ""; 
+            break;
     }
 
     $sql    = "select count(form_flow_run.id) as NUM from 
@@ -337,10 +350,11 @@ if($_GET['action'] == 'GetMyWorkList')      {
     $totalCount = $rs_a[0]['NUM'];
 
     $sql    = "select 
-                    form_flow_run.id,
+                    form_flow_run_process.id as id,
+                    form_flow_run.id as runid,
                     form_flow_run.FormId,
-                    form_flow_run.FlowId,
-                    form_flow_run.工作ID,
+                    form_flow_run_process.FlowId,
+                    form_flow_run_process.工作ID,
                     工作名称,开始时间,删除标记,是否归档,工作等级,发起人,发起人姓名,
                     form_flow_run_process.工作接收时间,
                     form_flow_run_process.流程步骤ID ,

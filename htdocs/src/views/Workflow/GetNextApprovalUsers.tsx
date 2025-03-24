@@ -4,7 +4,8 @@ import { Box,Typography,Button,Grid } from '@mui/material';
 import { authConfig, defaultConfig } from 'src/configs/auth'
 import CircularProgress from '@mui/material/CircularProgress'
 import Divider from '@mui/material/Divider'
-import { Autocomplete, TextField, Chip } from '@mui/material'; 
+import { Autocomplete, TextField, Chip } from '@mui/material'
+import toast from 'react-hot-toast'
 
 const GetNextApprovalUsers = ({ FlowId, handleReturnButton, flowRecord }: any) => {
 
@@ -70,6 +71,12 @@ const GetNextApprovalUsers = ({ FlowId, handleReturnButton, flowRecord }: any) =
               });
             const data = response.data;
             setLoading(false)
+            if(data && data.status && data.status == 'ok') {
+                toast.success(data.msg, {
+                    duration: 2000
+                })
+                handleReturnButton()
+            }
             console.log("GoToNextStep data", data)  
         } 
         catch (err) {
@@ -110,18 +117,15 @@ const GetNextApprovalUsers = ({ FlowId, handleReturnButton, flowRecord }: any) =
                 error={Boolean(textErrors && textErrors != '')} 
             />
             <Divider sx={{ my: 5 }} />
-            {nextNodes && nextNodes.map((item: any, index: number)=>{
-
-                const selectValue = selectedUsers && selectedUsers[item.经办步骤Step]
-                
+            {nextNodes && nextNodes.map((item: any, index: number) => {
+                const selectValue = selectedUsers && selectedUsers[item.经办步骤Step]                
                 const availableOptions = selectValue ? item.NodeFlow_AuthorizedUser.filter(
                     (option: any) => !selectValue.some((selected: any) => selected.value === option.value)
                 ) : item.NodeFlow_AuthorizedUser;
 
                 return (
                     <Fragment>
-                        <Typography sx={{ my: 2 }} >  转交下一步: {item.经办步骤} </Typography>
-                        
+                        <Typography sx={{ my: 2 }} >  转交下一步: {item.经办步骤} </Typography>                        
                         <Autocomplete
                             multiple
                             size="small"
@@ -165,11 +169,14 @@ const GetNextApprovalUsers = ({ FlowId, handleReturnButton, flowRecord }: any) =
 
                 )
             })}
-            <Button variant="contained" size="small" sx={{ ml: 'auto' }} onClick={()=>{
-                handleToNextStep()
-            }}>
-            开始转交
-            </Button>
+            {nextNodes && (
+                <Button variant="contained" size="small" sx={{ ml: 'auto', mt: 2 }} onClick={()=>{
+                    handleToNextStep()
+                }}>开始转交</Button>
+            )}
+            {(nextNodes == null || nextNodes.length == 0) && (
+                <Fragment>当前步骤没有主办人员,请在流程设计中设置当前步骤的授权访问人员信息.</Fragment>
+            )}
         </Box>
       )}
     </Fragment>

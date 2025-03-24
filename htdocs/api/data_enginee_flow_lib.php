@@ -623,6 +623,9 @@ if( $_GET['action']=="add_default_data" && in_array('Add',$Actions_In_List_Heade
             $Relative_Child_Table                   = $SettingMap['Relative_Child_Table'];
             $Relative_Child_Table_Field_Name        = $SettingMap['Relative_Child_Table_Field_Name'];
             $Relative_Child_Table_Parent_Field_Name = $SettingMap['Relative_Child_Table_Parent_Field_Name'];
+            $Relative_Child_Table_Add_Priv          = $SettingMap['Relative_Child_Table_Add_Priv'];
+            $Relative_Child_Table_Edit_Priv         = $SettingMap['Relative_Child_Table_Edit_Priv'];
+            $Relative_Child_Table_Delete_Priv       = $SettingMap['Relative_Child_Table_Delete_Priv'];
             if($Relative_Child_Table>0 && $Relative_Child_Table_Parent_Field_Name!="" && in_array($Relative_Child_Table_Parent_Field_Name,$MetaColumnNames)) {
                 $ChildSettingMap = returntablefield("form_formflow",'id',$Relative_Child_Table,'Setting')['Setting'];
                 $ChildSettingMap = unserialize(base64_decode($ChildSettingMap));
@@ -1397,6 +1400,9 @@ if( ( ($_GET['action']=="edit_default"&&in_array('Edit',$Actions_In_List_Row_Arr
     $Relative_Child_Table                   = $SettingMap['Relative_Child_Table'];
     $Relative_Child_Table_Field_Name        = $SettingMap['Relative_Child_Table_Field_Name'];
     $Relative_Child_Table_Parent_Field_Name = $SettingMap['Relative_Child_Table_Parent_Field_Name'];
+    $Relative_Child_Table_Add_Priv          = $SettingMap['Relative_Child_Table_Add_Priv'];
+    $Relative_Child_Table_Edit_Priv         = $SettingMap['Relative_Child_Table_Edit_Priv'];
+    $Relative_Child_Table_Delete_Priv       = $SettingMap['Relative_Child_Table_Delete_Priv'];
     if($Relative_Child_Table>0 && $Relative_Child_Table_Parent_Field_Name!="" && in_array($Relative_Child_Table_Parent_Field_Name,$MetaColumnNames)) {
         $ChildSettingMap = returntablefield("form_formflow",'id',$Relative_Child_Table,'Setting')['Setting'];
         $ChildSettingMap = unserialize(base64_decode($ChildSettingMap));
@@ -1440,6 +1446,9 @@ if( ( ($_GET['action']=="edit_default"&&in_array('Edit',$Actions_In_List_Row_Arr
         $Relative_Child_Table                   = $SettingMap['Relative_Child_Table'];
         $Relative_Child_Table_Field_Name        = $SettingMap['Relative_Child_Table_Field_Name'];
         $Relative_Child_Table_Parent_Field_Name = $SettingMap['Relative_Child_Table_Parent_Field_Name'];
+        $Relative_Child_Table_Add_Priv          = $SettingMap['Relative_Child_Table_Add_Priv'];
+        $Relative_Child_Table_Edit_Priv         = $SettingMap['Relative_Child_Table_Edit_Priv'];
+        $Relative_Child_Table_Delete_Priv       = $SettingMap['Relative_Child_Table_Delete_Priv'];
         if($Relative_Child_Table>0 && $Relative_Child_Table_Parent_Field_Name!="" && in_array($Relative_Child_Table_Parent_Field_Name,$MetaColumnNames)) {
             $ChildSettingMap = returntablefield("form_formflow",'id',$Relative_Child_Table,'Setting')['Setting'];
             $ChildSettingMap = unserialize(base64_decode($ChildSettingMap));
@@ -1471,9 +1480,9 @@ if( ( ($_GET['action']=="edit_default"&&in_array('Edit',$Actions_In_List_Row_Arr
                 $RS['add_default']['childtable']['allFields']        = $allFieldsAdd;
                 $RS['add_default']['childtable']['defaultValues']    = $defaultValuesAddChild;
                 $RS['add_default']['childtable']['submittext']       = __("NewItem");
-                $RS['add_default']['childtable']['Add']                = strpos($ChildSettingMap['Actions_In_List_Header'],'Add')===false?false:true;
-                $RS['add_default']['childtable']['Edit']               = strpos($ChildSettingMap['Actions_In_List_Row'],'Edit')===false?false:true;
-                $RS['add_default']['childtable']['Delete']             = strpos($ChildSettingMap['Actions_In_List_Row'],'Delete')===false?false:true;
+                $RS['add_default']['childtable']['Add']                = $Relative_Child_Table_Add_Priv == "Yes" && strpos($ChildSettingMap['Actions_In_List_Header'],'Add')!==false?true:false;
+                $RS['add_default']['childtable']['Edit']               = $Relative_Child_Table_Edit_Priv == "Yes" && strpos($ChildSettingMap['Actions_In_List_Row'],'Edit')!==false?true:false;
+                $RS['add_default']['childtable']['Delete']             = $Relative_Child_Table_Delete_Priv == "Yes" && strpos($ChildSettingMap['Actions_In_List_Row'],'Delete')!==false?true:false;
 
                 $allFieldsEdit   = getAllFields($ChildAllFieldsFromTable, $AllShowTypesArray, 'EDIT', true, $ChildSettingMap);
                 foreach($allFieldsEdit as $ModeName=>$allFieldItem) {
@@ -1483,7 +1492,7 @@ if( ( ($_GET['action']=="edit_default"&&in_array('Edit',$Actions_In_List_Row_Arr
                         if($ITEM['code']!="") {
                             $defaultValuesEditChild[$ITEM['code']] = $ITEM['value'];
                         }
-                        if(strpos($ChildSettingMap['Actions_In_List_Row'],'Edit')===false) {
+                        if(strpos($ChildSettingMap['Actions_In_List_Row'],'Edit')===false || $Relative_Child_Table_Edit_Priv == "No") {
                             $allFieldsEdit[$ModeName][$allFieldItemIndex]['rules']['disabled'] = true;
                         }
                         $allFieldItemIndex ++;
@@ -1497,9 +1506,9 @@ if( ( ($_GET['action']=="edit_default"&&in_array('Edit',$Actions_In_List_Row_Arr
                 $RS['edit_default']['childtable']['allFields']          = $allFieldsEdit;
                 $RS['edit_default']['childtable']['defaultValues']      = $defaultValuesEditChild;
                 $RS['edit_default']['childtable']['submittext']         = __("NewItem");
-                $RS['edit_default']['childtable']['Add']                = strpos($ChildSettingMap['Actions_In_List_Header'],'Add')===false?false:true;
-                $RS['edit_default']['childtable']['Edit']               = strpos($ChildSettingMap['Actions_In_List_Row'],'Edit')===false?false:true;
-                $RS['edit_default']['childtable']['Delete']             = strpos($ChildSettingMap['Actions_In_List_Row'],'Delete')===false?false:true;
+                $RS['edit_default']['childtable']['Add']                = $Relative_Child_Table_Add_Priv == "Yes" && strpos($ChildSettingMap['Actions_In_List_Header'],'Add')!==false?true:false;
+                $RS['edit_default']['childtable']['Edit']               = $Relative_Child_Table_Edit_Priv == "Yes" && strpos($ChildSettingMap['Actions_In_List_Row'],'Edit')!==false?true:false;
+                $RS['edit_default']['childtable']['Delete']             = $Relative_Child_Table_Delete_Priv == "Yes" && strpos($ChildSettingMap['Actions_In_List_Row'],'Delete')!==false?true:false;
                 global $WholePageModel;
                 if($WholePageModel == "Workflow")  {
                     $RS['edit_default']['submittext']                   = '';
