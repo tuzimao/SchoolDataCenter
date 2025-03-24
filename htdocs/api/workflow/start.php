@@ -167,7 +167,7 @@ if($_GET['action'] == 'GetNextApprovalUsers' && $FlowId > 0 && $processid > 0)  
     $SettingMap = unserialize(base64_decode($Setting));
 
     //得到所有用户信息 
-    $sql    = "select id, USER_ID, USER_NAME, DEPT_ID, USER_PRIV from data_user";
+    $sql    = "select id, USER_ID, USER_NAME, DEPT_ID, USER_PRIV, USER_ID as value, USER_NAME as label from data_user";
     $rs		= $db->Execute($sql);
     $rs_a   = $rs->GetArray();
     $USER_MAP = [];
@@ -231,7 +231,7 @@ if($_GET['action'] == 'GetNextApprovalUsers' && $FlowId > 0 && $processid > 0)  
             $可选节点['授权允许访问的部门']          = $NodeFlow_AuthorizedDept; 
             $可选节点['授权允许访问的角色']          = $NodeFlow_AuthorizedRole;
             $可选节点['NodeFlow_AuthorizedUser']   = array_values($ApprovalUsers); 
-            $可选节点['经办步骤']                   = $item['Step'] . " - ". $item['FlowName'];
+            $可选节点['经办步骤']                   = "(第".$item['Step']."步： ".$item['FlowName'].")";
             $可选节点['经办步骤id']                 = $item['id'];
             $可选节点['经办步骤Step']               = $item['Step'];
             $下一步骤可选节点[] = $可选节点;
@@ -239,10 +239,72 @@ if($_GET['action'] == 'GetNextApprovalUsers' && $FlowId > 0 && $processid > 0)  
 
     }
 
-    $data               = [];
-    $data['下一步骤']    = $下一步骤可选节点; 
     $RS             = [];
-    $RS['data']     = $data;
+    $RS['data']     = $下一步骤可选节点;
+    $RS['status']   = 'ok';
+    print_R(json_encode($RS));
+    exit;
+}
+
+$processid      = intval($_POST['processid']);
+$selectedText   = FilterString($_POST['selectedText']);
+$selectedUsers  = $_POST['selectedUsers'];
+if($_GET['action'] == 'GoToNextStep' && $FlowId > 0 && $processid > 0 && $selectedText != '' && is_array($selectedUsers) )      {
+    $sql        = "select * from form_formflow where id='$FlowId'";
+    $rs         = $db->Execute($sql);
+    $FormInfo   = $rs->fields;
+    $FormId     = $FormInfo['FormId'];
+    $FlowId     = $FormInfo['id'];
+    $FlowName   = $FormInfo['FlowName'];
+    $Step       = $FormInfo['Step'];
+    $Setting    = $FormInfo['Setting'];
+    $FaceTo     = $FormInfo['FaceTo'];
+    $SettingMap = unserialize(base64_decode($Setting));
+
+    $NextStep = $SettingMap['NextStep']; 
+    $流程名称MAP = [];
+    if($NextStep != "") {
+        $NextStepArray = explode(',', $NextStep);
+        $sql        = "select * from form_formflow where step in ('".join("','", $NextStepArray)."') and FormId = '$FormId'";
+        $rs         = $db->Execute($sql);
+        $rs_a       = $rs->GetArray();
+        foreach($rs_a as $item) {
+            $流程名称MAP[$item['Step']] = "(第".$item['Step']."步： ".$item['FlowName'].")"; ;
+        }
+    }
+
+    $sql        = "select * from form_flow_run_process where id = '$processid'";
+    $rs         = $db->Execute($sql);
+    $ProcessInfo= $rs->fields;
+    foreach($selectedUsers as $Step => $Users)  {
+        foreach($Users as $User)  {
+            //print_R($User);
+            $NewProcess = [];
+            $NewProcess['FormId'] = $ProcessInfo['FormId'];
+            $NewProcess['FlowId'] = $ProcessInfo['FlowId'];
+            $NewProcess['RunId'] = $ProcessInfo['RunId'];
+            $NewProcess['用户ID'] = $User['USER_ID'];
+            $NewProcess['工作ID'] = $ProcessInfo['工作ID'];
+            $NewProcess['工作接收时间'] = date("Y-m-d H:i:s");
+            $NewProcess['步骤状态'] = "未处理";
+            $NewProcess['流程步骤ID'] = intval($Step);
+            $NewProcess['是否主办'] = $ProcessInfo['是否主办'];
+            $NewProcess['上一步流程ID'] = $processid;
+            $NewProcess['是否超时'] = "否";
+            $NewProcess['工作创建时间'] = date("Y-m-d H:i:s");
+            $NewProcess['FlowName'] = $ProcessInfo['FlowName'];
+            $NewProcess['经办步骤'] = $流程名称MAP[$Step];
+            [$rs,$sql] = InsertOrUpdateTableByArray("form_flow_run_process",$NewProcess,"工作ID,用户ID,流程步骤ID",0);
+            //print $sql;
+        }
+    }
+
+    $sql = "update form_flow_run_process set 主办说明 = '".$selectedText."', 步骤状态 = '办结' where id = '$processid'";
+    $db->Execute($sql);
+    //print $sql;
+
+    $RS             = [];
+    $RS['data']     = $下一步骤可选节点;
     $RS['status']   = 'ok';
     print_R(json_encode($RS));
     exit;
