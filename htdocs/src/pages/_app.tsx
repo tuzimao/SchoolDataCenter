@@ -75,6 +75,13 @@ type GuardProps = {
   children: ReactNode
 }
 
+// 1. 在文件最顶部添加 polyfill（确保在所有代码之前执行）
+if (typeof window !== 'undefined') {
+  if (!Object.hasOwn) {
+    Object.hasOwn = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop);
+  }
+}
+
 const clientSideEmotionCache = createEmotionCache()
 
 // ** Pace Loader
