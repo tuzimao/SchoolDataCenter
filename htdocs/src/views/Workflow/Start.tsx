@@ -13,7 +13,6 @@ import IconButton from '@mui/material/IconButton'
 import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
 import Fade, { FadeProps } from '@mui/material/Fade'
-import { Breakpoint } from '@mui/system';
 
 const Transition = forwardRef(function Transition(
   props: FadeProps & { children?: ReactElement<any, any> },

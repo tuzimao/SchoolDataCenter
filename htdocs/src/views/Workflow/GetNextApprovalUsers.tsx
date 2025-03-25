@@ -48,7 +48,7 @@ const GetNextApprovalUsers = ({ FlowId, handleReturnButton, flowRecord }: any) =
 
     const newTextErrors: any = {};
     const newUserErrors: any = {};
-    nextNodes && nextNodes.map((item: any, index: number)=>{
+    nextNodes && nextNodes.map((item: any)=>{
         if (!selectedUsers || !selectedUsers[item.经办步骤Step] || selectedUsers[item.经办步骤Step].length == 0) {
             newUserErrors[item.经办步骤Step] = '下一步主办人不能为空';
         }
@@ -124,7 +124,7 @@ const GetNextApprovalUsers = ({ FlowId, handleReturnButton, flowRecord }: any) =
                 ) : item.NodeFlow_AuthorizedUser;
 
                 return (
-                    <Fragment>
+                    <Fragment key={index}>
                         <Typography sx={{ my: 2 }} >  转交下一步: {item.经办步骤} </Typography>                        
                         <Autocomplete
                             multiple
@@ -154,13 +154,15 @@ const GetNextApprovalUsers = ({ FlowId, handleReturnButton, flowRecord }: any) =
                             />
                             )}
                             renderTags={(value, getTagProps) =>
-                            value.map((option, index) => (
-                                <Chip 
-                                    label={option.label}
-                                    {...getTagProps({ index })}
-                                    size="small"
-                                    sx={{ mr: 1 }}
-                                />
+                            value.map((option, index: number) => (
+                                <Fragment key={index}>
+                                    <Chip 
+                                        label={option.label}
+                                        {...getTagProps({ index })}
+                                        size="small"
+                                        sx={{ mr: 1 }}
+                                    />
+                                </Fragment>
                             ))
                             }
                             sx={{ my: 2 }}
