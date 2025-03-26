@@ -39,7 +39,9 @@ const StartModel = ({ FlowId, handleReturnButton, flowRecord }: any) => {
   const [loading, setLoading] = useState(true);
   const [flowInfor, setFlowInfor] = useState<any>(null);
   const [submitCounter, setSubmitCounter] = useState<number>(0)
-  const [nextApprovalUsersDialog, setNextApprovalUsersDialog] = useState<boolean>(false);
+  const [dialogStatus, setDialogStatus] = useState<boolean>(false);
+  const [refuseStatus, setRefuseStatus] = useState<boolean>(false);
+  const [nextStepStatus, setNextStepStatus] = useState<boolean>(false);
   
   useEffect(() => {
     const fetchWorkItems = async () => {
@@ -78,10 +80,21 @@ const StartModel = ({ FlowId, handleReturnButton, flowRecord }: any) => {
   }
 
   const handleToNextStep = async () => {
-    setSubmitCounter(0)
-    setNextApprovalUsersDialog(true)
+    setSubmitCounter(submitCounter+1)
+    setDialogStatus(true)
+    setNextStepStatus(true)
+    setRefuseStatus(false)
     console.log("flowRecord", flowRecord)    
   }
+
+  const handleRefuseButton = async () => {
+    setDialogStatus(true)
+    setNextStepStatus(false)
+    setRefuseStatus(true)
+    console.log("handleRefuseButton", flowRecord)    
+  }
+
+  
 
   const toggleAddTableDrawer = () => {
     console.log("toggleAddTableDrawer")
@@ -104,8 +117,34 @@ const StartModel = ({ FlowId, handleReturnButton, flowRecord }: any) => {
   }
 
   const handleNextApprovalUsersDialogClose = () => {
-    setNextApprovalUsersDialog(false)
+    setDialogStatus(false)
+    setNextStepStatus(false)
+    setRefuseStatus(false)
   }
+
+  const handleGobackToPreviousStep = async (GobackToStep: string) => {
+    try {
+      const storedToken = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
+      const response = await axios.post(authConfig.backEndApiHost + 'workflow/start.php?action=GobackToPreviousStep', { FlowId, GobackToStep, processid: flowRecord.processid, runid: flowRecord.runid }, {
+        headers: {
+          Authorization: storedToken,
+          'Content-Type': 'application/json'
+        }
+      });
+      const data = response.data;
+      console.log("handleGobackToPreviousStep", data)
+      handleNextApprovalUsersDialogClose()
+    } 
+    catch (err) {
+      handleNextApprovalUsersDialogClose()
+    } 
+    finally {
+      handleNextApprovalUsersDialogClose()
+    }
+    handleReturnButton()
+  }
+
+  
 
   
   const backEndApi = "/data_workflow.php";
@@ -176,6 +215,13 @@ const StartModel = ({ FlowId, handleReturnButton, flowRecord }: any) => {
               }}>
                 保存
               </Button>
+              {true && (
+                <Button variant="contained" size="small" sx={{ ml: 2 }} onClick={()=>{
+                  handleRefuseButton()
+                }}>
+                  退回
+                </Button>
+              )}
               <Button variant="outlined" size="small" sx={{ ml: 2 }} onClick={()=>{
                 handleReturnButton()
               }}>
@@ -185,10 +231,10 @@ const StartModel = ({ FlowId, handleReturnButton, flowRecord }: any) => {
           </AppBar>
         </Box>
       )}
-      {nextApprovalUsersDialog && (
+      {dialogStatus && (
         <Dialog
           fullWidth
-          open={nextApprovalUsersDialog}
+          open={dialogStatus}
           scroll='body'
           onClose={handleNextApprovalUsersDialogClose}
           TransitionComponent={Transition}
@@ -201,7 +247,25 @@ const StartModel = ({ FlowId, handleReturnButton, flowRecord }: any) => {
             >
               <Icon icon='mdi:close' />
             </IconButton>
-            <GetNextApprovalUsers FlowId={FlowId} handleReturnButton={handleReturnButton} flowRecord={flowRecord} />
+            {nextStepStatus && (
+              <GetNextApprovalUsers FlowId={FlowId} handleReturnButton={handleReturnButton} flowRecord={flowRecord} />
+            )}
+            {refuseStatus && (
+              <Grid item xs={12} sm={12} container justifyContent="space-around">
+                <Box sx={{ mt: 6, mb: 6, display: 'flex', alignItems: 'center' }}>
+                  <Button variant="contained" size="small" sx={{ ml: 2 }} onClick={()=>{
+                    handleGobackToPreviousStep('PreviousStep')
+                  }}>
+                    退回到上一步
+                  </Button>
+                  <Button variant="outlined" size="small" sx={{ ml: 2 }} onClick={()=>{
+                    handleGobackToPreviousStep('FirstStep')
+                  }}>
+                    退回到第一步
+                  </Button>
+                </Box>
+              </Grid>
+            )}
           </DialogContent>
         </Dialog >
       )}

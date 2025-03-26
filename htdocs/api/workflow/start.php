@@ -291,7 +291,7 @@ if($_GET['action'] == 'GoToNextStep' && $FlowId > 0 && $processid > 0 && $select
             $NewProcess['步骤状态'] = "未处理";
             $NewProcess['流程步骤ID'] = intval($Step);
             $NewProcess['是否主办'] = $ProcessInfo['是否主办'];
-            $NewProcess['上一步流程ID'] = $processid;
+            $NewProcess['上一步ProcessId'] = $processid;
             $NewProcess['是否超时'] = "否";
             $NewProcess['工作创建时间'] = date("Y-m-d H:i:s");
             $NewProcess['FlowName'] = $ProcessInfo['FlowName'];
@@ -307,6 +307,64 @@ if($_GET['action'] == 'GoToNextStep' && $FlowId > 0 && $processid > 0 && $select
 
     $RS             = [];
     $RS['msg']      = "工作办理成功";
+    $RS['status']   = 'ok';
+    print_R(json_encode($RS));
+    exit;
+}
+
+$processid      = intval($_POST['processid']);
+$GobackToStep   = FilterString($_POST['GobackToStep']);
+$selectedText   = FilterString($_POST['selectedText']);
+if($_GET['action'] == 'GobackToPreviousStep' && $FlowId > 0 && $processid > 0 && $selectedText == '' && $GobackToStep != '' )      {
+    $sql        = "select * from form_formflow where id='$FlowId'";
+    $rs         = $db->Execute($sql);
+    $FormInfo   = $rs->fields;
+    $FormId     = $FormInfo['FormId'];
+    $FlowId     = $FormInfo['id'];
+    $FlowName   = $FormInfo['FlowName'];
+    $Step       = $FormInfo['Step'];
+    $Setting    = $FormInfo['Setting'];
+    $FaceTo     = $FormInfo['FaceTo'];
+    $SettingMap = unserialize(base64_decode($Setting));
+
+    $NextStep       = $SettingMap['NextStep']; 
+    $sql            = "select * from form_flow_run_process where id = '$processid'";
+    $rs             = $db->Execute($sql);
+    $ProcessInfo    = $rs->fields;
+    $上一步ProcessId    = $ProcessInfo['上一步ProcessId'];
+
+    $当前经办步骤    = '';
+    $sql            = "select * from form_flow_run_process where id = '$上一步ProcessId'";
+    $rsT            = $db->Execute($sql);
+    $当前经办步骤    = $rsT->fields['经办步骤'];
+    $FlowId         = $rsT->fields['FlowId'];
+    $流程步骤ID      = $rsT->fields['流程步骤ID'];
+    $上一步ProcessId      = $rsT->fields['上一步ProcessId'];
+    $FlowName      = $rsT->fields['FlowName'];
+
+    $NewProcess = [];
+    $NewProcess['FormId'] = $ProcessInfo['FormId'];
+    $NewProcess['FlowId'] = $FlowId;
+    $NewProcess['RunId']  = $ProcessInfo['RunId'];
+    $NewProcess['用户ID'] = $ProcessInfo['用户ID'];
+    $NewProcess['工作ID'] = $ProcessInfo['工作ID'];
+    $NewProcess['工作接收时间'] = date("Y-m-d H:i:s");
+    $NewProcess['步骤状态']     = "未处理";
+    $NewProcess['流程步骤ID']   = $流程步骤ID;
+    $NewProcess['是否主办']     = $ProcessInfo['是否主办'];
+    $NewProcess['上一步ProcessId'] = $上一步ProcessId;
+    $NewProcess['是否超时']     = "否";
+    $NewProcess['工作创建时间']  = date("Y-m-d H:i:s");
+    $NewProcess['FlowName']     = $FlowName;
+    $NewProcess['经办步骤']     = $当前经办步骤;
+    [$rs,$sql] = InsertOrUpdateTableByArray("form_flow_run_process",$NewProcess,"工作ID,用户ID,流程步骤ID,FlowId,步骤状态",0);
+
+    $sql = "update form_flow_run_process set 主办说明 = '".$selectedText."', 步骤状态 = '退回' where id = '$processid'";
+    $db->Execute($sql);
+    //print $sql;
+
+    $RS             = [];
+    $RS['msg']      = "工作退回成功";
     $RS['status']   = 'ok';
     print_R(json_encode($RS));
     exit;
@@ -329,7 +387,7 @@ if($_GET['action'] == 'GetMyWorkList' && $workType != '')      {
 
     switch($workType) {
         case 'todo':
-            $AddSql .= " and form_flow_run_process.步骤状态 != '办结' "; 
+            $AddSql .= " and form_flow_run_process.步骤状态 in ('未处理','办理中') "; 
             break;
         case 'done':
             $AddSql .= " and form_flow_run_process.步骤状态 = '办结' "; 
