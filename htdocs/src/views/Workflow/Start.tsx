@@ -42,6 +42,7 @@ const StartModel = ({ FlowId, handleReturnButton, flowRecord }: any) => {
   const [dialogStatus, setDialogStatus] = useState<boolean>(false);
   const [refuseStatus, setRefuseStatus] = useState<boolean>(false);
   const [nextStepStatus, setNextStepStatus] = useState<boolean>(false);
+  const [formSubmitStatus, setFormSubmitStatus] = useState<any>(null);
   
   useEffect(() => {
     const fetchWorkItems = async () => {
@@ -196,7 +197,7 @@ const StartModel = ({ FlowId, handleReturnButton, flowRecord }: any) => {
             <ScrollableContent>
               <Paper sx={{ padding: 2 }}>
                 <Grid sx={{ mx: 2, px: 2, pb: 2}}>
-                  <AddOrEditTableCore authConfig={authConfig} externalId={0} id={flowInfor.id} action={'edit_default'} addEditStructInfo={{allFields:{}, }} open={true} toggleAddTableDrawer={toggleAddTableDrawer} addUserHandleFilter={addUserHandleFilter} backEndApi={backEndApi} editViewCounter={1} IsGetStructureFromEditDefault={1} AddtionalParams={AddtionalParams} CSRF_TOKEN={""} dataGridLanguageCode={'zhCN'} toggleImagesPreviewListDrawer={toggleImagesPreviewListDrawer} handleIsLoadingTipChange={handleIsLoadingTipChange} setForceUpdate={setForceUpdate} additionalParameters={AddtionalParams} submitCounter={submitCounter} setSubmitCounter={setSubmitCounter}/>
+                  <AddOrEditTableCore authConfig={authConfig} externalId={0} id={flowInfor.id} action={'edit_default'} addEditStructInfo={{allFields:{}, }} open={true} toggleAddTableDrawer={toggleAddTableDrawer} addUserHandleFilter={addUserHandleFilter} backEndApi={backEndApi} editViewCounter={1} IsGetStructureFromEditDefault={1} AddtionalParams={AddtionalParams} CSRF_TOKEN={""} dataGridLanguageCode={'zhCN'} toggleImagesPreviewListDrawer={toggleImagesPreviewListDrawer} handleIsLoadingTipChange={handleIsLoadingTipChange} setForceUpdate={setForceUpdate} additionalParameters={AddtionalParams} submitCounter={submitCounter} setSubmitCounter={setSubmitCounter} setFormSubmitStatus={setFormSubmitStatus}/>
                 </Grid>
               </Paper>
             </ScrollableContent>
@@ -204,30 +205,41 @@ const StartModel = ({ FlowId, handleReturnButton, flowRecord }: any) => {
   
           {/* 底部固定 Toolbar */}
           <AppBar position="static" color="default" sx={{ top: 'auto', bottom: 0, minHeight: '50px' }}>
-            <Toolbar sx={{minHeight: '50px'}}>
-              <Button variant="contained" size="small" sx={{ ml: 'auto' }} onClick={()=>{
-                handleToNextStep()
-              }}>
-                转交下一步
-              </Button>
-              <Button variant="outlined" size="small" sx={{ ml: 2 }} onClick={()=>{
-                handleSaveData()
-              }}>
-                保存
-              </Button>
-              {true && (
-                <Button variant="contained" size="small" sx={{ ml: 2 }} onClick={()=>{
-                  handleRefuseButton()
+            {flowRecord && flowRecord.步骤状态 != "办结" && (              
+              <Toolbar sx={{minHeight: '50px'}}>
+                <Button variant="contained" size="small" sx={{ ml: 'auto' }} onClick={()=>{
+                  handleToNextStep()
                 }}>
-                  退回
+                  转交下一步
                 </Button>
-              )}
-              <Button variant="outlined" size="small" sx={{ ml: 2 }} onClick={()=>{
-                handleReturnButton()
-              }}>
-                返回
-              </Button>
-            </Toolbar>
+                <Button variant="outlined" size="small" sx={{ ml: 2 }} onClick={()=>{
+                  handleSaveData()
+                }}>
+                  保存
+                </Button>
+                {flowRecord && flowRecord.流程步骤ID && Number(flowRecord.流程步骤ID) > 1 && (
+                  <Button variant="contained" size="small" sx={{ ml: 2 }} onClick={()=>{
+                    handleRefuseButton()
+                  }}>
+                    退回
+                  </Button>
+                )}
+                <Button variant="outlined" size="small" sx={{ ml: 2 }} onClick={()=>{
+                  handleReturnButton()
+                }}>
+                  返回
+                </Button>
+              </Toolbar>
+            )}
+            {flowRecord && flowRecord.步骤状态 == "办结" && (              
+              <Toolbar sx={{minHeight: '50px'}}>
+                <Button variant="outlined" size="small" sx={{ ml: 'auto' }} onClick={()=>{
+                  handleReturnButton()
+                }}>
+                  返回
+                </Button>
+              </Toolbar>
+            )}
           </AppBar>
         </Box>
       )}
@@ -248,7 +260,7 @@ const StartModel = ({ FlowId, handleReturnButton, flowRecord }: any) => {
               <Icon icon='mdi:close' />
             </IconButton>
             {nextStepStatus && (
-              <GetNextApprovalUsers FlowId={FlowId} handleReturnButton={handleReturnButton} flowRecord={flowRecord} />
+              <GetNextApprovalUsers FlowId={FlowId} handleReturnButton={handleReturnButton} flowRecord={flowRecord} formSubmitStatus={formSubmitStatus}/>
             )}
             {refuseStatus && (
               <Grid item xs={12} sm={12} container justifyContent="space-around">

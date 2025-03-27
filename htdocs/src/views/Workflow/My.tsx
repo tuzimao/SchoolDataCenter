@@ -22,6 +22,7 @@ const MyModel = () => {
   const [counter, setCounter] = useState<number>(0)
   const [pageModel, setPageModel] = useState('My')
   const [flowRecord, setFlowRecord] = useState<any>(null)
+  const [todoRecordCounter, setTodoRecordCounter] = useState<number | null>(null)
   
   const router = useRouter()
 
@@ -38,6 +39,9 @@ const MyModel = () => {
       const data = response.data;
       setData(data.data);
       setTotalCount(data.totalCount);
+      if(workType=='todo') {
+        setTodoRecordCounter(data.totalCount)
+      }
     } catch (error) {
       console.error('Error fetching data:', error);
     } finally {
@@ -87,7 +91,7 @@ const MyModel = () => {
               setButtonAll('outlined')
               setWorkType('todo')
               setSearch('')
-            }}>待办工作</Button>
+            }}>待办工作({todoRecordCounter})</Button>
             <Button sx={{ my: 3, mr: 5 }} size="small" variant={buttonDone as any} onClick={()=>{
               setButtonToDo('outlined')
               setButtonDone('contained')
@@ -137,7 +141,7 @@ const MyModel = () => {
         </Box>
       )}
       {pageModel == "Start" && flowRecord && (
-        <StartModel FlowId={flowRecord.FlowId} handleReturnButton={handleReturnButton} flowRecord={flowRecord} />
+        <StartModel FlowId={flowRecord.FlowId} handleReturnButton={handleReturnButton} flowRecord={flowRecord} setTodoRecordCounter={setTodoRecordCounter}/>
       )}
     </Fragment>
   );

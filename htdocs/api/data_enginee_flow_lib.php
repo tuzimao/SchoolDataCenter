@@ -793,7 +793,7 @@ if( $_GET['action']=="edit_default_data" && in_array('Edit',$Actions_In_List_Row
             $IsExecutionSQL = 1;
         }
     }
-    if($_POST['ChildItemCounter']>0) {
+    if($_POST['ChildItemCounter']>0 && $SettingMap['Relative_Child_Table_Edit_Priv'] == "Yes") {
         $IsExecutionSQLChildTable = 1;
     }
     //Check Permission For This Record
@@ -896,7 +896,6 @@ if( $_GET['action']=="edit_default_data" && in_array('Edit',$Actions_In_List_Row
             }
         }
     }
-
     if($IsExecutionSQL && $IsExecutionSQLChildTable)   {
         //先更新主表,再更新子表
         if($IsExecutionSQLChildTable == 1)  {
@@ -1097,6 +1096,14 @@ if( $_GET['action']=="edit_default_data" && in_array('Edit',$Actions_In_List_Row
             $Record         = $db->Execute($sql);
             SystemLogRecord("edit_default_data", json_encode($RecordOriginal->fields), json_encode($Record->fields));
         }
+        print_R(EncryptApiData($RS, $GLOBAL_USER));
+        exit;
+    }
+    else if($IsExecutionSQL == 0 && $_POST['ChildItemCounter']>0)   {
+        $RS = [];
+        $RS['status'] = "OK";
+        $RS['msg']    = $SettingMap['Tip_When_Edit_Success'];
+        $RS['memo']   = "当前节点为只读操作, 没有执行数据库操作";
         print_R(EncryptApiData($RS, $GLOBAL_USER));
         exit;
     }

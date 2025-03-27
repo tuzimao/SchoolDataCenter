@@ -130,7 +130,7 @@ if($_GET['action'] == 'NewWorkflow' && $FlowId > 0 && $processid == 0)      {
     $Element['工作ID'] = $工作ID;
     $Element['工作接收时间']    = date('Y-m-d H:i:s');
     $Element['工作转交办结']    = "";
-    $Element['步骤状态']        = "办理中";
+    $Element['步骤状态']        = "未办理";
     $Element['流程步骤ID']      = $Step;
     $Element['工作创建时间']    = date('Y-m-d H:i:s');
     [$rs,$sql] = InsertOrUpdateTableByArray("form_flow_run_process",$Element,"工作ID,用户ID,流程步骤ID",0,'Insert');
@@ -180,7 +180,7 @@ if($_GET['action'] == 'GetNextApprovalUsers' && $FlowId > 0 && $processid > 0)  
     }
 
     $NextStep = $SettingMap['NextStep']; 
-    if($NextStep != "") {
+    if($NextStep != "" && $NextStep != "[结束]") {
         $NextStepArray = explode(',', $NextStep);
         $sql        = "select * from form_formflow where step in ('".join("','", $NextStepArray)."') and FormId = '$FormId'";
         $rs         = $db->Execute($sql);
@@ -243,6 +243,7 @@ if($_GET['action'] == 'GetNextApprovalUsers' && $FlowId > 0 && $processid > 0)  
     $RS             = [];
     $RS['data']     = $下一步骤可选节点;
     $RS['status']   = 'ok';
+    $RS['NextStep'] = $NextStep;
     print_R(json_encode($RS));
     exit;
 }
@@ -288,7 +289,7 @@ if($_GET['action'] == 'GoToNextStep' && $FlowId > 0 && $processid > 0 && $select
             $NewProcess['用户ID'] = $User['USER_ID'];
             $NewProcess['工作ID'] = $ProcessInfo['工作ID'];
             $NewProcess['工作接收时间'] = date("Y-m-d H:i:s");
-            $NewProcess['步骤状态'] = "未处理";
+            $NewProcess['步骤状态'] = "未办理";
             $NewProcess['流程步骤ID'] = intval($Step);
             $NewProcess['是否主办'] = $ProcessInfo['是否主办'];
             $NewProcess['上一步ProcessId'] = $processid;
@@ -349,7 +350,7 @@ if($_GET['action'] == 'GobackToPreviousStep' && $FlowId > 0 && $processid > 0 &&
     $NewProcess['用户ID'] = $ProcessInfo['用户ID'];
     $NewProcess['工作ID'] = $ProcessInfo['工作ID'];
     $NewProcess['工作接收时间'] = date("Y-m-d H:i:s");
-    $NewProcess['步骤状态']     = "未处理";
+    $NewProcess['步骤状态']     = "未办理";
     $NewProcess['流程步骤ID']   = $流程步骤ID;
     $NewProcess['是否主办']     = $ProcessInfo['是否主办'];
     $NewProcess['上一步ProcessId'] = $上一步ProcessId;
@@ -370,6 +371,35 @@ if($_GET['action'] == 'GobackToPreviousStep' && $FlowId > 0 && $processid > 0 &&
     exit;
 }
 
+$runid          = intval($_POST['runid']);
+if($_GET['action'] == 'GoToEndWork' && $FlowId > 0 && $processid > 0 && $runid > 0)      {
+    $sql        = "select * from form_formflow where id='$FlowId'";
+    $rs         = $db->Execute($sql);
+    $FormInfo   = $rs->fields;
+    $FormId     = $FormInfo['FormId'];
+    $FlowId     = $FormInfo['id'];
+    $FlowName   = $FormInfo['FlowName'];
+    $Step       = $FormInfo['Step'];
+    $Setting    = $FormInfo['Setting'];
+    $FaceTo     = $FormInfo['FaceTo'];
+    $SettingMap = unserialize(base64_decode($Setting));
+
+    $sql1 = "update form_flow_run_process set 主办说明 = '".$selectedText."', 步骤状态 = '办结' where id = '$processid' and 步骤状态 !='办结'";
+    $db->Execute($sql1);
+
+    $sql2 = "update form_flow_run set 结束时间 = '".date('Y-m-d H:i:s')."' where id = '$runid' and 结束时间 = ''";
+    $db->Execute($sql2);
+    
+    $RS             = [];
+    $RS['msg']      = "工作办理成功";
+    $RS['status']   = 'ok';
+    $RS['sql1']     = $sql1;
+    $RS['sql2']     = $sql2;
+    print_R(json_encode($RS));
+    exit;
+}
+
+
 $workType = FilterString($_POST['workType']);
 if($_GET['action'] == 'GetMyWorkList' && $workType != '')      {
     $pageid     = intval($_POST['pageid']);
@@ -387,7 +417,7 @@ if($_GET['action'] == 'GetMyWorkList' && $workType != '')      {
 
     switch($workType) {
         case 'todo':
-            $AddSql .= " and form_flow_run_process.步骤状态 in ('未处理','办理中') "; 
+            $AddSql .= " and form_flow_run_process.步骤状态 in ('未办理','办理中') "; 
             break;
         case 'done':
             $AddSql .= " and form_flow_run_process.步骤状态 = '办结' "; 
@@ -440,6 +470,7 @@ if($_GET['action'] == 'GetMyWorkList' && $workType != '')      {
     $RS['data']         = $NewRsa;
     $RS['totalCount']   = $totalCount;
     $RS['status']       = 'ok';
+    $RS['workType']     = $workType;
     print_R(json_encode($RS));
     exit;
 }

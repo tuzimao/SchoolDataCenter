@@ -167,11 +167,12 @@ interface AddOrEditTableType {
     additionalParameters: any
     submitCounter: number
     setSubmitCounter: (value: any) => void
+    setFormSubmitStatus: (value: any) => void
 }
 
 const AddOrEditTableCore = (props: AddOrEditTableType) => {
     // ** Props
-    const { authConfig, externalId, id, action, addEditStructInfo, toggleAddTableDrawer, addUserHandleFilter, backEndApi, editViewCounter, IsGetStructureFromEditDefault, AddtionalParams, CSRF_TOKEN, dataGridLanguageCode, toggleImagesPreviewListDrawer, handleIsLoadingTipChange, setForceUpdate, additionalParameters, submitCounter } = props
+    const { authConfig, externalId, id, action, addEditStructInfo, toggleAddTableDrawer, addUserHandleFilter, backEndApi, editViewCounter, IsGetStructureFromEditDefault, AddtionalParams, CSRF_TOKEN, dataGridLanguageCode, toggleImagesPreviewListDrawer, handleIsLoadingTipChange, setForceUpdate, additionalParameters, submitCounter, setFormSubmitStatus } = props
 
     const i18n: any = {language: 'zh'}
 
@@ -729,6 +730,9 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                     dataJson = data
                 }
                 console.log('Success:', dataJson);
+                if(setFormSubmitStatus) {
+                    setFormSubmitStatus(dataJson)
+                }
                 if (dataJson && dataJson.status == "OK") {
                     toast.success(dataJson.msg)
 
