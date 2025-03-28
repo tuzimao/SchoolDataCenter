@@ -1385,6 +1385,10 @@ if( ( ($_GET['action']=="edit_default"&&in_array('Edit',$Actions_In_List_Row_Arr
         }
     }
 
+    $RS = [];
+    $RS['status'] = "OK";
+    $RS['data'] = $data;
+
     //检查工作流部分的设定, 当工作流中工作被办结时, 并且去查看表单的时候, 需要展示只读, 而非可以编辑的表单
     $整个页面是否只读   = false;
     $processid = intval($_GET['processid']);
@@ -1401,9 +1405,6 @@ if( ( ($_GET['action']=="edit_default"&&in_array('Edit',$Actions_In_List_Row_Arr
         }
     }
 
-    $RS = [];
-    $RS['status'] = "OK";
-    $RS['data'] = $data;
     if($SettingMap['Debug_Sql_Show_On_Api']=="Yes" && in_array($GLOBAL_USER->USER_ID, ['admin', 'admin001']))  $RS['sql'] = $sql;
     $RS['msg'] = __("Get Data Success");
     if($_GET['IsGetStructureFromEditDefault']==1)  {

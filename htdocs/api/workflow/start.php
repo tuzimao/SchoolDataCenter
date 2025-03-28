@@ -397,6 +397,20 @@ if($_GET['action'] == 'GoToEndWork' && $FlowId > 0 && $processid > 0 && $runid >
 }
 
 
+
+$runid          = intval($_POST['runid']);
+if($_GET['action'] == 'getApprovalNodes' && $runid > 0)      {
+    $sql        = "select 工作接收时间, 步骤状态, 流程步骤ID, FlowName, 主办说明, 经办步骤 from form_flow_run_process where runid = '$runid' order by 流程步骤ID desc ";
+    $rs         = $db->Execute($sql);
+    $rsT        = $rs->GetArray();
+    $RS                 = [];
+    $RS['status']       = 'ok';
+    $RS['sql']          = $sql;
+    $RS['data']         = $rsT;
+    print_R(json_encode($RS));
+    exit;
+}
+
 $workType = FilterString($_POST['workType']);
 if($_GET['action'] == 'GetMyWorkList' && $workType != '')      {
     $pageid     = intval($_POST['pageid']);

@@ -7,6 +7,7 @@ import CircularProgress from '@mui/material/CircularProgress'
 
 import AddOrEditTableCore from 'src/views/Enginee/AddOrEditTableCore'
 import GetNextApprovalUsers from './GetNextApprovalUsers'
+import ApprovalNodesList from './ApprovalNodesList'
 
 import Icon from 'src/@core/components/icon'
 import IconButton from '@mui/material/IconButton'
@@ -44,6 +45,10 @@ const StartModel = ({ FlowId, handleReturnButton, flowRecord }: any) => {
   const [nextStepStatus, setNextStepStatus] = useState<boolean>(false);
   const [formSubmitStatus, setFormSubmitStatus] = useState<any>(null);
   
+  const [approvalNodes, setApprovalNodes] = useState<any[]>([]);
+
+  
+  
   useEffect(() => {
     const fetchWorkItems = async () => {
       try {
@@ -70,6 +75,28 @@ const StartModel = ({ FlowId, handleReturnButton, flowRecord }: any) => {
       setLoading(false)
       setFlowInfor({...flowRecord, id: flowRecord.工作ID2})
     }
+
+    const fetchApprovalNodes = async () => {
+      try {
+        const storedToken = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
+        const response = await axios.post(authConfig.backEndApiHost + 'workflow/start.php?action=getApprovalNodes', { runid: flowRecord.runid }, {
+          headers: {
+            Authorization: storedToken,
+            'Content-Type': 'application/json'
+          }
+        });
+        const data = response.data;
+        if(data.data) {
+          setApprovalNodes(data.data)
+        }
+      } 
+      catch (err) {
+      } 
+      finally {
+      }
+    };
+
+    fetchApprovalNodes();
 
   }, [FlowId]);
 
@@ -193,9 +220,12 @@ const StartModel = ({ FlowId, handleReturnButton, flowRecord }: any) => {
             {/* 中间滚动区域 */}
             <ScrollableContent>
               <Paper sx={{ padding: 2 }}>
-                <Grid sx={{ mx: 2, px: 2, pb: 2}}>
+                <Grid sx={{ mx: 2, px: 2}}>
                   <AddOrEditTableCore authConfig={authConfig} externalId={0} id={flowInfor.id} action={'edit_default'} addEditStructInfo={{allFields:{}, }} open={true} toggleAddTableDrawer={toggleAddTableDrawer} addUserHandleFilter={addUserHandleFilter} backEndApi={backEndApi} editViewCounter={1} IsGetStructureFromEditDefault={1} AddtionalParams={AddtionalParams} CSRF_TOKEN={""} dataGridLanguageCode={'zhCN'} toggleImagesPreviewListDrawer={toggleImagesPreviewListDrawer} handleIsLoadingTipChange={handleIsLoadingTipChange} setForceUpdate={setForceUpdate} additionalParameters={AddtionalParams} submitCounter={submitCounter} setSubmitCounter={setSubmitCounter} setFormSubmitStatus={setFormSubmitStatus}/>
                 </Grid>
+              </Paper>
+              <Paper sx={{ padding: 2, mt: 2 }}>
+              <ApprovalNodesList approvalNodes={approvalNodes}/>
               </Paper>
             </ScrollableContent>
           </Box>
