@@ -2035,6 +2035,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                                 id="controllable-states-demo"
                                                                                 isOptionEqualToValue={(option:any, value) => { return option.value === value; }}
                                                                                 renderInput={(params) => <TextField {...params} label={FieldArray.label} />}
+                                                                                disabled={FieldArray.rules.disabled}
                                                                                 onChange={(event: any, newValue: any) => {
                                                                                     if (newValue != undefined) {
                                                                                         const defaultValuesNewTemp:{[key:string]:any} = { ...defaultValuesNew }
@@ -2679,6 +2680,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                                 label={FieldArray.label}
                                                                                 rows={FieldArray.TextareaRows ?? 5}
                                                                                 multiline
+                                                                                disabled={FieldArray.rules.disabled}
                                                                                 onChange={(e) => {
                                                                                     onChange(e);
                                                                                     const defaultValuesNewTemp:{[key:string]:any} = { ...defaultValuesNew }
@@ -3711,14 +3713,19 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                             <Grid item xs={FieldArray.rules.xs} sm={FieldArray.rules.sm} key={"AllFields_" + FieldArray_index}>
                                                                 <FormControl fullWidth sx={{ mb: 0 }}>
                                                                     <DropzoneWrapper>
-                                                                        <div {...getRootPropsFiles({ className: 'dropzone' })}>
-                                                                            <input {...getInputPropsFiles()} />
-                                                                            <Box sx={{ display: 'flex', flexDirection: ['column', 'column', 'row'], alignItems: 'center' }}>
-                                                                            <Box sx={{ display: 'flex', flexDirection: 'column', textAlign: ['center', 'center', 'inherit'] }}>
-                                                                            <Typography color='textSecondary'>{FieldArray.label}:</Typography>
-                                                                            </Box>
-                                                                            </Box>
-                                                                        </div>
+                                                                        {FieldArray.rules.disabled == true && (
+                                                                            <Typography color='textSecondary' sx={{ml: 1}}>{FieldArray.label}:</Typography>
+                                                                        )}
+                                                                        {FieldArray.rules.disabled == false && (                                                                            
+                                                                            <div {...getRootPropsFiles({ className: 'dropzone' })}>
+                                                                                <input {...getInputPropsFiles()} />
+                                                                                <Box sx={{ display: 'flex', flexDirection: ['column', 'column', 'row'], alignItems: 'center' }}>
+                                                                                    <Box sx={{ display: 'flex', flexDirection: 'column', textAlign: ['center', 'center', 'inherit'] }}>
+                                                                                        <Typography color='textSecondary'>{FieldArray.label}:</Typography>
+                                                                                    </Box>
+                                                                                </Box>
+                                                                            </div>
+                                                                        )}
                                                                         {uploadFiles && uploadFiles.length ? (
                                                                             <Fragment>
                                                                             <List>

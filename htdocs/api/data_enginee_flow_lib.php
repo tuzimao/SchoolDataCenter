@@ -1385,12 +1385,37 @@ if( ( ($_GET['action']=="edit_default"&&in_array('Edit',$Actions_In_List_Row_Arr
         }
     }
 
+    //检查工作流部分的设定, 当工作流中工作被办结时, 并且去查看表单的时候, 需要展示只读, 而非可以编辑的表单
+    $整个页面是否只读   = false;
+    $processid = intval($_GET['processid']);
+    if($processid > 0) {
+        $sql        = "select 步骤状态 from form_flow_run_process where id = '$processid' ";
+        $rs         = $db->Execute($sql);
+        $步骤状态    = $rs->fields['步骤状态'];
+        if($步骤状态 == "办结") {
+            $整个页面是否只读   = true;
+            //强制处理子表记录为只读
+            $Relative_Child_Table_Add_Priv      = $SettingMap['Relative_Child_Table_Add_Priv']    = "No";
+            $Relative_Child_Table_Edit_Priv     = $SettingMap['Relative_Child_Table_Edit_Priv']   = "No";
+            $Relative_Child_Table_Delete_Priv   = $SettingMap['Relative_Child_Table_Delete_Priv'] = "No";
+        }
+    }
+
     $RS = [];
     $RS['status'] = "OK";
     $RS['data'] = $data;
     if($SettingMap['Debug_Sql_Show_On_Api']=="Yes" && in_array($GLOBAL_USER->USER_ID, ['admin', 'admin001']))  $RS['sql'] = $sql;
     $RS['msg'] = __("Get Data Success");
     if($_GET['IsGetStructureFromEditDefault']==1)  {
+        if($整个页面是否只读 == true) {
+            foreach($allFieldsEdit as $ModeName=>$allFieldItem)     {
+                for($iX=0;$iX<sizeof($allFieldItem);$iX++)   {   
+                    $allFieldItem[$iX]['rules']['disabled']     = true;
+                    //$allFieldItem[$iX]['type']                  = 'readonly';
+                    $allFieldsEdit[$ModeName][$iX]              = $allFieldItem[$iX];
+                }
+            }
+        }
         $edit_default['allFields']      = $allFieldsEdit;
         $edit_default['allFieldsMode']  = [['value'=>"Default", 'label'=>__("")]];
         $edit_default['defaultValues']  = $defaultValuesEdit;
@@ -1410,6 +1435,7 @@ if( ( ($_GET['action']=="edit_default"&&in_array('Edit',$Actions_In_List_Row_Arr
     $Relative_Child_Table_Add_Priv          = $SettingMap['Relative_Child_Table_Add_Priv'];
     $Relative_Child_Table_Edit_Priv         = $SettingMap['Relative_Child_Table_Edit_Priv'];
     $Relative_Child_Table_Delete_Priv       = $SettingMap['Relative_Child_Table_Delete_Priv'];
+    
     if($Relative_Child_Table>0 && $Relative_Child_Table_Parent_Field_Name!="" && in_array($Relative_Child_Table_Parent_Field_Name,$MetaColumnNames)) {
         $ChildSettingMap = returntablefield("form_formflow",'id',$Relative_Child_Table,'Setting')['Setting'];
         $ChildSettingMap = unserialize(base64_decode($ChildSettingMap));

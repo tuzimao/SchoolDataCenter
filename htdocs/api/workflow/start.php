@@ -190,10 +190,7 @@ if($_GET['action'] == 'GetNextApprovalUsers' && $FlowId > 0 && $processid > 0)  
             $SettingData        = unserialize(base64_decode($item['Setting']));
             $可选节点            = [];
             $NodeFlow_AuthorizedUser = [];
-            if($SettingData['NodeFlow_AuthorizedUser'] == null) {
-                $NodeFlow_AuthorizedUser = array_values($USER_MAP);
-            }
-            else {
+            if($SettingData['NodeFlow_AuthorizedUser'] != null && $SettingData['NodeFlow_AuthorizedUser'] != "") {
                 $NodeFlow_AuthorizedUser_Array = explode(',', $SettingData['NodeFlow_AuthorizedUser']);
                 foreach($NodeFlow_AuthorizedUser_Array as $itemX) {
                     $NodeFlow_AuthorizedUser[] = $USER_MAP[$itemX];
@@ -201,7 +198,7 @@ if($_GET['action'] == 'GetNextApprovalUsers' && $FlowId > 0 && $processid > 0)  
             }
 
             $NodeFlow_AuthorizedDept = [];
-            if($SettingData['NodeFlow_AuthorizedDept'] != null) {
+            if($SettingData['NodeFlow_AuthorizedDept'] != null && $SettingData['NodeFlow_AuthorizedDept'] != "") {
                 $NodeFlow_AuthorizedDept_Array = explode(',', $SettingData['NodeFlow_AuthorizedDept']);
                 foreach($NodeFlow_AuthorizedDept_Array as $itemX) {
                     $NodeFlow_AuthorizedDept = [...$NodeFlow_AuthorizedDept, ...(array)$USER_MAP_DEPT[$itemX]];
@@ -209,7 +206,7 @@ if($_GET['action'] == 'GetNextApprovalUsers' && $FlowId > 0 && $processid > 0)  
             }
             
             $NodeFlow_AuthorizedRole = [];
-            if($SettingData['NodeFlow_AuthorizedRole'] != null) {
+            if($SettingData['NodeFlow_AuthorizedRole'] != null && $SettingData['NodeFlow_AuthorizedRole'] != "") {
                 $NodeFlow_AuthorizedRole_Array = explode(',', $SettingData['NodeFlow_AuthorizedRole']);
                 foreach($NodeFlow_AuthorizedRole_Array as $itemX) {
                     $NodeFlow_AuthorizedRole = [...$NodeFlow_AuthorizedRole, ...(array)$USER_MAP_PRIV[$itemX]];
@@ -417,46 +414,63 @@ if($_GET['action'] == 'GetMyWorkList' && $workType != '')      {
 
     switch($workType) {
         case 'todo':
-            $AddSql .= " and form_flow_run_process.步骤状态 in ('未办理','办理中') "; 
+            $AddSql .= " and 步骤状态 in ('未办理','办理中') "; 
             break;
         case 'done':
-            $AddSql .= " and form_flow_run_process.步骤状态 = '办结' "; 
-            break;
-        case 'all':
-            $AddSql .= ""; 
+            $AddSql .= " and 步骤状态 = '办结' "; 
             break;
     }
 
-    $sql    = "select count(form_flow_run.id) as NUM from 
-                    form_flow_run, form_flow_run_process
-                where 
-                    form_flow_run.工作ID = form_flow_run_process.工作ID
-                    and form_flow_run_process.用户ID='".$GLOBAL_USER->USER_ID."' 
-                    $AddSql ";
+    $sql    = "select count(p.id) as NUM
+                FROM form_flow_run_process p
+                JOIN form_flow_run r ON r.工作ID = p.工作ID
+                WHERE p.id IN (
+                    SELECT MAX(p2.id)
+                    FROM form_flow_run_process p2
+                    WHERE p2.用户ID = '".$GLOBAL_USER->USER_ID."' 
+                    $AddSql
+                    GROUP BY p2.工作ID
+                )
+                AND p.用户ID = '".$GLOBAL_USER->USER_ID."' 
+                $AddSql ";
     $rs     = $db->Execute($sql);
     $rs_a   = $rs->GetArray();
     $totalCount = $rs_a[0]['NUM'];
 
-    $sql    = "select 
-                    form_flow_run_process.id as id,
-                    form_flow_run.id as runid,
-                    form_flow_run.FormId,
-                    form_flow_run_process.FlowId,
-                    form_flow_run_process.工作ID,
-                    工作名称,开始时间,删除标记,是否归档,工作等级,发起人,发起人姓名,
-                    form_flow_run_process.工作接收时间,
-                    form_flow_run_process.流程步骤ID ,
-                    form_flow_run_process.工作转交办结 ,
-                    form_flow_run_process.步骤状态 ,
-                    form_flow_run_process.经办步骤 ,
-                    form_flow_run_process.id as processid
-                from 
-                    form_flow_run, form_flow_run_process
-                where 
-                    form_flow_run.工作ID = form_flow_run_process.工作ID
-                    and form_flow_run_process.用户ID='".$GLOBAL_USER->USER_ID."' 
-                    $AddSql 
-                order by id desc limit $From, $To";
+    $sql    = " SELECT 
+                    p.id as id,
+                    r.id as runid,
+                    r.FormId,
+                    p.FlowId,
+                    p.工作ID,
+                    r.工作名称,
+                    r.开始时间,
+                    r.删除标记,
+                    r.是否归档,
+                    r.工作等级,
+                    r.发起人,
+                    r.发起人姓名,
+                    p.工作接收时间,
+                    p.流程步骤ID,
+                    p.工作转交办结,
+                    p.步骤状态,
+                    p.经办步骤,
+                    r.结束时间,
+                    p.id as processid 
+                FROM form_flow_run_process p
+                JOIN form_flow_run r ON r.工作ID = p.工作ID
+                WHERE p.id IN (
+                    -- 子查询：获取每个工作ID对应的最大ID
+                    SELECT MAX(p2.id)
+                    FROM form_flow_run_process p2
+                    WHERE p2.用户ID = '".$GLOBAL_USER->USER_ID."' 
+                    $AddSql
+                    GROUP BY p2.工作ID
+                )
+                AND p.用户ID = '".$GLOBAL_USER->USER_ID."' 
+                $AddSql 
+                ORDER BY p.id DESC limit $From, $To";
+
     $rs     = $db->Execute($sql);
     $rs_a   = $rs->GetArray();
     $NewRsa = [];

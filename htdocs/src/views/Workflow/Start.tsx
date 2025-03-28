@@ -145,11 +145,8 @@ const StartModel = ({ FlowId, handleReturnButton, flowRecord }: any) => {
     handleReturnButton()
   }
 
-  
-
-  
   const backEndApi = "/data_workflow.php";
-  const AddtionalParams = { FlowId }
+  const AddtionalParams = { FlowId, processid: flowRecord.processid, runid: flowRecord.runid }
 
   return (
     <Fragment>

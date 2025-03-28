@@ -18,7 +18,6 @@ const MyModel = () => {
   const [workType, setWorkType] = useState<string>('todo')
   const [buttonToDo, setButtonToDo] = useState<string>('contained')
   const [buttonDone, setButtonDone] = useState<string>('outlined')
-  const [buttonAll, setButtonAll] = useState<string>('outlined')
   const [counter, setCounter] = useState<number>(0)
   const [pageModel, setPageModel] = useState('My')
   const [flowRecord, setFlowRecord] = useState<any>(null)
@@ -59,23 +58,46 @@ const MyModel = () => {
     setCounter(counter+1)
   }
 
-  const columns: GridColDef[] = [
-    { field: 'id', headerName: '流水号', width: 100, headerAlign: 'center', align: 'center' },
-    { field: '工作ID', headerName: '工作ID', width: 120, headerAlign: 'center', align: 'center' },
-    { field: '工作名称', headerName: '工作名称', width: 400, headerAlign: 'center', align: 'center', renderCell: (params) => (
-        <Button variant='text' onClick={() => {
-            console.log("params", params.row)
-            setFlowRecord(params.row)
-            setPageModel('Start')
-          }}>
-          {params.value}
-        </Button>
-      ), },
-    { field: '经办步骤', headerName: '我经办的步骤(流程图)', width: 300, headerAlign: 'center', align: 'center' },
-    { field: '步骤状态', headerName: '步骤状态', width: 120, headerAlign: 'center', align: 'center' },
-    { field: '发起人姓名', headerName: '发起人', width: 120, headerAlign: 'center', align: 'center' },
-    { field: '工作接收时间', headerName: '到达时间', width: 200, headerAlign: 'center', align: 'center' }
-  ];
+  let columns: GridColDef[] = [];
+
+  if(workType == "todo")  {
+    columns = [
+      { field: 'id', headerName: '流水号', width: 100, headerAlign: 'center', align: 'center' },
+      { field: '工作ID', headerName: '工作ID', width: 120, headerAlign: 'center', align: 'center' },
+      { field: '工作名称', headerName: '工作名称', width: 400, headerAlign: 'center', align: 'center', renderCell: (params) => (
+          <Button variant='text' onClick={() => {
+              console.log("params", params.row)
+              setFlowRecord(params.row)
+              setPageModel('Start')
+            }}>
+            {params.value}
+          </Button>
+        ), },
+      { field: '经办步骤', headerName: '我经办的步骤(流程图)', width: 300, headerAlign: 'center', align: 'center' },
+      { field: '步骤状态', headerName: '步骤状态', width: 120, headerAlign: 'center', align: 'center' },
+      { field: '发起人姓名', headerName: '发起人', width: 120, headerAlign: 'center', align: 'center' },
+      { field: '工作接收时间', headerName: '到达时间', width: 200, headerAlign: 'center', align: 'center' }
+    ];
+  }
+  if(workType == "done")  {
+    columns = [
+      { field: 'id', headerName: '流水号', width: 100, headerAlign: 'center', align: 'center' },
+      { field: '工作ID', headerName: '工作ID', width: 120, headerAlign: 'center', align: 'center' },
+      { field: '工作名称', headerName: '工作名称', width: 400, headerAlign: 'center', align: 'center', renderCell: (params) => (
+          <Button variant='text' onClick={() => {
+              console.log("params", params.row)
+              setFlowRecord(params.row)
+              setPageModel('Start')
+            }}>
+            {params.value}
+          </Button>
+        ), },
+      { field: '经办步骤', headerName: '我经办的步骤(流程图)', width: 300, headerAlign: 'center', align: 'center' },
+      { field: '步骤状态', headerName: '步骤状态', width: 120, headerAlign: 'center', align: 'center' },
+      { field: '发起人姓名', headerName: '发起人', width: 120, headerAlign: 'center', align: 'center' },
+      { field: '结束时间', headerName: '结束时间', width: 200, headerAlign: 'center', align: 'center' }
+    ];
+  }
 
   return (
     <Fragment>
@@ -88,24 +110,15 @@ const MyModel = () => {
             <Button sx={{ my: 3, mr: 5 }} size="small" variant={buttonToDo as any} onClick={()=>{
               setButtonToDo('contained')
               setButtonDone('outlined')
-              setButtonAll('outlined')
               setWorkType('todo')
               setSearch('')
             }}>待办工作({todoRecordCounter})</Button>
             <Button sx={{ my: 3, mr: 5 }} size="small" variant={buttonDone as any} onClick={()=>{
               setButtonToDo('outlined')
               setButtonDone('contained')
-              setButtonAll('outlined')
               setWorkType('done')
               setSearch('')
             }}>办结工作</Button>
-            <Button sx={{ my: 3, mr: 5 }} size="small" variant={buttonAll as any} onClick={()=>{
-              setButtonToDo('outlined')
-              setButtonDone('outlined')
-              setButtonAll('contained')
-              setWorkType('all')
-              setSearch('')
-            }}>全部工作</Button>
             <Button sx={{ my: 3, mr: 5 }} size="small" variant='outlined' onClick={()=>{
               setCounter(counter+1)
             }}>刷新</Button>
