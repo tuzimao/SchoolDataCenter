@@ -30,6 +30,8 @@ const ApprovalNodesList = ({ approvalNodes }: any) => {
 
   console.log("approvalNodes", approvalNodes)
 
+  const NodesLength = approvalNodes.length
+
   const colorList = ['error','primary','info','warning','success','error','primary','info','warning','success','error','primary','info','warning','success']
 
   return (
@@ -43,7 +45,7 @@ const ApprovalNodesList = ({ approvalNodes }: any) => {
               <TimelineItem>
                 <TimelineSeparator>
                   <TimelineDot color={colorList[index] as OverridableStringUnion< 'inherit' | 'grey' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning', {} >} />
-                  <TimelineConnector />
+                  {index + 1 < NodesLength && <TimelineConnector /> }                  
                 </TimelineSeparator>
                 <TimelineContent sx={{ pr: 0, mt: 0, mb: theme => `${theme.spacing(1.5)} !important` }}>
                   <Box
