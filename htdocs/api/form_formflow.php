@@ -314,6 +314,9 @@ require_once("../data_enginee_flow.php");
     if($_POST['NextStep']!="")  {
         $FieldsArray['NextStep']   = $_POST['NextStep'];
     }
+    if($_POST['IsStartNode']!="")  {
+        $FieldsArray['IsStartNode']   = $_POST['IsStartNode'];
+    }
     if($_POST['NodeFlow_AuthorizedUser']!="")  {
         $FieldsArray['AuthorizedUser']   = $_POST['NodeFlow_AuthorizedUser'];
     }
