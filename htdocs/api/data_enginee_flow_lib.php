@@ -896,7 +896,7 @@ if( $_GET['action']=="edit_default_data" && in_array('Edit',$Actions_In_List_Row
             }
         }
     }
-    if($IsExecutionSQL && $IsExecutionSQLChildTable)   {
+    if($IsExecutionSQL)   {
         //先更新主表,再更新子表
         if($IsExecutionSQLChildTable == 1)  {
             [$Record,$sql]  = InsertOrUpdateTableByArray($TableName, $FieldsArray, 'id', 0, "InsertOrUpdate");
@@ -940,7 +940,7 @@ if( $_GET['action']=="edit_default_data" && in_array('Edit',$Actions_In_List_Row
             $Relative_Child_Table                   = $SettingMap['Relative_Child_Table'];
             $Relative_Child_Table_Field_Name        = $SettingMap['Relative_Child_Table_Field_Name'];
             $Relative_Child_Table_Parent_Field_Name = $SettingMap['Relative_Child_Table_Parent_Field_Name'];
-            if($Relative_Child_Table>0 && $Relative_Child_Table_Parent_Field_Name!="" && in_array($Relative_Child_Table_Parent_Field_Name,$MetaColumnNames)) {
+            if($IsExecutionSQLChildTable == 1 && $Relative_Child_Table>0 && $Relative_Child_Table_Parent_Field_Name!="" && in_array($Relative_Child_Table_Parent_Field_Name,$MetaColumnNames)) {
                 $ChildSettingMap = returntablefield("form_formflow",'id',$Relative_Child_Table,'Setting')['Setting'];
                 $ChildSettingMap = unserialize(base64_decode($ChildSettingMap));
                 $ChildFormId                = returntablefield("form_formflow",'id',$Relative_Child_Table,'FormId')['FormId'];
@@ -1109,8 +1109,11 @@ if( $_GET['action']=="edit_default_data" && in_array('Edit',$Actions_In_List_Row
     }
     else {
         $RS = [];
-        $RS['status'] = "ERROR";
-        $RS['msg'] = __("No POST Infor");
+        $RS['status']       = "ERROR";
+        $RS['msg']          = __("No POST Infor");
+        $RS['IsExecutionSQL']           = $IsExecutionSQL;
+        $RS['IsExecutionSQLChildTable'] = $IsExecutionSQLChildTable;
+        $RS['_POST'] = $_POST;
         if($SettingMap['Debug_Sql_Show_On_Api']=="Yes" && in_array($GLOBAL_USER->USER_ID, ['admin', 'admin001']))  $RS['sql'] = $sql;
         if($SettingMap['Debug_Sql_Show_On_Api']=="Yes" && in_array($GLOBAL_USER->USER_ID, ['admin', 'admin001']))  $RS['_GET'] = $_GET;
         if($SettingMap['Debug_Sql_Show_On_Api']=="Yes" && in_array($GLOBAL_USER->USER_ID, ['admin', 'admin001']))  $RS['_POST'] = $_POST;

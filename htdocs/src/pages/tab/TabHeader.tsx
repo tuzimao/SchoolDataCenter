@@ -83,8 +83,9 @@ const TabHeader = ({ tab, allTabs }: { tab: string; allTabs: {[key:string]:any} 
                       <Tab
                         key={TabValue}
                         value={Item.value}
+                        sx={{ width: '100px', minWidth: '100px' }}
                         label={
-                          < Box sx={{ display: 'flex', alignItems: 'center', ...(!hideText && { '& svg': { mr: 2 } }) }}>
+                          <Box sx={{ display: 'flex', alignItems: 'center', ...(!hideText && { '& svg': { mr: 1 } }), width: '100px', minWidth: '100px'}}>
                             <Icon icon={`mdi-${Item.icon}`} />
                             {!hideText && Item.label}
                           </Box>
