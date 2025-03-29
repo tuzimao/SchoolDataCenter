@@ -605,10 +605,14 @@ if($_GET['action']=="delete_array")  {
     $selectedRows = explode(',',$selectedRows);
     $primary_key = $columnNames[0];
     if($selectedRows[0]!="") {
-        $sql    = "select FormName,FieldName from form_formfield where $primary_key = '".$selectedRows[0]."'";
-        $rs     = $db->Execute($sql);
-        $FormName = $rs->fields['FormName'];
-        $FieldName = $rs->fields['FieldName'];
+        $sql        = "select FormId,FormName,FieldName from form_formfield where $primary_key = '".$selectedRows[0]."'";
+        $rs         = $db->Execute($sql);
+        $FormId     = $rs->fields['FormId'];
+        $FormName   = $rs->fields['FormName'];
+        $FieldName  = $rs->fields['FieldName'];
+        if($FormId != "" && $FormName == "")  {
+            $FormName = returntablefield("form_formname", "id", $FormId, "TableName")['TableName'];
+        }
         if($FormName!="")  {
             $MetaColumnNames    = $db->MetaColumnNames($FormName);
             $MetaColumnNames    = array_values($MetaColumnNames);

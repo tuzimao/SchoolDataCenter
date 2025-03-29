@@ -188,7 +188,6 @@ const GetNextApprovalUsers = ({ FlowId, handleReturnButton, flowRecord, formSubm
                                  )}
                                 {item.NodeFlow_AuthorizedUser && item.NodeFlow_AuthorizedUser.length > 0 && (                   
                                     <Autocomplete
-                                        multiple
                                         size="small"
                                         options={availableOptions}
                                         getOptionLabel={(option) => option.label}

@@ -1190,6 +1190,12 @@ const UserList = ({ authConfig, backEndApi, externalId, handleActionInMobileApp,
                     open={multiReviewOpenDialog[Item.action] == undefined ? false : multiReviewOpenDialog[Item.action]}
                     onClose={() => handleMultiCloseDialog()}
                     aria-labelledby='form-dialog-title'
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        handleMultiCloseDialogAndSubmit(Item.action, selectedRows, store.init_default.CSRF_TOKEN);
+                      }
+                    }}
                   >
                     <DialogTitle id='form-dialog-title'>{Item.title}</DialogTitle>
                     <DialogContent>
@@ -1199,7 +1205,12 @@ const UserList = ({ authConfig, backEndApi, externalId, handleActionInMobileApp,
                     </DialogContent>
                     <DialogActions className='dialog-actions-dense'>
                       <Button onClick={() => handleMultiCloseDialog()}>{Item.cancel}</Button>
-                      <Button onClick={() => { handleMultiCloseDialogAndSubmit(Item.action, selectedRows, store.init_default.CSRF_TOKEN) }} variant='contained'>{Item.submit}</Button>
+                      <Button 
+                        onClick={() => { handleMultiCloseDialogAndSubmit(Item.action, selectedRows, store.init_default.CSRF_TOKEN) }} 
+                        variant='contained'
+                        >
+                        {Item.submit}
+                        </Button>
                     </DialogActions>
                   </Dialog>
                 </Fragment>
@@ -1333,6 +1344,12 @@ const UserList = ({ authConfig, backEndApi, externalId, handleActionInMobileApp,
                       open={multiReviewOpenDialog[Item.action] == undefined ? false : multiReviewOpenDialog[Item.action]}
                       onClose={() => handleMultiCloseDialog()}
                       aria-labelledby='form-dialog-title'
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault();
+                          handleMultiCloseDialogAndSubmit(Item.action, selectedRows, store.init_default.CSRF_TOKEN);
+                        }
+                      }}
                     >
                       <DialogTitle id='form-dialog-title'>{Item.title}</DialogTitle>
                       <DialogContent>
@@ -1342,7 +1359,11 @@ const UserList = ({ authConfig, backEndApi, externalId, handleActionInMobileApp,
                       </DialogContent>
                       <DialogActions className='dialog-actions-dense'>
                         <Button onClick={() => handleMultiCloseDialog()}>{Item.cancel}</Button>
-                        <Button onClick={() => { handleMultiCloseDialogAndSubmit(Item.action, selectedRows, CSRF_TOKEN) }} variant='contained'>{Item.submit}</Button>
+                        <Button 
+                          onClick={() => { handleMultiCloseDialogAndSubmit(Item.action, selectedRows, store.init_default.CSRF_TOKEN) }}
+                          variant='contained'>
+                          {Item.submit}
+                        </Button>
                       </DialogActions>
                     </Dialog>
                   </Fragment>
