@@ -19,7 +19,7 @@ import {
 import { Search, DesignServices, Description, } from '@mui/icons-material';
 import CircularProgress from '@mui/material/CircularProgress'
 import { authConfig, defaultConfig } from 'src/configs/auth'
-
+import { useRouter } from 'next/router'
 import StartModel from 'src/views/Workflow/Start'
 
 
@@ -95,6 +95,7 @@ const NewModel = () => {
     setFlowId('')
   }
 
+  const router = useRouter()
 
   return (
     <Fragment>
@@ -121,6 +122,7 @@ const NewModel = () => {
                       display: 'flex',
                       alignItems: 'center',
                       p: 2,
+                      ml: 2,
                       width: '100%',
                       fontSize: 18
                     }}
@@ -128,19 +130,32 @@ const NewModel = () => {
                     新建工作
                   </Typography>
                 </Grid>
-                <Grid item xs={8}>
-                  <TextField
-                    label="请输入流程名称"
-                    variant="outlined"
-                    size="small"
-                    fullWidth
-                    onChange={handleSearch}
-                    InputProps={{
-                      endAdornment: <Search />,
-                    }}
-                    sx={{ mb: 1, my: 2, pr: 2}}
-                  />
+                <Grid container item xs={8} alignItems="center">
+                  <Grid item xs>
+                    <TextField
+                      label="请输入流程名称"
+                      variant="outlined"
+                      size="small"
+                      fullWidth
+                      onChange={handleSearch}
+                      InputProps={{
+                        endAdornment: <Search />,
+                      }}
+                      sx={{ mb: 1, my: 2, pr: 2 }}
+                    />
+                  </Grid>
+                  <Grid item>
+                    <Button 
+                      size="small" 
+                      onClick={() => {router.push('my')}} 
+                      variant="contained" 
+                      sx={{ mr: 2 }}
+                    >
+                      我的工作
+                    </Button>
+                  </Grid>
                 </Grid>
+
               </Grid>
               <Grid container spacing={2}>
                 <Grid item xs={2}>

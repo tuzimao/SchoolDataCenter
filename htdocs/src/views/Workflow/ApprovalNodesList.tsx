@@ -1,11 +1,9 @@
 // ** MUI Import
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
-import Avatar from '@mui/material/Avatar'
 import { styled } from '@mui/material/styles'
 import TimelineDot from '@mui/lab/TimelineDot'
 import TimelineItem from '@mui/lab/TimelineItem'
-import CardHeader from '@mui/material/CardHeader'
 import Typography from '@mui/material/Typography'
 import CardContent from '@mui/material/CardContent'
 import TimelineContent from '@mui/lab/TimelineContent'
@@ -42,7 +40,7 @@ const ApprovalNodesList = ({ approvalNodes }: any) => {
           {approvalNodes && approvalNodes.map((item: any, index: number)=>{            
             
             return (
-              <TimelineItem>
+              <TimelineItem key={index}>
                 <TimelineSeparator>
                   <TimelineDot color={colorList[index] as OverridableStringUnion< 'inherit' | 'grey' | 'primary' | 'secondary' | 'error' | 'info' | 'success' | 'warning', {} >} />
                   {index + 1 < NodesLength && <TimelineConnector /> }                  

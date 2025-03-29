@@ -173,7 +173,9 @@ const StartModel = ({ FlowId, handleReturnButton, flowRecord }: any) => {
   }
 
   const backEndApi = "/data_workflow.php";
-  const AddtionalParams = { FlowId, processid: flowRecord.processid, runid: flowRecord.runid }
+  const AddtionalParams = { FlowId, processid: flowRecord?.processid, runid: flowRecord?.runid }
+
+  console.log("flowRecord", flowRecord)
 
   return (
     <Fragment>
@@ -224,14 +226,35 @@ const StartModel = ({ FlowId, handleReturnButton, flowRecord }: any) => {
                   <AddOrEditTableCore authConfig={authConfig} externalId={0} id={flowInfor.id} action={'edit_default'} addEditStructInfo={{allFields:{}, }} open={true} toggleAddTableDrawer={toggleAddTableDrawer} addUserHandleFilter={addUserHandleFilter} backEndApi={backEndApi} editViewCounter={1} IsGetStructureFromEditDefault={1} AddtionalParams={AddtionalParams} CSRF_TOKEN={""} dataGridLanguageCode={'zhCN'} toggleImagesPreviewListDrawer={toggleImagesPreviewListDrawer} handleIsLoadingTipChange={handleIsLoadingTipChange} setForceUpdate={setForceUpdate} additionalParameters={AddtionalParams} submitCounter={submitCounter} setSubmitCounter={setSubmitCounter} setFormSubmitStatus={setFormSubmitStatus}/>
                 </Grid>
               </Paper>
-              <Paper sx={{ padding: 2, mt: 2 }}>
-              <ApprovalNodesList approvalNodes={approvalNodes}/>
-              </Paper>
+              {approvalNodes && approvalNodes.length > 0 && (
+                <Paper sx={{ padding: 2, mt: 2 }}>
+                  <ApprovalNodesList approvalNodes={approvalNodes}/>
+                </Paper>
+              )}
             </ScrollableContent>
           </Box>
   
           {/* 底部固定 Toolbar */}
           <AppBar position="static" color="default" sx={{ top: 'auto', bottom: 0, minHeight: '50px' }}>
+            {flowRecord == null && (              
+              <Toolbar sx={{minHeight: '50px'}}>
+                <Button variant="contained" size="small" sx={{ ml: 'auto' }} onClick={()=>{
+                  handleToNextStep()
+                }}>
+                  转交下一步
+                </Button>
+                <Button variant="outlined" size="small" sx={{ ml: 2 }} onClick={()=>{
+                  handleSaveData()
+                }}>
+                  保存
+                </Button>
+                <Button variant="outlined" size="small" sx={{ ml: 2 }} onClick={()=>{
+                  handleReturnButton()
+                }}>
+                  返回
+                </Button>
+              </Toolbar>
+            )}
             {flowRecord && flowRecord.步骤状态 != "办结" && (              
               <Toolbar sx={{minHeight: '50px'}}>
                 <Button variant="contained" size="small" sx={{ ml: 'auto' }} onClick={()=>{
