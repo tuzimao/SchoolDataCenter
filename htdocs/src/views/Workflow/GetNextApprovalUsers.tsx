@@ -4,7 +4,7 @@ import { Box,Typography,Button,Grid } from '@mui/material';
 import { authConfig, defaultConfig } from 'src/configs/auth'
 import CircularProgress from '@mui/material/CircularProgress'
 import Divider from '@mui/material/Divider'
-import { Autocomplete, TextField, Chip } from '@mui/material'
+import { Autocomplete, TextField } from '@mui/material'
 import toast from 'react-hot-toast'
 
 const GetNextApprovalUsers = ({ FlowId, handleReturnButton, flowRecord, formSubmitStatus, submitCounter }: any) => {
@@ -12,7 +12,6 @@ const GetNextApprovalUsers = ({ FlowId, handleReturnButton, flowRecord, formSubm
   const [loading, setLoading] = useState(true);
   const [nextNodes, setNextNodes] = useState<any[]>([])
   const [endNode, setEndNode] = useState<boolean>(false)
-
 
   const fetchWorkItems = async () => {
     try {
@@ -213,7 +212,7 @@ const GetNextApprovalUsers = ({ FlowId, handleReturnButton, flowRecord, formSubm
                                         sx={{ my: 2 }}
                                         size="small"
                                         options={availableOptions}
-                                        getOptionLabel={(option) => option.label}
+                                        getOptionLabel={(option: any) => option.label}
                                         onChange={(event, newValue: any) => {
                                             const filterValue = {...selectedUsers}
                                             filterValue[item.经办步骤Step] = newValue
