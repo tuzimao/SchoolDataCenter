@@ -346,6 +346,7 @@ $MAP['Node Setting'] 				        = '节点设置';
 $MAP['Set Node Information'] 				= '设置节点信息以及转入条件';
 $MAP['NodeType'] 				            = '节点类型';
 $MAP['IsStartNode'] 				        = '是否开始结点';
+$MAP['StepName'] 				            = '步骤名称';
 $MAP['NodeTypeHelpText'] 				    = "类型为'菜单'时,会加入系统菜单,需额外分配权限";
 $MAP['NextStepHelpText'] 	                = '请输入步骤ID, 结束节点: [结束]';
 $MAP['转到表单'] 				             = '转到表单';

@@ -608,6 +608,9 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
             else if(key + "_名称" in defaultValues) {
                 formData.append(key, (value=='请选择' || value == undefined) ? '' : value);
             }
+            else if(key == '学号' && '姓名' in defaultValues) {
+                formData.append(key, (value=='请选择' || value == undefined) ? '' : value);
+            }
             else if(key.startsWith('ChildTable____')) {
                 formData.append(key, (value=='请选择' || value == undefined) ? '' : value);
             }

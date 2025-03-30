@@ -36,7 +36,7 @@ if( $_GET['action']=="add_default_data" || $_GET['action']=="edit_default_data")
                     break;
                 case 'Student:SelectOneID':
                 case 'Student:SelectOneName':
-                    if($_GET['action']=="add_default_data")  {
+                    if($_GET['action']=="add_default_data" || $_GET['action']=="edit_default_data")  {
                         $sql     = "select * from data_student where 学号 = '".ForSqlInjection($_POST['学号'])."'";
                         $rsf     = $db->Execute($sql);
                         $_POST['姓名']      = $rsf->fields['姓名'];
@@ -109,7 +109,7 @@ if( $_GET['action']=="add_default_data" || $_GET['action']=="edit_default_data")
                 break;
             case 'HiddenStudentID':
                 $_POST[$Item['FieldName']] = $GLOBAL_USER->USER_ID;
-                if($_GET['action']=="add_default_data")  {
+                if($_GET['action']=="add_default_data" || $_GET['action']=="edit_default_data")  {
                     $sql     = "select * from data_student where 学号 = '".ForSqlInjection($GLOBAL_USER->USER_ID)."'";
                     $rsf     = $db->Execute($sql);
                     $_POST['姓名']      = $rsf->fields['姓名'];

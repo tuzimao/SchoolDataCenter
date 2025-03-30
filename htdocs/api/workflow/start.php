@@ -86,6 +86,9 @@ if($_GET['action'] == 'NewWorkflow' && $FlowId > 0 && $processid == 0)      {
     $Step       = $FormInfo['Step'];
     $Setting    = $FormInfo['Setting'];
     $FaceTo     = $FormInfo['FaceTo'];
+    $SettingMap = unserialize(base64_decode($Setting));
+    $StepName   = $SettingMap['StepName'];
+    if($StepName == null) $StepName = $Step;
 
     $sql        = "select * from form_formname where id='$FormId'";
     $rs         = $db->Execute($sql);
@@ -119,7 +122,7 @@ if($_GET['action'] == 'NewWorkflow' && $FlowId > 0 && $processid == 0)      {
     $Element['FormId'] = $FormId;
     $Element['FlowId'] = $FlowId;
     $Element['FlowName'] = $FlowName;
-    $Element['经办步骤'] = "(第".$Step."步： ".$FlowName.")"; 
+    $Element['经办步骤'] = "(第".$StepName."步： ".$FlowName.")"; 
     $Element['RunId']  = $RunId;
     $Element['用户ID'] = $GLOBAL_USER->USER_ID;
     $Element['工作ID'] = $工作ID;
@@ -142,7 +145,7 @@ if($_GET['action'] == 'NewWorkflow' && $FlowId > 0 && $processid == 0)      {
     $data['runid']          = $RunId; 
     $data['工作名称']       = $工作名称; 
     $data['表单名称']       = $FormName; 
-    $data['步骤名称']       = "主办(第1步： ".$FlowName.")"; 
+    $data['步骤名称']       = "主办(第".$StepName."步： ".$FlowName.")"; 
     $data['工作等级']       = "普通";
     $RS             = [];
     $RS['data']     = $data;
@@ -185,8 +188,11 @@ if($_GET['action'] == 'GetNextApprovalUsers' && $FlowId > 0 && $processid > 0)  
         $rs_a       = $rs->GetArray();
         $下一步骤可选节点 = [];
         foreach($rs_a as $item) {
-            $SettingData        = unserialize(base64_decode($item['Setting']));
-            $可选节点            = [];
+            $SettingData    = unserialize(base64_decode($item['Setting']));
+            $StepName       = $SettingData['StepName'];
+            if($StepName == null) $StepName = $item['Step'];
+
+            $可选节点               = [];
             $NodeFlow_AuthorizedUser = [];
             if($SettingData['NodeFlow_AuthorizedUser'] != null && $SettingData['NodeFlow_AuthorizedUser'] != "") {
                 $NodeFlow_AuthorizedUser_Array = explode(',', $SettingData['NodeFlow_AuthorizedUser']);
@@ -226,7 +232,7 @@ if($_GET['action'] == 'GetNextApprovalUsers' && $FlowId > 0 && $processid > 0)  
             $可选节点['授权允许访问的部门']          = $NodeFlow_AuthorizedDept; 
             $可选节点['授权允许访问的角色']          = $NodeFlow_AuthorizedRole;
             $可选节点['NodeFlow_AuthorizedUser']   = array_values($ApprovalUsers); 
-            $可选节点['经办步骤']                   = "(第".$item['Step']."步： ".$item['FlowName'].")";
+            $可选节点['经办步骤']                   = "(第".$StepName."步： ".$item['FlowName'].")";
             $可选节点['经办步骤id']                 = $item['id'];
             $可选节点['经办步骤Step']               = $item['Step'];
             $可选节点['经办步骤FlowId']             = $item['id'];
@@ -266,7 +272,10 @@ if($_GET['action'] == 'GoToNextStep' && $FlowId > 0 && $processid > 0 && $select
         $rs         = $db->Execute($sql);
         $rs_a       = $rs->GetArray();
         foreach($rs_a as $item) {
-            $流程名称MAP[$item['Step']]['FlowName'] = "(第".$item['Step']."步： ".$item['FlowName'].")"; ;
+            $SettingData    = unserialize(base64_decode($item['Setting']));
+            $StepName       = $SettingData['StepName'];
+            if($StepName == null) $StepName = $item['Step'];
+            $流程名称MAP[$item['Step']]['FlowName'] = "(第".$StepName."步： ".$item['FlowName'].")"; ;
             $流程名称MAP[$item['Step']]['FlowId']   = $item['id'];
         }
     }
@@ -393,8 +402,6 @@ if($_GET['action'] == 'GoToEndWork' && $FlowId > 0 && $processid > 0 && $runid >
     exit;
 }
 
-
-
 $runid          = intval($_POST['runid']);
 if($_GET['action'] == 'getApprovalNodes' && $runid > 0)      {
     $sql        = "select 工作接收时间, 步骤状态, 流程步骤ID, FlowName, 主办说明, 经办步骤 from form_flow_run_process where runid = '$runid' and 步骤状态 = '办结' order by 流程步骤ID desc ";
@@ -467,7 +474,8 @@ if($_GET['action'] == 'GetMyWorkList' && $workType != '')      {
                     p.步骤状态,
                     p.经办步骤,
                     r.结束时间,
-                    p.id as processid 
+                    p.id as processid,
+                    p.上一步ProcessId as 上一步ProcessId
                 FROM form_flow_run_process p
                 JOIN form_flow_run r ON r.工作ID = p.工作ID
                 WHERE p.id IN (

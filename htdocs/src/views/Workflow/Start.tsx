@@ -236,25 +236,6 @@ const StartModel = ({ FlowId, handleReturnButton, flowRecord }: any) => {
   
           {/* 底部固定 Toolbar */}
           <AppBar position="static" color="default" sx={{ top: 'auto', bottom: 0, minHeight: '50px' }}>
-            {flowInfor == null && (              
-              <Toolbar sx={{minHeight: '50px'}}>
-                <Button variant="contained" size="small" sx={{ ml: 'auto' }} onClick={()=>{
-                  handleToNextStep()
-                }}>
-                  转交下一步
-                </Button>
-                <Button variant="outlined" size="small" sx={{ ml: 2 }} onClick={()=>{
-                  handleSaveData()
-                }}>
-                  保存
-                </Button>
-                <Button variant="outlined" size="small" sx={{ ml: 2 }} onClick={()=>{
-                  handleReturnButton()
-                }}>
-                  返回
-                </Button>
-              </Toolbar>
-            )}
             {flowInfor && flowInfor.步骤状态 != "办结" && (              
               <Toolbar sx={{minHeight: '50px'}}>
                 <Button variant="contained" size="small" sx={{ ml: 'auto' }} onClick={()=>{
@@ -267,7 +248,7 @@ const StartModel = ({ FlowId, handleReturnButton, flowRecord }: any) => {
                 }}>
                   保存
                 </Button>
-                {flowInfor && flowInfor.流程步骤ID && Number(flowInfor.流程步骤ID) > 1 && (
+                {flowInfor && flowInfor.流程步骤ID && Number(flowInfor.上一步ProcessId) > 0 && (
                   <Button variant="contained" size="small" sx={{ ml: 2 }} onClick={()=>{
                     handleRefuseButton()
                   }}>
