@@ -159,12 +159,12 @@ $YesOrNotOptions[] = ['value'=>'Yes', 'label'=>__('Yes')];
 $YesOrNotOptions[] = ['value'=>'No', 'label'=>__('No')];
 
 //处理其它几个编辑页面的结构定义
-include_once('form_formflow_edit_default_1.php');
-include_once('form_formflow_edit_default_2.php');
-include_once('form_formflow_edit_default_3.php');
-include_once('form_formflow_edit_default_4.php');
-include_once('form_formflow_edit_default_5.php');
-include_once('form_formflow_edit_default_7.php');
+include_once('./lib/form_formflow_edit_default_1.php');
+include_once('./lib/form_formflow_edit_default_2.php');
+include_once('./lib/form_formflow_edit_default_3.php');
+include_once('./lib/form_formflow_edit_default_4.php');
+include_once('./lib/form_formflow_edit_default_5.php');
+include_once('./lib/form_formflow_edit_default_7.php');
 
 if(($_GET['action']=="edit_default_6_data") && $id!="")     {
     $sql        = "select * from form_formflow where id = '$id'";

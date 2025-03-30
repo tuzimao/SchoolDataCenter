@@ -6,6 +6,11 @@
 * Copyright (c) 2007-2025
 * License: 商业授权
 */
+//禁止当前文件直接在URL中访问
+$CurrentUrlFileName = basename($_SERVER['PHP_SELF']);
+$ForbiddenAccessUrlList = ['form_formflow_edit_default_5.php'];
+if(in_array($CurrentUrlFileName, $ForbiddenAccessUrlList)) exit;
+
 
 //#########################################################################################################################
 //MobileEnd################################################################################################################
