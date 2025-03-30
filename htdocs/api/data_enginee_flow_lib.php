@@ -1431,6 +1431,12 @@ if( ( ($_GET['action']=="edit_default"&&in_array('Edit',$Actions_In_List_Row_Arr
         $edit_default['titletext']      = "";
         $edit_default['titlememo']      = "";
         $edit_default['tablewidth']     = 650;
+        if($整个页面是否只读 == true) {
+            $edit_default['submittext']     = "";
+        }
+        if($_GET['processid'] > 0 && $_GET['runid'] > 0) {
+            $edit_default['submittext']     = "";
+        }
     }
     //Relative Child Table Support
     $Relative_Child_Table                   = $SettingMap['Relative_Child_Table'];

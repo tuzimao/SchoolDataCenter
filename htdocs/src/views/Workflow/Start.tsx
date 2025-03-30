@@ -153,7 +153,7 @@ const StartModel = ({ FlowId, handleReturnButton, flowRecord }: any) => {
   const handleGobackToPreviousStep = async (GobackToStep: string) => {
     try {
       const storedToken = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
-      const response = await axios.post(authConfig.backEndApiHost + 'workflow/start.php?action=GobackToPreviousStep', { FlowId, GobackToStep, processid: flowRecord.processid, runid: flowRecord.runid }, {
+      const response = await axios.post(authConfig.backEndApiHost + 'workflow/start.php?action=GobackToPreviousStep', { FlowId, GobackToStep, processid: flowRecord.processid, runid: flowInfor.runid }, {
         headers: {
           Authorization: storedToken,
           'Content-Type': 'application/json'
@@ -173,9 +173,9 @@ const StartModel = ({ FlowId, handleReturnButton, flowRecord }: any) => {
   }
 
   const backEndApi = "/data_workflow.php";
-  const AddtionalParams = { FlowId, processid: flowRecord?.processid, runid: flowRecord?.runid }
+  const AddtionalParams = { FlowId, processid: flowInfor?.processid, runid: flowInfor?.runid }
 
-  console.log("flowRecord", flowRecord)
+  console.log("flowInfor", flowInfor)
 
   return (
     <Fragment>
@@ -236,7 +236,7 @@ const StartModel = ({ FlowId, handleReturnButton, flowRecord }: any) => {
   
           {/* 底部固定 Toolbar */}
           <AppBar position="static" color="default" sx={{ top: 'auto', bottom: 0, minHeight: '50px' }}>
-            {flowRecord == null && (              
+            {flowInfor == null && (              
               <Toolbar sx={{minHeight: '50px'}}>
                 <Button variant="contained" size="small" sx={{ ml: 'auto' }} onClick={()=>{
                   handleToNextStep()
@@ -255,7 +255,7 @@ const StartModel = ({ FlowId, handleReturnButton, flowRecord }: any) => {
                 </Button>
               </Toolbar>
             )}
-            {flowRecord && flowRecord.步骤状态 != "办结" && (              
+            {flowInfor && flowInfor.步骤状态 != "办结" && (              
               <Toolbar sx={{minHeight: '50px'}}>
                 <Button variant="contained" size="small" sx={{ ml: 'auto' }} onClick={()=>{
                   handleToNextStep()
@@ -267,7 +267,7 @@ const StartModel = ({ FlowId, handleReturnButton, flowRecord }: any) => {
                 }}>
                   保存
                 </Button>
-                {flowRecord && flowRecord.流程步骤ID && Number(flowRecord.流程步骤ID) > 1 && (
+                {flowInfor && flowInfor.流程步骤ID && Number(flowInfor.流程步骤ID) > 1 && (
                   <Button variant="contained" size="small" sx={{ ml: 2 }} onClick={()=>{
                     handleRefuseButton()
                   }}>
@@ -281,7 +281,7 @@ const StartModel = ({ FlowId, handleReturnButton, flowRecord }: any) => {
                 </Button>
               </Toolbar>
             )}
-            {flowRecord && flowRecord.步骤状态 == "办结" && (              
+            {flowInfor && flowInfor.步骤状态 == "办结" && (              
               <Toolbar sx={{minHeight: '50px'}}>
                 <Button variant="outlined" size="small" sx={{ ml: 'auto' }} onClick={()=>{
                   handleReturnButton()
@@ -310,7 +310,7 @@ const StartModel = ({ FlowId, handleReturnButton, flowRecord }: any) => {
               <Icon icon='mdi:close' />
             </IconButton>
             {nextStepStatus && (
-              <GetNextApprovalUsers FlowId={FlowId} handleReturnButton={handleReturnButton} flowRecord={flowRecord} formSubmitStatus={formSubmitStatus}/>
+              <GetNextApprovalUsers FlowId={FlowId} handleReturnButton={handleReturnButton} flowRecord={flowInfor} formSubmitStatus={formSubmitStatus} submitCounter={submitCounter} />
             )}
             {refuseStatus && (
               <Grid item xs={12} sm={12} container justifyContent="space-around">

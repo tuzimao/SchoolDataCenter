@@ -757,7 +757,6 @@ function getCurrentXueQi() {
 	return $selected;
 }
 
-
 function AddOneRecordToTable($TableName, $FormId, $DefaultValue) {
     global $TableName, $db, $GLOBAL_USER;
     $DefaultFieldValue = $DefaultValue;
@@ -770,13 +769,18 @@ function AddOneRecordToTable($TableName, $FormId, $DefaultValue) {
         $FieldName  = $Item['FieldName'];
         $ShowType   = $Item['ShowType'];
         switch($ShowType) {
+            case 'Xueqi:Name':
+                $DefaultFieldValue[$FieldName] = getCurrentXueQi();
+                break;
             case 'Input:Increasement[Fromat1]':
                 $DefaultFieldValue[$FieldName] = $DefaultValue['id'];
                 break;
             case 'Hidden:Createtime':
+            case 'Hidden:CreateandupdatetimeInput':
                 $DefaultFieldValue[$FieldName] = date('Y-m-d H:i:s');
                 break;
             case 'Hidden:CurrentUserIdAdd':
+            case 'Hidden:CurrentUserIdAddEditHidden':
                 $DefaultFieldValue[$FieldName] = $GLOBAL_USER->USER_ID;
                 break;
             case 'Hidden:CurrentStudentCodeAdd':
