@@ -27,6 +27,7 @@ const ScrollableContent = styled(Box)(({ theme }) => ({
   flexGrow: 1,
   overflowY: 'auto',
   padding: theme.spacing(3),
+  maxHeight: 'calc(100vh - 166px)'
 }));
 
 // 自定义侧边栏样式
