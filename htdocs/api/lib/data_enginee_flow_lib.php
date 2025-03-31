@@ -9,8 +9,8 @@
 use Overtrue\Pinyin\Pinyin;
 header("Content-Type: application/json");
 $TIME_BEGIN = time();
-require_once('cors.php');
-require_once('include.inc.php');
+require_once('../cors.php');
+require_once('../include.inc.php');
 require_once('data_enginee_function.php');
 
 //print "TIME EXCEUTE 0:".(time()-$TIME_BEGIN)."<BR>\n";
@@ -136,7 +136,6 @@ $InsertOrUpdateFieldArrayForSql['EDIT'] = [];
 $defaultValuesAdd  = [];
 $defaultValuesEdit = [];
 
-
 $allFieldsAdd   = getAllFields($AllFieldsFromTable, $AllShowTypesArray, 'ADD', true, $SettingMap);
 foreach($allFieldsAdd as $ModeName=>$allFieldItem) {
     foreach($allFieldItem as $ITEM) {
@@ -242,22 +241,22 @@ if($_GET['action']=="option_multi_setting_two")  {
 
 
 
-require_once('lib/data_enginee_flow_lib_import_default_data.php');
+require_once('data_enginee_flow_lib_import_default_data.php');
 
 //编辑页面时的启用字段列表
-require_once('lib/data_enginee_flow_lib_add_default_data.php');
+require_once('data_enginee_flow_lib_add_default_data.php');
 
-require_once('lib/data_enginee_flow_lib_edit_default_data.php');
+require_once('data_enginee_flow_lib_edit_default_data.php');
 
-require_once('lib/data_enginee_flow_lib_edit_default_configsetting_data.php');
+require_once('data_enginee_flow_lib_edit_default_configsetting_data.php');
 
-require_once('lib/data_enginee_flow_lib_edit_default.php');
+require_once('data_enginee_flow_lib_edit_default.php');
 
-require_once('lib/data_enginee_flow_lib_edit_default_configsetting_data.php');
+require_once('data_enginee_flow_lib_edit_default_configsetting_data.php');
 
-require_once('lib/data_enginee_flow_lib_view_default.php');
+require_once('data_enginee_flow_lib_view_default.php');
 
-require_once('lib/data_enginee_flow_lib_delete_array.php');
+require_once('data_enginee_flow_lib_delete_array.php');
 
 
 if( $_GET['action']=="edit_default_1" && $_GET['id']!="" )  {

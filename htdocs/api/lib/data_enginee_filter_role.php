@@ -7,8 +7,8 @@
 * License: 商业授权
 */
 header("Content-Type: application/json");
-require_once('cors.php');
-require_once('include.inc.php');
+require_once('../cors.php');
+require_once('../include.inc.php');
 
 $USER_ID    = ForSqlInjection($GLOBAL_USER->USER_ID);
 $USER_NAME  = ForSqlInjection($GLOBAL_USER->USER_NAME);
