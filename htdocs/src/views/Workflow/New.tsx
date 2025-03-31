@@ -71,15 +71,17 @@ const NewModel = () => {
     const searchTerm = event.target.value;
     
     try {
+      const storedToken = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
       const response = await axios.get(`${authConfig.backEndApiHost}workflow/start.php`, {
-        params: {
-          action: 'SearchWorkflow',
-          keyword: searchTerm
-        }
+        params: { action: 'SearchWorkflow', keyword: searchTerm },
+        headers: { Authorization: storedToken}
       });
       const data = response.data;
       setAllWorkItems(data.data);
-      setCurrentWorkItems(data.data['资产'] || []);
+      const DataKeys = Object.keys(data.data);
+      if(DataKeys && DataKeys.length > 0) {
+        setCurrentWorkItems(data.data[DataKeys[0]] || []);
+      }
     } catch (err) {
       console.error('搜索出错:', err);
     }
@@ -159,9 +161,9 @@ const NewModel = () => {
               </Grid>
               <Grid container spacing={2}>
                 <Grid item xs={2}>
-                  <Paper sx={{ height: '100%', backgroundColor: 'background.paper' }}>
+                  <Paper sx={{ height: 'calc(100vh - 150px)', backgroundColor: 'background.paper' }}>
                     <List>
-                      {Object.keys(allWorkItems).map((category) => (
+                      {allWorkItems && Object.keys(allWorkItems).map((category) => (
                         <ListItemButton
                           key={category}
                           selected={selectedCategory === category}
