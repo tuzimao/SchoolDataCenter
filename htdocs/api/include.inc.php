@@ -757,7 +757,7 @@ function getCurrentXueQi() {
 	return $selected;
 }
 
-function AddOneRecordToTable($TableName, $FormId, $DefaultValue) {
+function AddOneRecordToTable($TableName, $FormId, $FlowId, $DefaultValue) {
     global $TableName, $db, $GLOBAL_USER;
     $DefaultFieldValue = $DefaultValue;
     $sql        = "select * from form_formfield where FormId='$FormId' and IsEnable='1' order by SortNumber asc, id asc";
@@ -765,7 +765,7 @@ function AddOneRecordToTable($TableName, $FormId, $DefaultValue) {
     $AllFieldsFromTable   = $rs->GetArray();
     $AllFieldsMap = [];
     foreach($AllFieldsFromTable as $Item)  {
-        $Item['Setting']    = json_decode($Item['Setting'],true);
+        $Item['Setting']    = json_decode($Item['Setting'], true);
         $FieldName  = $Item['FieldName'];
         $ShowType   = $Item['ShowType'];
         switch($ShowType) {
@@ -786,6 +786,30 @@ function AddOneRecordToTable($TableName, $FormId, $DefaultValue) {
             case 'Hidden:CurrentStudentCodeAdd':
                 if($GLOBAL_USER->学号=="") $GLOBAL_USER->学号 = $GLOBAL_USER->USER_ID;
                 $DefaultFieldValue[$FieldName] = $GLOBAL_USER->学号;
+                break;
+        }
+    }
+
+	//流程中的字段设置
+    $sql        = "select * from form_formflow where FormId='$FormId' and id='$FlowId'";
+    $rs         = $db->Execute($sql);
+    $AllFieldsFromFlow   = $rs->GetArray();
+    $SettingMap = unserialize(base64_decode($AllFieldsFromFlow[0]['Setting']));
+
+	foreach($AllFieldsFromTable as $Item)  {
+        $Item['Setting']    = json_decode($Item['Setting'], true);
+        $FieldName  		= $Item['FieldName'];
+        $ShowType   		= $Item['ShowType'];
+		$流程中的设定 		 = $SettingMap['FieldType_'.$FieldName];
+        switch($流程中的设定) {
+            case 'HiddenStudentID':
+                $DefaultFieldValue[$FieldName] = $GLOBAL_USER->学号;
+                break;
+            case 'HiddenStudentName':
+                $DefaultFieldValue[$FieldName] = $GLOBAL_USER->姓名;
+                break;
+            case 'HiddenStudentClass':
+                $DefaultFieldValue[$FieldName] = $GLOBAL_USER->班级;
                 break;
         }
     }

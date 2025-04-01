@@ -11,6 +11,13 @@ require_once('../include.inc.php');
 
 CheckAuthUserLoginStatus();
 
+if($GLOBAL_USER->type == 'Student') {
+    $FaceTo = "Student";
+}
+else {
+    $FaceTo = "AuthUser";
+}
+
 $payload        = file_get_contents('php://input');
 $_POST          = json_decode($payload,true);
 
@@ -19,7 +26,7 @@ if($_GET['action'] == 'MyNewWorkflow')      {
             where 
                 form_formflow.NodeType = '工作流' and 
                 form_formflow.IsStartNode = 'Yes' and 
-                form_formflow.FaceTo = 'AuthUser' and 
+                form_formflow.FaceTo = '$FaceTo' and 
                 form_formflow.FormId = form_formname.id
             order by 
                 form_formflow.Step asc
@@ -52,7 +59,7 @@ if($_GET['action'] == 'SearchWorkflow')      {
             where 
                 form_formflow.NodeType = '工作流' and 
                 form_formflow.IsStartNode = 'Yes' and 
-                form_formflow.FaceTo = 'AuthUser' and 
+                form_formflow.FaceTo = '$FaceTo' and 
                 form_formflow.FormId = form_formname.id 
                 $AddSql
             order by 
@@ -137,7 +144,7 @@ if($_GET['action'] == 'NewWorkflow' && $FlowId > 0 && $processid == 0)      {
 
     //业务数据表-初始化一条记录进去
     $DefaultValue['id'] = $工作ID;
-    AddOneRecordToTable($TableName, $FormId, $DefaultValue);
+    AddOneRecordToTable($TableName, $FormId, $FlowId, $DefaultValue);
 
     $data                   = [];
     $data['id']             = EncryptID($工作ID); 

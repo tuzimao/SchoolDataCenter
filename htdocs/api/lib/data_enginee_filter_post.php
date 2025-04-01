@@ -7,8 +7,8 @@
 * License: 商业授权
 */
 header("Content-Type: application/json");
-require_once('../cors.php');
-require_once('../include.inc.php');
+require_once('./cors.php');
+require_once('./include.inc.php');
 
 
 if( $_GET['action']=="add_default_data" || $_GET['action']=="edit_default_data") {
