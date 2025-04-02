@@ -51,7 +51,10 @@ const NewModel = () => {
         });
         const data = response.data;
         setAllWorkItems(data.data);
-        setCurrentWorkItems(data.data['资产'] || []);
+        const DataKeys = Object.keys(data.data);
+        if(DataKeys && DataKeys.length > 0) {
+          setCurrentWorkItems(data.data[DataKeys[0]] || []);
+        }
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to fetch workflows');
       } finally {
@@ -92,12 +95,12 @@ const NewModel = () => {
     console.log('点击操作:', action);
   };
 
-  const handleReturnButton = () => {
-    setPageModel('New')
-    setFlowId('')
-  }
-
   const router = useRouter()
+
+  const handleReturnButton = () => {
+    setFlowId('')
+    router.push('my')
+  }
 
   return (
     <Fragment>
