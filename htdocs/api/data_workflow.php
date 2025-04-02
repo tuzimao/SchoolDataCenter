@@ -8,8 +8,8 @@
 */
 header("Content-Type: application/json");
 $TIME_BEGIN = time();
-require_once('cors.php');
-require_once('include.inc.php');
+require_once(__DIR__ . '/cors.php');
+require_once(__DIR__ . '/include.inc.php');
 
 
 global $WholePageModel;

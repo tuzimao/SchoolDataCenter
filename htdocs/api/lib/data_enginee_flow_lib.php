@@ -9,8 +9,6 @@
 use Overtrue\Pinyin\Pinyin;
 header("Content-Type: application/json");
 $TIME_BEGIN = time();
-require_once('./cors.php');
-require_once('./include.inc.php');
 require_once('data_enginee_function.php');
 
 //print "TIME EXCEUTE 0:".(time()-$TIME_BEGIN)."<BR>\n";
