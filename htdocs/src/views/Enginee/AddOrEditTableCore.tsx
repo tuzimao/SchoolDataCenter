@@ -2739,6 +2739,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                         render={({ field: { value, onChange, onBlur } }) => (
                                                                             <DatePickerWrapper sx={{ zIndex: 'tooltip' }}>
                                                                                 <DatePicker
+                                                                                    disabled={FieldArray.rules.disabled}
                                                                                     selected={defaultValuesNew[FieldArray.name]!=undefined && defaultValuesNew[FieldArray.name]!="" && defaultValuesNew[FieldArray.name] != "0000-00-00" && defaultValuesNew[FieldArray.name] != "1971-01-01" && defaultValuesNew[FieldArray.name].length == 10 ? (new Date(defaultValuesNew[FieldArray.name] + ' 00:00:00')) : (value ? new Date(value) : null)  }
                                                                                     id={FieldArray.name}
                                                                                     showYearDropdown
@@ -2813,6 +2814,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                         render={({ field: { value, onChange, onBlur } }) => (
                                                                             <DatePickerWrapper sx={{ zIndex: 'tooltip' }}>
                                                                                 <DatePicker
+                                                                                    disabled={FieldArray.rules.disabled}
                                                                                     selected={defaultValuesNew[FieldArray.name]!=undefined && defaultValuesNew[FieldArray.name]!="" && defaultValuesNew[FieldArray.name] != "00000000" && defaultValuesNew[FieldArray.name] != "19710101" && defaultValuesNew[FieldArray.name].length == 8 ? (new Date(Number(defaultValuesNew[FieldArray.name].substring(0,4)) + '-' + Number(defaultValuesNew[FieldArray.name].substring(4,6)) + '-' + Number(defaultValuesNew[FieldArray.name].substring(6,8)) + '-' + ' 00:00:00')) : (value ? new Date(value) : null)  }
                                                                                     id={FieldArray.name}
                                                                                     showYearDropdown
@@ -2888,6 +2890,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                         render={({ field: { value, onChange, onBlur } }) => (
                                                                             <DatePickerWrapper>
                                                                                 <DatePicker
+                                                                                    disabled={FieldArray.rules.disabled}
                                                                                     selected={defaultValuesNew[FieldArray.name] && defaultValuesNew[FieldArray.name] != "0000" && defaultValuesNew[FieldArray.name] != "1971" && defaultValuesNew[FieldArray.name].length == 4 ? (new Date(defaultValuesNew[FieldArray.name] + '-01-01 00:00:00')) : (value ? new Date(value) : null)   }
                                                                                     id={FieldArray.name}
                                                                                     showYearPicker
@@ -2961,6 +2964,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                         render={({ field: { value, onChange, onBlur } }) => (
                                                                             <DatePickerWrapper>
                                                                                 <DatePicker
+                                                                                    disabled={FieldArray.rules.disabled}
                                                                                     selected={defaultValuesNew[FieldArray.name] && defaultValuesNew[FieldArray.name] != "0000-00" && defaultValuesNew[FieldArray.name] != "1971-01" && defaultValuesNew[FieldArray.name].length == 7 ? (new Date(defaultValuesNew[FieldArray.name] + '-01 00:00:00')) : (value ? new Date(value) : null)   }
                                                                                     id={FieldArray.name}
                                                                                     showMonthYearPicker
@@ -3034,6 +3038,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                         render={({ field: { value, onChange, onBlur } }) => (
                                                                             <DatePickerWrapper>
                                                                                 <DatePicker
+                                                                                    disabled={FieldArray.rules.disabled}
                                                                                     selected={defaultValuesNew[FieldArray.name] && defaultValuesNew[FieldArray.name] != "0000-00" && defaultValuesNew[FieldArray.name] != "197101" && defaultValuesNew[FieldArray.name].length == 6 ? (new Date(Number(defaultValuesNew[FieldArray.name].substring(0,4)) + '-' + Number(defaultValuesNew[FieldArray.name].substring(4,6)) + '-01 00:00:00')) : (value ? new Date(value) : null)   }
                                                                                     id={FieldArray.name}
                                                                                     showMonthYearPicker
@@ -3130,6 +3135,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                             return (
                                                                                 <DatePickerWrapper sx={{ '& .react-datepicker-wrapper': { width: '290px' } }}>
                                                                                     <DatePicker
+                                                                                        disabled={FieldArray.rules.disabled}
                                                                                         selected={quarterMap[FieldArray.name] ? (new Date(quarterMap[FieldArray.name])) : (value ? new Date(value) : null)   }
                                                                                         id={FieldArray.name}
                                                                                         showQuarterYearPicker
@@ -3205,6 +3211,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                         render={({ field: { value, onChange, onBlur } }) => (
                                                                             <DatePickerWrapper sx={{ 'z-index': 9999}}>
                                                                                 <DatePicker
+                                                                                    disabled={FieldArray.rules.disabled}
                                                                                     showTimeSelect
                                                                                     timeFormat='HH:mm'
                                                                                     timeIntervals={15}
@@ -3280,6 +3287,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                 <FormControl fullWidth sx={{ mb: 0 }}>
                                                                     <DatePickerWrapper>
                                                                         <DatePicker
+                                                                            disabled={FieldArray.rules.disabled}
                                                                             showTimeSelect
                                                                             timeFormat='HH:mm'
                                                                             timeIntervals={15}

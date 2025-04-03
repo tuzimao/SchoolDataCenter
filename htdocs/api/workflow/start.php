@@ -21,7 +21,7 @@ else {
 $payload        = file_get_contents('php://input');
 $_POST          = json_decode($payload,true);
 
-if($_GET['action'] == 'MyNewWorkflow')      {
+if($_GET['action'] == 'MyNewWorkflow')       {
     $sql = "select form_formflow.id as FlowId, form_formflow.FlowName, form_formflow.FormId, form_formname.Memo, form_formname.FormGroup from form_formflow, form_formname 
             where 
                 form_formflow.NodeType = '工作流' and 
@@ -84,7 +84,7 @@ if($_GET['action'] == 'SearchWorkflow')      {
 $FlowId     = intval(DecryptID($_POST['FlowId']));
 $processid  = intval($_POST['processid']);
 $runid      = intval($_POST['runid']);
-if($_GET['action'] == 'NewWorkflow' && $FlowId > 0 && $processid == 0)      {
+if($_GET['action'] == 'NewWorkflow' && $FlowId > 0 && $processid == 0)              {
     $sql        = "select * from form_formflow where id='$FlowId'";
     $rs         = $db->Execute($sql);
     $FormInfo   = $rs->fields;
@@ -97,6 +97,13 @@ if($_GET['action'] == 'NewWorkflow' && $FlowId > 0 && $processid == 0)      {
     $SettingMap = unserialize(base64_decode($Setting));
     $StepName   = $SettingMap['StepName'];
     if($StepName == null) $StepName = $Step;
+
+    //加载工作流插件
+    require_once('plugins.php');
+    $NodeFlow_Approval_Execute_Function = $SettingMap['NodeFlow_Approval_Execute_Function']; 
+    if(function_exists($NodeFlow_Approval_Execute_Function))  {
+        $NodeFlow_Approval_Execute_Function();
+    }
 
     $sql        = "select * from form_formname where id='$FormId'";
     $rs         = $db->Execute($sql);
@@ -314,7 +321,7 @@ if($_GET['action'] == 'GetNextApprovalUsers' && $FlowId > 0 && $processid > 0)  
 $processid      = intval($_POST['processid']);
 $selectedText   = FilterString($_POST['selectedText']);
 $selectedUsers  = $_POST['selectedUsers'];
-if($_GET['action'] == 'GoToNextStep' && $FlowId > 0 && $processid > 0 && $selectedText != '' && is_array($selectedUsers) )      {
+if($_GET['action'] == 'GoToNextStep' && $FlowId > 0 && $processid > 0 && $selectedText != '' && is_array($selectedUsers) )          {
     $sql        = "select * from form_formflow where id='$FlowId'";
     $rs         = $db->Execute($sql);
     $FormInfo   = $rs->fields;
@@ -330,7 +337,7 @@ if($_GET['action'] == 'GoToNextStep' && $FlowId > 0 && $processid > 0 && $select
     require_once('plugins.php');
     $NodeFlow_Approval_Execute_Function = $SettingMap['NodeFlow_Approval_Execute_Function']; 
     if(function_exists($NodeFlow_Approval_Execute_Function))  {
-        $NodeFlow_Approval_Execute_Function();
+        $NodeFlow_Approval_Execute_Function(); 
     }
 
     $NextStep = $SettingMap['NextStep']; 
@@ -388,7 +395,7 @@ if($_GET['action'] == 'GoToNextStep' && $FlowId > 0 && $processid > 0 && $select
 $processid      = intval($_POST['processid']);
 $GobackToStep   = FilterString($_POST['GobackToStep']);
 $selectedText   = FilterString($_POST['selectedText']);
-if($_GET['action'] == 'GobackToPreviousStep' && $FlowId > 0 && $processid > 0 && $selectedText == '' && $GobackToStep != '' )      {
+if($_GET['action'] == 'GobackToPreviousStep' && $FlowId > 0 && $processid > 0 && $selectedText == '' && $GobackToStep != '' )       {
     $sql        = "select * from form_formflow where id='$FlowId'";
     $rs         = $db->Execute($sql);
     $FormInfo   = $rs->fields;
@@ -456,6 +463,13 @@ if($_GET['action'] == 'GoToEndWork' && $FlowId > 0 && $processid > 0 && $runid >
     $FaceTo     = $FormInfo['FaceTo'];
     $SettingMap = unserialize(base64_decode($Setting));
 
+    //加载工作流插件
+    require_once('plugins.php');
+    $NodeFlow_Approval_Execute_Function = $SettingMap['NodeFlow_Approval_Execute_Function']; 
+    if(function_exists($NodeFlow_Approval_Execute_Function))  {
+        $NodeFlow_Approval_Execute_Function();
+    }
+
     $sql1 = "update form_flow_run_process set 主办说明 = '".$selectedText."', 步骤状态 = '办结' where id = '$processid' and 步骤状态 !='办结'";
     $db->Execute($sql1);
 
@@ -472,7 +486,7 @@ if($_GET['action'] == 'GoToEndWork' && $FlowId > 0 && $processid > 0 && $runid >
 }
 
 $runid          = intval($_POST['runid']);
-if($_GET['action'] == 'getApprovalNodes' && $runid > 0)      {
+if($_GET['action'] == 'getApprovalNodes' && $runid > 0)         {
     $sql        = "select 工作接收时间, 步骤状态, 流程步骤ID, FlowName, 主办说明, 经办步骤 from form_flow_run_process where runid = '$runid' and 步骤状态 = '办结' order by 流程步骤ID desc ";
     $rs         = $db->Execute($sql);
     $rsT        = $rs->GetArray();
@@ -485,7 +499,7 @@ if($_GET['action'] == 'getApprovalNodes' && $runid > 0)      {
 }
 
 $workType = FilterString($_POST['workType']);
-if($_GET['action'] == 'GetMyWorkList' && $workType != '')      {
+if($_GET['action'] == 'GetMyWorkList' && $workType != '')       {
     $pageid     = intval($_POST['pageid']);
     $pageSize   = intval($_POST['pageSize']);
     if($pageSize<=0)    $pageSize   = 15;
