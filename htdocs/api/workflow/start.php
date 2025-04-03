@@ -175,6 +175,11 @@ if($_GET['action'] == 'GetNextApprovalUsers' && $FlowId > 0 && $processid > 0)  
     $FaceTo     = $FormInfo['FaceTo'];
     $SettingMap = unserialize(base64_decode($Setting));
 
+    $sql        = "select * from form_formname where id='$FormId'";
+    $rs         = $db->Execute($sql);
+    $FormInfo   = $rs->fields;
+    $TableName  = $FormInfo['TableName'];
+
     //得到所有用户信息 
     $sql    = "select id, USER_ID, USER_NAME, DEPT_ID, USER_PRIV, USER_ID as value, USER_NAME as label from data_user";
     $rs		= $db->Execute($sql);
@@ -195,13 +200,62 @@ if($_GET['action'] == 'GetNextApprovalUsers' && $FlowId > 0 && $processid > 0)  
         $rs         = $db->Execute($sql);
         $rs_a       = $rs->GetArray();
         $下一步骤可选节点 = [];
-        foreach($rs_a as $item) {
+        foreach($rs_a as $item)             {
+
+            $可选节点               = [];
+            $NodeFlow_AuthorizedUser = [];
+
             $SettingData    = unserialize(base64_decode($item['Setting']));
             $StepName       = $SettingData['StepName'];
             if($StepName == null) $StepName = $item['Step'];
 
-            $可选节点               = [];
-            $NodeFlow_AuthorizedUser = [];
+            $Page_Role_Name = $SettingData['Page_Role_Name'];
+            if($Page_Role_Name == "ClassMaster") {
+                //额外限制权限为: 班主任
+                $sql        = "select 工作ID from form_flow_run_process where id = '$processid'";
+                $rs         = $db->Execute($sql);
+                $工作ID     = $rs->fields['工作ID'];
+                if($工作ID != "" && $TableName != "")  {
+                    $sql = "select * from $TableName where id = '$工作ID' ";
+                    $rs         = $db->Execute($sql);
+                    $涉及记录    = $rs->fields;
+                    $班级       = $涉及记录['班级'];
+                    if($班级 == "" && $涉及记录['班级名称'] != "" ) $班级   = $涉及记录['班级名称'];
+                    if($班级 == "" && $涉及记录['学生班级'] != "" ) $班级   = $涉及记录['学生班级'];
+                    $班主任用户名 = returntablefield("data_banji", "班级名称", $班级, "班主任用户名")['班主任用户名'];
+                    if($班主任用户名 != "")  {
+                        $NodeFlow_AuthorizedUser[] = $USER_MAP[$班主任用户名];
+                    }
+                }
+            }
+            $Faculty_Filter_Field = $SettingData['Faculty_Filter_Field'];
+            if($Page_Role_Name == "Faculty" && $Faculty_Filter_Field != "") {
+                //额外限制权限为: 班主任
+                $sql        = "select 工作ID from form_flow_run_process where id = '$processid'";
+                $rs         = $db->Execute($sql);
+                $工作ID     = $rs->fields['工作ID'];
+                if($工作ID != "" && $TableName != "")  {
+                    $sql = "select * from $TableName where id = '$工作ID' ";
+                    $rs         = $db->Execute($sql);
+                    $涉及记录    = $rs->fields;
+                    $班级       = $涉及记录['班级'];
+                    if($班级 == "" && $涉及记录['班级名称'] != "" ) $班级   = $涉及记录['班级名称'];
+                    if($班级 == "" && $涉及记录['学生班级'] != "" ) $班级   = $涉及记录['学生班级'];
+                    $所属系部 = returntablefield("data_banji", "班级名称", $班级, "所属系部")['所属系部'];
+                    if($所属系部 != "")  {
+                        $系部管理员Text = returntablefield("data_xi", "系部名称", $所属系部, $Faculty_Filter_Field)[$Faculty_Filter_Field];
+                        if($系部管理员Text != "" )  {
+                            $系部管理员Array = explode(',', $系部管理员Text);
+                            foreach($系部管理员Array as $用户名) {
+                                $NodeFlow_AuthorizedUser[] = $USER_MAP[$用户名];
+                            }
+                        }
+                    }
+                }
+            }
+            //print_R($NodeFlow_AuthorizedUser);exit;
+            
+            //手动指定审核人
             if($SettingData['NodeFlow_AuthorizedUser'] != null && $SettingData['NodeFlow_AuthorizedUser'] != "") {
                 $NodeFlow_AuthorizedUser_Array = explode(',', $SettingData['NodeFlow_AuthorizedUser']);
                 foreach($NodeFlow_AuthorizedUser_Array as $itemX) {
@@ -271,6 +325,13 @@ if($_GET['action'] == 'GoToNextStep' && $FlowId > 0 && $processid > 0 && $select
     $Setting    = $FormInfo['Setting'];
     $FaceTo     = $FormInfo['FaceTo'];
     $SettingMap = unserialize(base64_decode($Setting));
+
+    //加载工作流插件
+    require_once('plugins.php');
+    $NodeFlow_Approval_Execute_Function = $SettingMap['NodeFlow_Approval_Execute_Function']; 
+    if(function_exists($NodeFlow_Approval_Execute_Function))  {
+        $NodeFlow_Approval_Execute_Function();
+    }
 
     $NextStep = $SettingMap['NextStep']; 
     $流程名称MAP = [];

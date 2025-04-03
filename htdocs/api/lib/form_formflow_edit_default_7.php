@@ -177,6 +177,8 @@ $rs = $db->Execute($sql) or print($sql);
 $RoleRecords = $rs->GetArray();
 $edit_default_7['AuthorizedControl'][] = ['name' => "NodeFlow_AuthorizedRole_名称", 'code' => "NodeFlow_AuthorizedRole", 'FieldTypeArray'=>$CurrentRoleFieldTypeArray, 'show'=>true, 'type'=>"autocompletemulti", 'options'=>$RoleRecords, 'label' => __("NodeFlow_AuthorizedRole"), 'value' => '', 'placeholder' => __(""), 'helptext' => __("NodeFlow_AuthorizedHelpText"), 'rules' => ['required' => false,'xs'=>12, 'sm'=>12,'disabled' => false]];
 
+$edit_default_7['AuthorizedControl'][] = ['name' => "NodeFlow_Approval_Execute_Function", 'show'=>true, 'type'=>"input", 'label' => __("NodeFlow_Approval_Execute_Function"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>12, 'disabled' => false]];
+
 $defaultValues_7 = [];
 foreach($edit_default_7 as $ModeName=>$allFieldItem) {
     foreach($allFieldItem as $ITEM) {
@@ -188,6 +190,7 @@ foreach($edit_default_7 as $ModeName=>$allFieldItem) {
         }
     }
 }
+
 
 $edit_default_7_mode[] = ['value'=>"Menu_Location", 'label'=>__("Menu_Location")];
 $edit_default_7_mode[] = ['value'=>"Page_Role", 'label'=>__("Page_Role")];
