@@ -27,7 +27,6 @@ import toast from 'react-hot-toast'
 
 // ** Type Imports
 import { Settings } from 'src/@core/context/settingsContext'
-import { EventSourcePolyfill } from 'eventsource';
 
 interface Props {
   settings: Settings
@@ -60,12 +59,7 @@ const UserDropdown = (props: Props) => {
   // ** Vars
   const { direction } = settings
 
-  // SSE
-  type SSEStatus = 'connecting' | 'connected' | 'disconnected' | 'error';
-  const [status, setStatus] = useState<SSEStatus>('error');
-  
   const connectSSEWithHeaders = async () => {
-    setStatus('connecting');
     try {
       const storedToken = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
       const response = await fetch(authConfig.backEndApiHost + '/msg/pc.php', {
@@ -101,8 +95,8 @@ const UserDropdown = (props: Props) => {
           }
         });
       }
-    } catch (err) {
-      setStatus('error');
+    } 
+    catch (err) {
     }
   };
 
