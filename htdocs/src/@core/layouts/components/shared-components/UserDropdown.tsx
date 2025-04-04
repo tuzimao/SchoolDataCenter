@@ -86,11 +86,15 @@ const UserDropdown = (props: Props) => {
         text.split('\n\n').forEach(event => {
           if (event.trim()) {
             try {
-              const data = JSON.parse(event.replace(/^data: /, ''));
-              console.log("messages data", data)
-              toast.success(data.MSG_CONTENT, {
-                duration: 3000
-              })
+              if(event != null)  {
+                const data = JSON.parse(event.replace(/^data: /, ''));
+                console.log("messages data", data)
+                if(data != null && data.MSG_CONTENT) {
+                  toast.success(data.MSG_CONTENT, {
+                    duration: 3000
+                  })
+                }
+              }
             } catch (e) {
               console.error('Parse error:', e);
             }
