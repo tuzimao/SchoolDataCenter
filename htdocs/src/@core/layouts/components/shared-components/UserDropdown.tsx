@@ -23,9 +23,11 @@ import { useAuth } from 'src/hooks/useAuth'
 // ** Config
 import {authConfig, defaultConfig} from 'src/configs/auth'
 import axios from 'axios'
+import toast from 'react-hot-toast'
 
 // ** Type Imports
 import { Settings } from 'src/@core/context/settingsContext'
+import { EventSourcePolyfill } from 'eventsource';
 
 interface Props {
   settings: Settings
@@ -57,6 +59,53 @@ const UserDropdown = (props: Props) => {
 
   // ** Vars
   const { direction } = settings
+
+  // SSE
+  type SSEStatus = 'connecting' | 'connected' | 'disconnected' | 'error';
+  const [status, setStatus] = useState<SSEStatus>('error');
+  
+  const connectSSEWithHeaders = async () => {
+    setStatus('connecting');
+    try {
+      const storedToken = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
+      const response = await fetch(authConfig.backEndApiHost + '/msg/pc.php', {
+        headers: { 'Authorization': storedToken }
+      });
+  
+      if (!response.ok) throw new Error(response.statusText);
+  
+      const reader = response.body?.getReader();
+      if (!reader) throw new Error('No readable stream');
+  
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+  
+        // 处理 SSE 数据流
+        const text = new TextDecoder().decode(value);
+        text.split('\n\n').forEach(event => {
+          if (event.trim()) {
+            try {
+              const data = JSON.parse(event.replace(/^data: /, ''));
+              console.log("messages data", data)
+              toast.success(data.MSG_CONTENT, {
+                duration: 3000
+              })
+            } catch (e) {
+              console.error('Parse error:', e);
+            }
+          }
+        });
+      }
+    } catch (err) {
+      setStatus('error');
+    }
+  };
+
+  useEffect(() => {
+    connectSSEWithHeaders()
+  }, []);
+
 
   useEffect(() => {
     const refreshUserToken = async () => {
