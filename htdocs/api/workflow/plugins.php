@@ -10,5 +10,10 @@ require_once('plugins_student.php');
 //老师调代课, 课表
 require_once('plugins_schedule.php');
 
+//老师调代课, 课表
+require_once('plugins_fixedasset.php');
+
+
+
 
 ?>

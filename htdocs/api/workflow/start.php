@@ -116,7 +116,7 @@ if($_GET['action'] == 'NewWorkflow' && $FlowId > 0 && $processid == 0)          
     $rs         = $db->Execute($sql);
     $rs_a       = $rs->GetArray();
     $工作ID     = intval($rs_a[0]['NUM']) + 100000 + 1;
-    $工作名称   = "No. ".$工作ID." ".$工作ID."-".$FormName."-".$GLOBAL_USER->USER_NAME;
+    $工作名称   = "No. ".$工作ID." ".$FormName."-".$GLOBAL_USER->USER_NAME;
     
     //我的工作
     $Element = []; 
