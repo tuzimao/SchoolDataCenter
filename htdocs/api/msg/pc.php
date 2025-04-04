@@ -4,12 +4,17 @@
 @ini_set('zlib.output_compression', 0);
 @ini_set('implicit_flush', 1);
 
+ini_set('max_execution_time', 0);
+ini_set('memory_limit', '512M');
+ignore_user_abort(false); // 客户端断开时停止脚本
+
 header('Content-Type: text/event-stream'); // 必须设置
 header('Cache-Control: no-cache');        // 禁用缓存
 header('Connection: keep-alive');         // 保持连接
 header('X-Accel-Buffering: no');          // 针对Nginx的特殊配置
 
 require_once('../include.inc.php');
+
 
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: Authorization, Content-Type");
