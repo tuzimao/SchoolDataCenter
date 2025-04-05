@@ -15,7 +15,6 @@ header('X-Accel-Buffering: no');          // 针对Nginx的特殊配置
 
 require_once('../include.inc.php');
 
-
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: Authorization, Content-Type");
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
