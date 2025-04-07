@@ -339,6 +339,27 @@ if($_GET['action'] == 'GoToNextStep' && $FlowId > 0 && $processid > 0 && $select
     if(function_exists($NodeFlow_Approval_Execute_Function))  {
         $NodeFlow_Approval_Execute_Function(); 
     }
+    //审核通过时处理一些简单的字段修改
+    $sql        = "select * from form_formname where id='$FormId'";
+    $rs         = $db->Execute($sql);
+    $FormInfo   = $rs->fields;
+    $FormName           = $FormInfo['FullName'];
+    $TableName          = $FormInfo['TableName'];
+    $MetaColumnNames    = GLOBAL_MetaColumnNames($TableName);
+    $NodeFlow_Approval_Change_Field_Name            = $SettingMap['NodeFlow_Approval_Change_Field_Name'];
+    $NodeFlow_Approval_Change_Field_Value           = $SettingMap['NodeFlow_Approval_Change_Field_Value'];
+    $NodeFlow_Approval_Change_Field_To_DateTime     = $SettingMap['NodeFlow_Approval_Change_Field_To_DateTime'];
+    $NodeFlow_Approval_Change_Field_To_UserId       = $SettingMap['NodeFlow_Approval_Change_Field_To_UserId'];
+    $AddSqlApproval = [];
+    if($NodeFlow_Approval_Change_Field_Name != "" && in_array($NodeFlow_Approval_Change_Field_Name, $MetaColumnNames)) {
+        $AddSqlApproval[] = " $NodeFlow_Approval_Change_Field_Name = '".$NodeFlow_Approval_Change_Field_Value."' ";
+    }
+    if($NodeFlow_Approval_Change_Field_To_DateTime != "" && in_array($NodeFlow_Approval_Change_Field_To_DateTime, $MetaColumnNames)) {
+        $AddSqlApproval[] = " $NodeFlow_Approval_Change_Field_To_DateTime = '".date('Y-m-d H:i:s')."' ";
+    }
+    if($NodeFlow_Approval_Change_Field_To_UserId != "" && in_array($NodeFlow_Approval_Change_Field_To_UserId, $MetaColumnNames)) {
+        $AddSqlApproval[] = " $NodeFlow_Approval_Change_Field_To_UserId = '".$GLOBAL_USER->USER_ID."' ";
+    }
 
     $NextStep = $SettingMap['NextStep']; 
     $流程名称MAP = [];
@@ -359,6 +380,13 @@ if($_GET['action'] == 'GoToNextStep' && $FlowId > 0 && $processid > 0 && $select
     $sql        = "select * from form_flow_run_process where id = '$processid'";
     $rs         = $db->Execute($sql);
     $ProcessInfo= $rs->fields;
+
+    //执行操作-审核通过时处理一些简单的字段修改
+    if(sizeof($AddSqlApproval)>0 && $ProcessInfo['工作ID'] != '') {
+        $sql = "update $TableName set ".join(',', $AddSqlApproval)." where id = '".$ProcessInfo['工作ID']."'";
+        $db->Execute($sql);
+    }
+
     foreach($selectedUsers as $Step => $User)  {
         if($User && $User['USER_ID'] != '')   {
             $NewProcess = [];
@@ -419,8 +447,41 @@ if($_GET['action'] == 'GobackToPreviousStep' && $FlowId > 0 && $processid > 0 &&
     $当前经办步骤    = $rsT->fields['经办步骤'];
     $FlowId         = $rsT->fields['FlowId'];
     $流程步骤ID      = $rsT->fields['流程步骤ID'];
-    $上一步ProcessId      = $rsT->fields['上一步ProcessId'];
-    $FlowName      = $rsT->fields['FlowName'];
+    $上一步ProcessId     = $rsT->fields['上一步ProcessId'];
+    $FlowName           = $rsT->fields['FlowName'];
+
+    //上一步骤的Flow信息
+    $sql        = "select * from form_formflow where id='$FlowId'";
+    $rs         = $db->Execute($sql);
+    $FormInfo   = $rs->fields;
+    $上一步骤SettingMap = unserialize(base64_decode($FormInfo['Setting']));
+
+    //审核通过时处理一些简单的字段修改
+    $sql        = "select * from form_formname where id='$FormId'";
+    $rs         = $db->Execute($sql);
+    $FormInfo   = $rs->fields;
+    $FormName           = $FormInfo['FullName'];
+    $TableName          = $FormInfo['TableName'];
+    $MetaColumnNames    = GLOBAL_MetaColumnNames($TableName);
+    $NodeFlow_Approval_Change_Field_Name            = $上一步骤SettingMap['NodeFlow_Approval_Change_Field_Name'];
+    $NodeFlow_Approval_Change_Field_Value           = $上一步骤SettingMap['NodeFlow_Approval_Change_Field_Value'];
+    $NodeFlow_Approval_Change_Field_To_DateTime     = $上一步骤SettingMap['NodeFlow_Approval_Change_Field_To_DateTime'];
+    $NodeFlow_Approval_Change_Field_To_UserId       = $上一步骤SettingMap['NodeFlow_Approval_Change_Field_To_UserId'];
+    $AddSqlApproval = [];
+    if($NodeFlow_Approval_Change_Field_Name != "" && in_array($NodeFlow_Approval_Change_Field_Name, $MetaColumnNames)) {
+        $AddSqlApproval[] = " $NodeFlow_Approval_Change_Field_Name = '' ";
+    }
+    if($NodeFlow_Approval_Change_Field_To_DateTime != "" && in_array($NodeFlow_Approval_Change_Field_To_DateTime, $MetaColumnNames)) {
+        $AddSqlApproval[] = " $NodeFlow_Approval_Change_Field_To_DateTime = '' ";
+    }
+    if($NodeFlow_Approval_Change_Field_To_UserId != "" && in_array($NodeFlow_Approval_Change_Field_To_UserId, $MetaColumnNames)) {
+        $AddSqlApproval[] = " $NodeFlow_Approval_Change_Field_To_UserId = '' ";
+    }
+    //执行操作-审核通过时处理一些简单的字段修改
+    if(sizeof($AddSqlApproval)>0 && $ProcessInfo['工作ID']!='') {
+        $sql = "update $TableName set ".join(',', $AddSqlApproval)." where id = '".$ProcessInfo['工作ID']."'";
+        $db->Execute($sql);
+    }
 
     $NewProcess = [];
     $NewProcess['FormId'] = $ProcessInfo['FormId'];
@@ -468,6 +529,36 @@ if($_GET['action'] == 'GoToEndWork' && $FlowId > 0 && $processid > 0 && $runid >
     $NodeFlow_Approval_Execute_Function = $SettingMap['NodeFlow_Approval_Execute_Function']; 
     if(function_exists($NodeFlow_Approval_Execute_Function))  {
         $NodeFlow_Approval_Execute_Function();
+    }
+    //审核通过时处理一些简单的字段修改
+    $sql        = "select * from form_formname where id='$FormId'";
+    $rs         = $db->Execute($sql);
+    $FormInfo   = $rs->fields;
+    $FormName           = $FormInfo['FullName'];
+    $TableName          = $FormInfo['TableName'];
+    $MetaColumnNames    = GLOBAL_MetaColumnNames($TableName);
+    $NodeFlow_Approval_Change_Field_Name            = $SettingMap['NodeFlow_Approval_Change_Field_Name'];
+    $NodeFlow_Approval_Change_Field_Value           = $SettingMap['NodeFlow_Approval_Change_Field_Value'];
+    $NodeFlow_Approval_Change_Field_To_DateTime     = $SettingMap['NodeFlow_Approval_Change_Field_To_DateTime'];
+    $NodeFlow_Approval_Change_Field_To_UserId       = $SettingMap['NodeFlow_Approval_Change_Field_To_UserId'];
+    $AddSqlApproval = [];
+    if($NodeFlow_Approval_Change_Field_Name != "" && in_array($NodeFlow_Approval_Change_Field_Name, $MetaColumnNames)) {
+        $AddSqlApproval[] = " $NodeFlow_Approval_Change_Field_Name = '".$NodeFlow_Approval_Change_Field_Value."' ";
+    }
+    if($NodeFlow_Approval_Change_Field_To_DateTime != "" && in_array($NodeFlow_Approval_Change_Field_To_DateTime, $MetaColumnNames)) {
+        $AddSqlApproval[] = " $NodeFlow_Approval_Change_Field_To_DateTime = '".date('Y-m-d H:i:s')."' ";
+    }
+    if($NodeFlow_Approval_Change_Field_To_UserId != "" && in_array($NodeFlow_Approval_Change_Field_To_UserId, $MetaColumnNames)) {
+        $AddSqlApproval[] = " $NodeFlow_Approval_Change_Field_To_UserId = '".$GLOBAL_USER->USER_ID."' ";
+    }
+    $sql        = "select * from form_flow_run_process where id = '$processid'";
+    $rs         = $db->Execute($sql);
+    $ProcessInfo= $rs->fields;
+    //执行操作-审核通过时处理一些简单的字段修改
+    if(sizeof($AddSqlApproval)>0 && $ProcessInfo['工作ID']!='') {
+        $sql = "update $TableName set ".join(',', $AddSqlApproval)." where id = '".$ProcessInfo['工作ID']."'";
+        $db->Execute($sql);
+        print $sql;exit;
     }
 
     $sql1 = "update form_flow_run_process set 主办说明 = '".$selectedText."', 步骤状态 = '办结' where id = '$processid' and 步骤状态 !='办结'";

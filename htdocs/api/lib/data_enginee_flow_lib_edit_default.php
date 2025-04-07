@@ -425,8 +425,15 @@ if( ( ($_GET['action']=="edit_default"&&in_array('Edit',$Actions_In_List_Row_Arr
     foreach($allFieldsEdit as $ModeName=>$allFieldItemTemp) {
         $CounterTemp = 0;
         $allFieldItem = $allFieldsView[$ModeName];
+
+        $allFieldItemTempMap = [];
+        foreach($allFieldItemTemp as $ITEM) {
+            $allFieldItemTempMap[$ITEM['name']] = $ITEM;
+        }
+        
         foreach($allFieldItem as $ITEM) {
-            if($allFieldItemTemp[$CounterTemp]['type']=='readonly')  {
+            //print_R($ITEM['name'] . "-" .$allFieldItemTemp[$CounterTemp]['type']. "<BR>");
+            if($allFieldItemTempMap[$ITEM['name']]['type']=='readonly')  {
                 $FieldName              = $ITEM['name'];
                 $CurrentFieldTypeArray  = $ITEM['FieldTypeArray'];
                 switch($CurrentFieldTypeArray[0])   {

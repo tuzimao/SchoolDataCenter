@@ -84,7 +84,11 @@ $MAP['NodeFlow_AuthorizedUser']         = '授权允许访问的用户';
 $MAP['NodeFlow_AuthorizedDept']         = '授权允许访问的部门';
 $MAP['NodeFlow_AuthorizedRole']         = '授权允许访问的角色';
 $MAP['NodeFlow_AuthorizedHelpText']     = '如果不填写,则表示不启用此项限制';
-$MAP['NodeFlow_Approval_Execute_Function'] = "转交下一步时执行的函数";
+$MAP['NodeFlow_Approval_Execute_Function']          = "转交下一步时执行的函数";
+$MAP['NodeFlow_Approval_Change_Field_Name']         = "修改字段";
+$MAP['NodeFlow_Approval_Change_Field_Value']        = "修改为值";
+$MAP['NodeFlow_Approval_Change_Field_To_DateTime']  = "修改为当前时间";
+$MAP['NodeFlow_Approval_Change_Field_To_UserId']    = "修改为当前用户名";
 
 $MAP['Yes'] 	        = '是';
 $MAP['No'] 	            = '否';

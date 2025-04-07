@@ -176,8 +176,12 @@ else {
 $rs = $db->Execute($sql) or print($sql);
 $RoleRecords = $rs->GetArray();
 $edit_default_7['AuthorizedControl'][] = ['name' => "NodeFlow_AuthorizedRole_名称", 'code' => "NodeFlow_AuthorizedRole", 'FieldTypeArray'=>$CurrentRoleFieldTypeArray, 'show'=>true, 'type'=>"autocompletemulti", 'options'=>$RoleRecords, 'label' => __("NodeFlow_AuthorizedRole"), 'value' => '', 'placeholder' => __(""), 'helptext' => __("NodeFlow_AuthorizedHelpText"), 'rules' => ['required' => false,'xs'=>12, 'sm'=>12,'disabled' => false]];
-
 $edit_default_7['AuthorizedControl'][] = ['name' => "NodeFlow_Approval_Execute_Function", 'show'=>true, 'type'=>"input", 'label' => __("NodeFlow_Approval_Execute_Function"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>12, 'disabled' => false]];
+
+$edit_default_7['AuthorizedControl'][] = ['name' => "NodeFlow_Approval_Change_Field_Name", 'show'=>true, 'type'=>'select', 'options'=>$MetaColumnNamesOptionsAll, 'label' => __("NodeFlow_Approval_Change_Field_Name"), 'value' => $MetaColumnNamesOptionsAll[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>3]];
+$edit_default_7['AuthorizedControl'][] = ['name' => "NodeFlow_Approval_Change_Field_Value", 'show'=>true, 'type'=>"input", 'label' => __("NodeFlow_Approval_Change_Field_Value"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>3, 'disabled' => false]];
+$edit_default_7['AuthorizedControl'][] = ['name' => "NodeFlow_Approval_Change_Field_To_DateTime", 'show'=>true, 'type'=>'select', 'options'=>$MetaColumnNamesOptionsAll, 'label' => __("NodeFlow_Approval_Change_Field_To_DateTime"), 'value' => $MetaColumnNamesOptionsAll[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>3]];
+$edit_default_7['AuthorizedControl'][] = ['name' => "NodeFlow_Approval_Change_Field_To_UserId", 'show'=>true, 'type'=>'select', 'options'=>$MetaColumnNamesOptionsAll, 'label' => __("NodeFlow_Approval_Change_Field_To_UserId"), 'value' => $MetaColumnNamesOptionsAll[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>3]];
 
 $defaultValues_7 = [];
 foreach($edit_default_7 as $ModeName=>$allFieldItem) {
