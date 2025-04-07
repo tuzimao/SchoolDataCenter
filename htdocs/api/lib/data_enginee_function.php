@@ -1160,25 +1160,25 @@ function getAllFields($AllFieldsFromTable, $AllShowTypesArray, $actionType, $Fil
                 if($actionType=="EDIT") $InsertOrUpdateFieldArrayForSql[$actionType][$FieldName] = "";
                 $allFieldsMap['Default'][] = ['name' => $FieldName, 'show'=>true, 'FieldTypeArray'=>$CurrentFieldTypeArray, 'type'=>$CurrentFieldTypeArray[0], 'label' => $ShowTextName, 'value' => $FieldDefault, 'GroupOneMenuName'=>"楼房属性", 'GroupTwoMenuName'=>"楼房名称", 'GroupOneMenuValue'=>$一级菜单[2], 'GroupTwoMenuValue'=>$二级菜单MAP[$一级菜单[2]][0], 'GroupOneMenuArray'=>$一级菜单, 'GroupTwoMenuArray'=>$二级菜单MAP, 'placeholder' => $Placeholder, 'helptext' => $Helptext, 'rules' => ['required' => $IsMustFill==1?true:false,'xs'=>12, 'sm'=>intval($IsFullWidth), 'disabled' => false], 'SelectBuildingData'=>"SelectBuilding_".$Item['id'], 'GroupTwoMap'=>$GroupTwoMap];
                 break;
-                case '报修故障分类':
-                    //报修故障分类
-                    $其它建筑 = [];
-                    $sql	= "select 内容,项目 from data_wygl_biaoxiucontent order by 项目,内容";
-                    $rs		= $db->Execute($sql);
-                    $rs_a	= $rs->GetArray();
-                    $GroupTwoMap = [];
-                    $二级菜单MAP = [];
-                    $二级菜单MAP['请选择'][] = '请选择';
-                    for($R=0;$R<sizeof($rs_a);$R++)							{
-                        $项目 = $rs_a[$R]['项目'];
-                        $内容 = $rs_a[$R]['内容'];
-                        $二级菜单MAP[$项目][] = $内容;
-                        $GroupTwoMap[$内容] = $项目;
-                    }
-                    $一级菜单 = array_keys($二级菜单MAP);
-                    if($actionType=="EDIT") $InsertOrUpdateFieldArrayForSql[$actionType][$FieldName] = "";
-                    $allFieldsMap['Default'][] = ['name' => $FieldName, 'show'=>true, 'FieldTypeArray'=>['SelectBuilding'], 'type'=>'SelectBuilding', 'label' => $ShowTextName, 'value' => $FieldDefault, 'GroupOneMenuName'=>"故障分组", 'GroupTwoMenuName'=>"故障分类", 'GroupOneMenuValue'=>$一级菜单[0], 'GroupTwoMenuValue'=>$二级菜单MAP[$一级菜单[0]][0], 'GroupOneMenuArray'=>$一级菜单, 'GroupTwoMenuArray'=>$二级菜单MAP, 'placeholder' => $Placeholder, 'helptext' => $Helptext, 'rules' => ['required' => $IsMustFill==1?true:false,'xs'=>12, 'sm'=>intval($IsFullWidth), 'disabled' => false], 'SelectBuildingData'=>"SelectBuilding_".$Item['id'], 'GroupTwoMap'=>$GroupTwoMap];
-                    break;
+            case '报修故障分类':
+                //报修故障分类
+                $其它建筑 = [];
+                $sql	= "select 内容,项目 from data_wygl_biaoxiucontent order by 项目,内容";
+                $rs		= $db->Execute($sql);
+                $rs_a	= $rs->GetArray();
+                $GroupTwoMap = [];
+                $二级菜单MAP = [];
+                $二级菜单MAP['请选择'][] = '请选择';
+                for($R=0;$R<sizeof($rs_a);$R++)							{
+                    $项目 = $rs_a[$R]['项目'];
+                    $内容 = $rs_a[$R]['内容'];
+                    $二级菜单MAP[$项目][] = $内容;
+                    $GroupTwoMap[$内容] = $项目;
+                }
+                $一级菜单 = array_keys($二级菜单MAP);
+                if($actionType=="EDIT") $InsertOrUpdateFieldArrayForSql[$actionType][$FieldName] = "";
+                $allFieldsMap['Default'][] = ['name' => $FieldName, 'show'=>true, 'FieldTypeArray'=>['SelectBuilding'], 'type'=>'SelectBuilding', 'label' => $ShowTextName, 'value' => $FieldDefault, 'GroupOneMenuName'=>"故障分组", 'GroupTwoMenuName'=>"故障分类", 'GroupOneMenuValue'=>$一级菜单[0], 'GroupTwoMenuValue'=>$二级菜单MAP[$一级菜单[0]][0], 'GroupOneMenuArray'=>$一级菜单, 'GroupTwoMenuArray'=>$二级菜单MAP, 'placeholder' => $Placeholder, 'helptext' => $Helptext, 'rules' => ['required' => $IsMustFill==1?true:false,'xs'=>12, 'sm'=>intval($IsFullWidth), 'disabled' => false], 'SelectBuildingData'=>"SelectBuilding_".$Item['id'], 'GroupTwoMap'=>$GroupTwoMap];
+                break;
             case '维修人员':
                 if($actionType=="EDIT"&&$disabledItem == false) $InsertOrUpdateFieldArrayForSql[$actionType][$FieldName] = "";
                 global $USER_ID;

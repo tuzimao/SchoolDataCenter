@@ -1924,34 +1924,63 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                         }
 
                                                         //console.log("errors select--------------------------------", errors)
-
+                                                        /*
+                                                        <RadioGroup
+                                                            value={value}
+                                                            onChange={(e) => {
+                                                                onChange(e.target.value);
+                                                                const defaultValuesNewTemp: {[key: string]: any} = { ...defaultValuesNew };
+                                                                defaultValuesNewTemp[FieldArray.GroupOneMenuName] = e.target.value;
+                                                                defaultValuesNewTemp[FieldArray.GroupTwoMenuName] = FieldArray.GroupTwoMenuArray[e.target.value][0];
+                                                                setDefaultValuesNew(defaultValuesNewTemp);
+                                                            }}
+                                                            >
+                                                            {FieldArray.GroupOneMenuArray.map((GroupOneMenu: any, ItemArray_index: number) => (
+                                                                <FormControlLabel
+                                                                    key={ItemArray_index}
+                                                                    value={GroupOneMenu}
+                                                                    control={<Radio />}
+                                                                    label={GroupOneMenu}
+                                                                />
+                                                            ))}
+                                                        </RadioGroup>
+                                                        */
                                                         return (
                                                             <Fragment key={"AllFields_1_" + FieldArray_index}>
                                                                 <Grid item xs={FieldArray.rules.xs} sm={FieldArray.rules.sm}>
                                                                     <FormControl fullWidth sx={{ mb: 0 }}>
+                                                                        <InputLabel
+                                                                            id='validation-basic-select'
+                                                                            error={Boolean(errors[FieldArray.GroupOneMenuName])}
+                                                                            htmlFor='validation-basic-select'
+                                                                        >
+                                                                            {FieldArray.GroupOneMenuName}
+                                                                        </InputLabel>
                                                                         <Controller
                                                                             name={FieldArray.GroupOneMenuName}
                                                                             control={control}
                                                                             render={({ field: { value, onChange } }) => (
-                                                                                <RadioGroup
-                                                                                value={value}
-                                                                                onChange={(e) => {
-                                                                                    onChange(e.target.value);
-                                                                                    const defaultValuesNewTemp: {[key: string]: any} = { ...defaultValuesNew };
-                                                                                    defaultValuesNewTemp[FieldArray.GroupOneMenuName] = e.target.value;
-                                                                                    defaultValuesNewTemp[FieldArray.GroupTwoMenuName] = FieldArray.GroupTwoMenuArray[e.target.value][0];
-                                                                                    setDefaultValuesNew(defaultValuesNewTemp);
-                                                                                }}
+                                                                                <Select
+                                                                                    size={componentsize}
+                                                                                    value={value}
+                                                                                    label={FieldArray.label}
+                                                                                    onChange={(e) => {
+                                                                                        onChange(e.target.value);
+                                                                                        const defaultValuesNewTemp = { ...defaultValuesNew };
+                                                                                        defaultValuesNewTemp[FieldArray.GroupOneMenuName] = e.target.value;
+                                                                                        defaultValuesNewTemp[FieldArray.GroupTwoMenuName] = FieldArray.GroupTwoMenuArray[e.target.value][0];
+                                                                                        setDefaultValuesNew(defaultValuesNewTemp);
+                                                                                    }}
+                                                                                    error={Boolean(errors[FieldArray.GroupOneMenuName])}
+                                                                                    labelId='validation-basic-select'
+                                                                                    aria-describedby='validation-basic-select'
                                                                                 >
-                                                                                {FieldArray.GroupOneMenuArray.map((GroupOneMenu: any, ItemArray_index: number) => (
-                                                                                    <FormControlLabel
-                                                                                        key={ItemArray_index}
-                                                                                        value={GroupOneMenu}
-                                                                                        control={<Radio />}
-                                                                                        label={GroupOneMenu}
-                                                                                    />
-                                                                                ))}
-                                                                                </RadioGroup>
+                                                                                    {FieldArray.GroupOneMenuArray.map((GroupOneMenu: any, index: number) => (
+                                                                                        <MenuItem key={index} value={GroupOneMenu}>
+                                                                                            {GroupOneMenu}
+                                                                                        </MenuItem>
+                                                                                    ))}
+                                                                                </Select>
                                                                             )}
                                                                         />
                                                                     </FormControl>

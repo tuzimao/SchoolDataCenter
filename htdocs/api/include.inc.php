@@ -783,8 +783,17 @@ function AddOneRecordToTable($TableName, $FormId, $FlowId, $DefaultValue) {
             case 'Hidden:CurrentUserIdAddEditHidden':
                 $DefaultFieldValue[$FieldName] = $GLOBAL_USER->USER_ID;
                 break;
+            case 'UserMobile':
+				if($GLOBAL_USER->type=="User") {
+                    $MOBILE_NO = returntablefield("data_user","USER_ID",$GLOBAL_USER->USER_ID,"MOBILE_NO")['MOBILE_NO'];
+                }
+                else {
+                    $MOBILE_NO = returntablefield("data_student","学号",$GLOBAL_USER->学号,"学生手机号码")['学生手机号码'];
+                }
+                $DefaultFieldValue[$FieldName] = $MOBILE_NO;
+                break;
             case 'Hidden:CurrentStudentCodeAdd':
-                if($GLOBAL_USER->学号=="") $GLOBAL_USER->学号 = $GLOBAL_USER->USER_ID;
+            case 'Hidden:CurrentStudentCodeAddEdit':
                 $DefaultFieldValue[$FieldName] = $GLOBAL_USER->学号;
                 break;
         }
