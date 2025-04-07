@@ -204,7 +204,25 @@ if(($_GET['action']=="edit_default_1_data" || $_GET['action']=="edit_default_2_d
         $rs         = $db->Execute($sql);
     }
     if($_POST['Menu_One']!=""&&$_POST['Menu_Two']!=""&&$id!=""&&$_POST['NodeType']=="菜单")   {
+        $sql    = "select id from data_menutwo order by id asc";
+        $rs     = $db->Execute($sql);
+        $rs_a   = $rs->GetArray();
+        $MenuTwoIdList = [];
+        foreach ($rs_a as $Line) {
+            $MenuTwoIdList[] = $Line['id'];
+        }
         $FieldsArray = [];
+        $min        = min($MenuTwoIdList);
+        $max        = max($MenuTwoIdList);
+        $fullRange  = range($min, $max);
+        $missingNumbers = array_diff($fullRange, $MenuTwoIdList);
+        $missingNumbers = array_values($missingNumbers);
+        if(sizeof($missingNumbers) == 0) {
+            $FieldsArray['id']  = $max + 1;
+        }
+        else {
+            $FieldsArray['id']  = $missingNumbers[0];
+        }
         $FieldsArray['MenuOneName']    = $_POST['Menu_One'];
         $FieldsArray['MenuTwoName']    = $_POST['Menu_Two'];
         $FieldsArray['MenuThreeName']  = $_POST['Menu_Three'];
@@ -216,7 +234,7 @@ if(($_GET['action']=="edit_default_1_data" || $_GET['action']=="edit_default_2_d
         $FieldsArray['SortNumber']     = $id;
         $FieldsArray['Creator']        = "admin";
         $FieldsArray['CreateTime']     = date("Y-m-d H:i:s");
-        [$rs,$sql] = InsertOrUpdateTableByArray("data_menutwo",$FieldsArray,'FlowId',0);
+        [$rs,$sql] = InsertOrUpdateTableByArray("data_menutwo",$FieldsArray,'FlowId',0,'Insert');
         //Write Interface File In Apps Dir
         $sql        = "select id from data_menutwo where FlowId = '$id'";
         $rs         = $db->Execute($sql);
