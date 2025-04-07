@@ -760,7 +760,10 @@ function getAllFields($AllFieldsFromTable, $AllShowTypesArray, $actionType, $Fil
                 //Do Nothing
                 break;
             case 'hidden':
-                if($actionType=="ADD"||$actionType=="EDIT") $InsertOrUpdateFieldArrayForSql[$actionType][$FieldName] = "";
+                if($actionType=="ADD"||$actionType=="EDIT") {
+                    $InsertOrUpdateFieldArrayForSql[$actionType][$FieldName] = "";
+                    $allFieldsMap['Default'][] = ['name' => $FieldName, 'show'=>true, 'FieldTypeArray'=>$CurrentFieldTypeArray, 'type'=>'hidden', 'label' => $ShowTextName, 'value' => '', 'placeholder' => $Placeholder, 'helptext' => $Helptext, 'rules' => ['required' => $IsMustFill==1?true:false,'xs'=>12, 'sm'=>intval($IsFullWidth), 'disabled' => false,'min'=>$Min,'max'=>$Max]];
+                }
                 break;
             case 'system_datetime':
                 if($actionType=="ADD"||$actionType=="EDIT")  {
