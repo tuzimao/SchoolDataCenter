@@ -56,7 +56,7 @@ const AppSoulChatList = (props: any) => {
                     </Grid>
                   </Grid>
                 )}
-                <Grid container spacing={2} sx={{ my: 0}}>
+                <Grid container spacing={0} sx={{ my: 0}}>
                   {store.init_default.data && store.init_default.data.map((item: any, index: number) => (
                     <Grid item key={index} xs={12} sm={6} md={4} lg={4}>
                       <Box position="relative" sx={{ml: 4}}>
