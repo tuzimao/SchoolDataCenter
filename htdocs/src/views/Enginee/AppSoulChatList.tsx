@@ -49,7 +49,7 @@ const AppSoulChatList = (props: any) => {
               <Fragment>
                 {isMobileData == false && (
                   <Grid container spacing={2}>
-                    <Grid item xs={12}>
+                    <Grid item xs={12} sx={{ml: 2, mt: 2}}>
                       <Box px={2} pb={0}>
                         <Typography variant="h6">心理健康测评</Typography>
                       </Box>
@@ -59,7 +59,7 @@ const AppSoulChatList = (props: any) => {
                 <Grid container spacing={2} sx={{ my: 0}}>
                   {store.init_default.data && store.init_default.data.map((item: any, index: number) => (
                     <Grid item key={index} xs={12} sm={6} md={4} lg={4}>
-                      <Box position="relative">
+                      <Box position="relative" sx={{ml: 4}}>
                         <CardMedia image={`/images/cardmedia/cardmedia-${theme.palette.mode}.png`} sx={{ height: '14rem', objectFit: 'contain', borderRadius: 1 }}/>
                         <Box position="absolute" top={10} left={3} m={1} px={0.8} borderRadius={1} >
                           <Box display="flex" alignItems="center">
