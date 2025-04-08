@@ -44,7 +44,20 @@ function plugin_data_wygl_baoxiuxinxi_6_edit_default($id)  {
     global $GLOBAL_USER;
     global $TableName;
     global $FlowId,$AllShowTypesArray;
-    //Here is your write code
+    //Here is your write 
+    
+    $整个页面是否只读   = false;
+    $processid = intval($_GET['processid']);
+    if($processid > 0) {
+        $sql        = "select 步骤状态 from form_flow_run_process where id = '$processid' ";
+        $rs         = $db->Execute($sql);
+        $步骤状态    = $rs->fields['步骤状态'];
+        if($步骤状态 == "办结") {
+            //不显示服务评价的代码
+            return ;
+        }
+    }
+
     //Get All Fields
     $sql                    = "select * from form_configsetting where FlowId='$FlowId' and IsEnable='1' order by SortNumber asc, id asc";
     $rs                     = $db->Execute($sql);

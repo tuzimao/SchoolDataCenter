@@ -558,7 +558,6 @@ if($_GET['action'] == 'GoToEndWork' && $FlowId > 0 && $processid > 0 && $runid >
     if(sizeof($AddSqlApproval)>0 && $ProcessInfo['工作ID']!='') {
         $sql = "update $TableName set ".join(',', $AddSqlApproval)." where id = '".$ProcessInfo['工作ID']."'";
         $db->Execute($sql);
-        print $sql;exit;
     }
 
     $sql1 = "update form_flow_run_process set 主办说明 = '".$selectedText."', 步骤状态 = '办结' where id = '$processid' and 步骤状态 !='办结'";
@@ -578,7 +577,7 @@ if($_GET['action'] == 'GoToEndWork' && $FlowId > 0 && $processid > 0 && $runid >
 
 $runid          = intval($_POST['runid']);
 if($_GET['action'] == 'getApprovalNodes' && $runid > 0)         {
-    $sql        = "select 工作接收时间, 步骤状态, 流程步骤ID, FlowName, 主办说明, 经办步骤 from form_flow_run_process where runid = '$runid' and 步骤状态 = '办结' order by 流程步骤ID desc ";
+    $sql        = "select 工作接收时间, 步骤状态, 流程步骤ID, FlowName, 主办说明, 经办步骤 from form_flow_run_process where runid = '$runid' and (步骤状态 = '办结' or 步骤状态 = '退回') order by 工作接收时间 desc ";
     $rs         = $db->Execute($sql);
     $rsT        = $rs->GetArray();
     $RS                 = [];
