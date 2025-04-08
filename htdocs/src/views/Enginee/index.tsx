@@ -1170,10 +1170,10 @@ const UserList = ({ authConfig, backEndApi, externalId, handleActionInMobileApp,
             <Grid sx={{ pr: 3, pb: 0, display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
               <CardHeader title={store.init_default.searchtitle} />
               <Grid sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
-                {store.init_default.returnButton1.status && (
+                {store.init_default.returnButton1 && store.init_default.returnButton1.status && (
                   <Button sx={{ mb: 2, mr: 2 }} variant='outlined' size='small' onClick={() => { window.history.back(); }}>{store.init_default.returnButton1.text}</Button>
                 )}
-                {store.init_default.returnButton2.status && store.init_default.returnButton2.url && (
+                {store.init_default.returnButton2 && store.init_default.returnButton2.status && store.init_default.returnButton2.url && (
                   <Button sx={{ mb: 2, mr: 2 }} variant='contained' size='small' onClick={() => { router.push(store.init_default.returnButton2.url + externalId) }}>{store.init_default.returnButton2.text}</Button>
                 )}
               </Grid>

@@ -499,6 +499,11 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                         FieldArray.rules.format == 'chinatelphone' ? yupCheck = yupCheck.matches(/\d{3}-\d{8}|\d{4}-\d{7}/, FieldArray.rules.invalidtext) : '';
                         yupCheckMap[FieldArray.name] = yupCheck
                     }
+                    else if (FieldArray.type == "SelectBuilding" && FieldArray.rules && FieldArray.rules.required) {
+                        console.log("FieldArray", FieldArray)
+                        yupCheckMap[FieldArray.GroupOneMenuName] = yup.string().required().notOneOf(['请选择'], '请选择一个有效选项').label(FieldArray.GroupOneMenuName)
+                        yupCheckMap[FieldArray.GroupTwoMenuName] = yup.string().required().notOneOf(['请选择'], '请选择一个有效选项').label(FieldArray.GroupTwoMenuName)
+                    }
                     else if (FieldArray.type == "email" && FieldArray.rules && FieldArray.rules.required) {
                         yupCheckMap[FieldArray.name] = yup.string().email().required().label(FieldArray.label)
                     }
@@ -533,6 +538,12 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                     }
                     else if (FieldArray.type == "password" && FieldArray.rules && FieldArray.rules.required)  {
                         yupCheckMap[FieldArray.name] = yup.string().required().label(FieldArray.label)
+                    }
+                    else if (FieldArray.type == "autocomplete" && FieldArray.rules && FieldArray.rules.required)  {
+                        yupCheckMap[FieldArray.name] = yup.string().required().label(FieldArray.label)
+                    }
+                    else if (FieldArray.type == "autocompletemulti" && FieldArray.rules && FieldArray.rules.required)  {
+                        yupCheckMap[FieldArray.name] = yup.array().min(1, "至少需要选择一项") .required().label(FieldArray.label)
                     }
                     else if (FieldArray.type == "comfirmpassword" && FieldArray.rules && FieldArray.rules.required)  {
                         yupCheckMap[FieldArray.name] = yup.string().required().min(6).matches(/^(?=.*[a-zA-Z])(?=.*\d).+$/, FieldArray.rules.invalidtext).label(FieldArray.label)
@@ -2514,7 +2525,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                     }
                                                     else if ((FieldArray.show || fieldArrayShow[FieldArray.name]) && (FieldArray.type == "radiogroup" || FieldArray.type == "radiogroupcolor")) {
 
-                                                        //console.log("defaultValuesNew[FieldArray.name]***************Begin", FieldArray)
+                                                        //console.log("defaultValuesNew[FieldArray.name]***************Begin0001", FieldArray)
                                                         if (defaultValuesNew[FieldArray.name] != undefined) {
                                                           setValue(FieldArray.name, defaultValuesNew[FieldArray.name])
                                                         }

@@ -44,11 +44,11 @@ const StartModel = ({ FlowId, handleReturnButton, flowRecord }: any) => {
   const [dialogStatus, setDialogStatus] = useState<boolean>(false);
   const [refuseStatus, setRefuseStatus] = useState<boolean>(false);
   const [nextStepStatus, setNextStepStatus] = useState<boolean>(false);
+  const [nextStepStatusButton, setNextStepStatusButton] = useState<boolean>(false);
   const [formSubmitStatus, setFormSubmitStatus] = useState<any>(null);
   
   const [approvalNodes, setApprovalNodes] = useState<any[]>([]);
 
-  
   
   useEffect(() => {
     const fetchWorkItems = async () => {
@@ -109,12 +109,27 @@ const StartModel = ({ FlowId, handleReturnButton, flowRecord }: any) => {
   }
 
   const handleToNextStep = async () => {
+    
+    //第一步先保存表单
+    setFormSubmitStatus(null)
     setSubmitCounter(submitCounter+1)
-    setDialogStatus(true)
-    setNextStepStatus(true)
-    setRefuseStatus(false)
-    console.log("flowRecord", flowRecord)    
+    setNextStepStatusButton(true)
+
+    //第二步放入formSubmitStatus变化时执行
   }
+  console.log("formSubmitStatus", formSubmitStatus)
+
+  //formSubmitStatus变化时执行  
+  useEffect(() => {
+    if(formSubmitStatus && formSubmitStatus.status == 'OK' && nextStepStatusButton) {
+      console.log("formSubmitStatus", formSubmitStatus)
+      setDialogStatus(true)
+      setNextStepStatus(true)
+      setRefuseStatus(false)
+      setNextStepStatusButton(false)
+      console.log("flowRecord", flowRecord)
+    }
+  }, [formSubmitStatus, nextStepStatusButton])
 
   const handleRefuseButton = async () => {
     setDialogStatus(true)
@@ -223,7 +238,7 @@ const StartModel = ({ FlowId, handleReturnButton, flowRecord }: any) => {
             {/* 中间滚动区域 */}
             <ScrollableContent>
               <Paper sx={{ padding: 2 }}>
-                <Grid sx={{ mx: 2, px: 2}}>
+                <Grid sx={{ mx: 2, px: 2, mb: 2}}>
                   <AddOrEditTableCore authConfig={authConfig} externalId={0} id={flowInfor.id} action={'edit_default'} addEditStructInfo={{allFields:{}, }} open={true} toggleAddTableDrawer={toggleAddTableDrawer} addUserHandleFilter={addUserHandleFilter} backEndApi={backEndApi} editViewCounter={1} IsGetStructureFromEditDefault={1} AddtionalParams={AddtionalParams} CSRF_TOKEN={""} dataGridLanguageCode={'zhCN'} toggleImagesPreviewListDrawer={toggleImagesPreviewListDrawer} handleIsLoadingTipChange={handleIsLoadingTipChange} setForceUpdate={setForceUpdate} additionalParameters={AddtionalParams} submitCounter={submitCounter} setSubmitCounter={setSubmitCounter} setFormSubmitStatus={setFormSubmitStatus}/>
                 </Grid>
               </Paper>

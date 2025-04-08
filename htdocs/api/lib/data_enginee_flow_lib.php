@@ -91,6 +91,9 @@ $FormName   = $FromInfo['FullName'];
 if($SettingMap['EnablePluginsForIndividual']=="Enable" && $TableName!="" && $Step>0 && is_file("../plugins/plugin_".$TableName."_".$Step.".php"))    {
     require_once("../plugins/plugin_".$TableName."_".$Step.".php");
 }
+if($SettingMap['EnablePluginsForIndividual']=="Enable" && $TableName!="" && $Step>0 && is_file("./plugins/plugin_".$TableName."_".$Step.".php"))    {
+    require_once("./plugins/plugin_".$TableName."_".$Step.".php");
+}
 
 //Get form_formfield_showtype
 $sql        = "select * from form_formfield_showtype";

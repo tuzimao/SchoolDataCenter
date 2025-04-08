@@ -17,6 +17,9 @@ module.exports = withTM({
   distDir: 'webroot',
   trailingSlash: true,
   reactStrictMode: false,
+  experimental: {
+    esmExternals: false
+  },
   webpack: config => {
     config.resolve.alias = {
       ...config.resolve.alias,
