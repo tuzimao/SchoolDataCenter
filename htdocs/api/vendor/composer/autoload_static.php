@@ -8,6 +8,7 @@ class ComposerStaticInit4703474fbb2f7c93cd3c47536bc5c3e4
 {
     public static $files = array (
         '2cffec82183ee1cea088009cef9a6fc3' => __DIR__ . '/..' . '/ezyang/htmlpurifier/library/HTMLPurifier.composer.php',
+        '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -17,6 +18,8 @@ class ComposerStaticInit4703474fbb2f7c93cd3c47536bc5c3e4
         ),
         'S' => 
         array (
+            'Symfony\\Polyfill\\Mbstring\\' => 26,
+            'Symfony\\Component\\HttpFoundation\\' => 33,
             'StellaMaris\\Clock\\' => 18,
         ),
         'P' => 
@@ -39,6 +42,8 @@ class ComposerStaticInit4703474fbb2f7c93cd3c47536bc5c3e4
         ),
         'L' => 
         array (
+            'League\\OAuth2\\Server\\' => 21,
+            'League\\Event\\' => 13,
             'Lcobucci\\JWT\\' => 13,
             'Lcobucci\\Clock\\' => 15,
         ),
@@ -57,6 +62,14 @@ class ComposerStaticInit4703474fbb2f7c93cd3c47536bc5c3e4
         'ZipStream\\' => 
         array (
             0 => __DIR__ . '/..' . '/maennchen/zipstream-php/src',
+        ),
+        'Symfony\\Polyfill\\Mbstring\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
+        ),
+        'Symfony\\Component\\HttpFoundation\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/http-foundation',
         ),
         'StellaMaris\\Clock\\' => 
         array (
@@ -98,6 +111,14 @@ class ComposerStaticInit4703474fbb2f7c93cd3c47536bc5c3e4
         'Matrix\\' => 
         array (
             0 => __DIR__ . '/..' . '/markbaker/matrix/classes/src',
+        ),
+        'League\\OAuth2\\Server\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/league/oauth2-server/src',
+        ),
+        'League\\Event\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/league/event/src',
         ),
         'Lcobucci\\JWT\\' => 
         array (
