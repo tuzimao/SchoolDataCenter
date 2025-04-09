@@ -200,7 +200,26 @@ if($_GET['action'] == 'GetNextApprovalUsers' && $FlowId > 0 && $processid > 0)  
         $USER_MAP_PRIV[$item['USER_PRIV']][] = $item;
     }
 
-    $NextStep = $SettingMap['NextStep']; 
+    $NextStep = $SettingMap['NextStep'];
+
+    //个性化代码-非通用代码-网上报修-根据楼房属性来判断流程走向-开始
+    if($Step == 1 && $TableName == "data_wygl_baoxiuxinxi")  {
+        $sql        = "select 工作ID from form_flow_run_process where id = '$processid'";
+        $rs         = $db->Execute($sql);
+        $工作ID     = $rs->fields['工作ID'];
+        $sql = "select 楼房属性, 楼房名称 from $TableName where id = '$工作ID' ";
+        $rs         = $db->Execute($sql);
+        $涉及记录    = $rs->fields;
+        $楼房属性    = $涉及记录['楼房属性'];
+        if($楼房属性 == "学生宿舍")  {
+            $NextStep = 2;
+        }
+        else {
+            $NextStep = 3;
+        }
+    }
+    //个性化代码-非通用代码-网上报修-根据楼房属性来判断流程走向-结束
+
     if($NextStep != "" && $NextStep != "[结束]") {
         $NextStepArray = explode(',', $NextStep);
         $sql        = "select * from form_formflow where step in ('".join("','", $NextStepArray)."') and FormId = '$FormId'";
@@ -217,7 +236,7 @@ if($_GET['action'] == 'GetNextApprovalUsers' && $FlowId > 0 && $processid > 0)  
             if($StepName == null) $StepName = $item['Step'];
 
             $Page_Role_Name = $SettingData['Page_Role_Name'];
-            if($Page_Role_Name == "ClassMaster") {
+            if($Page_Role_Name == "ClassMaster")    {
                 //额外限制权限为: 班主任
                 $sql        = "select 工作ID from form_flow_run_process where id = '$processid'";
                 $rs         = $db->Execute($sql);
@@ -235,8 +254,31 @@ if($_GET['action'] == 'GetNextApprovalUsers' && $FlowId > 0 && $processid > 0)  
                     }
                 }
             }
+            if($Page_Role_Name == "Dormitory")      {
+                //额外限制权限为: 宿舍管理员
+                $sql        = "select 工作ID from form_flow_run_process where id = '$processid'";
+                $rs         = $db->Execute($sql);
+                $工作ID     = $rs->fields['工作ID'];
+                if($工作ID != "" && $TableName == "data_wygl_baoxiuxinxi")  {
+                    $sql = "select 楼房属性, 楼房名称 from $TableName where id = '$工作ID' ";
+                    $rs         = $db->Execute($sql);
+                    $涉及记录    = $rs->fields;
+                    $楼房属性    = $涉及记录['楼房属性'];
+                    $楼房名称    = $涉及记录['楼房名称'];
+                    if($楼房属性 == "学生宿舍" && $楼房名称 != "")  {
+                        $生管老师 = returntablefield("data_dorm_building", "宿舍楼名称", $楼房名称, "生管老师一,生管老师二,生管老师三,生管老师四,生管老师五,生管老师六,生管老师七,生管老师八,生管老师九,生管老师十");
+                        $生管老师VALUES = array_values($生管老师);
+                        $生管老师KEYS   = array_flip($生管老师VALUES);
+                        foreach($生管老师KEYS as $生管老师KEY => $NOT_USE) {
+                            if($生管老师KEY != "") {
+                                $NodeFlow_AuthorizedUser[] = $USER_MAP[$生管老师KEY];
+                            }
+                        }
+                    }
+                }
+            }
             $Faculty_Filter_Field = $SettingData['Faculty_Filter_Field'];
-            if($Page_Role_Name == "Faculty" && $Faculty_Filter_Field != "") {
+            if($Page_Role_Name == "Faculty" && $Faculty_Filter_Field != "")     {
                 //额外限制权限为: 班主任
                 $sql        = "select 工作ID from form_flow_run_process where id = '$processid'";
                 $rs         = $db->Execute($sql);

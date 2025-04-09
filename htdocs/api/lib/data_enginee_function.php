@@ -960,7 +960,7 @@ function getAllFields($AllFieldsFromTable, $AllShowTypesArray, $actionType, $Fil
                 $WhereField         = ForSqlInjection($CurrentFieldTypeArray[5]);
                 $WhereValue         = ForSqlInjection($CurrentFieldTypeArray[6]);
                 $MetaColumnNamesTemp    = GLOBAL_MetaColumnNames($TableNameTemp);
-                $AddSqlTemp         = "";
+                $AddSqlTemp             = "";
                 switch($TableNameTemp) {
                     case 'data_banji':
                         global $班级表额外过滤条件;
@@ -975,21 +975,26 @@ function getAllFields($AllFieldsFromTable, $AllShowTypesArray, $actionType, $Fil
                         }
                         break;
                     case 'data_student_jiangxuejin':
-                        global $班级表额外过滤条件;
                         if(in_array("申请开始时间", $MetaColumnNamesTemp) && in_array("申请结束时间", $MetaColumnNamesTemp)) {
                             $AddSqlTemp = " and 申请结束时间 >= '".date('Y-m-d')."'  and 申请开始时间 <= '".date('Y-m-d')."' ";
                         }
                         break;
                     case 'data_student_zhuxuejin':
-                        global $班级表额外过滤条件;
                         if(in_array("申请开始时间", $MetaColumnNamesTemp) && in_array("申请结束时间", $MetaColumnNamesTemp)) {
                             $AddSqlTemp = " and 申请结束时间 >= '".date('Y-m-d')."'  and 申请开始时间 <= '".date('Y-m-d')."' ";
                         }
                         break;
                     case 'data_student_qingongjianxue':
-                        global $班级表额外过滤条件;
                         if(in_array("申请开始时间", $MetaColumnNamesTemp) && in_array("申请结束时间", $MetaColumnNamesTemp)) {
                             $AddSqlTemp = " and 申请结束时间 >= '".date('Y-m-d')."'  and 申请开始时间 <= '".date('Y-m-d')."' ";
+                        }
+                        break;
+                    case 'data_wygl_biaoxiuxiangmu':
+                        if(in_array("允许老师报修", $MetaColumnNamesTemp) && $GLOBAL_USER->USER_ID != '') {
+                            $AddSqlTemp = " and 允许老师报修 = '1' ";
+                        }
+                        if(in_array("允许学生报修", $MetaColumnNamesTemp) && $GLOBAL_USER->学号 != '') {
+                            $AddSqlTemp = " and 允许学生报修 = '1' ";
                         }
                         break;
                 }
