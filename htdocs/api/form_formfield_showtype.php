@@ -194,7 +194,7 @@ $columnsactions[] = ['action'=>'view_default','text'=>__('View'),'mdi'=>'mdi:eye
 $columnsactions[] = ['action'=>'edit_default','text'=>__('Edit'),'mdi'=>'mdi:pencil-outline'];
 $columnsactions[] = ['action'=>'delete_array','text'=>__('Delete'),'mdi'=>'mdi:delete-outline','double_check'=>__('Do you want to delete this item?')];
 $columnsactions[] = ['action'=>'edit_default_1','text'=>__('Copy'),'mdi'=>'mdi:content-copy','double_check'=>'Do you want to copy this item?'];
-$init_default_columns[] = ['flex' => 0.1, 'minWidth' => 120, 'sortable' => false, 'field' => "actions", 'headerName' => __("Actions"), 'show'=>true, 'type'=>'actions', 'actions' => $columnsactions];
+$init_default_columns[] = ['flex' => 0.1, 'minWidth' => 120, 'maxWidth' => 200, 'sortable' => false, 'field' => "actions", 'headerName' => __("Actions"), 'show'=>true, 'type'=>'actions', 'actions' => $columnsactions];
 
 //$columnName = "id";           $init_default_columns[] = ['flex' => 0.1, 'minWidth' => 80, 'maxWidth' => 80, 'field' => $columnName, 'headerName' => __($columnName), 'show'=>true, 'type'=>'input', 'renderCell' => NULL];
 $columnName = "Name";           $init_default_columns[] = ['flex' => 0.1, 'minWidth' => 250, 'maxWidth' => 400, 'field' => $columnName, 'headerName' => __($columnName), 'editable'=>true, 'show'=>true, 'type'=>'string', 'renderCell' => NULL];

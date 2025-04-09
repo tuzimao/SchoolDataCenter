@@ -416,7 +416,7 @@ $AddSql = " where 1=1 and FormId='$externalId'";
 $columnsactions     = [];
 $columnsactions[]   = ['action'=>'delete_array','text'=>__('Delete'),'mdi'=>'mdi:delete-outline','double_check'=>__('Do you want to delete this item?')];
 $columnsactions[]   = ['action'=>'edit_default_6','text'=>__('Copy'),'mdi'=>'mdi:content-copy','double_check'=>'Do you want to copy this item?'];
-$init_default_columns[] = ['flex' => 0.1, 'minWidth' => 120, 'sortable' => false, 'field' => "actions", 'headerName' => __("Actions"), 'show'=>true, 'type'=>'actions', 'actions' => $columnsactions];
+$init_default_columns[] = ['flex' => 0.1, 'minWidth' => 120, 'maxWidth' => 200, 'sortable' => false, 'field' => "actions", 'headerName' => __("Actions"), 'show'=>true, 'type'=>'actions', 'actions' => $columnsactions];
 //$columnName = "TableName";      $init_default_columns[] = ['flex' => 0.1, 'minWidth' => 200, 'maxWidth' => 300, 'field' => $columnName, 'headerName' => __($columnName), 'editable'=>false, 'show'=>true, 'type'=>'string', 'renderCell' => NULL];
 //$columnName = "FullName";    $init_default_columns[] = ['flex' => 0.1, 'minWidth' => 150, 'maxWidth' => 300, 'field' => $columnName, 'headerName' => __($columnName), 'editable'=>false, 'show'=>true, 'type'=>'string', 'renderCell' => NULL];
 $columnName = "Step";           $init_default_columns[] = ['flex' => 0.1, 'minWidth' => 100, 'maxWidth' => 200, 'field' => $columnName, 'headerName' => __($columnName), 'editable'=>false, 'show'=>true, 'type'=>'string', 'renderCell' => NULL];

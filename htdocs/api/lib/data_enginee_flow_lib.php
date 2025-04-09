@@ -431,7 +431,7 @@ if(in_array('Edit',$Actions_In_List_Row_Array)) {
 if(in_array('Delete',$Actions_In_List_Row_Array)) {
     $columnsactions[]   = ['action'=>'delete_array','text'=>$SettingMap['Rename_List_Delete_Button'],'mdi'=>'mdi:delete-outline','double_check'=>__('Do you want to delete this item?')];
 }
-$init_default_columns[] = ['flex' => 0.1, 'minWidth' => 120, 'sortable' => false, 'field' => "actions", 'headerName' => __("Actions"), 'show'=>true, 'type'=>'actions', 'actions' => $columnsactions];
+$init_default_columns[] = ['flex' => 0.1, 'minWidth' => 120, 'maxWidth' => 200, 'sortable' => false, 'field' => "actions", 'headerName' => __("Actions"), 'show'=>true, 'type'=>'actions', 'actions' => $columnsactions];
 
 
 $ApprovalNodeFieldsArray        = explode(',',$SettingMap['ApprovalNodeFields']);
