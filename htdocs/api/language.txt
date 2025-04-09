@@ -1,2 +1,3 @@
 
 $MAP['StepName'] 	= 'StepName';
+$MAP['ShowType_名称'] 	= 'ShowType_名称';

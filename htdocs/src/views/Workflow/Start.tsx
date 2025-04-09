@@ -14,6 +14,7 @@ import IconButton from '@mui/material/IconButton'
 import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
 import Fade, { FadeProps } from '@mui/material/Fade'
+import ImagesPreview from '../Enginee/ImagesPreview'
 
 const Transition = forwardRef(function Transition(
   props: FadeProps & { children?: ReactElement<any, any> },
@@ -40,15 +41,22 @@ const StartModel = ({ FlowId, handleReturnButton, flowRecord }: any) => {
 
   const [loading, setLoading] = useState(true);
   const [flowInfor, setFlowInfor] = useState<any>(null);
-  const [submitCounter, setSubmitCounter] = useState<number>(0)
+  const [submitCounter, setSubmitCounter] = useState<number>(0);
   const [dialogStatus, setDialogStatus] = useState<boolean>(false);
   const [refuseStatus, setRefuseStatus] = useState<boolean>(false);
   const [nextStepStatus, setNextStepStatus] = useState<boolean>(false);
   const [nextStepStatusButton, setNextStepStatusButton] = useState<boolean>(false);
   const [formSubmitStatus, setFormSubmitStatus] = useState<any>(null);
+
+  const [imagesPreviewOpen, setImagesPreviewOpen] = useState<boolean>(false);
+  const [imagesPreviewList, setImagesPreviewList] = useState<string[]>([]);
+  const [imagesType, setImagesType] = useState<string[]>([]);
   
   const [approvalNodes, setApprovalNodes] = useState<any[]>([]);
 
+  const toggleImagesPreviewDrawer = () => {
+    setImagesPreviewOpen(!imagesPreviewOpen)
+  }
   
   useEffect(() => {
     const fetchWorkItems = async () => {
@@ -148,8 +156,10 @@ const StartModel = ({ FlowId, handleReturnButton, flowRecord }: any) => {
     console.log("toggleAddTableDrawer")
   }
 
-  const toggleImagesPreviewListDrawer = () => {
-    console.log("toggleAddTableDrawer")
+  const toggleImagesPreviewListDrawer = (imagesPreviewList: string[], imagesType: string[]) => {
+    setImagesPreviewOpen(!imagesPreviewOpen)
+    setImagesPreviewList(imagesPreviewList)
+    setImagesType(imagesType)
   }
 
   const handleIsLoadingTipChange = () => {
@@ -328,6 +338,7 @@ const StartModel = ({ FlowId, handleReturnButton, flowRecord }: any) => {
           </DialogContent>
         </Dialog >
       )}
+      <ImagesPreview open={imagesPreviewOpen} toggleImagesPreviewDrawer={toggleImagesPreviewDrawer} imagesList={imagesPreviewList} imagesType={imagesType} />
     </Fragment>
   );
 };

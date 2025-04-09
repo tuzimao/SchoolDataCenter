@@ -364,9 +364,9 @@ const ViewTableCore = (props: ViewTableType) => {
                                         <div className='file-details' style={{display: "flex"}}>
                                           <div style={{padding: "3px 3px 0 0"}}>
                                             {FileUrl.type.startsWith('image') ?
-                                            <Box sx={{ display: 'flex', alignItems: 'center',cursor: 'pointer',':hover': {cursor: 'pointer',}, }} onClick={() => toggleImagesPreviewListDrawer([authConfig.backEndApiHost+FileUrl['webkitRelativePath']], ['image'])}>
-                                              <ImgStyled68 src={authConfig.backEndApiHost+FileUrl['webkitRelativePath']} />
-                                            </Box>
+                                              <Box sx={{ display: 'flex', alignItems: 'center',cursor: 'pointer',':hover': {cursor: 'pointer',}, }} onClick={() => toggleImagesPreviewListDrawer([authConfig.backEndApiHost+FileUrl['webkitRelativePath']], ['image'])}>
+                                                <ImgStyled68 src={authConfig.backEndApiHost+FileUrl['webkitRelativePath']} />
+                                              </Box>
                                             : <Icon icon='mdi:file-document-outline' fontSize={28}/>
                                             }
                                           </div>

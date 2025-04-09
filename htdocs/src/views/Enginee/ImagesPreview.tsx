@@ -43,6 +43,7 @@ interface ImagesPreviewType {
 
 const ImagesPreview = (props: ImagesPreviewType) => {
   // ** Props
+  console.log("ImagesPreview", props)
   const { open, imagesList, imagesType, toggleImagesPreviewDrawer } = props
 
   const handleClose = () => {

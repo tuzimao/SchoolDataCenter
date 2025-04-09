@@ -203,7 +203,7 @@ if($_GET['action'] == 'GetNextApprovalUsers' && $FlowId > 0 && $processid > 0)  
     $NextStep = $SettingMap['NextStep'];
 
     //个性化代码-非通用代码-网上报修-根据楼房属性来判断流程走向-开始
-    if($Step == 1 && $TableName == "data_wygl_baoxiuxinxi")  {
+    if(($Step == 1 || $Step == 8) && $TableName == "data_wygl_baoxiuxinxi")  {
         $sql        = "select 工作ID from form_flow_run_process where id = '$processid'";
         $rs         = $db->Execute($sql);
         $工作ID     = $rs->fields['工作ID'];
@@ -279,7 +279,7 @@ if($_GET['action'] == 'GetNextApprovalUsers' && $FlowId > 0 && $processid > 0)  
             }
             $Faculty_Filter_Field = $SettingData['Faculty_Filter_Field'];
             if($Page_Role_Name == "Faculty" && $Faculty_Filter_Field != "")     {
-                //额外限制权限为: 班主任
+                //额外限制权限为: 院系
                 $sql        = "select 工作ID from form_flow_run_process where id = '$processid'";
                 $rs         = $db->Execute($sql);
                 $工作ID     = $rs->fields['工作ID'];
@@ -302,7 +302,68 @@ if($_GET['action'] == 'GetNextApprovalUsers' && $FlowId > 0 && $processid > 0)  
                     }
                 }
             }
-            //print_R($NodeFlow_AuthorizedUser);exit;
+            //网上报修-维修组长派单-维修组长列表
+            if($item['FlowName'] == "维修组长派单")  {
+                $sql        = "select 工作ID from form_flow_run_process where id = '$processid'";
+                $rs         = $db->Execute($sql);
+                $工作ID     = $rs->fields['工作ID'];
+                if($工作ID != "" && $TableName != "")  {
+                    $sql = "select 负责人,维修人员 from data_wygl_biaoxiuxiangmu ";
+                    $rs         = $db->Execute($sql);
+                    $涉及记录    = $rs->GetArray();
+                    $负责人     = [];
+                    foreach($涉及记录 as $List) {
+                        $负责人[] = $List['负责人'];
+                    }
+                    $负责人TEXT  = join(',', $负责人);
+                    $负责人Array = explode(',', $负责人TEXT);
+                    $负责人Flip  = array_flip($负责人Array);
+                    foreach($负责人Flip as $List=>$NOT_USE)   {
+                        if($List != '' && is_array($USER_MAP[$List]) )     {
+                            $NodeFlow_AuthorizedUser[] = $USER_MAP[$List];                            
+                        }
+                    }
+                }
+            }
+            //网上报修-确认维修-得到维修人员列表
+            if($item['FlowName'] == "确认维修")  {
+                $sql        = "select 工作ID from form_flow_run_process where id = '$processid'";
+                $rs         = $db->Execute($sql);
+                $工作ID     = $rs->fields['工作ID'];
+                if($工作ID != "" && $TableName != "")  {
+                    $sql = "select 报修项目 from $TableName where id = '$工作ID' ";
+                    $rs         = $db->Execute($sql);
+                    $报修项目    = $rs->fields['报修项目'];
+                    $sql = "select 负责人,维修人员 from data_wygl_biaoxiuxiangmu where 名称 = '$报修项目'";
+                    $rs         = $db->Execute($sql);
+                    $涉及记录    = $rs->GetArray();
+                    $负责人Array = explode(',', $涉及记录[0]['维修人员']);
+                    $负责人Flip  = array_flip($负责人Array);
+                    foreach($负责人Flip as $List=>$NOT_USE)   {
+                        if($List != '' && is_array($USER_MAP[$List]) )     {
+                            $NodeFlow_AuthorizedUser[] = $USER_MAP[$List];                            
+                        }
+                    }
+                }
+            }
+            //网上报修-服务评价-返回发起人
+            if($item['FlowName'] == "服务评价")  {
+                $sql        = "select 工作ID from form_flow_run_process where id = '$processid'";
+                $rs         = $db->Execute($sql);
+                $工作ID     = $rs->fields['工作ID'];
+                if($工作ID != "" && $TableName != "")  {
+                    $sql = "select 报修人,学生学号 from $TableName where id = '$工作ID' ";
+                    $rs         = $db->Execute($sql);
+                    $报修人      = $rs->fields['报修人'];
+                    $学生学号    = $rs->fields['学生学号'];
+                    if($报修人 != '' && is_array($USER_MAP[$报修人]) )     {
+                        $NodeFlow_AuthorizedUser[] = $USER_MAP[$报修人];                            
+                    }
+                    if($学生学号 != '')     {
+                        $NodeFlow_AuthorizedUser[] = returntablefield("data_student", "学号", $学生学号, "id, 学号 as USER_ID, 姓名 as USER_NAME, 学号 as value, 姓名 as label, 班级");
+                    }
+                }
+            }
             
             //手动指定审核人
             if($SettingData['NodeFlow_AuthorizedUser'] != null && $SettingData['NodeFlow_AuthorizedUser'] != "") {
