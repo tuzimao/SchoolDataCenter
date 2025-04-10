@@ -565,6 +565,8 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                 break;
                             case 'autocomplete':
                             case 'jumpwindow':
+                                yupCheckMap[NewFieldName] = yup.string().required().label(FieldArray.label)
+                                console.log("NewFieldName", NewFieldName, FieldArray.type)
                                 break;
                         }
                     })
@@ -4475,7 +4477,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
 
                         {addEditStructInfo2.childtable && addEditStructInfo2.childtable.allFields && addEditStructInfo2.childtable.submittext ?
                             <Card key={"ChildtableSection"} sx={{ mb: 1, mx: 0, p:0 }}>
-                                <RepeaterWrapper sx={{ mx: 0 }}>
+                                <RepeaterWrapper sx={{ mx: 0, px: 0 }}>
                                     <Repeater count={childItemCounter} >
                                     {(i: number) => {
                                         const Tag = i === 0 ? Box : Collapse
