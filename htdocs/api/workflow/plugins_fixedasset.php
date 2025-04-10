@@ -58,8 +58,6 @@ function 工作流中固定资产采购申请获得批准之后资产采购和�
     global $GLOBAL_USER;
     global $TableName;
 
-    return ; //暂时未启用此部分代码
-
     $FlowId     = intval(DecryptID($_POST['FlowId']));
     $processid  = intval($_POST['processid']);
     $runid      = intval($_POST['runid']);
@@ -90,7 +88,7 @@ function 工作流中固定资产采购申请获得批准之后资产采购和�
             $RecordInfo = $rs->fields;
             //开始----处理主要的业务逻辑部分代码
             //进行资产入库操作.
-            
+            固定资产_采购单_转_入库($RecordInfo['资产采购编码']);
             //结束----处理主要的业务逻辑部分代码
         }
     }
