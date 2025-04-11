@@ -4,11 +4,15 @@ import { forwardRef, ReactElement, Ref, Fragment, useState, useEffect, SetStateA
 // ** MUI Imports
 import Box from '@mui/material/Box'
 import Badge from '@mui/material/Badge'
+import Grid from '@mui/material/Grid'
+import Typography from '@mui/material/Typography'
 import IconButton from '@mui/material/IconButton'
 import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
 import Fade, { FadeProps } from '@mui/material/Fade'
 import styles from './components/Excel2007.module.css';
+import Container from '@mui/material/Container'
+import CircularProgress from '@mui/material/CircularProgress'
 
 //PDF
 //import { pdfjs, Document, Page } from 'react-pdf';
@@ -39,6 +43,10 @@ function ExcelViewer({ fileUrl }: { fileUrl: string; } ) {
   const [rows, setRows] = useState([]);
   const [cols, setCols] = useState([]);
 
+  const [show, setShow] = useState<boolean>(true)
+  const [loading, setLoading] = useState<boolean>(true)
+  const [loadingText, setLoadingText] = useState<string>('Loading')
+
   useEffect(() => {
     const fetchExcel = async () => {
       try {
@@ -54,7 +62,8 @@ function ExcelViewer({ fileUrl }: { fileUrl: string; } ) {
           ExcelRenderer(blob, (err: any, resp: { cols: SetStateAction<never[]>; rows: SetStateAction<never[]> }) => {
             if (err) {
               console.error(err);
-            } else {
+            } 
+            else {
               const tempCols: SetStateAction<any[]> = []
               tempCols.push({name: '', key: 0})
               
@@ -70,16 +79,20 @@ function ExcelViewer({ fileUrl }: { fileUrl: string; } ) {
               
               // @ts-ignore
               setRows(resp.rows);
+
+              setLoading(false)
             }
           });
         };
         
         reader.onerror = () => {
+          setLoading(false)
           throw new Error("Failed to read the blob data");
         };
         
         reader.readAsBinaryString(blob);
       } catch (error) {
+        setLoading(false)
         console.error("Error fetching or parsing the Excel file:", error);
       }
     };
@@ -88,8 +101,12 @@ function ExcelViewer({ fileUrl }: { fileUrl: string; } ) {
   }, [fileUrl]);
 
   return (
-      <div>
-        {rows && cols && (
+      <div style={{ 
+        maxHeight: '85vh', // 限制最大高度
+        overflow: 'auto',  // 启用滚动
+        width: '100%'      // 确保宽度填满容器
+      }}>
+        {rows && cols && loading == false && (
           <OutTable
             data={rows}
             columns={cols}
@@ -97,6 +114,18 @@ function ExcelViewer({ fileUrl }: { fileUrl: string; } ) {
             tableHeaderRowClass={styles.heading}
           />
         )}
+        {loading &&
+                <Container>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12} sx={{}}>
+                      <Box sx={{ mx: 6, display: 'flex', alignItems: 'center', flexDirection: 'column', whiteSpace: 'nowrap' }}>
+                        <CircularProgress sx={{ mb: 8 }} />
+                        <Typography>{loadingText}</Typography>
+                      </Box>
+                    </Grid>
+                  </Grid>
+                </Container>
+          }
       </div>
   );
 }
