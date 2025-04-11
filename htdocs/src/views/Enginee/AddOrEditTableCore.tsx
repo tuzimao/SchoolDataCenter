@@ -1099,6 +1099,22 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
             return <Icon icon='mdi:file-document-outline' />
         }
     }
+    const renderFilePreviewLink = (fileInfor: File | FileUrl, width: number, height: number) => {
+        if(fileInfor['type']=="file" || fileInfor['type']=="PowerPoint" || fileInfor['type']=="Word" || fileInfor['type']=="Excel" || fileInfor['type']=="pdf" || fileInfor['type']=="image")  {
+
+            return (
+                <Typography className='file-name'>
+                    <Box sx={{m: 0, p: 0, cursor: 'pointer'}} onClick={() => toggleImagesPreviewListDrawer([authConfig.backEndApiHost + fileInfor['webkitRelativePath']], [fileInfor['type']])} >{fileInfor['name']}</Box>
+                </Typography>
+            )
+        }
+        else {
+            
+            return (
+                <Typography className='file-name'>{fileInfor['name']}</Typography>
+            )
+        }
+    }
     const handleRemoveFile = (file: File) => {
         const filtered = uploadFiles.filter((i: File) => i.name !== file.name)
         setUploadFiles([...filtered])
@@ -3978,25 +3994,11 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                                 return (
                                                                                         <ListItem key={fileInfor.name} style={{padding: "3px"}}>
                                                                                             <div className='file-details' style={{ display: 'flex', overflow: 'hidden'}}>
-                                                                                                <div className='file-preview' style={{marginRight: '4px', paddingTop: '4px'}}>{renderFilePreview(fileInfor, 38, 38)}</div>
+                                                                                                <div className='file-preview' style={{marginRight: '4px', paddingTop: '4px'}}>
+                                                                                                    {renderFilePreview(fileInfor, 38, 38)}
+                                                                                                </div>
                                                                                                 <div>
-                                                                                                {fileInfor['type']=="file" ?
-                                                                                                    <Typography className='file-name'><CustomLink href={authConfig.backEndApiHost+fileInfor['webkitRelativePath']} download={fileInfor['name']}>{fileInfor['name']}</CustomLink></Typography>
-                                                                                                :
-                                                                                                ''
-                                                                                                }
-                                                                                                {fileInfor['type']=="image" ?
-                                                                                                    <Typography className='file-name'>
-                                                                                                        <Box sx={{m: 0, p: 0, cursor: 'pointer'}} onClick={() => toggleImagesPreviewListDrawer([authConfig.backEndApiHost + fileInfor['webkitRelativePath']], ['image'])} >{fileInfor['name']}</Box>
-                                                                                                    </Typography>
-                                                                                                :
-                                                                                                ''
-                                                                                                }
-                                                                                                {(fileInfor['type']!="file" && fileInfor['type']!="image") ?
-                                                                                                    <Typography className='file-name'>{fileInfor['name']}</Typography>
-                                                                                                :
-                                                                                                ''
-                                                                                                }
+                                                                                                {renderFilePreviewLink(fileInfor, 38, 38)}
                                                                                                 <Typography className='file-size' variant='body2'>
                                                                                                     {Math.round(fileInfor.size / 100) / 10 > 1000
                                                                                                     ? `${(Math.round(fileInfor.size / 100) / 10000).toFixed(1)} mb`
