@@ -1,5 +1,5 @@
 // ** React Imports
-import { forwardRef, ReactElement, Ref, Fragment, useState, useEffect, SetStateAction } from 'react'
+import { forwardRef, ReactElement, Ref, Fragment, useState, useEffect, SetStateAction, useRef } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -10,23 +10,23 @@ import IconButton from '@mui/material/IconButton'
 import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
 import Fade, { FadeProps } from '@mui/material/Fade'
-import styles from './components/Excel2007.module.css';
+import styles from './components/Excel2007.module.css'
 import Container from '@mui/material/Container'
 import CircularProgress from '@mui/material/CircularProgress'
+import Icon from 'src/@core/components/icon'
 
 //PDF
-//import { pdfjs, Document, Page } from 'react-pdf';
-//import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
-//import 'react-pdf/dist/esm/Page/TextLayer.css';
+import { pdfjs, Document, Page } from 'react-pdf';
+import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
+import 'react-pdf/dist/esm/Page/TextLayer.css';
+pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 //EXCEL
 import {OutTable, ExcelRenderer} from 'react-excel-renderer';
 
-// Set up pdf.js worker
-//pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
+//Word
+import { renderAsync } from 'docx-preview';
 
-// ** Icon Imports
-import Icon from 'src/@core/components/icon'
 
 const Transition = forwardRef(function Transition(
     props: FadeProps & { children?: ReactElement<any, any> },
@@ -43,9 +43,8 @@ function ExcelViewer({ fileUrl }: { fileUrl: string; } ) {
   const [rows, setRows] = useState([]);
   const [cols, setCols] = useState([]);
 
-  const [show, setShow] = useState<boolean>(true)
   const [loading, setLoading] = useState<boolean>(true)
-  const [loadingText, setLoadingText] = useState<string>('Loading')
+  const loadingText = 'Loading'
 
   useEffect(() => {
     const fetchExcel = async () => {
@@ -115,27 +114,155 @@ function ExcelViewer({ fileUrl }: { fileUrl: string; } ) {
           />
         )}
         {loading &&
-                <Container>
-                  <Grid container spacing={2}>
-                    <Grid item xs={12} sx={{}}>
-                      <Box sx={{ mx: 6, display: 'flex', alignItems: 'center', flexDirection: 'column', whiteSpace: 'nowrap' }}>
-                        <CircularProgress sx={{ mb: 8 }} />
-                        <Typography>{loadingText}</Typography>
-                      </Box>
-                    </Grid>
+              <Container>
+                <Grid container spacing={2}>
+                  <Grid item xs={12} sx={{}}>
+                    <Box sx={{ mx: 6, display: 'flex', alignItems: 'center', flexDirection: 'column', whiteSpace: 'nowrap' }}>
+                      <CircularProgress sx={{ mb: 8 }} />
+                      <Typography>{loadingText}</Typography>
+                    </Box>
                   </Grid>
-                </Container>
-          }
+                </Grid>
+              </Container>
+        }
       </div>
   );
 }
 
-interface ImagesPreviewType {
-    open: boolean
-    imagesList: string[]
-    imagesType: string[]
-    toggleImagesPreviewDrawer: () => void
+function WordViewer({ fileUrl }: { fileUrl: string }) {
+  const previewRef = useRef<HTMLDivElement>(null);
+  const [loading, setLoading] = useState<boolean>(true)
+  const loadingText = 'Loading'
+
+  useEffect(() => {
+    const fetchAndRender = async () => {
+      try {
+        const response = await fetch(fileUrl);
+        const arrayBuffer = await response.arrayBuffer();
+        setLoading(false)
+        if (previewRef.current) {
+          await renderAsync(arrayBuffer, previewRef.current);
+        }
+      } catch (error) {
+        console.error('Error rendering Word file:', error);
+      }
+    };
+
+    fetchAndRender();
+  }, [fileUrl]);
+
+  return (
+    <>
+    <div 
+      ref={previewRef}
+      style={{ 
+        maxHeight: '85vh', 
+        overflow: 'auto',
+        width: '100%'
+      }} 
+    />
+    {loading && (
+      <Container>
+        <Grid container spacing={2}>
+          <Grid item xs={12} sx={{}}>
+            <Box sx={{ mx: 6, display: 'flex', alignItems: 'center', flexDirection: 'column', whiteSpace: 'nowrap' }}>
+              <CircularProgress sx={{ mb: 8 }} />
+              <Typography>{loadingText}</Typography>
+            </Box>
+          </Grid>
+        </Grid>
+      </Container>
+    )}
+    </>
+  );
+}
+
+function PDFViewer({ fileUrl }: { fileUrl: string }) {
+  const [numPages, setNumPages] = useState<number>(0);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [containerWidth, setContainerWidth] = useState<number>(800);
+  const loadingText = 'Loading'
+
+  function onDocumentLoadSuccess({ numPages }: { numPages: number }) {
+    setNumPages(numPages);
+    setLoading(false);
   }
+
+  // 计算页面宽度，保持A4比例 (1.414)
+  const getPageWidth = () => {
+    return Math.min(containerWidth, 800);
+  };
+
+  return (
+    <div 
+      style={{ 
+        maxHeight: '85vh',
+        overflow: 'auto',
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+      }}
+      ref={(ref) => {
+        if (ref) {
+          setContainerWidth(ref.clientWidth);
+        }
+      }}
+    >
+      <Document
+        file={fileUrl}
+        onLoadSuccess={onDocumentLoadSuccess}
+        loading={<div>加载中...</div>}
+        error={<div>加载失败！<a href={fileUrl} download>点击下载</a></div>}
+      >
+        {Array.from(new Array(numPages), (_, index) => (
+          <div 
+            key={`page_${index + 1}`}
+            style={{
+              marginBottom: '8px',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+            }}
+          >
+            <Page 
+              pageNumber={index + 1} 
+              width={getPageWidth()}
+              renderTextLayer={true}
+              renderAnnotationLayer={true}
+            />
+            {index < numPages - 1 && (
+              <div style={{ 
+                height: '1px', 
+                backgroundColor: '#e0e0e0',
+                margin: '16px 0'
+              }} />
+            )}
+          </div>
+        ))}
+      </Document>
+      
+      {loading && (
+        <Container>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sx={{}}>
+              <Box sx={{ mx: 6, display: 'flex', alignItems: 'center', flexDirection: 'column', whiteSpace: 'nowrap' }}>
+                <CircularProgress sx={{ mb: 8 }} />
+                <Typography>{loadingText}</Typography>
+              </Box>
+            </Grid>
+          </Grid>
+        </Container>
+      )}
+    </div>
+  );
+}
+
+
+interface ImagesPreviewType {
+  open: boolean
+  imagesList: string[]
+  imagesType: string[]
+  toggleImagesPreviewDrawer: () => void
+}
 
 const FilesPreview = (props: ImagesPreviewType) => {
   // ** Props
@@ -197,19 +324,16 @@ const FilesPreview = (props: ImagesPreviewType) => {
                       )
                     case 'pdf':
 
-                      return (
-                          <Fragment key={UrlIndex}>
-                          </Fragment>
-                      );
-                    case 'Word':
+                      return <PDFViewer fileUrl={Url} />
 
-                      return (
-                        <div style={{ width: '100%', color:'black'}} key={UrlIndex}>
-                        </div>
-                      )
+                    case 'Word':
+                      
+                      return <WordViewer fileUrl={Url} />
+
                     case 'Excel':
 
                       return <ExcelViewer fileUrl={Url} />
+
                     default:
 
                       return (
