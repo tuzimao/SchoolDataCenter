@@ -1089,6 +1089,18 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
         if (file && 'webkitRelativePath' in file && file['webkitRelativePath']!="" && file['type']=="image") {
             return <Box sx={{m: 0, p: 0, cursor: 'pointer'}} onClick={() => toggleImagesPreviewListDrawer([authConfig.backEndApiHost + file['webkitRelativePath']], ['image'])} ><img width={width} height={height} alt={file.name} style={{padding: "1px"}} src={authConfig.backEndApiHost+file['webkitRelativePath']} /></Box>
         }
+        else if (file && 'webkitRelativePath' in file && file['webkitRelativePath']!="" && file['type']=="Word") {
+            return <Icon icon='icon-park-outline:word' />
+        }
+        else if (file && 'webkitRelativePath' in file && file['webkitRelativePath']!="" && file['type']=="Excel") {
+            return <Icon icon='icon-park-outline:excel' />
+        }
+        else if (file && 'webkitRelativePath' in file && file['webkitRelativePath']!="" && file['type']=="PowerPoint") {
+            return <Icon icon='teenyicons:ppt-outline' />
+        }
+        else if (file && 'webkitRelativePath' in file && file['webkitRelativePath']!="" && file['type']=="pdf") {
+            return <Icon icon='icomoon-free:file-pdf' />
+        }
         else if (file && 'webkitRelativePath' in file && file['webkitRelativePath']!="" && file['type']!="image") {
             return <Icon icon='mdi:file-document-outline' />
         }
@@ -1099,8 +1111,8 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
             return <Icon icon='mdi:file-document-outline' />
         }
     }
-    const renderFilePreviewLink = (fileInfor: File | FileUrl, width: number, height: number) => {
-        if(fileInfor['type']=="file" || fileInfor['type']=="PowerPoint" || fileInfor['type']=="Word" || fileInfor['type']=="Excel" || fileInfor['type']=="pdf" || fileInfor['type']=="image")  {
+    const renderFilePreviewLink = (fileInfor: File | FileUrl) => {
+        if(fileInfor['type']=="file" || fileInfor['type']=="Word" || fileInfor['type']=="Excel" || fileInfor['type']=="pdf" || fileInfor['type']=="image")  {
 
             return (
                 <Typography className='file-name'>
@@ -3806,7 +3818,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                             <Fragment>
                                                                             <List>
                                                                             {uploadFiles.map((fileInfor: File | FileUrl) => {
-                                                                                console.log("fileInfor", fileInfor)
+                                                                                
                                                                                 return (
                                                                                         <ListItem key={fileInfor.name}>
                                                                                             <div className='file-details' style={{overflow: 'hidden'}}>
@@ -3990,7 +4002,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                             <Fragment>
                                                                             <List>
                                                                             {uploadFilesReadonly.map((fileInfor: File | FileUrl) => {
-                                                                                console.log("fileInfor", fileInfor);
+                                                                                
                                                                                 return (
                                                                                         <ListItem key={fileInfor.name} style={{padding: "3px"}}>
                                                                                             <div className='file-details' style={{ display: 'flex', overflow: 'hidden'}}>
@@ -3998,12 +4010,17 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                                                     {renderFilePreview(fileInfor, 38, 38)}
                                                                                                 </div>
                                                                                                 <div>
-                                                                                                {renderFilePreviewLink(fileInfor, 38, 38)}
-                                                                                                <Typography className='file-size' variant='body2'>
-                                                                                                    {Math.round(fileInfor.size / 100) / 10 > 1000
-                                                                                                    ? `${(Math.round(fileInfor.size / 100) / 10000).toFixed(1)} mb`
-                                                                                                    : `${(Math.round(fileInfor.size / 100) / 10).toFixed(1)} kb`}
-                                                                                                </Typography>
+                                                                                                {renderFilePreviewLink(fileInfor)}
+                                                                                                <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+                                                                                                    <Typography className='file-size' variant='body2'>
+                                                                                                        {Math.round(fileInfor.size / 100) / 10 > 1000
+                                                                                                        ? `${(Math.round(fileInfor.size / 100) / 10000).toFixed(1)} mb`
+                                                                                                        : `${(Math.round(fileInfor.size / 100) / 10).toFixed(1)} kb`}
+                                                                                                    </Typography>
+                                                                                                    <CustomLink href={authConfig.backEndApiHost + fileInfor['webkitRelativePath']} download={fileInfor['name']}>
+                                                                                                        <Typography className='file-size' variant='body2'>下载</Typography>
+                                                                                                    </CustomLink>
+                                                                                                </Box>
                                                                                                 </div>
                                                                                             </div>
                                                                                         </ListItem>

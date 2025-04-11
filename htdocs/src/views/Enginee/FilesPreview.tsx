@@ -17,8 +17,10 @@ import Icon from 'src/@core/components/icon'
 
 //PDF
 import { pdfjs, Document, Page } from 'react-pdf';
+
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
+
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 //EXCEL
@@ -181,7 +183,6 @@ function PDFViewer({ fileUrl }: { fileUrl: string }) {
   const [numPages, setNumPages] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
   const [containerWidth, setContainerWidth] = useState<number>(800);
-  const loadingText = 'Loading'
 
   function onDocumentLoadSuccess({ numPages }: { numPages: number }) {
     setNumPages(numPages);
@@ -192,6 +193,8 @@ function PDFViewer({ fileUrl }: { fileUrl: string }) {
   const getPageWidth = () => {
     return Math.min(containerWidth, 800);
   };
+
+  console.log("PDFViewer loading", loading)
 
   return (
     <div 
@@ -239,19 +242,6 @@ function PDFViewer({ fileUrl }: { fileUrl: string }) {
           </div>
         ))}
       </Document>
-      
-      {loading && (
-        <Container>
-          <Grid container spacing={2}>
-            <Grid item xs={12} sx={{}}>
-              <Box sx={{ mx: 6, display: 'flex', alignItems: 'center', flexDirection: 'column', whiteSpace: 'nowrap' }}>
-                <CircularProgress sx={{ mb: 8 }} />
-                <Typography>{loadingText}</Typography>
-              </Box>
-            </Grid>
-          </Grid>
-        </Container>
-      )}
     </div>
   );
 }
