@@ -14,7 +14,7 @@ import IconButton from '@mui/material/IconButton'
 import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
 import Fade, { FadeProps } from '@mui/material/Fade'
-import ImagesPreview from '../Enginee/ImagesPreview'
+import FilesPreview from '../Enginee/FilesPreview'
 
 const Transition = forwardRef(function Transition(
   props: FadeProps & { children?: ReactElement<any, any> },
@@ -338,7 +338,7 @@ const StartModel = ({ FlowId, handleReturnButton, flowRecord }: any) => {
           </DialogContent>
         </Dialog >
       )}
-      <ImagesPreview open={imagesPreviewOpen} toggleImagesPreviewDrawer={toggleImagesPreviewDrawer} imagesList={imagesPreviewList} imagesType={imagesType} />
+      <FilesPreview open={imagesPreviewOpen} toggleImagesPreviewDrawer={toggleImagesPreviewDrawer} imagesList={imagesPreviewList} imagesType={imagesType} />
     </Fragment>
   );
 };

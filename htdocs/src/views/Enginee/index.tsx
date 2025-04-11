@@ -64,7 +64,7 @@ import IndexTableHeader from 'src/views/Enginee/IndexTableHeader'
 import IndexTableHeaderMobile from 'src/views/Enginee/IndexTableHeaderMobile'
 import AddOrEditTable from './AddOrEditTable'
 import ViewTable from './ViewTable'
-import ImagesPreview from './ImagesPreview'
+import FilesPreview from './FilesPreview'
 import IndexBottomFlowNode from './IndexBottomFlowNode'
 import AppSoulChatList from './AppSoulChatList'
 import AppAiChatList from './AppAiChatList'
@@ -1631,7 +1631,7 @@ const UserList = ({ authConfig, backEndApi, externalId, handleActionInMobileApp,
 
       {store && store.view_default && store.view_default.defaultValues && addEditActionName.indexOf("view_default") != -1 && addEditActionId!='' ? <ViewTable authConfig={authConfig} externalId={Number(externalId)} id={addEditActionId} action={addEditActionName} pageJsonInfor={store[addEditActionName]} open={viewActionOpen} toggleViewTableDrawer={toggleViewTableDrawer} backEndApi={backEndApi} editViewCounter={editViewCounter + 1} addEditViewShowInWindow={addEditViewShowInWindow} CSRF_TOKEN={CSRF_TOKEN} toggleImagesPreviewListDrawer={toggleImagesPreviewListDrawer} dialogMaxWidth={store.init_default.dialogMaxWidth} handleSetRightButtonIconOriginal={handleSetRightButtonIconOriginal} viewPageShareStatus={viewPageShareStatus} handSetViewPageShareStatus={handSetViewPageShareStatus}/> : ''}
 
-      <ImagesPreview open={imagesPreviewOpen} toggleImagesPreviewDrawer={toggleImagesPreviewDrawer} imagesList={imagesPreviewList} imagesType={imagesType} />
+      <FilesPreview open={imagesPreviewOpen} toggleImagesPreviewDrawer={toggleImagesPreviewDrawer} imagesList={imagesPreviewList} imagesType={imagesType} />
 
     </Grid >
   )

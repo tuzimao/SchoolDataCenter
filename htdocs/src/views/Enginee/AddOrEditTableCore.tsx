@@ -3790,7 +3790,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                             <Fragment>
                                                                             <List>
                                                                             {uploadFiles.map((fileInfor: File | FileUrl) => {
-
+                                                                                console.log("fileInfor", fileInfor)
                                                                                 return (
                                                                                         <ListItem key={fileInfor.name}>
                                                                                             <div className='file-details' style={{overflow: 'hidden'}}>
@@ -3974,7 +3974,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                             <Fragment>
                                                                             <List>
                                                                             {uploadFilesReadonly.map((fileInfor: File | FileUrl) => {
-
+                                                                                console.log("fileInfor", fileInfor);
                                                                                 return (
                                                                                         <ListItem key={fileInfor.name} style={{padding: "3px"}}>
                                                                                             <div className='file-details' style={{ display: 'flex', overflow: 'hidden'}}>

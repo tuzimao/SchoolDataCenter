@@ -41,9 +41,9 @@ interface ImagesPreviewType {
     toggleImagesPreviewDrawer: () => void
   }
 
-const ImagesPreview = (props: ImagesPreviewType) => {
+const FilesPreview = (props: ImagesPreviewType) => {
   // ** Props
-  console.log("ImagesPreview", props)
+  console.log("FilesPreview", props)
   const { open, imagesList, imagesType, toggleImagesPreviewDrawer } = props
 
   const handleClose = () => {
@@ -170,4 +170,4 @@ const ImagesPreview = (props: ImagesPreviewType) => {
   )
 }
 
-export default ImagesPreview
+export default FilesPreview
