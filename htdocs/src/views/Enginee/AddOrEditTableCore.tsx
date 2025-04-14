@@ -1112,7 +1112,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
         }
     }
     const renderFilePreviewLink = (fileInfor: File | FileUrl) => {
-        if(fileInfor['type']=="file" || fileInfor['type']=="Word" || fileInfor['type']=="Excel" || fileInfor['type']=="pdf" || fileInfor['type']=="image")  {
+        if(fileInfor['type']=="file" || fileInfor['type']=="Word" || fileInfor['type']=="Excel" || fileInfor['type']=="PowerPoint" || fileInfor['type']=="pdf" || fileInfor['type']=="image")  {
 
             return (
                 <Typography className='file-name'>

@@ -29,6 +29,9 @@ import {OutTable, ExcelRenderer} from 'react-excel-renderer';
 //Word
 import { renderAsync } from 'docx-preview';
 
+//PPTX
+import { init } from 'pptx-preview';
+
 
 const Transition = forwardRef(function Transition(
     props: FadeProps & { children?: ReactElement<any, any> },
@@ -246,6 +249,134 @@ function PDFViewer({ fileUrl }: { fileUrl: string }) {
   );
 }
 
+interface PPTXViewerProps {
+  fileUrl?: string;  // 支持直接传入URL
+  fileData?: ArrayBuffer; // 或者直接传入ArrayBuffer数据
+  width?: number;
+  height?: number;
+  className?: string;
+}
+
+const PPTXViewer: React.FC<PPTXViewerProps> = ({
+  fileUrl = 'test.pptx',
+  fileData,
+  width = 850,
+  height = 800,
+  className = ''
+}) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const previewerRef = useRef<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // 加载并预览PPTX文件
+  const loadAndPreview = async (arrayBuffer: ArrayBuffer) => {
+    try {
+      if (!containerRef.current) {
+        throw new Error('PPTX容器未初始化');
+      }
+
+      // 清理旧实例
+      if (previewerRef.current) {
+        previewerRef.current.destroy();
+      }
+
+      // 初始化预览器
+      previewerRef.current = init(containerRef.current, {
+        width,
+        height
+      });
+
+      // 执行预览
+      previewerRef.current.preview(arrayBuffer);
+      setLoading(false);
+    } catch (err) {
+      console.error('PPTX预览失败:', err);
+      setError(err instanceof Error ? err.message : '未知错误');
+      setLoading(false);
+    }
+  };
+
+  // 从URL获取文件
+  const fetchFile = async (url: string) => {
+    setLoading(true);
+    setError(null);
+    
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`HTTP错误: ${response.status}`);
+      }
+
+      return await response.arrayBuffer();
+    } catch (err) {
+      console.error('文件加载失败:', err);
+      setError(err instanceof Error ? err.message : '文件加载失败');
+      setLoading(false);
+      
+      return null;
+    }
+  };
+
+  // 主效果钩子
+  useEffect(() => {
+    if (fileData) {
+      // 如果直接提供了文件数据
+      loadAndPreview(fileData);
+    } else if (fileUrl) {
+      // 通过URL加载文件
+      fetchFile(fileUrl).then(arrayBuffer => {
+        if (arrayBuffer) {
+          loadAndPreview(arrayBuffer);
+        }
+      });
+    }
+
+    // 清理函数
+    return () => {
+      if (previewerRef.current) {
+        previewerRef.current.destroy();
+        previewerRef.current = null;
+      }
+    };
+  }, [fileUrl, fileData, width, height]);
+
+  return (
+    <div className={`pptx-viewer-container ${className}`}>
+      {loading && (
+        <div className="pptx-loading">
+          <div className="spinner" />
+          <p>正在加载PPTX文档...</p>
+        </div>
+      )}
+      
+      {error && (
+        <div className="pptx-error">
+          <h3>⚠️ 加载失败</h3>
+          <p>{error}</p>
+          <button 
+            onClick={() => fileUrl && fetchFile(fileUrl).then(arrayBuffer => {
+              if (arrayBuffer) loadAndPreview(arrayBuffer);
+            })}
+          >
+            重试
+          </button>
+        </div>
+      )}
+
+      <div
+        ref={containerRef}
+        className="pptx-wrapper"
+        style={{
+          display: error ? 'none' : 'block',
+          width: `${width}px`,
+          height: `${height}px`
+        }}
+      />
+    </div>
+  );
+};
+
 
 interface ImagesPreviewType {
   open: boolean
@@ -256,8 +387,8 @@ interface ImagesPreviewType {
 
 const FilesPreview = (props: ImagesPreviewType) => {
   // ** Props
-  console.log("FilesPreview", props)
   const { open, imagesList, imagesType, toggleImagesPreviewDrawer } = props
+  console.log("FilesPreview", imagesList)
 
   const handleClose = () => {
     toggleImagesPreviewDrawer()
@@ -323,6 +454,10 @@ const FilesPreview = (props: ImagesPreviewType) => {
                     case 'Excel':
 
                       return <ExcelViewer fileUrl={Url} />
+
+                    case 'PowerPoint':
+
+                      return <PPTXViewer fileUrl={Url} />
 
                     default:
 
