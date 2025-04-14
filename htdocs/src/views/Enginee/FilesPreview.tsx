@@ -273,7 +273,7 @@ const PPTXViewer: React.FC<PPTXViewerProps> = ({
   const previewerRef = useRef<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
+  
   // 加载并预览PPTX文件
   const loadAndPreview = async (arrayBuffer: ArrayBuffer) => {
     try {
@@ -285,6 +285,7 @@ const PPTXViewer: React.FC<PPTXViewerProps> = ({
       if (previewerRef.current) {
         previewerRef.current.destroy();
       }
+      console.log("previewerRef", previewerRef)
 
       // 初始化预览器
       previewerRef.current = pptxInit && pptxInit(containerRef.current, {
@@ -323,6 +324,26 @@ const PPTXViewer: React.FC<PPTXViewerProps> = ({
     }
   };
 
+  // 主效果钩子
+  useEffect(() => {
+    if (fileUrl) {
+      // 通过URL加载文件
+      fetchFile(fileUrl).then(arrayBuffer => {
+        if (arrayBuffer) {
+          loadAndPreview(arrayBuffer);
+        }
+      });
+    }
+
+    // 清理函数
+    return () => {
+      if (previewerRef.current) {
+        previewerRef.current.destroy();
+        previewerRef.current = null;
+      }
+    };
+  }, [fileUrl, width, height]);
+
 
   return (
     <div className={`pptx-viewer-container ${className}`}>
@@ -339,7 +360,7 @@ const PPTXViewer: React.FC<PPTXViewerProps> = ({
           <p>{error}</p>
           <button 
             onClick={() => fileUrl && fetchFile(fileUrl).then(arrayBuffer => {
-              if (arrayBuffer && pptxInit) loadAndPreview(arrayBuffer);
+              if (arrayBuffer) loadAndPreview(arrayBuffer);
             })}
           >
             重试
