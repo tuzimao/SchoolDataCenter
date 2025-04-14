@@ -29,9 +29,6 @@ import {OutTable, ExcelRenderer} from 'react-excel-renderer';
 //Word
 import { renderAsync } from 'docx-preview';
 
-//PPTX
-import { init } from 'pptx-preview';
-
 
 const Transition = forwardRef(function Transition(
     props: FadeProps & { children?: ReactElement<any, any> },
@@ -257,6 +254,15 @@ interface PPTXViewerProps {
   className?: string;
 }
 
+// 在模块顶层加载
+let pptxInit: typeof import('pptx-preview').init | null = null;
+
+import('pptx-preview').then(({ init }) => {
+  pptxInit = init;
+  console.log("pptx-preview pre-loaded", init);
+}).catch(console.error);
+
+
 const PPTXViewer: React.FC<PPTXViewerProps> = ({
   fileUrl = 'test.pptx',
   width = 850,
@@ -281,7 +287,7 @@ const PPTXViewer: React.FC<PPTXViewerProps> = ({
       }
 
       // 初始化预览器
-      previewerRef.current = init(containerRef.current, {
+      previewerRef.current = pptxInit && pptxInit(containerRef.current, {
         width,
         height
       });
@@ -333,7 +339,7 @@ const PPTXViewer: React.FC<PPTXViewerProps> = ({
           <p>{error}</p>
           <button 
             onClick={() => fileUrl && fetchFile(fileUrl).then(arrayBuffer => {
-              if (arrayBuffer) loadAndPreview(arrayBuffer);
+              if (arrayBuffer && pptxInit) loadAndPreview(arrayBuffer);
             })}
           >
             重试
