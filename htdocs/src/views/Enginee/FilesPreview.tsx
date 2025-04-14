@@ -259,7 +259,6 @@ interface PPTXViewerProps {
 
 const PPTXViewer: React.FC<PPTXViewerProps> = ({
   fileUrl = 'test.pptx',
-  fileData,
   width = 850,
   height = 800,
   className = ''
@@ -318,28 +317,6 @@ const PPTXViewer: React.FC<PPTXViewerProps> = ({
     }
   };
 
-  // 主效果钩子
-  useEffect(() => {
-    if (fileData) {
-      // 如果直接提供了文件数据
-      loadAndPreview(fileData);
-    } else if (fileUrl) {
-      // 通过URL加载文件
-      fetchFile(fileUrl).then(arrayBuffer => {
-        if (arrayBuffer) {
-          loadAndPreview(arrayBuffer);
-        }
-      });
-    }
-
-    // 清理函数
-    return () => {
-      if (previewerRef.current) {
-        previewerRef.current.destroy();
-        previewerRef.current = null;
-      }
-    };
-  }, [fileUrl, fileData, width, height]);
 
   return (
     <div className={`pptx-viewer-container ${className}`}>
