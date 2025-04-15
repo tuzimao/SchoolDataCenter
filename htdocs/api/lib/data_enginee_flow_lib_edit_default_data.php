@@ -224,6 +224,7 @@ if( $_GET['action']=="edit_default_data" && in_array('Edit',$Actions_In_List_Row
             }
             //Relative Child Table Support
             $Relative_Child_Table                   = $SettingMap['Relative_Child_Table'];
+            $Relative_Child_Table_Type              = $SettingMap['Relative_Child_Table_Type'];
             $Relative_Child_Table_Field_Name        = $SettingMap['Relative_Child_Table_Field_Name'];
             $Relative_Child_Table_Parent_Field_Name = $SettingMap['Relative_Child_Table_Parent_Field_Name'];
             if($IsExecutionSQLChildTable == 1 && $Relative_Child_Table>0 && $Relative_Child_Table_Parent_Field_Name!="" && in_array($Relative_Child_Table_Parent_Field_Name,$MetaColumnNames)) {
@@ -311,6 +312,7 @@ if( $_GET['action']=="edit_default_data" && in_array('Edit',$Actions_In_List_Row
         //只更新子表, 不更新主表
         //Relative Child Table Support
         $Relative_Child_Table                   = $SettingMap['Relative_Child_Table'];
+        $Relative_Child_Table_Type              = $SettingMap['Relative_Child_Table_Type'];
         $Relative_Child_Table_Field_Name        = $SettingMap['Relative_Child_Table_Field_Name'];
         $Relative_Child_Table_Parent_Field_Name = $SettingMap['Relative_Child_Table_Parent_Field_Name'];
         $RS['status']   = "OK";

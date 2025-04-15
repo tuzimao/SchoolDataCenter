@@ -246,11 +246,13 @@ if( $_GET['action']=="add_default_data" && in_array('Add',$Actions_In_List_Heade
 
             //Relative Child Table Support
             $Relative_Child_Table                   = $SettingMap['Relative_Child_Table'];
+            $Relative_Child_Table_Type              = $SettingMap['Relative_Child_Table_Type'];
             $Relative_Child_Table_Field_Name        = $SettingMap['Relative_Child_Table_Field_Name'];
             $Relative_Child_Table_Parent_Field_Name = $SettingMap['Relative_Child_Table_Parent_Field_Name'];
             $Relative_Child_Table_Add_Priv          = $SettingMap['Relative_Child_Table_Add_Priv'];
             $Relative_Child_Table_Edit_Priv         = $SettingMap['Relative_Child_Table_Edit_Priv'];
             $Relative_Child_Table_Delete_Priv       = $SettingMap['Relative_Child_Table_Delete_Priv'];
+            $Relative_Child_Table_Select_Priv       = $SettingMap['Relative_Child_Table_Select_Priv'];
             if($Relative_Child_Table>0 && $Relative_Child_Table_Parent_Field_Name!="" && in_array($Relative_Child_Table_Parent_Field_Name,$MetaColumnNames)) {
                 $ChildSettingMap = returntablefield("form_formflow",'id',$Relative_Child_Table,'Setting')['Setting'];
                 $ChildSettingMap = unserialize(base64_decode($ChildSettingMap));

@@ -300,11 +300,13 @@ if( ( ($_GET['action']=="edit_default"&&in_array('Edit',$Actions_In_List_Row_Arr
     }
     //Relative Child Table Support
     $Relative_Child_Table                   = $SettingMap['Relative_Child_Table'];
+    $Relative_Child_Table_Type              = $SettingMap['Relative_Child_Table_Type'];
     $Relative_Child_Table_Field_Name        = $SettingMap['Relative_Child_Table_Field_Name'];
     $Relative_Child_Table_Parent_Field_Name = $SettingMap['Relative_Child_Table_Parent_Field_Name'];
     $Relative_Child_Table_Add_Priv          = $SettingMap['Relative_Child_Table_Add_Priv'];
     $Relative_Child_Table_Edit_Priv         = $SettingMap['Relative_Child_Table_Edit_Priv'];
     $Relative_Child_Table_Delete_Priv       = $SettingMap['Relative_Child_Table_Delete_Priv'];
+    $Relative_Child_Table_Select_Priv       = $SettingMap['Relative_Child_Table_Select_Priv'];
     
     if($Relative_Child_Table>0 && $Relative_Child_Table_Parent_Field_Name!="" && in_array($Relative_Child_Table_Parent_Field_Name,$MetaColumnNames)) {
         $ChildSettingMap = returntablefield("form_formflow",'id',$Relative_Child_Table,'Setting')['Setting'];
@@ -347,11 +349,13 @@ if( ( ($_GET['action']=="edit_default"&&in_array('Edit',$Actions_In_List_Row_Arr
         
         //Relative Child Table Support
         $Relative_Child_Table                   = $SettingMap['Relative_Child_Table'];
+        $Relative_Child_Table_Type              = $SettingMap['Relative_Child_Table_Type'];
         $Relative_Child_Table_Field_Name        = $SettingMap['Relative_Child_Table_Field_Name'];
         $Relative_Child_Table_Parent_Field_Name = $SettingMap['Relative_Child_Table_Parent_Field_Name'];
         $Relative_Child_Table_Add_Priv          = $SettingMap['Relative_Child_Table_Add_Priv'];
         $Relative_Child_Table_Edit_Priv         = $SettingMap['Relative_Child_Table_Edit_Priv'];
         $Relative_Child_Table_Delete_Priv       = $SettingMap['Relative_Child_Table_Delete_Priv'];
+        $Relative_Child_Table_Select_Priv       = $SettingMap['Relative_Child_Table_Select_Priv'];
         if($Relative_Child_Table>0 && $Relative_Child_Table_Parent_Field_Name!="" && in_array($Relative_Child_Table_Parent_Field_Name,$MetaColumnNames)) {
             $ChildSettingMap = returntablefield("form_formflow",'id',$Relative_Child_Table,'Setting')['Setting'];
             $ChildSettingMap = unserialize(base64_decode($ChildSettingMap));
@@ -386,6 +390,8 @@ if( ( ($_GET['action']=="edit_default"&&in_array('Edit',$Actions_In_List_Row_Arr
                 $RS['add_default']['childtable']['Add']                = $Relative_Child_Table_Add_Priv == "Yes" && strpos($ChildSettingMap['Actions_In_List_Header'],'Add')!==false?true:false;
                 $RS['add_default']['childtable']['Edit']               = $Relative_Child_Table_Edit_Priv == "Yes" && strpos($ChildSettingMap['Actions_In_List_Row'],'Edit')!==false?true:false;
                 $RS['add_default']['childtable']['Delete']             = $Relative_Child_Table_Delete_Priv == "Yes" && strpos($ChildSettingMap['Actions_In_List_Row'],'Delete')!==false?true:false;
+                $RS['add_default']['childtable']['Select']             = $Relative_Child_Table_Select_Priv == "Yes"?true:false;
+                $RS['add_default']['childtable']['Type']               = $Relative_Child_Table_Type;
 
                 $allFieldsEdit   = getAllFields($ChildAllFieldsFromTable, $AllShowTypesArray, 'EDIT', true, $ChildSettingMap);
                 foreach($allFieldsEdit as $ModeName=>$allFieldItem) {
@@ -412,9 +418,17 @@ if( ( ($_GET['action']=="edit_default"&&in_array('Edit',$Actions_In_List_Row_Arr
                 $RS['edit_default']['childtable']['Add']                = $Relative_Child_Table_Add_Priv == "Yes" && strpos($ChildSettingMap['Actions_In_List_Header'],'Add')!==false?true:false;
                 $RS['edit_default']['childtable']['Edit']               = $Relative_Child_Table_Edit_Priv == "Yes" && strpos($ChildSettingMap['Actions_In_List_Row'],'Edit')!==false?true:false;
                 $RS['edit_default']['childtable']['Delete']             = $Relative_Child_Table_Delete_Priv == "Yes" && strpos($ChildSettingMap['Actions_In_List_Row'],'Delete')!==false?true:false;
+                $RS['edit_default']['childtable']['Select']             = $Relative_Child_Table_Select_Priv == "Yes"?true:false;
+                $RS['edit_default']['childtable']['Type']               = $Relative_Child_Table_Type;
+                
                 global $WholePageModel;
                 if($WholePageModel == "Workflow")  {
                     $RS['edit_default']['submittext']                   = '';
+                }
+
+                if($Relative_Child_Table_Type == "从子表中选择记录")   {
+                    $ChileTable_init_default = ChildTable_Init_Default_Structure($ChildTableName, $ChildMetaColumnNames, $ChildSettingMap);
+                    $RS['edit_default']['childtable']['init_default'] = $ChileTable_init_default;
                 }
             }
         }
