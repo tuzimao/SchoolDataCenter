@@ -40,7 +40,7 @@ function 工作流中固定资产采购申请获得批准()  {
                 $db->BeginTrans();
                 $sql    = "update data_fixedasset_in set 最终状态='采购申请通过' where id='$工作ID'";
                 $db->Execute($sql);
-                $sql    = "update data_fixedasset_in_detail set 采购状态='未采购', 资产采购描述='$资产采购描述' where 资产采购编码='$工作ID'";
+                $sql    = "update data_fixedasset_in_detail set 采购状态='采购中', 资产采购描述='$资产采购描述' where 资产采购编码='$工作ID'";
                 $db->Execute($sql);
                 $db->CommitTrans();
             }
@@ -162,7 +162,7 @@ function 固定资产_采购明细记录_转_入库($id)     {
         $sql = "insert into data_fixedasset (".join(',',$KEYS).") values('".join("','",$VALUES)."')";
         //print $sql."<BR>";
         $db->Execute($sql) or print $sql."\n";
-        $sql = "update data_fixedasset_in_detail set 入库时间='".date("Y-m-d H:i:s")."',入库操作员='".$GLOBAL_USER->USER_ID."' where id='".$Line['id']."' ";
+        $sql = "update data_fixedasset_in_detail set 入库时间='".date("Y-m-d H:i:s")."', 入库操作员='".$GLOBAL_USER->USER_ID."' where id='".$Line['id']."' ";
         //print $sql."<BR>";
         $db->Execute($sql);
     }

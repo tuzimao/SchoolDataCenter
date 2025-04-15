@@ -179,7 +179,53 @@ const ViewTableCore = (props: ViewTableType) => {
   }, [id, editViewCounter, isMobileData])
 
   //Need refresh data every time.
+  interface FileUrl extends File {
+    url: string;
+  }
 
+  const renderFilePreview = (file: File | FileUrl, width: number, height: number) => {
+    if (file && 'webkitRelativePath' in file && file['webkitRelativePath']!="" && file['type']=="image") {
+        return <Box sx={{m: 0, p: 0, cursor: 'pointer'}} onClick={() => toggleImagesPreviewListDrawer([authConfig.backEndApiHost + file['webkitRelativePath']], ['image'])} ><img width={width} height={height} alt={file.name} style={{padding: "1px"}} src={authConfig.backEndApiHost+file['webkitRelativePath']} /></Box>
+    }
+    else if (file && 'webkitRelativePath' in file && file['webkitRelativePath']!="" && file['type']=="Word") {
+        return <Icon icon='icon-park-outline:word' />
+    }
+    else if (file && 'webkitRelativePath' in file && file['webkitRelativePath']!="" && file['type']=="Excel") {
+        return <Icon icon='icon-park-outline:excel' />
+    }
+    else if (file && 'webkitRelativePath' in file && file['webkitRelativePath']!="" && file['type']=="PowerPoint") {
+        return <Icon icon='teenyicons:ppt-outline' />
+    }
+    else if (file && 'webkitRelativePath' in file && file['webkitRelativePath']!="" && file['type']=="pdf") {
+        return <Icon icon='icomoon-free:file-pdf' />
+    }
+    else if (file && 'webkitRelativePath' in file && file['webkitRelativePath']!="" && file['type']!="image") {
+        return <Icon icon='mdi:file-document-outline' />
+    }
+    else if (file.type.startsWith('image')) {
+        return <img width={width} height={height} alt={file.name} style={{padding: "1px"}} src={URL.createObjectURL(file as any)} />
+    }
+    else {
+        return <Icon icon='mdi:file-document-outline' />
+    }
+  }
+  const renderFilePreviewLink = (fileInfor: File | FileUrl) => {
+    if(fileInfor['type']=="file" || fileInfor['type']=="Word" || fileInfor['type']=="Excel" || fileInfor['type']=="PowerPoint" || fileInfor['type']=="pdf" || fileInfor['type']=="image")  {
+
+        return (
+            <Typography className='file-name'>
+                <Box sx={{m: 0, p: 0, cursor: 'pointer'}} onClick={() => toggleImagesPreviewListDrawer([authConfig.backEndApiHost + fileInfor['webkitRelativePath']], [fileInfor['type']])} >{fileInfor['name']}</Box>
+            </Typography>
+        )
+    }
+    else {
+        
+        return (
+            <Typography className='file-name'>{fileInfor['name']}</Typography>
+        )
+    }
+  }
+    
   const handleClose = () => {
     toggleViewTableDrawer()
   }
@@ -361,36 +407,24 @@ const ViewTableCore = (props: ViewTableType) => {
 
                                       return (
                                         <ListItem key={FileUrl['name']} style={{padding: "3px"}}>
-                                        <div className='file-details' style={{display: "flex"}}>
-                                          <div style={{padding: "3px 3px 0 0"}}>
-                                            {FileUrl.type.startsWith('image') ?
-                                              <Box sx={{ display: 'flex', alignItems: 'center',cursor: 'pointer',':hover': {cursor: 'pointer',}, }} onClick={() => toggleImagesPreviewListDrawer([authConfig.backEndApiHost+FileUrl['webkitRelativePath']], ['image'])}>
-                                                <ImgStyled68 src={authConfig.backEndApiHost+FileUrl['webkitRelativePath']} />
-                                              </Box>
-                                            : <Icon icon='mdi:file-document-outline' fontSize={28}/>
-                                            }
+                                          <div className='file-details' style={{display: "flex"}}>
+                                            <div className='file-preview' style={{marginRight: '4px', paddingTop: '4px'}}>
+                                                {renderFilePreview(FileUrl, 38, 38)}
+                                            </div>
+                                            <div>
+                                                {renderFilePreviewLink(FileUrl)}
+                                                <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+                                                    <Typography className='file-size' variant='body2'>
+                                                        {Math.round(FileUrl.size / 100) / 10 > 1000
+                                                        ? `${(Math.round(FileUrl.size / 100) / 10000).toFixed(1)} mb`
+                                                        : `${(Math.round(FileUrl.size / 100) / 10).toFixed(1)} kb`}
+                                                    </Typography>
+                                                    <CustomLink href={authConfig.backEndApiHost + FileUrl['webkitRelativePath']} download={FileUrl['name']}>
+                                                        <Typography className='file-size' variant='body2'>下载</Typography>
+                                                    </CustomLink>
+                                                </Box>
+                                            </div>
                                           </div>
-                                          <div>
-                                            {FileUrl['type']=="pdf" || FileUrl['type']=="Excel" || FileUrl['type']=="Word" || FileUrl['type']=="PowerPoint" ?
-                                              <Typography className='file-name'><CustomLink href={authConfig.backEndApiHost+FileUrl['webkitRelativePath']} download={FileUrl['name']}>{FileUrl['name']}</CustomLink></Typography>
-                                            :
-                                              ''
-                                            }
-                                            {FileUrl['type']=="file" ?
-                                              <Typography className='file-name'><CustomLink href={authConfig.backEndApiHost+FileUrl['webkitRelativePath']} download={FileUrl['name']}>{FileUrl['name']}</CustomLink></Typography>
-                                            :
-                                              ''
-                                            }
-                                            {FileUrl['size']>0 ?
-                                              <Typography className='file-size' variant='body2'>
-                                                  {Math.round(FileUrl['size'] / 100) / 10 > 1000
-                                                  ? `${(Math.round(FileUrl['size'] / 100) / 10000).toFixed(1)} mb`
-                                                  : `${(Math.round(FileUrl['size'] / 100) / 10).toFixed(1)} kb`}
-                                              </Typography>
-                                              : ''
-                                            }
-                                          </div>
-                                        </div>
                                         </ListItem>
                                         )
                                     })}

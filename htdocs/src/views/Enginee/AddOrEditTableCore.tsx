@@ -4010,17 +4010,17 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                                                                     {renderFilePreview(fileInfor, 38, 38)}
                                                                                                 </div>
                                                                                                 <div>
-                                                                                                {renderFilePreviewLink(fileInfor)}
-                                                                                                <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-                                                                                                    <Typography className='file-size' variant='body2'>
-                                                                                                        {Math.round(fileInfor.size / 100) / 10 > 1000
-                                                                                                        ? `${(Math.round(fileInfor.size / 100) / 10000).toFixed(1)} mb`
-                                                                                                        : `${(Math.round(fileInfor.size / 100) / 10).toFixed(1)} kb`}
-                                                                                                    </Typography>
-                                                                                                    <CustomLink href={authConfig.backEndApiHost + fileInfor['webkitRelativePath']} download={fileInfor['name']}>
-                                                                                                        <Typography className='file-size' variant='body2'>下载</Typography>
-                                                                                                    </CustomLink>
-                                                                                                </Box>
+                                                                                                    {renderFilePreviewLink(fileInfor)}
+                                                                                                    <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+                                                                                                        <Typography className='file-size' variant='body2'>
+                                                                                                            {Math.round(fileInfor.size / 100) / 10 > 1000
+                                                                                                            ? `${(Math.round(fileInfor.size / 100) / 10000).toFixed(1)} mb`
+                                                                                                            : `${(Math.round(fileInfor.size / 100) / 10).toFixed(1)} kb`}
+                                                                                                        </Typography>
+                                                                                                        <CustomLink href={authConfig.backEndApiHost + fileInfor['webkitRelativePath']} download={fileInfor['name']}>
+                                                                                                            <Typography className='file-size' variant='body2'>下载</Typography>
+                                                                                                        </CustomLink>
+                                                                                                    </Box>
                                                                                                 </div>
                                                                                             </div>
                                                                                         </ListItem>
