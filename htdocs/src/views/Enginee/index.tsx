@@ -777,69 +777,31 @@ const UserList = ({ authConfig, backEndApi, externalId, handleActionInMobileApp,
       break;
   }
 
-  const columns_for_datagrid:any[] = []
+  const getColumnsForDatagrid = (store: any) => {
 
-  type rowType = {
-    [key:string]:string
-  }
-  interface CellType {
-    row: rowType
-  }
-  const CustomLink = styled(Link)({
-    textDecoration: "none",
-    color: "inherit",
-  });
+    type rowType = {
+      [key:string]:string
+    }
+    interface CellType {
+      row: rowType
+    }
+    const CustomLink = styled(Link)({
+      textDecoration: "none",
+      color: "inherit",
+    });
 
-  // set table every row actions, [edit, delete, or others] href={`?action=${action.action}&id=${row.id}`}
-  store.columns.map((column: any, column_index: number) => {
-    if (column && column.type == "actions" && column.actions) {
-      const columnRenderCell = { ...column }
-      columnRenderCell['renderCell'] = ({ row }: CellType) => (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          {column.actions.map((action: any, action_index: number) => {
-            switch (action.action) {
-              case 'view_default':
-                if (!store.init_default.ForbiddenViewRow.includes(row.id)) {
+    const columns_for_datagrid:any[] = []
 
-                  return (
-                    <Tooltip title={action.text} key={"ColumnRenderCell" + action_index}>
-                      <IconButton size='small' onClick={() => togglePageActionDrawer(action.action, row.id, store.init_default.CSRF_TOKEN)}>
-                        <Icon icon={action.mdi} fontSize={20} />
-                      </IconButton>
-                    </Tooltip>
-                  )
-                }
-                break;
-              case 'edit_default':
-                if (!store.init_default.ForbiddenEditRow.includes(row.id)
-                    &&
-                    (!store.init_default.CSRF_DATA || (store.init_default.CSRF_DATA && store.init_default.CSRF_DATA.Actions_In_List_Row_Array && store.init_default.CSRF_DATA.Actions_In_List_Row_Array.includes('Edit')))
-                    ) {
-
-                  return (
-                    <Tooltip title={action.text} key={"ColumnRenderCell" + action_index}>
-                      <IconButton size='small' onClick={() => togglePageActionDrawer(action.action, row.id, store.init_default.CSRF_TOKEN)}>
-                        <Icon icon={action.mdi} fontSize={20} />
-                      </IconButton>
-                    </Tooltip>
-                  )
-                }
-                break;
-              case 'delete_array':
-                if (!store.init_default.ForbiddenDeleteRow.includes(row.id)) {
-
-                  return (
-                    <Tooltip title={action.text} key={"ColumnRenderCell" + action_index}>
-                      <IconButton size='small' onClick={() => togglePageActionDrawer(action.action, row.id, store.init_default.CSRF_TOKEN)}>
-                        <Icon icon={action.mdi} fontSize={20} />
-                      </IconButton>
-                    </Tooltip>
-                  )
-                }
-                break;
-              default:
-                  if (!store.init_default.ForbiddenEditRow.includes(row.id)) {
-
+    store.columns.map((column: any, column_index: number) => {
+      if (column && column.type == "actions" && column.actions) {
+        const columnRenderCell = { ...column }
+        columnRenderCell['renderCell'] = ({ row }: CellType) => (
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            {column.actions.map((action: any, action_index: number) => {
+              switch (action.action) {
+                case 'view_default':
+                  if (!store.init_default.ForbiddenViewRow.includes(row.id)) {
+  
                     return (
                       <Tooltip title={action.text} key={"ColumnRenderCell" + action_index}>
                         <IconButton size='small' onClick={() => togglePageActionDrawer(action.action, row.id, store.init_default.CSRF_TOKEN)}>
@@ -849,61 +811,64 @@ const UserList = ({ authConfig, backEndApi, externalId, handleActionInMobileApp,
                     )
                   }
                   break;
-            }
-
-          })}
-        </Box>
-      )
-      columns_for_datagrid[column_index] = columnRenderCell
-    }
-    else if (column && column.type == "actionInRow") {
-      const columnRenderCell = { ...column }
-      const columnTempArray = [column.action]
-      columnRenderCell['renderCell'] = ({ row }: any) => (
-          <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 3, color: column.urlcolor } }}>
-            <Icon icon={column.urlmdi} fontSize={20} />
-            <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
-              {columnTempArray.map((action: any, action_index: number) => {
-                switch (action) {
-                  case 'view_default':
-                    if (!store.init_default.ForbiddenViewRow.includes(row.id)) {
-
-                      return (
-                        <IconButton size='small' onClick={() => togglePageActionDrawer(action, row.id, store.init_default.CSRF_TOKEN)} key={action_index}>
-                          <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
-                            {row[column.field]}
-                          </Typography>
+                case 'edit_default':
+                  if (!store.init_default.ForbiddenEditRow.includes(row.id)
+                      &&
+                      (!store.init_default.CSRF_DATA || (store.init_default.CSRF_DATA && store.init_default.CSRF_DATA.Actions_In_List_Row_Array && store.init_default.CSRF_DATA.Actions_In_List_Row_Array.includes('Edit')))
+                      ) {
+  
+                    return (
+                      <Tooltip title={action.text} key={"ColumnRenderCell" + action_index}>
+                        <IconButton size='small' onClick={() => togglePageActionDrawer(action.action, row.id, store.init_default.CSRF_TOKEN)}>
+                          <Icon icon={action.mdi} fontSize={20} />
                         </IconButton>
-                      )
-                    }
-                    break;
-                  case 'edit_default':
+                      </Tooltip>
+                    )
+                  }
+                  break;
+                case 'delete_array':
+                  if (!store.init_default.ForbiddenDeleteRow.includes(row.id)) {
+  
+                    return (
+                      <Tooltip title={action.text} key={"ColumnRenderCell" + action_index}>
+                        <IconButton size='small' onClick={() => togglePageActionDrawer(action.action, row.id, store.init_default.CSRF_TOKEN)}>
+                          <Icon icon={action.mdi} fontSize={20} />
+                        </IconButton>
+                      </Tooltip>
+                    )
+                  }
+                  break;
+                default:
                     if (!store.init_default.ForbiddenEditRow.includes(row.id)) {
-
+  
                       return (
-                          <IconButton size='small' onClick={() => togglePageActionDrawer(action, row.id, store.init_default.CSRF_TOKEN)} key={action_index}>
-                            <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
-                              {row[column.field]}
-                            </Typography>
+                        <Tooltip title={action.text} key={"ColumnRenderCell" + action_index}>
+                          <IconButton size='small' onClick={() => togglePageActionDrawer(action.action, row.id, store.init_default.CSRF_TOKEN)}>
+                            <Icon icon={action.mdi} fontSize={20} />
                           </IconButton>
+                        </Tooltip>
                       )
                     }
                     break;
-                  case 'delete_array':
-                    if (!store.init_default.ForbiddenDeleteRow.includes(row.id)) {
-
-                      return (
-                        <IconButton size='small' onClick={() => togglePageActionDrawer(action, row.id, store.init_default.CSRF_TOKEN)} key={action_index}>
-                          <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
-                            {row[column.field]}
-                          </Typography>
-                        </IconButton>
-                      )
-                    }
-                    break;
-                  default:
-                      if (!store.init_default.ForbiddenEditRow.includes(row.id)) {
-
+              }
+  
+            })}
+          </Box>
+        )
+        columns_for_datagrid[column_index] = columnRenderCell
+      }
+      else if (column && column.type == "actionInRow") {
+        const columnRenderCell = { ...column }
+        const columnTempArray = [column.action]
+        columnRenderCell['renderCell'] = ({ row }: any) => (
+            <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 3, color: column.urlcolor } }}>
+              <Icon icon={column.urlmdi} fontSize={20} />
+              <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
+                {columnTempArray.map((action: any, action_index: number) => {
+                  switch (action) {
+                    case 'view_default':
+                      if (!store.init_default.ForbiddenViewRow.includes(row.id)) {
+  
                         return (
                           <IconButton size='small' onClick={() => togglePageActionDrawer(action, row.id, store.init_default.CSRF_TOKEN)} key={action_index}>
                             <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
@@ -913,228 +878,272 @@ const UserList = ({ authConfig, backEndApi, externalId, handleActionInMobileApp,
                         )
                       }
                       break;
-                }
-
-              })}
-            </Typography>
-          </Box>
-      )
-      columns_for_datagrid[column_index] = columnRenderCell
-    }
-    else if (column && column.type == "url") {
-      const columnRenderCell = { ...column }
-      columnRenderCell['renderCell'] = ({ row }: any) => (
-        <StyledLink href={`${column.href}${row.id}`} target={column.target}>
-          <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 3, color: column.urlcolor } }}>
-            <Icon icon={column.urlmdi} fontSize={20} />
-            <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
-              {row[column.field]}
-            </Typography>
-          </Box>
-        </StyledLink>
-      )
-      columns_for_datagrid[column_index] = columnRenderCell
-    }
-    else if (column && column.type == "ExternalUrl") {
-      const columnRenderCell = { ...column }
-      columnRenderCell['renderCell'] = ({ row }: any) => (
-        <StyledLink href={`${authConfig.backEndApiHost}${row[column.field].replace("[id]",row.id)}`} target={column.target}>
-          <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 3, color: column.urlcolor } }}>
-            <Icon icon={column.urlmdi} fontSize={20} />
-            <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
-              {row[column.field]}
-            </Typography>
-          </Box>
-        </StyledLink>
-      )
-      columns_for_datagrid[column_index] = columnRenderCell
-    }
-    else if (column && column.type == "api") {
-      const columnRenderCell = { ...column }
-      columnRenderCell['renderCell'] = ({ row }: any) => (
-        <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 1, color: column.apicolor } }}>
-          <IconButton sx={{ borderRadius: 1, py: 0.5 }} size='small' onClick={() => togglePageActionDrawer(column.apiaction, row.id, store.init_default.CSRF_TOKEN)}>
-            <Icon icon={column.apimdi} fontSize={20} />
-            <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize', pt: 0, pb: 0 }}>
-              {column.headerName}
-            </Typography>
-          </IconButton>
-        </Box>
-      )
-      columns_for_datagrid[column_index] = columnRenderCell
-    }
-    else if (column && column.type == "apivalue") {
-      const columnRenderCell = { ...column }
-      columnRenderCell['renderCell'] = ({ row }: any) => (
-        <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 1, color: column.apicolor } }}>
-          <IconButton sx={{ borderRadius: 1, py: 0.5 }} size='small' onClick={() => togglePageActionDrawer(column.apiaction, row.id, store.init_default.CSRF_TOKEN)}>
-            <Icon icon={column.apimdi} fontSize={20} />
-            <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize', pt: 0, pb: 0 }}>
-              {row[column.field]}
-            </Typography>
-          </IconButton>
-        </Box>
-      )
-      columns_for_datagrid[column_index] = columnRenderCell
-    }
-    else if (column && column.type == "avatar") {
-      const columnRenderCell = { ...column }
-      columnRenderCell['renderCell'] = ({ row }: any) => {
-        return (
-          row[column.field] != "" ?
-            (
-              <Box sx={{ display: 'flex', alignItems: 'center',cursor: 'pointer',':hover': {cursor: 'pointer',}, }}  onClick={() => toggleImagesPreviewListDrawer([authConfig.backEndApiHost+row[column.field]], ['image'])}>
-                <CustomAvatar src={authConfig.backEndApiHost+row[column.field]} sx={{ mr: 3, width: 30, height: 30 }} />
-              </Box>
-            )
-            :
-            null
+                    case 'edit_default':
+                      if (!store.init_default.ForbiddenEditRow.includes(row.id)) {
+  
+                        return (
+                            <IconButton size='small' onClick={() => togglePageActionDrawer(action, row.id, store.init_default.CSRF_TOKEN)} key={action_index}>
+                              <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
+                                {row[column.field]}
+                              </Typography>
+                            </IconButton>
+                        )
+                      }
+                      break;
+                    case 'delete_array':
+                      if (!store.init_default.ForbiddenDeleteRow.includes(row.id)) {
+  
+                        return (
+                          <IconButton size='small' onClick={() => togglePageActionDrawer(action, row.id, store.init_default.CSRF_TOKEN)} key={action_index}>
+                            <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
+                              {row[column.field]}
+                            </Typography>
+                          </IconButton>
+                        )
+                      }
+                      break;
+                    default:
+                        if (!store.init_default.ForbiddenEditRow.includes(row.id)) {
+  
+                          return (
+                            <IconButton size='small' onClick={() => togglePageActionDrawer(action, row.id, store.init_default.CSRF_TOKEN)} key={action_index}>
+                              <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
+                                {row[column.field]}
+                              </Typography>
+                            </IconButton>
+                          )
+                        }
+                        break;
+                  }
+  
+                })}
+              </Typography>
+            </Box>
         )
+        columns_for_datagrid[column_index] = columnRenderCell
       }
-      columns_for_datagrid[column_index] = columnRenderCell
-    }
-    else if (column && column.type == "approvalnode") {
-      const columnRenderCell = { ...column }
-      columnRenderCell['renderCell'] = ({ row }: any) => {
-
-        return (
-          row[column.field] != "" && row[column.field.replace("审核状态", "审核时间")] != "" ?
-            (
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <CustomAvatar src={row.avatar || '/images/avatars/1.png'} sx={{ mr: 3, width: 30, height: 30 }} />
-                <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-                  {row[column.field]} ({row[column.field.replace("审核状态", "审核人")]})
-                  <Typography noWrap variant='caption'>
-                    {row[column.field.replace("审核状态", "审核意见")]} ({row[column.field.replace("审核状态", "审核时间")]})
+      else if (column && column.type == "url") {
+        const columnRenderCell = { ...column }
+        columnRenderCell['renderCell'] = ({ row }: any) => (
+          <StyledLink href={`${column.href}${row.id}`} target={column.target}>
+            <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 3, color: column.urlcolor } }}>
+              <Icon icon={column.urlmdi} fontSize={20} />
+              <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
+                {row[column.field]}
+              </Typography>
+            </Box>
+          </StyledLink>
+        )
+        columns_for_datagrid[column_index] = columnRenderCell
+      }
+      else if (column && column.type == "ExternalUrl") {
+        const columnRenderCell = { ...column }
+        columnRenderCell['renderCell'] = ({ row }: any) => (
+          <StyledLink href={`${authConfig.backEndApiHost}${row[column.field].replace("[id]",row.id)}`} target={column.target}>
+            <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 3, color: column.urlcolor } }}>
+              <Icon icon={column.urlmdi} fontSize={20} />
+              <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
+                {row[column.field]}
+              </Typography>
+            </Box>
+          </StyledLink>
+        )
+        columns_for_datagrid[column_index] = columnRenderCell
+      }
+      else if (column && column.type == "api") {
+        const columnRenderCell = { ...column }
+        columnRenderCell['renderCell'] = ({ row }: any) => (
+          <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 1, color: column.apicolor } }}>
+            <IconButton sx={{ borderRadius: 1, py: 0.5 }} size='small' onClick={() => togglePageActionDrawer(column.apiaction, row.id, store.init_default.CSRF_TOKEN)}>
+              <Icon icon={column.apimdi} fontSize={20} />
+              <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize', pt: 0, pb: 0 }}>
+                {column.headerName}
+              </Typography>
+            </IconButton>
+          </Box>
+        )
+        columns_for_datagrid[column_index] = columnRenderCell
+      }
+      else if (column && column.type == "apivalue") {
+        const columnRenderCell = { ...column }
+        columnRenderCell['renderCell'] = ({ row }: any) => (
+          <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 1, color: column.apicolor } }}>
+            <IconButton sx={{ borderRadius: 1, py: 0.5 }} size='small' onClick={() => togglePageActionDrawer(column.apiaction, row.id, store.init_default.CSRF_TOKEN)}>
+              <Icon icon={column.apimdi} fontSize={20} />
+              <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize', pt: 0, pb: 0 }}>
+                {row[column.field]}
+              </Typography>
+            </IconButton>
+          </Box>
+        )
+        columns_for_datagrid[column_index] = columnRenderCell
+      }
+      else if (column && column.type == "avatar") {
+        const columnRenderCell = { ...column }
+        columnRenderCell['renderCell'] = ({ row }: any) => {
+          return (
+            row[column.field] != "" ?
+              (
+                <Box sx={{ display: 'flex', alignItems: 'center',cursor: 'pointer',':hover': {cursor: 'pointer',}, }}  onClick={() => toggleImagesPreviewListDrawer([authConfig.backEndApiHost+row[column.field]], ['image'])}>
+                  <CustomAvatar src={authConfig.backEndApiHost+row[column.field]} sx={{ mr: 3, width: 30, height: 30 }} />
+                </Box>
+              )
+              :
+              null
+          )
+        }
+        columns_for_datagrid[column_index] = columnRenderCell
+      }
+      else if (column && column.type == "approvalnode") {
+        const columnRenderCell = { ...column }
+        columnRenderCell['renderCell'] = ({ row }: any) => {
+  
+          return (
+            row[column.field] != "" && row[column.field.replace("审核状态", "审核时间")] != "" ?
+              (
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  <CustomAvatar src={row.avatar || '/images/avatars/1.png'} sx={{ mr: 3, width: 30, height: 30 }} />
+                  <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+                    {row[column.field]} ({row[column.field.replace("审核状态", "审核人")]})
+                    <Typography noWrap variant='caption'>
+                      {row[column.field.replace("审核状态", "审核意见")]} ({row[column.field.replace("审核状态", "审核时间")]})
+                    </Typography>
+                  </Box>
+                </Box>
+              )
+              :
+              null
+          )
+        }
+        columns_for_datagrid[column_index] = columnRenderCell
+      }
+      else if (column && (column.type == "files" || column.type == "files2")) {
+        const columnRenderCell = { ...column }
+        columnRenderCell['renderCell'] = ({ row }: any) => {
+  
+          return (
+            <Fragment>
+            {row[column.field] && row[column.field].length>0 && row[column.field].map((FileUrl: any, TempIndex: number)=>{
+  
+              return (
+                <ListItem key={TempIndex} style={{padding: "3px"}}>
+                <div className='file-details' style={{display: "flex"}}>
+                  <div style={{padding: "3px 3px 0 0"}}>
+                    {FileUrl.type.startsWith('image') ?
+                    <Box sx={{ display: 'flex', alignItems: 'center',cursor: 'pointer',':hover': {cursor: 'pointer',}, }} onClick={() => toggleImagesPreviewListDrawer([authConfig.backEndApiHost+FileUrl['webkitRelativePath']], ['image'])}>
+                      <ImgStyled src={authConfig.backEndApiHost+FileUrl['webkitRelativePath']} />
+                    </Box>
+                    : <Icon icon='mdi:file-document-outline' fontSize={28}/>
+                    }
+                  </div>
+                  <div>
+                    {FileUrl['type']=="pdf" || FileUrl['type']=="Excel" || FileUrl['type']=="Word" || FileUrl['type']=="PowerPoint" ?
+                      <Typography className='file-name'><CustomLink href={authConfig.backEndApiHost+FileUrl['webkitRelativePath']} download={FileUrl['name']}>{FileUrl['name']}</CustomLink></Typography>
+                    :
+                      ''
+                    }
+                    {FileUrl['type']=="file" ?
+                      <Typography className='file-name'><CustomLink href={authConfig.backEndApiHost+FileUrl['webkitRelativePath']} download={FileUrl['name']}>{FileUrl['name']}</CustomLink></Typography>
+                    :
+                      ''
+                    }
+                    {FileUrl['size']>0 && !FileUrl.type.startsWith('image') ?
+                      <Typography className='file-size' variant='body2'>
+                          {Math.round(FileUrl['size'] / 100) / 10 > 1000
+                          ? `${(Math.round(FileUrl['size'] / 100) / 10000).toFixed(1)} mb`
+                          : `${(Math.round(FileUrl['size'] / 100) / 10).toFixed(1)} kb`}
+                      </Typography>
+                      : ''
+                    }
+                  </div>
+                </div>
+                </ListItem>
+                )
+            })}
+            </Fragment>
+          )
+        }
+        columns_for_datagrid[column_index] = columnRenderCell
+      }
+      else if (column && (column.type == "images" || column.type == "images2")) {
+        const columnRenderCell = { ...column }
+        columnRenderCell['renderCell'] = ({ row }: any) => {
+  
+          return (
+            <Fragment>
+            {row[column.field] && row[column.field].length>0 && row[column.field].map((FileUrl: any, TempIndex: number)=>{
+  
+              return (
+                <ListItem key={TempIndex} style={{padding: "3px"}}>
+                <div className='file-details' style={{display: "flex"}}>
+                  <div style={{padding: "0"}}>
+                    <Box sx={{ display: 'flex', alignItems: 'center',cursor: 'pointer',':hover': {cursor: 'pointer',}, }} onClick={() => toggleImagesPreviewListDrawer([authConfig.backEndApiHost+FileUrl['webkitRelativePath']], ['image'])}>
+                      <ImgStyled src={authConfig.backEndApiHost+FileUrl['webkitRelativePath']} />
+                    </Box>
+                  </div>
+                </div>
+                </ListItem>
+                )
+            })}
+            </Fragment>
+          )
+        }
+        columns_for_datagrid[column_index] = columnRenderCell
+      }
+      else if (column && (column.type == "radiogroupcolor")) {
+        const columnRenderCell = { ...column }
+        columnRenderCell['renderCell'] = ({ row }: any) => {
+  
+          return (
+            row[column.field] != undefined &&row[column.field] != "" ?
+              (
+                <CustomChip
+                  skin='light'
+                  size='small'
+                  label={row[column.field]}
+                  color={column.color[row[column.field]]}
+                  sx={{ textTransform: 'capitalize' }}
+                />
+              )
+              :
+              null
+          )
+        }
+        columns_for_datagrid[column_index] = columnRenderCell
+      }
+      else if (column && (column.type == "tablefiltercolor") && column.color) {
+        const columnRenderCell = { ...column }
+        columnRenderCell['renderCell'] = ({ row }: any) => {
+  
+          return (
+            row[column.field] != undefined && row[column.field] != "" ?
+              (
+                <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 3, color: column.color[row[column.field]] && column.color[row[column.field]].color ? column.color[row[column.field]].color : "info.main" } }}>
+                  <Icon icon={column.color[row[column.field]] && column.color[row[column.field]].icon ? column.color[row[column.field]].icon : 'pencil-outline'} fontSize={20} />
+                  <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
+                    {row[column.field]}
                   </Typography>
                 </Box>
-              </Box>
-            )
-            :
-            null
-        )
-      }
-      columns_for_datagrid[column_index] = columnRenderCell
-    }
-    else if (column && (column.type == "files" || column.type == "files2")) {
-      const columnRenderCell = { ...column }
-      columnRenderCell['renderCell'] = ({ row }: any) => {
-
-        return (
-          <Fragment>
-          {row[column.field] && row[column.field].length>0 && row[column.field].map((FileUrl: any, TempIndex: number)=>{
-
-            return (
-              <ListItem key={TempIndex} style={{padding: "3px"}}>
-              <div className='file-details' style={{display: "flex"}}>
-                <div style={{padding: "3px 3px 0 0"}}>
-                  {FileUrl.type.startsWith('image') ?
-                  <Box sx={{ display: 'flex', alignItems: 'center',cursor: 'pointer',':hover': {cursor: 'pointer',}, }} onClick={() => toggleImagesPreviewListDrawer([authConfig.backEndApiHost+FileUrl['webkitRelativePath']], ['image'])}>
-                    <ImgStyled src={authConfig.backEndApiHost+FileUrl['webkitRelativePath']} />
-                  </Box>
-                  : <Icon icon='mdi:file-document-outline' fontSize={28}/>
-                  }
-                </div>
-                <div>
-                  {FileUrl['type']=="pdf" || FileUrl['type']=="Excel" || FileUrl['type']=="Word" || FileUrl['type']=="PowerPoint" ?
-                    <Typography className='file-name'><CustomLink href={authConfig.backEndApiHost+FileUrl['webkitRelativePath']} download={FileUrl['name']}>{FileUrl['name']}</CustomLink></Typography>
-                  :
-                    ''
-                  }
-                  {FileUrl['type']=="file" ?
-                    <Typography className='file-name'><CustomLink href={authConfig.backEndApiHost+FileUrl['webkitRelativePath']} download={FileUrl['name']}>{FileUrl['name']}</CustomLink></Typography>
-                  :
-                    ''
-                  }
-                  {FileUrl['size']>0 && !FileUrl.type.startsWith('image') ?
-                    <Typography className='file-size' variant='body2'>
-                        {Math.round(FileUrl['size'] / 100) / 10 > 1000
-                        ? `${(Math.round(FileUrl['size'] / 100) / 10000).toFixed(1)} mb`
-                        : `${(Math.round(FileUrl['size'] / 100) / 10).toFixed(1)} kb`}
-                    </Typography>
-                    : ''
-                  }
-                </div>
-              </div>
-              </ListItem>
               )
-          })}
-          </Fragment>
-        )
+              :
+              null
+          )
+        }
+        columns_for_datagrid[column_index] = columnRenderCell
       }
-      columns_for_datagrid[column_index] = columnRenderCell
-    }
-    else if (column && (column.type == "images" || column.type == "images2")) {
-      const columnRenderCell = { ...column }
-      columnRenderCell['renderCell'] = ({ row }: any) => {
-
-        return (
-          <Fragment>
-          {row[column.field] && row[column.field].length>0 && row[column.field].map((FileUrl: any, TempIndex: number)=>{
-
-            return (
-              <ListItem key={TempIndex} style={{padding: "3px"}}>
-              <div className='file-details' style={{display: "flex"}}>
-                <div style={{padding: "0"}}>
-                  <Box sx={{ display: 'flex', alignItems: 'center',cursor: 'pointer',':hover': {cursor: 'pointer',}, }} onClick={() => toggleImagesPreviewListDrawer([authConfig.backEndApiHost+FileUrl['webkitRelativePath']], ['image'])}>
-                    <ImgStyled src={authConfig.backEndApiHost+FileUrl['webkitRelativePath']} />
-                  </Box>
-                </div>
-              </div>
-              </ListItem>
-              )
-          })}
-          </Fragment>
-        )
+      else {
+        const columnRenderCell = { ...column }
+        columns_for_datagrid[column_index] = columnRenderCell
       }
-      columns_for_datagrid[column_index] = columnRenderCell
-    }
-    else if (column && (column.type == "radiogroupcolor")) {
-      const columnRenderCell = { ...column }
-      columnRenderCell['renderCell'] = ({ row }: any) => {
+    })
 
-        return (
-          row[column.field] != undefined &&row[column.field] != "" ?
-            (
-              <CustomChip
-                skin='light'
-                size='small'
-                label={row[column.field]}
-                color={column.color[row[column.field]]}
-                sx={{ textTransform: 'capitalize' }}
-              />
-            )
-            :
-            null
-        )
-      }
-      columns_for_datagrid[column_index] = columnRenderCell
-    }
-    else if (column && (column.type == "tablefiltercolor") && column.color) {
-      const columnRenderCell = { ...column }
-      columnRenderCell['renderCell'] = ({ row }: any) => {
+    return columns_for_datagrid
+  }
+  
+  const columns_for_datagrid:any[] = getColumnsForDatagrid(store)
 
-        return (
-          row[column.field] != undefined && row[column.field] != "" ?
-            (
-              <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 3, color: column.color[row[column.field]] && column.color[row[column.field]].color ? column.color[row[column.field]].color : "info.main" } }}>
-                <Icon icon={column.color[row[column.field]] && column.color[row[column.field]].icon ? column.color[row[column.field]].icon : 'pencil-outline'} fontSize={20} />
-                <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
-                  {row[column.field]}
-                </Typography>
-              </Box>
-            )
-            :
-            null
-        )
-      }
-      columns_for_datagrid[column_index] = columnRenderCell
-    }
-    else {
-      const columnRenderCell = { ...column }
-      columns_for_datagrid[column_index] = columnRenderCell
-    }
-  })
+  // set table every row actions, [edit, delete, or others] href={`?action=${action.action}&id=${row.id}`}
+  
 
   //console.log("store.init_default.ApprovalNodeFields",store.init_default.ApprovalNodeFields)
   //console.log("addEditActionId-addEditActionId-addEditActionId", addEditActionId)

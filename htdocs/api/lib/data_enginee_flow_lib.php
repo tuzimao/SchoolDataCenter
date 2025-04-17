@@ -99,6 +99,7 @@ if($SettingMap['EnablePluginsForIndividual']=="Enable" && $TableName!="" && $Ste
 $sql        = "select * from form_formfield_showtype";
 $rs         = $db->Execute($sql);
 $AllShowTypes   = $rs->GetArray();
+global $AllShowTypesArray;
 $AllShowTypesArray = [];
 foreach($AllShowTypes as $Item)  {
     $AllShowTypesArray[$Item['Name']] = $Item;

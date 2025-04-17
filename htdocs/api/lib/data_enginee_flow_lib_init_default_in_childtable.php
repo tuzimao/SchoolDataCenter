@@ -4,10 +4,11 @@ $CurrentUrlFileName = basename($_SERVER['PHP_SELF']);
 $ForbiddenAccessUrlList = ['data_enginee_flow_lib_init_default.php'];
 if(in_array($CurrentUrlFileName, $ForbiddenAccessUrlList)) exit;
 
-function ChildTable_Init_Default_Structure($TableName, $MetaColumnNames, $SettingMap) {
+function ChildTable_Init_Default_Structure($FormId, $TableName, $MetaColumnNames, $SettingMap) {
 
 global $GLOBAL_LANGUAGE;
 global $db;
+global $AllShowTypesArray;
 
 $Actions_In_List_Row_Array = explode(',',$SettingMap['Actions_In_List_Row']);
 $Actions_In_List_Header_Array = explode(',',$SettingMap['Actions_In_List_Header']);
@@ -15,6 +16,134 @@ $Actions_In_List_Header_Array = explode(',',$SettingMap['Actions_In_List_Header'
 //列表页面时的启用字段列表
 $init_default_columns   = [];
 $columnsactions         = [];
+
+
+$sql        = "select * from form_formfield where FormId='$FormId' and IsEnable='1' order by SortNumber asc, id asc";
+$rs         = $db->Execute($sql);
+$AllFieldsFromTable   = $rs->GetArray();
+$AllFieldsMap = [];
+foreach($AllFieldsFromTable as $Item)  {
+    $Item['Setting']                    = json_decode($Item['Setting'],true);
+    $AllFieldsMap[$Item['FieldName']]   = $Item;
+    $LocaleFieldArray[$Item['EnglishName']] = $Item['FieldName'];
+    $LocaleFieldArray[$Item['ChineseName']] = $Item['FieldName'];
+}
+$searchField = [];
+$groupField = [];
+$FieldNameToType = [];
+$UpdateFields = [];
+foreach($AllFieldsFromTable as $Item)  {
+    $FieldName      = $Item['FieldName'];
+    $EnglishName    = $Item['EnglishName'];
+    $ShowType       = $Item['ShowType'];
+    $IsSearch       = $Item['IsSearch'];
+    $IsGroupFilter  = $Item['IsGroupFilter'];
+    $ColumnWidth    = intval($Item['ColumnWidth']);
+    $IsHiddenGroupFilter = $Item['IsHiddenGroupFilter'];
+    $CurrentFieldType = $AllShowTypesArray[$ShowType]['LIST'];
+    $CurrentFieldTypeArray = explode(':',$CurrentFieldType);
+    $FieldNameToType[$FieldName] = $CurrentFieldType;
+
+    global $GLOBAL_LANGUAGE;
+    switch($GLOBAL_LANGUAGE) {
+        case 'zhCN':
+            $ShowTextName    = $Item['ChineseName'];
+            break;
+        case 'enUS':
+            $ShowTextName    = $Item['EnglishName'];
+            break;
+        default:
+            $ShowTextName    = $Item['EnglishName'];
+            break;
+    }
+
+    $editable = false;
+    if($SettingMap['FieldEditable_'.$FieldName]=='true' || $SettingMap['FieldEditable_'.$FieldName]=='1')   {
+        $editable = true;
+        $UpdateFields[] = $FieldName;
+    }
+
+    //Filter Field Type
+    $FieldTypeInFlow = $SettingMap['FieldType_'.$FieldName];
+    $FieldTypeInFlow_Map = [];
+    switch($FieldTypeInFlow)   {
+        case 'View_Use_ListAddEdit_NotUse':
+        case 'Disable':
+        case '':
+            $CurrentFieldTypeArray[0] = "Disable";
+            break;
+    }
+    //print $FieldName.":".$FieldTypeInFlow." ".$CurrentFieldTypeArray[0]."\n";
+
+    switch($CurrentFieldTypeArray[0])   {
+        case 'Disable':
+        case '':
+            break;
+        case 'api1':
+            $init_default_columns[] = ['flex' => 0.1, 'type'=>'api', 'minWidth' => $ColumnWidth, 'maxWidth' => $ColumnWidth+100, 'field' => $FieldName, 'headerName' => $ShowTextName, 'show'=>true, 'renderCell' => NULL, 'editable'=>$editable,'apimdi'=>'mdi:chart-donut','apicolor'=>'info.main', 'apiaction' => "edit_default_1"];
+            break;
+        case 'api2':
+            $init_default_columns[] = ['flex' => 0.1, 'type'=>'api', 'minWidth' => $ColumnWidth, 'maxWidth' => $ColumnWidth+100, 'field' => $FieldName, 'headerName' => $ShowTextName, 'show'=>true, 'renderCell' => NULL, 'editable'=>$editable,'apimdi'=>'mdi:cog-outline','apicolor'=>'info.main', 'apiaction' => "edit_default_2"];
+            break;
+        case 'api3':
+            $init_default_columns[] = ['flex' => 0.1, 'type'=>'api', 'minWidth' => $ColumnWidth, 'maxWidth' => $ColumnWidth+100, 'field' => $FieldName, 'headerName' => $ShowTextName, 'show'=>true, 'renderCell' => NULL, 'editable'=>$editable,'apimdi'=>'mdi:border-bottom','apicolor'=>'info.main', 'apiaction' => "edit_default_3"];
+            break;
+        case 'api4':
+            $init_default_columns[] = ['flex' => 0.1, 'type'=>'api', 'minWidth' => $ColumnWidth, 'maxWidth' => $ColumnWidth+100, 'field' => $FieldName, 'headerName' => $ShowTextName, 'show'=>true, 'renderCell' => NULL, 'editable'=>$editable,'apimdi'=>'mdi:cellphone','apicolor'=>'info.main', 'apiaction' => "edit_default_4"];
+            break;
+        case 'api5':
+            $init_default_columns[] = ['flex' => 0.1, 'type'=>'api', 'minWidth' => $ColumnWidth, 'maxWidth' => $ColumnWidth+100, 'field' => $FieldName, 'headerName' => $ShowTextName, 'show'=>true, 'renderCell' => NULL, 'editable'=>$editable,'apimdi'=>'mdi:message-bulleted','apicolor'=>'info.main', 'apiaction' => "edit_default_5"];
+            break;
+        case 'api6':
+            $init_default_columns[] = ['flex' => 0.1, 'type'=>'api', 'minWidth' => $ColumnWidth, 'maxWidth' => $ColumnWidth+100, 'field' => $FieldName, 'headerName' => $ShowTextName, 'show'=>true, 'renderCell' => NULL, 'editable'=>$editable,'apimdi'=>'mdi:chart-donut','apicolor'=>'info.main', 'apiaction' => "edit_default_6"];
+            break;
+        case 'tablefilter':
+        case 'tablefiltercolor':
+        case 'autocomplete':
+            $init_default_columns[] = ['flex' => 0.1, 'type'=>$CurrentFieldTypeArray[0], 'minWidth' => $ColumnWidth, 'maxWidth' => $ColumnWidth+100, 'field' => $FieldName, 'headerName' => $ShowTextName, 'show'=>true, 'renderCell' => NULL, 'editable'=>$editable];
+            break;
+        case 'autocompletemulti':
+            $init_default_columns[] = ['flex' => 0.1, 'type'=>$CurrentFieldTypeArray[0], 'minWidth' => $ColumnWidth, 'maxWidth' => $ColumnWidth+200, 'field' => $FieldName, 'headerName' => $ShowTextName, 'show'=>true, 'renderCell' => NULL, 'editable'=>$editable];
+            break;
+        case 'radiogroup':
+        case 'radiogroupcolor':
+            $init_default_columns[] = ['flex' => 0.1, 'type'=>$CurrentFieldTypeArray[0], 'minWidth' => $ColumnWidth, 'maxWidth' => $ColumnWidth+100, 'field' => $FieldName, 'headerName' => $ShowTextName, 'show'=>true, 'renderCell' => NULL, 'editable'=>$editable];
+            break;
+        case 'avatar':
+            $init_default_columns[] = ['flex' => 0.1, 'type'=>$CurrentFieldTypeArray[0], 'minWidth' => $ColumnWidth, 'maxWidth' => $ColumnWidth+100, 'field' => $FieldName, 'headerName' => $ShowTextName, 'show'=>true, 'renderCell' => NULL, 'editable'=>$editable];
+            break;
+        case 'images':
+        case 'images2':
+            $init_default_columns[] = ['flex' => 0.1, 'type'=>$CurrentFieldTypeArray[0], 'minWidth' => $ColumnWidth, 'maxWidth' => $ColumnWidth+100, 'field' => $FieldName, 'headerName' => $ShowTextName, 'show'=>true, 'renderCell' => NULL, 'editable'=>$editable];
+            break;
+        case 'files':
+        case 'files2':
+            $init_default_columns[] = ['flex' => 0.1, 'type'=>$CurrentFieldTypeArray[0], 'minWidth' => $ColumnWidth, 'maxWidth' => $ColumnWidth+100, 'field' => $FieldName, 'headerName' => $ShowTextName, 'show'=>true, 'renderCell' => NULL, 'editable'=>$editable];
+            break;
+        case 'file':
+            $init_default_columns[] = ['flex' => 0.1, 'type'=>$CurrentFieldTypeArray[0], 'minWidth' => $ColumnWidth, 'maxWidth' => $ColumnWidth+100, 'field' => $FieldName, 'headerName' => $ShowTextName, 'show'=>true, 'renderCell' => NULL, 'editable'=>$editable];
+            break;
+        case 'xlsx':
+            $init_default_columns[] = ['flex' => 0.1, 'type'=>$CurrentFieldTypeArray[0], 'minWidth' => $ColumnWidth, 'maxWidth' => $ColumnWidth+100, 'field' => $FieldName, 'headerName' => $ShowTextName, 'show'=>true, 'renderCell' => NULL, 'editable'=>$editable];
+            break;
+        case 'ExternalUrl':
+            $init_default_columns[] = ['flex' => 0.1, 'type'=>$CurrentFieldTypeArray[0], "href"=>"", "target"=>"_blank", 'minWidth' => $ColumnWidth, 'maxWidth' => $ColumnWidth+100, 'field' => $FieldName, 'headerName' => $ShowTextName, 'show'=>true, 'renderCell' => NULL, 'editable'=>$editable];
+            break;
+        default:
+            $FieldType = "string";
+            //print_R($FieldName);
+            //print_R($ApprovalNodeFieldsStatus);
+            $init_default_columns[] = ['flex' => 0.1, 'type'=>$FieldType, 'minWidth' => $ColumnWidth, 'maxWidth' => $ColumnWidth+100, 'field' => $FieldName, 'headerName' => $ShowTextName, 'show'=>true, 'renderCell' => NULL, 'editable'=>$editable];
+            break;
+    }
+    if($IsSearch==1&&($SettingMap['FieldSearch_'.$FieldName]=='true'||$SettingMap['FieldSearch_'.$FieldName]=='1'))   {
+        $searchField[] = ['label' => $ShowTextName, 'value' => $FieldName];
+    }
+    if($SettingMap['FieldGroup_'.$FieldName]=='true'||$SettingMap['FieldGroup_'.$FieldName]=='1')   { //$IsGroupFilter==1&&
+        $groupField[] = $FieldName;
+    }
+
+}
 
 //Search Field
 $RS['init_default']['searchFieldArray'] = $searchField;
@@ -378,6 +507,10 @@ $RS['init_default']['pinnedColumns']  = [];
 
 $RS['init_default']['dataGridLanguageCode']  = $GLOBAL_LANGUAGE;
 
+$RS['init_default']['ForbiddenSelectRow']   = array_keys($ForbiddenSelectRow);
+$RS['init_default']['ForbiddenViewRow']     = array_keys($ForbiddenViewRow);
+$RS['init_default']['ForbiddenEditRow']     = array_keys($ForbiddenEditRow);
+$RS['init_default']['ForbiddenDeleteRow']   = array_keys($ForbiddenDeleteRow);
 
 return $RS['init_default'];
 

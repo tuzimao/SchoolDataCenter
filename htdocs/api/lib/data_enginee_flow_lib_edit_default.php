@@ -427,7 +427,7 @@ if( ( ($_GET['action']=="edit_default"&&in_array('Edit',$Actions_In_List_Row_Arr
                 }
 
                 if($Relative_Child_Table_Type == "从子表中选择记录")   {
-                    $ChileTable_init_default = ChildTable_Init_Default_Structure($ChildTableName, $ChildMetaColumnNames, $ChildSettingMap);
+                    $ChileTable_init_default = ChildTable_Init_Default_Structure($ChildFormId, $ChildTableName, $ChildMetaColumnNames, $ChildSettingMap);
                     $RS['edit_default']['childtable']['init_default'] = $ChileTable_init_default;
                 }
             }

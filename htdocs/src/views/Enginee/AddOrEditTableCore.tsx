@@ -1,6 +1,6 @@
 // ** React Imports
 import { useState, useEffect, MouseEvent, ChangeEvent, Fragment, SyntheticEvent, forwardRef, ReactElement, Ref, FocusEvent } from 'react'
-import { ElementType,MouseEventHandler } from 'react'
+import { ElementType,MouseEventHandler, useCallback } from 'react'
 
 // ** MUI Imports
 import Select from '@mui/material/Select'
@@ -66,9 +66,9 @@ import { useForm, Controller } from 'react-hook-form'
 //import { fr } from 'yup-locales';
 import { setLocale } from 'yup';
 import AddOrEditTableLanguage from 'src/types/forms/AddOrEditTableLanguage';
+import { DataGrid, GridSortModel, GridCellEditCommitParams, GridFilterModel, GridRowId, zhCN, zhTW, enUS } from '@mui/x-data-grid';
 
 import axios from 'axios'
-
 import Mousetrap from 'mousetrap'
 
 // ** Icon Imports
@@ -101,6 +101,7 @@ import chinacityshort from 'src/types/forms/chinacityshort';
 import mdi from 'src/types/forms/mdi';
 
 import {isMobile} from 'src/configs/functions'
+import CustomAvatar from 'src/@core/components/mui/avatar'
 
 // ** Tab Content Imports
 import IndexJumpDialogWindow from 'src/views/Enginee/IndexJumpDialogWindow'
@@ -552,7 +553,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
             })
         })
         console.log("deleteChildTableItemArray", deleteChildTableItemArray, childItemCounter)
-        if(addEditStructInfo2 && addEditStructInfo2.childtable && addEditStructInfo2.childtable.allFields)   {
+        if(addEditStructInfo2 && addEditStructInfo2.childtable && addEditStructInfo2.childtable.allFields && addEditStructInfo2.childtable.Type == "手动建立子表记录" )   {
             for (let i = 0; i < childItemCounter; i++) {
                 if(!deleteChildTableItemArray.includes(i))   {
                     addEditStructInfo2.childtable.allFields.Default.map((FieldArray: any) => {
@@ -1172,6 +1173,253 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
     }, [allFieldsMode])
 
     console.log("addEditStructInfo2", addEditStructInfo2)
+
+    const [pageSize, setPageSize] = useState<number>(15)
+    const [pageCount, setPageCount] = useState<number>(0)
+    const [page, setPage] = useState<number>(0)
+
+    const [filterMultiColumns, setFilterMultiColumns] = useState<GridFilterModel>()
+    const [searchFieldName, setSearchFieldName] = useState<string>('')
+    const [searchFieldValue, setSearchFieldValue] = useState<string>('')
+    const [selectedRows, setSelectedRows] = useState<GridRowId[]>([])
+    const [sortMethod, setSortMethod] = useState<string>('desc')
+    const [sortColumn, setSortColumn] = useState<string>('')
+
+    const StyledLink = styled(Link)(({ theme }) => ({
+      fontWeight: 600,
+      fontSize: '1rem',
+      cursor: 'pointer',
+      textDecoration: 'none',
+      color: theme.palette.text.secondary,
+      '&:hover': {
+        color: theme.palette.primary.main
+      }
+    }))
+
+    const getColumnsForDatagrid = (store: any) => {
+
+        console.log("storestore", store)
+    
+        type rowType = {
+          [key:string]:string
+        }
+        interface CellType {
+          row: rowType
+        }
+        const CustomLink = styled(Link)({
+          textDecoration: "none",
+          color: "inherit",
+        });
+    
+        const columns_for_datagrid:any[] = []
+    
+        store.columns.map((column: any, column_index: number) => {
+          if (column && column.type == "url") {
+            const columnRenderCell = { ...column }
+            columnRenderCell['renderCell'] = ({ row }: any) => (
+              <StyledLink href={`${column.href}${row.id}`} target={column.target}>
+                <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 3, color: column.urlcolor } }}>
+                  <Icon icon={column.urlmdi} fontSize={20} />
+                  <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
+                    {row[column.field]}
+                  </Typography>
+                </Box>
+              </StyledLink>
+            )
+            columns_for_datagrid[column_index] = columnRenderCell
+          }
+          else if (column && column.type == "ExternalUrl") {
+            const columnRenderCell = { ...column }
+            columnRenderCell['renderCell'] = ({ row }: any) => (
+              <StyledLink href={`${authConfig.backEndApiHost}${row[column.field].replace("[id]",row.id)}`} target={column.target}>
+                <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 3, color: column.urlcolor } }}>
+                  <Icon icon={column.urlmdi} fontSize={20} />
+                  <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
+                    {row[column.field]}
+                  </Typography>
+                </Box>
+              </StyledLink>
+            )
+            columns_for_datagrid[column_index] = columnRenderCell
+          }
+          else if (column && column.type == "avatar") {
+            const columnRenderCell = { ...column }
+            columnRenderCell['renderCell'] = ({ row }: any) => {
+              return (
+                row[column.field] != "" ?
+                  (
+                    <Box sx={{ display: 'flex', alignItems: 'center',cursor: 'pointer',':hover': {cursor: 'pointer',}, }}  onClick={() => toggleImagesPreviewListDrawer([authConfig.backEndApiHost+row[column.field]], ['image'])}>
+                      <CustomAvatar src={authConfig.backEndApiHost+row[column.field]} sx={{ mr: 3, width: 30, height: 30 }} />
+                    </Box>
+                  )
+                  :
+                  null
+              )
+            }
+            columns_for_datagrid[column_index] = columnRenderCell
+          }
+          else if (column && column.type == "approvalnode") {
+            const columnRenderCell = { ...column }
+            columnRenderCell['renderCell'] = ({ row }: any) => {
+      
+              return (
+                row[column.field] != "" && row[column.field.replace("审核状态", "审核时间")] != "" ?
+                  (
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      <CustomAvatar src={row.avatar || '/images/avatars/1.png'} sx={{ mr: 3, width: 30, height: 30 }} />
+                      <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+                        {row[column.field]} ({row[column.field.replace("审核状态", "审核人")]})
+                        <Typography noWrap variant='caption'>
+                          {row[column.field.replace("审核状态", "审核意见")]} ({row[column.field.replace("审核状态", "审核时间")]})
+                        </Typography>
+                      </Box>
+                    </Box>
+                  )
+                  :
+                  null
+              )
+            }
+            columns_for_datagrid[column_index] = columnRenderCell
+          }
+          else if (column && (column.type == "files" || column.type == "files2")) {
+            const columnRenderCell = { ...column }
+            columnRenderCell['renderCell'] = ({ row }: any) => {
+      
+              return (
+                <Fragment>
+                {row[column.field] && row[column.field].length>0 && row[column.field].map((FileUrl: any, TempIndex: number)=>{
+      
+                  return (
+                    <ListItem key={TempIndex} style={{padding: "3px"}}>
+                    <div className='file-details' style={{display: "flex"}}>
+                      <div style={{padding: "3px 3px 0 0"}}>
+                        {FileUrl.type.startsWith('image') ?
+                        <Box sx={{ display: 'flex', alignItems: 'center',cursor: 'pointer',':hover': {cursor: 'pointer',}, }} onClick={() => toggleImagesPreviewListDrawer([authConfig.backEndApiHost+FileUrl['webkitRelativePath']], ['image'])}>
+                          <ImgStyled src={authConfig.backEndApiHost+FileUrl['webkitRelativePath']} />
+                        </Box>
+                        : <Icon icon='mdi:file-document-outline' fontSize={28}/>
+                        }
+                      </div>
+                      <div>
+                        {FileUrl['type']=="pdf" || FileUrl['type']=="Excel" || FileUrl['type']=="Word" || FileUrl['type']=="PowerPoint" ?
+                          <Typography className='file-name'><CustomLink href={authConfig.backEndApiHost+FileUrl['webkitRelativePath']} download={FileUrl['name']}>{FileUrl['name']}</CustomLink></Typography>
+                        :
+                          ''
+                        }
+                        {FileUrl['type']=="file" ?
+                          <Typography className='file-name'><CustomLink href={authConfig.backEndApiHost+FileUrl['webkitRelativePath']} download={FileUrl['name']}>{FileUrl['name']}</CustomLink></Typography>
+                        :
+                          ''
+                        }
+                        {FileUrl['size']>0 && !FileUrl.type.startsWith('image') ?
+                          <Typography className='file-size' variant='body2'>
+                              {Math.round(FileUrl['size'] / 100) / 10 > 1000
+                              ? `${(Math.round(FileUrl['size'] / 100) / 10000).toFixed(1)} mb`
+                              : `${(Math.round(FileUrl['size'] / 100) / 10).toFixed(1)} kb`}
+                          </Typography>
+                          : ''
+                        }
+                      </div>
+                    </div>
+                    </ListItem>
+                    )
+                })}
+                </Fragment>
+              )
+            }
+            columns_for_datagrid[column_index] = columnRenderCell
+          }
+          else if (column && (column.type == "images" || column.type == "images2")) {
+            const columnRenderCell = { ...column }
+            columnRenderCell['renderCell'] = ({ row }: any) => {
+      
+              return (
+                <Fragment>
+                {row[column.field] && row[column.field].length>0 && row[column.field].map((FileUrl: any, TempIndex: number)=>{
+      
+                  return (
+                    <ListItem key={TempIndex} style={{padding: "3px"}}>
+                    <div className='file-details' style={{display: "flex"}}>
+                      <div style={{padding: "0"}}>
+                        <Box sx={{ display: 'flex', alignItems: 'center',cursor: 'pointer',':hover': {cursor: 'pointer',}, }} onClick={() => toggleImagesPreviewListDrawer([authConfig.backEndApiHost+FileUrl['webkitRelativePath']], ['image'])}>
+                          <ImgStyled src={authConfig.backEndApiHost+FileUrl['webkitRelativePath']} />
+                        </Box>
+                      </div>
+                    </div>
+                    </ListItem>
+                    )
+                })}
+                </Fragment>
+              )
+            }
+            columns_for_datagrid[column_index] = columnRenderCell
+          }
+          else if (column && (column.type == "radiogroupcolor")) {
+            const columnRenderCell = { ...column }
+            columnRenderCell['renderCell'] = ({ row }: any) => {
+      
+              return (
+                row[column.field] != undefined &&row[column.field] != "" ?
+                  (
+                    <CustomChip
+                      skin='light'
+                      size='small'
+                      label={row[column.field]}
+                      color={column.color[row[column.field]]}
+                      sx={{ textTransform: 'capitalize' }}
+                    />
+                  )
+                  :
+                  null
+              )
+            }
+            columns_for_datagrid[column_index] = columnRenderCell
+          }
+          else if (column && (column.type == "tablefiltercolor") && column.color) {
+            const columnRenderCell = { ...column }
+            columnRenderCell['renderCell'] = ({ row }: any) => {
+      
+              return (
+                row[column.field] != undefined && row[column.field] != "" ?
+                  (
+                    <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 3, color: column.color[row[column.field]] && column.color[row[column.field]].color ? column.color[row[column.field]].color : "info.main" } }}>
+                      <Icon icon={column.color[row[column.field]] && column.color[row[column.field]].icon ? column.color[row[column.field]].icon : 'pencil-outline'} fontSize={20} />
+                      <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
+                        {row[column.field]}
+                      </Typography>
+                    </Box>
+                  )
+                  :
+                  null
+              )
+            }
+            columns_for_datagrid[column_index] = columnRenderCell
+          }
+          else {
+            const columnRenderCell = { ...column }
+            columns_for_datagrid[column_index] = columnRenderCell
+          }
+        })
+    
+        return columns_for_datagrid
+    }
+      
+    const columns_for_datagrid:any[] = addEditStructInfo2.childtable && addEditStructInfo2.childtable.Type == "从子表中选择记录" ? getColumnsForDatagrid(addEditStructInfo2.childtable.init_default) : []
+
+    const onFilterColumnChangeMulti = useCallback((filterModel: GridFilterModel) => {
+        setFilterMultiColumns(JSON.parse(JSON.stringify(filterModel)))
+    }, [])
+
+    const handleSortModel = (newModel: GridSortModel) => {
+        if (newModel.length) {
+            const newModelItem = newModel[0]
+            setSortMethod(String(newModelItem.sort))
+            setSortColumn(String(newModelItem.field))
+        } else {
+            setSortMethod('asc')
+            setSortColumn(addEditStructInfo2.childtable.init_default.columns[0].field)
+        }
+    }
 
     return (
         <Fragment>
@@ -4494,7 +4742,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                             )
                         })}
 
-                        {addEditStructInfo2.childtable && addEditStructInfo2.childtable.allFields && addEditStructInfo2.childtable.submittext ?
+                        {addEditStructInfo2.childtable && addEditStructInfo2.childtable.allFields && addEditStructInfo2.childtable.submittext && addEditStructInfo2.childtable.Type == "手动建立子表记录" && 
                             <Card key={"ChildtableSection"} sx={{ mb: 1, mx: 0, p:0 }}>
                                 <RepeaterWrapper sx={{ mx: 0, px: 0 }}>
                                     <Repeater count={childItemCounter} >
@@ -4981,7 +5229,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                     })}
 
                                                 </Grid>
-                                                {addEditStructInfo2.childtable && addEditStructInfo2.childtable.Delete &&
+                                                {addEditStructInfo2.childtable && addEditStructInfo2.childtable.Delete && addEditStructInfo2.childtable.Type == "手动建立子表记录"  &&
                                                 <ChildTableRowAction>
                                                     <IconButton size='small' onClick={(event: SyntheticEvent)=>deleteChildTableItem(event, i)}>
                                                         <Icon icon='mdi:close' fontSize={20} />
@@ -5011,7 +5259,38 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                     }
                                 </RepeaterWrapper>
                             </Card>
-                            : ''
+                        }
+
+                        {addEditStructInfo2.childtable && addEditStructInfo2.childtable.Type == "从子表中选择记录" && addEditStructInfo2.childtable.init_default.data && 
+                            <Grid item xs={12} sm={12} container sx={{ pt: 4, ml: 1 }}>
+                              <Grid container spacing={2}>
+                                <DataGrid
+                                    page={page}
+                                    autoHeight
+                                    pagination
+                                    rows={addEditStructInfo2.childtable.init_default.data}
+                                    rowCount={addEditStructInfo2.childtable.init_default.total}
+                                    rowHeight={38}
+                                    columns={columns_for_datagrid}
+                                    checkboxSelection={addEditStructInfo2.childtable.init_default.checkboxSelection?true:false}
+                                    disableSelectionOnClick
+                                    pageSize={pageSize}
+                                    sortingMode='server'
+                                    paginationMode='server'
+                                    onSortModelChange={handleSortModel}
+                                    rowsPerPageOptions={addEditStructInfo2.childtable.init_default.pageNumberArray}
+                                    onPageChange={newPage => setPage(newPage)}
+                                    onPageSizeChange={(newPageSize: number) => setPageSize(newPageSize)}
+                                    selectionModel={selectedRows}
+                                    onSelectionModelChange={rows => setSelectedRows(rows)}
+                                    loading={isLoading}
+                                    filterMode="server"
+                                    onFilterModelChange={onFilterColumnChangeMulti}
+                                    isRowSelectable={(params) => !addEditStructInfo2.childtable.init_default.ForbiddenSelectRow.includes(params.id)}
+                                    localeText={zhCN.components.MuiDataGrid.defaultProps.localeText}
+                                    />
+                              </Grid>
+                            </Grid>
                         }
 
                         {singleModelCounter > 0 && FieldShowStatus == 1 && (
