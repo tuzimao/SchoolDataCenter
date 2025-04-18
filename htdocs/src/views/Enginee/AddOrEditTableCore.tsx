@@ -1,6 +1,6 @@
 // ** React Imports
 import { useState, useEffect, MouseEvent, ChangeEvent, Fragment, SyntheticEvent, forwardRef, ReactElement, Ref, FocusEvent } from 'react'
-import { ElementType,MouseEventHandler, useCallback } from 'react'
+import { ElementType,MouseEventHandler } from 'react'
 
 // ** MUI Imports
 import Select from '@mui/material/Select'
@@ -66,7 +66,8 @@ import { useForm, Controller } from 'react-hook-form'
 //import { fr } from 'yup-locales';
 import { setLocale } from 'yup';
 import AddOrEditTableLanguage from 'src/types/forms/AddOrEditTableLanguage';
-import { DataGrid, GridSortModel, GridCellEditCommitParams, GridFilterModel, GridRowId, zhCN, zhTW, enUS } from '@mui/x-data-grid';
+import { DataGrid, GridRowId, zhCN } from '@mui/x-data-grid';
+import CustomChip from 'src/@core/components/mui/chip'
 
 import axios from 'axios'
 import Mousetrap from 'mousetrap'
@@ -224,6 +225,9 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
 
     const [fieldIdValue, setFieldIdValue] = useState<number>(0)
     const [singleModelCounter, setSingleModelCounter] = useState<number>(0)
+
+    const [selectedRows, setSelectedRows] = useState<GridRowId[]>([])
+    console.log("selectedRows", selectedRows)
 
     useEffect(() => {
         if (action.indexOf("edit_default") != -1 && editViewCounter > 0) {
@@ -592,6 +596,11 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
     })
 
     const onSubmit = (data: {[key:string]:any}) => {
+        if(addEditStructInfo2 && addEditStructInfo2.childtable && addEditStructInfo2.childtable.Type == "从子表中选择记录" && selectedRows && selectedRows.length == 0 )   {
+            toast.error('至少要选择一项记录')
+
+            return 
+        }
         const toastId = toast.loading(addEditStructInfo2.submitloading)
         setIsSubmitLoading(true)
         handleIsLoadingTipChange(true, addEditStructInfo2.ImportLoading)
@@ -713,6 +722,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
         formData.append('ChildItemCounter', String(childItemCounter));
         formData.append('deleteChildTableItemArray', deleteChildTableItemArray.join(','));
         formData.append('readonlyIdArray', readonlyIdArray.join(','));
+        formData.append('selectedRows', selectedRows.join(','));
 
         const postUrl = authConfig.backEndApiHost + backEndApi + "?action=" + action + "_data&id=" + id + "&externalId=" + externalId
         fetch(
@@ -1175,15 +1185,10 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
     console.log("addEditStructInfo2", addEditStructInfo2)
 
     const [pageSize, setPageSize] = useState<number>(15)
-    const [pageCount, setPageCount] = useState<number>(0)
     const [page, setPage] = useState<number>(0)
 
-    const [filterMultiColumns, setFilterMultiColumns] = useState<GridFilterModel>()
-    const [searchFieldName, setSearchFieldName] = useState<string>('')
-    const [searchFieldValue, setSearchFieldValue] = useState<string>('')
-    const [selectedRows, setSelectedRows] = useState<GridRowId[]>([])
-    const [sortMethod, setSortMethod] = useState<string>('desc')
-    const [sortColumn, setSortColumn] = useState<string>('')
+    //const [searchFieldName, setSearchFieldName] = useState<string>('')
+    //const [searchFieldValue, setSearchFieldValue] = useState<string>('')
 
     const StyledLink = styled(Link)(({ theme }) => ({
       fontWeight: 600,
@@ -1200,12 +1205,6 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
 
         console.log("storestore", store)
     
-        type rowType = {
-          [key:string]:string
-        }
-        interface CellType {
-          row: rowType
-        }
         const CustomLink = styled(Link)({
           textDecoration: "none",
           color: "inherit",
@@ -1405,21 +1404,6 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
     }
       
     const columns_for_datagrid:any[] = addEditStructInfo2.childtable && addEditStructInfo2.childtable.Type == "从子表中选择记录" ? getColumnsForDatagrid(addEditStructInfo2.childtable.init_default) : []
-
-    const onFilterColumnChangeMulti = useCallback((filterModel: GridFilterModel) => {
-        setFilterMultiColumns(JSON.parse(JSON.stringify(filterModel)))
-    }, [])
-
-    const handleSortModel = (newModel: GridSortModel) => {
-        if (newModel.length) {
-            const newModelItem = newModel[0]
-            setSortMethod(String(newModelItem.sort))
-            setSortColumn(String(newModelItem.field))
-        } else {
-            setSortMethod('asc')
-            setSortColumn(addEditStructInfo2.childtable.init_default.columns[0].field)
-        }
-    }
 
     return (
         <Fragment>
@@ -5277,7 +5261,6 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                     pageSize={pageSize}
                                     sortingMode='server'
                                     paginationMode='server'
-                                    onSortModelChange={handleSortModel}
                                     rowsPerPageOptions={addEditStructInfo2.childtable.init_default.pageNumberArray}
                                     onPageChange={newPage => setPage(newPage)}
                                     onPageSizeChange={(newPageSize: number) => setPageSize(newPageSize)}
@@ -5285,7 +5268,6 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                     onSelectionModelChange={rows => setSelectedRows(rows)}
                                     loading={isLoading}
                                     filterMode="server"
-                                    onFilterModelChange={onFilterColumnChangeMulti}
                                     isRowSelectable={(params) => !addEditStructInfo2.childtable.init_default.ForbiddenSelectRow.includes(params.id)}
                                     localeText={zhCN.components.MuiDataGrid.defaultProps.localeText}
                                     />

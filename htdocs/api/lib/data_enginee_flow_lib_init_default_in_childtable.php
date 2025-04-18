@@ -488,7 +488,7 @@ $RS['init_default']['data']                     = $NewRSA;
 
 
 $RS['init_default']['multireview']          = [];
-$RS['init_default']['checkboxSelection']    = is_array($multireview['multireview']) && count($multireview['multireview'])>0 ? true : false;
+$RS['init_default']['checkboxSelection']    = true;
 
 $RS['init_default']['rowHeight']        = $rowHeight;
 $RS['init_default']['dialogContentHeight']  = "90%";
