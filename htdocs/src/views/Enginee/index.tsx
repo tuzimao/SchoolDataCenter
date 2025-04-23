@@ -1168,7 +1168,7 @@ const UserList = ({ authConfig, backEndApi, externalId, handleActionInMobileApp,
 
   const [show, setShow] = useState<boolean>(false)
 
-  console.log("store", store)
+  console.log("store.init_default.filter", store.init_default.filter)
 
   return (
     <Grid container spacing={0}>
