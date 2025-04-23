@@ -718,6 +718,60 @@ if($_GET['action'] == 'GoToEndWork' && $FlowId > 0 && $processid > 0 && $runid >
         $db->Execute($sql);
     }
 
+    //修改子表的记录信息    
+    $NodeFlow_Approval_Change_ChildTable_Field_Name            = $SettingMap['NodeFlow_Approval_Change_ChildTable_Field_Name'];
+    $NodeFlow_Approval_Change_ChildTable_Field_Value           = $SettingMap['NodeFlow_Approval_Change_ChildTable_Field_Value'];
+    $NodeFlow_Approval_Change_ChildTable_Field_To_DateTime     = $SettingMap['NodeFlow_Approval_Change_ChildTable_Field_To_DateTime'];
+    $NodeFlow_Approval_Change_ChildTable_Field_To_UserId       = $SettingMap['NodeFlow_Approval_Change_ChildTable_Field_To_UserId'];
+    //Relative Child Table Support
+    $Relative_Child_Table                   = $SettingMap['Relative_Child_Table'];
+    $Relative_Child_Table_Type              = $SettingMap['Relative_Child_Table_Type'];
+    $Relative_Child_Table_Field_Name        = $SettingMap['Relative_Child_Table_Field_Name'];
+    $Relative_Child_Table_Parent_Field_Name = $SettingMap['Relative_Child_Table_Parent_Field_Name'];
+    if($Relative_Child_Table>0 && $Relative_Child_Table_Parent_Field_Name!="" && in_array($Relative_Child_Table_Parent_Field_Name,$MetaColumnNames) && $ProcessInfo['工作ID'] != '') {
+        $ChildSettingMap = returntablefield("form_formflow",'id',$Relative_Child_Table,'Setting')['Setting'];
+        $ChildSettingMap = unserialize(base64_decode($ChildSettingMap));
+        $ChildFormId                = returntablefield("form_formflow",'id',$Relative_Child_Table,'FormId')['FormId'];
+        $ChildTableName             = returntablefield("form_formname",'id',$ChildFormId,'TableName')['TableName'];
+        $ChildMetaColumnNames       = GLOBAL_MetaColumnNames($ChildTableName);
+        $UpdateSqlArray             = [];
+        if($Relative_Child_Table_Field_Name!="" && in_array($Relative_Child_Table_Field_Name, $ChildMetaColumnNames)) {
+            if(in_array($NodeFlow_Approval_Change_ChildTable_Field_Name, $ChildMetaColumnNames)) {
+                preg_match_all('/\[(.*?)\]/', $NodeFlow_Approval_Change_ChildTable_Field_Value, $NodeFlow_Approval_Change_ChildTable_Field_Value_Filter);
+                if($NodeFlow_Approval_Change_ChildTable_Field_Value_Filter[1] != "") {
+                    //值中带有[], 表示是同步字段信息, 而不是一个固定的值
+                    $ParentTableFieldName = $NodeFlow_Approval_Change_ChildTable_Field_Value_Filter[1][0];
+                    if($ParentTableFieldName != "" && in_array($ParentTableFieldName,$MetaColumnNames)) {
+                        $Relative_Child_Table_Parent_Field_Name_Value = returntablefield($TableName,'id',$ProcessInfo['工作ID'],$ParentTableFieldName)[$ParentTableFieldName];
+                        $UpdateSqlArray[] = " $NodeFlow_Approval_Change_ChildTable_Field_Name = '".$Relative_Child_Table_Parent_Field_Name_Value."' ";
+                    }
+                }
+                else {
+                    $UpdateSqlArray[] = " $NodeFlow_Approval_Change_ChildTable_Field_Name = '".$NodeFlow_Approval_Change_ChildTable_Field_Value."' ";
+                }
+            }
+            if(in_array($NodeFlow_Approval_Change_ChildTable_Field_To_DateTime, $ChildMetaColumnNames)) {
+                $UpdateSqlArray[] = " $NodeFlow_Approval_Change_ChildTable_Field_To_DateTime = '".date('Y-m-d H:i:s')."' ";
+            }
+            if(in_array($NodeFlow_Approval_Change_ChildTable_Field_To_UserId, $ChildMetaColumnNames)) {
+                $UpdateSqlArray[] = " $NodeFlow_Approval_Change_ChildTable_Field_To_UserId = '".$GLOBAL_USER->USER_ID."' ";
+            }
+            $selectedRowsArray = explode(",", $_POST['selectedRows']);
+            $selectedRows = [];
+            foreach($selectedRowsArray as $Item) {
+                $selectedRows[] = DecryptID($Item);
+            }
+            //print_R($UpdateSqlArray);
+            if(sizeof($UpdateSqlArray)>0 && sizeof($selectedRows)>0 && $selectedRows[0]>0) {
+                $Relative_Child_Table_Parent_Field_Name_Value = returntablefield($TableName,'id',$ProcessInfo['工作ID'],$Relative_Child_Table_Parent_Field_Name)[$Relative_Child_Table_Parent_Field_Name];
+                $sql = "update $ChildTableName set ".join(',', $UpdateSqlArray)." where id in ('".join("','", $selectedRows)."')";
+                $db->Execute($sql);
+                //print $sql;exit;
+            }
+        }
+    }
+    //print $sql;exit;
+
     $sql1 = "update form_flow_run_process set 主办说明 = '".$selectedText."', 步骤状态 = '办结' where id = '$processid' and 步骤状态 !='办结'";
     $db->Execute($sql1);
 

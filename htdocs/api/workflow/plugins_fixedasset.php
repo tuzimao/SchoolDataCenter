@@ -51,7 +51,7 @@ function 工作流中固定资产采购申请获得批准()  {
     
 }
 
-function 工作流中固定资产采购申请获得批准之后资产采购和入库()  {
+function 工作流中固定资产采购申请获得批准之后修改资产明细的状态()  {
     global $db;
     global $SettingMap;
     global $MetaColumnNames;

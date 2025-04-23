@@ -14,6 +14,7 @@ import { marked } from 'marked'
 
 import AddOrEditTable from './AddOrEditTable'
 import toast from 'react-hot-toast'
+import { GridRowId } from '@mui/x-data-grid'
 
 marked.setOptions({
   renderer: new marked.Renderer(),
@@ -52,6 +53,7 @@ const AppAiQuestion = (props: any) => {
   // 课程列表
   const courses = ['语文', '数学', '英语', '物理', '化学', '生物', '历史', '地理', '政治'];
   const [course, setCourse] = useState(courses[0]);
+  const [selectedRows, setSelectedRows] = useState<GridRowId[]>([])
 
   // 年级与出版社映射
   const gradeTextbookMap: Record<string, string[]> = {
@@ -419,7 +421,7 @@ const AppAiQuestion = (props: any) => {
               pl: 2
             }}>
             {processingQuestionResult == true && (
-              <AddOrEditTable authConfig={authConfig} externalId={Number(externalId)} id={addEditActionId} action={'edit_default'} addEditStructInfo={null} open={true} toggleAddTableDrawer={toggleEditTableDrawer} addUserHandleFilter={addUserHandleFilter} backEndApi={backEndApi} editViewCounter={editViewCounter + 1} IsGetStructureFromEditDefault={isGetStructureFromEditDefault} addEditViewShowInWindow={true} CSRF_TOKEN={CSRF_TOKEN} dataGridLanguageCode={store.init_default.dataGridLanguageCode} dialogMaxWidth={store.init_default.dialogMaxWidth} toggleImagesPreviewListDrawer={toggleImagesPreviewListDrawer} handleIsLoadingTipChange={handleIsLoadingTipChange} setForceUpdate={setForceUpdate} additionalParameters={additionalParameters}/>
+              <AddOrEditTable authConfig={authConfig} externalId={Number(externalId)} id={addEditActionId} action={'edit_default'} addEditStructInfo={null} open={true} toggleAddTableDrawer={toggleEditTableDrawer} addUserHandleFilter={addUserHandleFilter} backEndApi={backEndApi} editViewCounter={editViewCounter + 1} IsGetStructureFromEditDefault={isGetStructureFromEditDefault} addEditViewShowInWindow={true} CSRF_TOKEN={CSRF_TOKEN} dataGridLanguageCode={store.init_default.dataGridLanguageCode} dialogMaxWidth={store.init_default.dialogMaxWidth} toggleImagesPreviewListDrawer={toggleImagesPreviewListDrawer} handleIsLoadingTipChange={handleIsLoadingTipChange} setForceUpdate={setForceUpdate} additionalParameters={additionalParameters} selectedRows={selectedRows} setSelectedRows={setSelectedRows}/>
             )}
             {processingQuestionResult == false && (
               <Typography sx={{py:4, color: 'gray'}}>{'生成题目完成以后,就会显示出题目预览'}</Typography>
