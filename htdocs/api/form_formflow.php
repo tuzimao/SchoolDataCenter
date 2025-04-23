@@ -234,7 +234,7 @@ if(($_GET['action']=="edit_default_1_data" || $_GET['action']=="edit_default_2_d
         $FieldsArray['SortNumber']     = $id;
         $FieldsArray['Creator']        = "admin";
         $FieldsArray['CreateTime']     = date("Y-m-d H:i:s");
-        [$rs,$sql] = InsertOrUpdateTableByArray("data_menutwo",$FieldsArray,'FlowId',0,'Insert');
+        [$rs,$sql] = InsertOrUpdateTableByArray("data_menutwo",$FieldsArray,'FlowId',0);
         //Write Interface File In Apps Dir
         $sql        = "select id from data_menutwo where FlowId = '$id'";
         $rs         = $db->Execute($sql);

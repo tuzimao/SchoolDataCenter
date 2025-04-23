@@ -1,6 +1,6 @@
 <?php
 
-function 工作流中固定资产采购申请获得批准()  {
+function 工作流中固定资产采购申请获得批准之后修改资产明细的状态为采购中()  {
     global $db;
     global $SettingMap;
     global $MetaColumnNames;
@@ -51,7 +51,7 @@ function 工作流中固定资产采购申请获得批准()  {
     
 }
 
-function 工作流中固定资产采购申请获得批准之后修改资产明细的状态()  {
+function 工作流中固定资产完成入库流程以后进行的资产入库操作()  {
     global $db;
     global $SettingMap;
     global $MetaColumnNames;
@@ -88,7 +88,7 @@ function 工作流中固定资产采购申请获得批准之后修改资产明�
             $RecordInfo = $rs->fields;
             //开始----处理主要的业务逻辑部分代码
             //进行资产入库操作.
-            固定资产_采购单_转_入库($RecordInfo['资产采购编码']);
+            固定资产_采购单_转_入库($RecordInfo['资产入库编码']);
             //结束----处理主要的业务逻辑部分代码
         }
     }
@@ -96,10 +96,9 @@ function 工作流中固定资产采购申请获得批准之后修改资产明�
     
 }
 
-
-function 固定资产_采购单_转_入库($资产采购编码) {
+function 固定资产_采购单_转_入库($资产入库编码) {
     global $db;
-    $sql    = "select * from data_fixedasset_in_detail where 资产采购编码='$资产采购编码' and 采购状态='资产入库' and 入库时间=''";//
+    $sql    = "select * from data_fixedasset_in_detail where 资产入库编码='$资产入库编码' and 采购状态='采购完成' and 入库时间=''";//
     $rs     = $db->Execute($sql);
     $rs_a   = $rs->GetArray();
     foreach($rs_a AS $Line)     {
@@ -111,7 +110,7 @@ function 固定资产_采购明细记录_转_入库($id)     {
     global $db;
     global $GLOBAL_USER;
     $db->BeginTrans();
-    $sql    = "select * from data_fixedasset_in_detail where id='$id' and 采购状态='资产入库' and 入库时间=''";//
+    $sql    = "select * from data_fixedasset_in_detail where id='$id' and 采购状态='采购完成' and 入库时间=''";//
     $rs     = $db->Execute($sql);
     $rs_a   = $rs->GetArray();
     foreach($rs_a AS $Line)     {
@@ -154,6 +153,7 @@ function 固定资产_采购明细记录_转_入库($id)     {
         $Element['供应商网站']      = $rsT->fields['供应商网站'];
 
         $Element['资产采购编码'] = $Line['资产采购编码'];
+        $Element['资产入库编码'] = $Line['资产入库编码'];
         $Element['购买方式']    = $Line['购买方式'];
         $Element['创建人']      = $GLOBAL_USER->USER_ID;
         $Element['创建时间']    = date("Y-m-d H:i:s");
@@ -162,7 +162,7 @@ function 固定资产_采购明细记录_转_入库($id)     {
         $sql = "insert into data_fixedasset (".join(',',$KEYS).") values('".join("','",$VALUES)."')";
         //print $sql."<BR>";
         $db->Execute($sql) or print $sql."\n";
-        $sql = "update data_fixedasset_in_detail set 入库时间='".date("Y-m-d H:i:s")."', 入库操作员='".$GLOBAL_USER->USER_ID."' where id='".$Line['id']."' ";
+        $sql = "update data_fixedasset_in_detail set 入库时间='".date("Y-m-d H:i:s")."', 入库操作员='".$GLOBAL_USER->USER_ID."', 入库状态='已入库' where id='".$Line['id']."' ";
         //print $sql."<BR>";
         $db->Execute($sql);
     }
