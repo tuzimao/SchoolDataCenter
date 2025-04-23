@@ -9,6 +9,9 @@ function ChildTable_Init_Default_Structure($FormId, $TableName, $MetaColumnNames
 global $GLOBAL_LANGUAGE;
 global $db;
 global $AllShowTypesArray;
+global $AddSql;
+//重置$AddSql的值, 这个地方只作用于子表的列表显示SQL
+$AddSql = " where 1=1 ";
 
 $Actions_In_List_Row_Array = explode(',',$SettingMap['Actions_In_List_Row']);
 $Actions_In_List_Header_Array = explode(',',$SettingMap['Actions_In_List_Header']);
@@ -159,7 +162,7 @@ if ($searchFieldName != "" && $searchFieldValue != "" && in_array($searchFieldNa
 $RS['init_default']['searchFieldValue'] = ForSqlInjection($_REQUEST['searchFieldValue']);
 
 //Extra_Priv_Filter_Field
-Extra_Priv_Filter_Field_To_SQL();
+Extra_Priv_Filter_Field_To_SQL($SettingMap, $MetaColumnNames);
 
 $functionNameIndividual = "plugin_".$TableName."_".$Step."_init_default";
 if(function_exists($functionNameIndividual))  {

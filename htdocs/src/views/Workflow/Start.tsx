@@ -16,6 +16,8 @@ import DialogContent from '@mui/material/DialogContent'
 import Fade, { FadeProps } from '@mui/material/Fade'
 import FilesPreview from '../Enginee/FilesPreview'
 
+import { GridRowId } from '@mui/x-data-grid'
+
 const Transition = forwardRef(function Transition(
   props: FadeProps & { children?: ReactElement<any, any> },
   ref: Ref<unknown>
@@ -53,6 +55,7 @@ const StartModel = ({ FlowId, handleReturnButton, flowRecord }: any) => {
   const [imagesType, setImagesType] = useState<string[]>([]);
   
   const [approvalNodes, setApprovalNodes] = useState<any[]>([]);
+  const [selectedRows, setSelectedRows] = useState<GridRowId[]>([])
 
   const toggleImagesPreviewDrawer = () => {
     setImagesPreviewOpen(!imagesPreviewOpen)
@@ -249,7 +252,7 @@ const StartModel = ({ FlowId, handleReturnButton, flowRecord }: any) => {
             <ScrollableContent>
               <Paper sx={{ padding: 2 }}>
                 <Grid sx={{ mx: 2, px: 2, mb: 2}}>
-                  <AddOrEditTableCore authConfig={authConfig} externalId={0} id={flowInfor.id} action={'edit_default'} addEditStructInfo={{allFields:{}, }} open={true} toggleAddTableDrawer={toggleAddTableDrawer} addUserHandleFilter={addUserHandleFilter} backEndApi={backEndApi} editViewCounter={1} IsGetStructureFromEditDefault={1} AddtionalParams={AddtionalParams} CSRF_TOKEN={""} dataGridLanguageCode={'zhCN'} toggleImagesPreviewListDrawer={toggleImagesPreviewListDrawer} handleIsLoadingTipChange={handleIsLoadingTipChange} setForceUpdate={setForceUpdate} additionalParameters={AddtionalParams} submitCounter={submitCounter} setSubmitCounter={setSubmitCounter} setFormSubmitStatus={setFormSubmitStatus}/>
+                  <AddOrEditTableCore authConfig={authConfig} externalId={0} id={flowInfor.id} action={'edit_default'} addEditStructInfo={{allFields:{}, }} open={true} toggleAddTableDrawer={toggleAddTableDrawer} addUserHandleFilter={addUserHandleFilter} backEndApi={backEndApi} editViewCounter={1} IsGetStructureFromEditDefault={1} AddtionalParams={AddtionalParams} CSRF_TOKEN={""} dataGridLanguageCode={'zhCN'} toggleImagesPreviewListDrawer={toggleImagesPreviewListDrawer} handleIsLoadingTipChange={handleIsLoadingTipChange} setForceUpdate={setForceUpdate} additionalParameters={AddtionalParams} submitCounter={submitCounter} setSubmitCounter={setSubmitCounter} setFormSubmitStatus={setFormSubmitStatus} selectedRows={selectedRows} setSelectedRows={setSelectedRows}/>
                 </Grid>
               </Paper>
               {approvalNodes && approvalNodes.length > 0 && (
@@ -317,7 +320,7 @@ const StartModel = ({ FlowId, handleReturnButton, flowRecord }: any) => {
               <Icon icon='mdi:close' />
             </IconButton>
             {nextStepStatus && (
-              <GetNextApprovalUsers FlowId={FlowId} handleReturnButton={handleReturnButton} flowRecord={flowInfor} formSubmitStatus={formSubmitStatus} submitCounter={submitCounter} />
+              <GetNextApprovalUsers FlowId={FlowId} handleReturnButton={handleReturnButton} flowRecord={flowInfor} formSubmitStatus={formSubmitStatus} submitCounter={submitCounter} selectedRows={selectedRows}/>
             )}
             {refuseStatus && (
               <Grid item xs={12} sm={12} container justifyContent="space-around">

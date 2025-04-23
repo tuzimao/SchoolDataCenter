@@ -90,6 +90,10 @@ $MAP['NodeFlow_Approval_Change_Field_Name']         = "修改字段";
 $MAP['NodeFlow_Approval_Change_Field_Value']        = "修改为值";
 $MAP['NodeFlow_Approval_Change_Field_To_DateTime']  = "修改为当前时间";
 $MAP['NodeFlow_Approval_Change_Field_To_UserId']    = "修改为当前用户名";
+$MAP['NodeFlow_Approval_Change_ChildTable_Field_Name']         = "修改子表的字段名称";
+$MAP['NodeFlow_Approval_Change_ChildTable_Field_Value']        = "修改子表字段为何值";
+$MAP['NodeFlow_Approval_Change_ChildTable_Field_To_DateTime']  = "修改子表字段为当前时间";
+$MAP['NodeFlow_Approval_Change_ChildTable_Field_To_UserId']    = "修改子表字段为当前用户名";
 
 $MAP['Yes'] = 'Yes';
 $MAP['No'] = 'No';

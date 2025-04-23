@@ -183,6 +183,12 @@ $edit_default_7['AuthorizedControl'][] = ['name' => "NodeFlow_Approval_Change_Fi
 $edit_default_7['AuthorizedControl'][] = ['name' => "NodeFlow_Approval_Change_Field_To_DateTime", 'show'=>true, 'type'=>'select', 'options'=>$MetaColumnNamesOptionsAll, 'label' => __("NodeFlow_Approval_Change_Field_To_DateTime"), 'value' => $MetaColumnNamesOptionsAll[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>3]];
 $edit_default_7['AuthorizedControl'][] = ['name' => "NodeFlow_Approval_Change_Field_To_UserId", 'show'=>true, 'type'=>'select', 'options'=>$MetaColumnNamesOptionsAll, 'label' => __("NodeFlow_Approval_Change_Field_To_UserId"), 'value' => $MetaColumnNamesOptionsAll[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>3]];
 
+
+$edit_default_7['AuthorizedControl'][] = ['name' => "NodeFlow_Approval_Change_ChildTable_Field_Name", 'show'=>true, 'type'=>'input', 'label' => __("NodeFlow_Approval_Change_ChildTable_Field_Name"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false, 'disabled' => false, 'xs'=>12, 'sm'=>3]];
+$edit_default_7['AuthorizedControl'][] = ['name' => "NodeFlow_Approval_Change_ChildTable_Field_Value", 'show'=>true, 'type'=>"input", 'label' => __("NodeFlow_Approval_Change_ChildTable_Field_Value"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>3, 'disabled' => false]];
+$edit_default_7['AuthorizedControl'][] = ['name' => "NodeFlow_Approval_Change_ChildTable_Field_To_DateTime", 'show'=>true, 'type'=>'input', 'label' => __("NodeFlow_Approval_Change_ChildTable_Field_To_DateTime"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false, 'disabled' => false, 'xs'=>12, 'sm'=>3]];
+$edit_default_7['AuthorizedControl'][] = ['name' => "NodeFlow_Approval_Change_ChildTable_Field_To_UserId", 'show'=>true, 'type'=>'input', 'label' => __("NodeFlow_Approval_Change_ChildTable_Field_To_UserId"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false, 'disabled' => false, 'xs'=>12, 'sm'=>3]];
+
 $defaultValues_7 = [];
 foreach($edit_default_7 as $ModeName=>$allFieldItem) {
     foreach($allFieldItem as $ITEM) {

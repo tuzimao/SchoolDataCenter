@@ -7,7 +7,7 @@ import Divider from '@mui/material/Divider'
 import { Autocomplete, TextField } from '@mui/material'
 import toast from 'react-hot-toast'
 
-const GetNextApprovalUsers = ({ FlowId, handleReturnButton, flowRecord, formSubmitStatus, submitCounter }: any) => {
+const GetNextApprovalUsers = ({ FlowId, handleReturnButton, flowRecord, formSubmitStatus, submitCounter, selectedRows }: any) => {
 
   const [loading, setLoading] = useState(true);
   const [nextNodes, setNextNodes] = useState<any[]>([])
@@ -89,7 +89,7 @@ const GetNextApprovalUsers = ({ FlowId, handleReturnButton, flowRecord, formSubm
         setNewTextErrors(null)
         try {
             const storedToken = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
-            const response = await axios.post(authConfig.backEndApiHost + 'workflow/start.php?action=GoToNextStep', { FlowId, processid: flowRecord.processid, runid: flowRecord.runid, selectedText, selectedUsers }, {
+            const response = await axios.post(authConfig.backEndApiHost + 'workflow/start.php?action=GoToNextStep', { FlowId, processid: flowRecord.processid, runid: flowRecord.runid, selectedText, selectedUsers, selectedRows: selectedRows.join(',') }, {
                 headers: {
                   Authorization: storedToken,
                   'Content-Type': 'application/json'
@@ -125,7 +125,7 @@ const GetNextApprovalUsers = ({ FlowId, handleReturnButton, flowRecord, formSubm
     if(selectedText && selectedText.trim() != '')   {
         try {
             const storedToken = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
-            const response = await axios.post(authConfig.backEndApiHost + 'workflow/start.php?action=GoToEndWork', { FlowId, processid: flowRecord.processid, runid: flowRecord.runid, selectedText }, {
+            const response = await axios.post(authConfig.backEndApiHost + 'workflow/start.php?action=GoToEndWork', { FlowId, processid: flowRecord.processid, runid: flowRecord.runid, selectedText, selectedRows: selectedRows.join(',') }, {
                 headers: {
                     Authorization: storedToken,
                     'Content-Type': 'application/json'

@@ -607,7 +607,7 @@ if ($searchFieldName != "" && $searchFieldValue != "" && in_array($searchFieldNa
 $RS['init_default']['searchFieldValue'] = ForSqlInjection($_REQUEST['searchFieldValue']);
 
 //Extra_Priv_Filter_Field
-Extra_Priv_Filter_Field_To_SQL();
+Extra_Priv_Filter_Field_To_SQL($SettingMap, $MetaColumnNames);
 
 $functionNameIndividual = "plugin_".$TableName."_".$Step."_init_default";
 if(function_exists($functionNameIndividual))  {

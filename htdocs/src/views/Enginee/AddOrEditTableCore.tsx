@@ -170,11 +170,13 @@ interface AddOrEditTableType {
     submitCounter: number
     setSubmitCounter: (value: any) => void
     setFormSubmitStatus: (value: any) => void
+    selectedRows: GridRowId[]
+    setSelectedRows: (value: any) => void
 }
 
 const AddOrEditTableCore = (props: AddOrEditTableType) => {
     // ** Props
-    const { authConfig, externalId, id, action, addEditStructInfo, toggleAddTableDrawer, addUserHandleFilter, backEndApi, editViewCounter, IsGetStructureFromEditDefault, AddtionalParams, CSRF_TOKEN, dataGridLanguageCode, toggleImagesPreviewListDrawer, handleIsLoadingTipChange, setForceUpdate, additionalParameters, submitCounter, setFormSubmitStatus } = props
+    const { authConfig, externalId, id, action, addEditStructInfo, toggleAddTableDrawer, addUserHandleFilter, backEndApi, editViewCounter, IsGetStructureFromEditDefault, AddtionalParams, CSRF_TOKEN, dataGridLanguageCode, toggleImagesPreviewListDrawer, handleIsLoadingTipChange, setForceUpdate, additionalParameters, submitCounter, setFormSubmitStatus, selectedRows, setSelectedRows } = props
 
     const i18n: any = {language: 'zh'}
 
@@ -226,7 +228,6 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
     const [fieldIdValue, setFieldIdValue] = useState<number>(0)
     const [singleModelCounter, setSingleModelCounter] = useState<number>(0)
 
-    const [selectedRows, setSelectedRows] = useState<GridRowId[]>([])
     console.log("selectedRows", selectedRows)
 
     useEffect(() => {
@@ -719,10 +720,10 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                 }
             });
         }
-        formData.append('ChildItemCounter', String(childItemCounter));
-        formData.append('deleteChildTableItemArray', deleteChildTableItemArray.join(','));
-        formData.append('readonlyIdArray', readonlyIdArray.join(','));
-        formData.append('selectedRows', selectedRows.join(','));
+        childItemCounter && formData.append('ChildItemCounter', String(childItemCounter));
+        deleteChildTableItemArray && formData.append('deleteChildTableItemArray', deleteChildTableItemArray.join(','));
+        readonlyIdArray && formData.append('readonlyIdArray', readonlyIdArray.join(','));
+        selectedRows && formData.append('selectedRows', selectedRows.join(','));
 
         const postUrl = authConfig.backEndApiHost + backEndApi + "?action=" + action + "_data&id=" + id + "&externalId=" + externalId
         fetch(

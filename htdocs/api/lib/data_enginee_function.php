@@ -1292,21 +1292,21 @@ function getAllFields($AllFieldsFromTable, $AllShowTypesArray, $actionType, $Fil
     return $allFieldsMap;
 }
 
-function Extra_Priv_Filter_Field_To_SQL() {
+function Extra_Priv_Filter_Field_To_SQL($SettingMap, $MetaColumnNames) {
     global $AddSql;
     global $AdminFilterTipTextArray;
     global $AdminFilterOrTipTextArray;
-    $AddSql .= Extra_Priv_Filter_Field_To_SQL_Item('One');
-    $AddSql .= Extra_Priv_Filter_Field_To_SQL_Item('Two');
-    $AddSql .= Extra_Priv_Filter_Field_To_SQL_Item('Three');
-    $AddSql .= Extra_Priv_Filter_Field_To_SQL_Item('Four');
-    $AddSql .= Extra_Priv_Filter_Field_To_SQL_Item('Five');
+    $AddSql .= Extra_Priv_Filter_Field_To_SQL_Item('One', $SettingMap, $MetaColumnNames);
+    $AddSql .= Extra_Priv_Filter_Field_To_SQL_Item('Two', $SettingMap, $MetaColumnNames);
+    $AddSql .= Extra_Priv_Filter_Field_To_SQL_Item('Three', $SettingMap, $MetaColumnNames);
+    $AddSql .= Extra_Priv_Filter_Field_To_SQL_Item('Four', $SettingMap, $MetaColumnNames);
+    $AddSql .= Extra_Priv_Filter_Field_To_SQL_Item('Five', $SettingMap, $MetaColumnNames);
     $OrSql   = [];
-    $SQL = Extra_Priv_Filter_Or_Field_To_SQL_Item('One');
+    $SQL = Extra_Priv_Filter_Or_Field_To_SQL_Item('One', $SettingMap, $MetaColumnNames);
     if($SQL != "") $OrSql[] = $SQL;
-    $SQL = Extra_Priv_Filter_Or_Field_To_SQL_Item('Two');
+    $SQL = Extra_Priv_Filter_Or_Field_To_SQL_Item('Two', $SettingMap, $MetaColumnNames);
     if($SQL != "") $OrSql[] = $SQL;
-    $SQL = Extra_Priv_Filter_Or_Field_To_SQL_Item('Three');
+    $SQL = Extra_Priv_Filter_Or_Field_To_SQL_Item('Three', $SettingMap, $MetaColumnNames);
     if($SQL != "") $OrSql[] = $SQL;
     if($OrSql[0] != "")   {
         $AddSql .= " and (". join(" or ", $OrSql) .")";
@@ -1314,8 +1314,8 @@ function Extra_Priv_Filter_Field_To_SQL() {
     }
 }
 
-function Extra_Priv_Filter_Field_To_SQL_Item($Item) {
-    global $db, $SettingMap, $MetaColumnNames;
+function Extra_Priv_Filter_Field_To_SQL_Item($Item, $SettingMap, $MetaColumnNames) {
+    global $db;
     $AdminFilterTipTextOne  = "";
     $tempsql_Text            = "";
     $Extra_Priv_Filter_Field_One  = $SettingMap['Extra_Priv_Filter_Field_'.$Item];
@@ -1395,8 +1395,8 @@ function Extra_Priv_Filter_Field_To_SQL_Item($Item) {
     return $tempsql_Text;
 }
 
-function Extra_Priv_Filter_Or_Field_To_SQL_Item($Item) {
-    global $db, $SettingMap, $MetaColumnNames;
+function Extra_Priv_Filter_Or_Field_To_SQL_Item($Item, $SettingMap, $MetaColumnNames) {
+    global $db;
     $AdminFilterTipTextOne   = "";
     $tempsql_Text            = "";
     $Extra_Priv_Filter_Field_One  = $SettingMap['Extra_Priv_Filter_Or_Field_'.$Item];
