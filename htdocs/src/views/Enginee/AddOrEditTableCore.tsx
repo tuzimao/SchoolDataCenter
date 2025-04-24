@@ -597,7 +597,8 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
     })
 
     const onSubmit = (data: {[key:string]:any}) => {
-        if(addEditStructInfo2 && addEditStructInfo2.childtable && addEditStructInfo2.childtable.Type == "从子表中选择记录" && selectedRows && selectedRows.length == 0 )   {
+        console.log("addEditStructInfo2.childtable", addEditStructInfo2.childtable)
+        if(addEditStructInfo2 && addEditStructInfo2.childtable && addEditStructInfo2.childtable.Type == "从子表中选择记录" && addEditStructInfo2.childtable.Select == true && selectedRows && selectedRows.length == 0 )   {
             toast.error('至少要选择一项记录')
 
             return 

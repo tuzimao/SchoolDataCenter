@@ -236,6 +236,14 @@ $ForbiddenViewRowOriginal   = [];
 $ForbiddenEditRowOriginal   = [];
 $ForbiddenDeleteRowOriginal = [];
 
+//在不启用子表选择模式的时候, 才需要增加数据过滤
+//在启用子表选择模式的时候, 需要可以选择所有的数据
+global $Relative_Child_Table_List_Sql_Filter;
+global $Relative_Child_Table_Select_Priv;
+if($Relative_Child_Table_Select_Priv == 'No' && $Relative_Child_Table_List_Sql_Filter != '')  {
+    $AddSql .= $Relative_Child_Table_List_Sql_Filter;
+}
+
 //Get Total Records Number
 $sql    = "select count(*) AS NUM from $TableName " . $AddSql . "";
 $sqlList[] = $sql;
@@ -489,9 +497,10 @@ $RS['init_default']['columnsactions']   = $columnsactions;
 
 $RS['init_default']['data']                     = $NewRSA;
 
+global $Relative_Child_Table_Select_Priv;
 
 $RS['init_default']['multireview']          = [];
-$RS['init_default']['checkboxSelection']    = true;
+$RS['init_default']['checkboxSelection']    = $Relative_Child_Table_Select_Priv == "Yes" ? true : false;
 
 $RS['init_default']['rowHeight']        = $rowHeight;
 $RS['init_default']['dialogContentHeight']  = "90%";

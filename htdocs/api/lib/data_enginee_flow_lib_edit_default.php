@@ -307,6 +307,8 @@ if( ( ($_GET['action']=="edit_default"&&in_array('Edit',$Actions_In_List_Row_Arr
     $Relative_Child_Table_Edit_Priv         = $SettingMap['Relative_Child_Table_Edit_Priv'];
     $Relative_Child_Table_Delete_Priv       = $SettingMap['Relative_Child_Table_Delete_Priv'];
     $Relative_Child_Table_Select_Priv       = $SettingMap['Relative_Child_Table_Select_Priv'];
+    global $Relative_Child_Table_List_Sql_Filter;
+    
     
     if($Relative_Child_Table>0 && $Relative_Child_Table_Parent_Field_Name!="" && in_array($Relative_Child_Table_Parent_Field_Name,$MetaColumnNames)) {
         $ChildSettingMap = returntablefield("form_formflow",'id',$Relative_Child_Table,'Setting')['Setting'];
@@ -316,6 +318,8 @@ if( ( ($_GET['action']=="edit_default"&&in_array('Edit',$Actions_In_List_Row_Arr
         $ChildMetaColumnNames       = GLOBAL_MetaColumnNames($ChildTableName);
         if($Relative_Child_Table_Field_Name!="" && in_array($Relative_Child_Table_Field_Name, $ChildMetaColumnNames) ) {
             //Get All Fields
+            global $Relative_Child_Table_List_Sql_Filter;
+            $Relative_Child_Table_List_Sql_Filter = " and $Relative_Child_Table_Parent_Field_Name = '".$data[$Relative_Child_Table_Parent_Field_Name]."' ";
             $sql        = "select * from $ChildTableName where $Relative_Child_Table_Parent_Field_Name = '".$data[$Relative_Child_Table_Parent_Field_Name]."';";
             $rs         = $db->Execute($sql);
             $rs_a       = $rs->GetArray();
