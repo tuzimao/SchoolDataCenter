@@ -37,7 +37,6 @@ const NewModel = () => {
   const [allWorkItems, setAllWorkItems] = useState<{[key: string]: WorkItem[]}>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [hoveredItem, setHoveredItem] = useState<number | null>(null);
   const [pageModel, setPageModel] = useState('New');
   const [flowId, setFlowId] = useState<string>('');
 
@@ -187,11 +186,7 @@ const NewModel = () => {
                       {currentWorkItems.length > 0 ? (
                         currentWorkItems.map((item, index) => (
                           <Fragment key={index}>
-                            <ListItem 
-                              sx={{my: 1, py: 0}}
-                              onMouseEnter={() => setHoveredItem(index)}
-                              onMouseLeave={() => setHoveredItem(null)}
-                            >
+                            <ListItem sx={{my: 1, py: 0}} >
                               <Grid container alignItems="center" spacing={2}>
                                 <Grid item xs={4}>
                                   <ListItemText  sx={{my: 1}}
@@ -219,19 +214,17 @@ const NewModel = () => {
                                 </Grid>
                                 <Grid item xs={4}>
                                   <Grid container justifyContent="flex-end">
-                                    {hoveredItem === index && (
-                                      <Button 
-                                        size="small" 
-                                        onClick={()=>{
-                                          setFlowId(item.FlowId)
-                                          setPageModel('Start')
-                                        }}
-                                        variant='contained' 
-                                        sx={{ px: 5.5 }}
-                                      >
-                                        {'新建工作'}
-                                      </Button>
-                                    )}
+                                    <Button 
+                                      size="small" 
+                                      onClick={()=>{
+                                        setFlowId(item.FlowId)
+                                        setPageModel('Start')
+                                      }}
+                                      variant='contained' 
+                                      sx={{ px: 5.5 }}
+                                    >
+                                      {'新建工作'}
+                                    </Button>
                                   </Grid>
                                 </Grid>
                               </Grid>
