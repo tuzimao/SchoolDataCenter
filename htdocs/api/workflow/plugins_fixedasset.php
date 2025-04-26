@@ -96,6 +96,102 @@ function 工作流中固定资产完成入库流程以后进行的资产入库�
     
 }
 
+function 工作流中固定资产完成调拨流程以后进行的资产调拨操作() {
+    global $db;
+    global $SettingMap;
+    global $MetaColumnNames;
+    global $GLOBAL_USER;
+    global $TableName;
+
+    $FlowId     = intval(DecryptID($_POST['FlowId']));
+    $processid  = intval($_POST['processid']);
+    $runid      = intval($_POST['runid']);
+    if($FlowId > 0 && $processid > 0)      {
+        $sql        = "select * from form_formflow where id='$FlowId'";
+        $rs         = $db->Execute($sql);
+        $FormInfo   = $rs->fields;
+        $FormId     = $FormInfo['FormId'];
+        $FlowId     = $FormInfo['id'];
+        $FlowName   = $FormInfo['FlowName'];
+        $Step       = $FormInfo['Step'];
+        $Setting    = $FormInfo['Setting'];
+        $FaceTo     = $FormInfo['FaceTo'];
+        $SettingMap = unserialize(base64_decode($Setting));
+
+        $sql        = "select * from form_formname where id='$FormId'";
+        $rs         = $db->Execute($sql);
+        $FormInfo   = $rs->fields;
+        $FormName   = $FormInfo['FullName'];
+        $TableName  = $FormInfo['TableName'];
+
+        $sql        = "select 工作ID from form_flow_run_process where id = '$processid'";
+        $rs         = $db->Execute($sql);
+        $工作ID     = $rs->fields['工作ID'];
+        if($工作ID != "" && $TableName != "")  {
+            $sql        = "select * from $TableName where id = '$工作ID' ";
+            $rs         = $db->Execute($sql);
+            $RecordInfo = $rs->fields;
+            //开始----处理主要的业务逻辑部分代码
+            //进行资产入库操作.
+            $资产调拨编码   = $RecordInfo['资产调拨编码'];
+            $新存放地点     = $RecordInfo['新存放地点'];
+            $sql = "update data_fixedasset set 存放地点='$新存放地点' where 资产调拨编码='$资产调拨编码'";
+            $db->Execute($sql);
+            //print_R($新存放地点);
+            //print $sql;exit;
+            //结束----处理主要的业务逻辑部分代码
+        }
+    }
+}
+
+function 工作流中固定资产完成报废流程以后进行的资产报废操作() {
+    global $db;
+    global $SettingMap;
+    global $MetaColumnNames;
+    global $GLOBAL_USER;
+    global $TableName;
+
+    $FlowId     = intval(DecryptID($_POST['FlowId']));
+    $processid  = intval($_POST['processid']);
+    $runid      = intval($_POST['runid']);
+    if($FlowId > 0 && $processid > 0)      {
+        $sql        = "select * from form_formflow where id='$FlowId'";
+        $rs         = $db->Execute($sql);
+        $FormInfo   = $rs->fields;
+        $FormId     = $FormInfo['FormId'];
+        $FlowId     = $FormInfo['id'];
+        $FlowName   = $FormInfo['FlowName'];
+        $Step       = $FormInfo['Step'];
+        $Setting    = $FormInfo['Setting'];
+        $FaceTo     = $FormInfo['FaceTo'];
+        $SettingMap = unserialize(base64_decode($Setting));
+
+        $sql        = "select * from form_formname where id='$FormId'";
+        $rs         = $db->Execute($sql);
+        $FormInfo   = $rs->fields;
+        $FormName   = $FormInfo['FullName'];
+        $TableName  = $FormInfo['TableName'];
+
+        $sql        = "select 工作ID from form_flow_run_process where id = '$processid'";
+        $rs         = $db->Execute($sql);
+        $工作ID     = $rs->fields['工作ID'];
+        if($工作ID != "" && $TableName != "")  {
+            $sql        = "select * from $TableName where id = '$工作ID' ";
+            $rs         = $db->Execute($sql);
+            $RecordInfo = $rs->fields;
+            //开始----处理主要的业务逻辑部分代码
+            //进行资产入库操作.
+            $资产报废编码   = $RecordInfo['资产报废编码'];
+            $新存放地点     = $RecordInfo['新存放地点'];
+            $sql = "update data_fixedasset set 资产状态='资产已报废' where 资产报废编码='$资产报废编码'";
+            $db->Execute($sql);
+            //print_R($新存放地点);
+            //print $sql;exit;
+            //结束----处理主要的业务逻辑部分代码
+        }
+    }
+}
+
 function 固定资产_采购单_转_入库($资产入库编码) {
     global $db;
     $sql    = "select * from data_fixedasset_in_detail where 资产入库编码='$资产入库编码' and 采购状态='采购完成' and 入库时间=''";//
