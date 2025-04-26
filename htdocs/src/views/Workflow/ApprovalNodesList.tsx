@@ -26,7 +26,7 @@ const Timeline = styled(MuiTimeline)<TimelineProps>({
 
 const ApprovalNodesList = ({ approvalNodes }: any) => {
 
-  console.log("approvalNodes", approvalNodes)
+  //console.log("approvalNodes", approvalNodes)
 
   const NodesLength = approvalNodes.length
 
@@ -56,7 +56,7 @@ const ApprovalNodesList = ({ approvalNodes }: any) => {
                     }}
                   >
                     <Typography variant='body2' sx={{ mr: 2, color: 'text.primary' }}>
-                      {item.经办步骤} - {item.步骤状态}
+                      {item.经办步骤} - {item.步骤状态} - {item.USER_NAME}
                     </Typography>
                     <Typography variant='caption' sx={{ color: 'text.disabled' }}>
                       {item.工作接收时间}

@@ -397,8 +397,8 @@ if( ( ($_GET['action']=="edit_default"&&in_array('Edit',$Actions_In_List_Row_Arr
                 $RS['add_default']['childtable']['Select']             = $Relative_Child_Table_Select_Priv == "Yes"?true:false;
                 $RS['add_default']['childtable']['Type']               = $Relative_Child_Table_Type;
 
-                $allFieldsEdit   = getAllFields($ChildAllFieldsFromTable, $AllShowTypesArray, 'EDIT', true, $ChildSettingMap);
-                foreach($allFieldsEdit as $ModeName=>$allFieldItem) {
+                $allFieldsEditChild   = getAllFields($ChildAllFieldsFromTable, $AllShowTypesArray, 'EDIT', true, $ChildSettingMap);
+                foreach($allFieldsEditChild as $ModeName=>$allFieldItem) {
                     $allFieldItemIndex = 0;
                     foreach($allFieldItem as $ITEM) {
                         $defaultValuesEditChild[$ITEM['name']] = $ITEM['value'];
@@ -406,7 +406,7 @@ if( ( ($_GET['action']=="edit_default"&&in_array('Edit',$Actions_In_List_Row_Arr
                             $defaultValuesEditChild[$ITEM['code']] = $ITEM['value'];
                         }
                         if(strpos($ChildSettingMap['Actions_In_List_Row'],'Edit')===false || $Relative_Child_Table_Edit_Priv == "No") {
-                            $allFieldsEdit[$ModeName][$allFieldItemIndex]['rules']['disabled'] = true;
+                            $allFieldsEditChild[$ModeName][$allFieldItemIndex]['rules']['disabled'] = true;
                         }
                         $allFieldItemIndex ++;
                     }
@@ -416,7 +416,7 @@ if( ( ($_GET['action']=="edit_default"&&in_array('Edit',$Actions_In_List_Row_Arr
                         $defaultValuesEditChild[$ModeName] = $allFieldItem;
                     }
                 }
-                $RS['edit_default']['childtable']['allFields']          = $allFieldsEdit;
+                $RS['edit_default']['childtable']['allFields']          = $allFieldsEditChild;
                 $RS['edit_default']['childtable']['defaultValues']      = $defaultValuesEditChild;
                 $RS['edit_default']['childtable']['submittext']         = __("NewItem");
                 $RS['edit_default']['childtable']['Add']                = $Relative_Child_Table_Add_Priv == "Yes" && strpos($ChildSettingMap['Actions_In_List_Header'],'Add')!==false?true:false;
@@ -448,9 +448,10 @@ if( ( ($_GET['action']=="edit_default"&&in_array('Edit',$Actions_In_List_Row_Arr
         foreach($allFieldItemTemp as $ITEM) {
             $allFieldItemTempMap[$ITEM['name']] = $ITEM;
         }
+        //($allFieldItemTempMap);exit;
         
         foreach($allFieldItem as $ITEM) {
-            //print_R($ITEM['name'] . "-" .$allFieldItemTemp[$CounterTemp]['type']. "<BR>");
+            //print_R($ITEM['name'] . "-" .$allFieldItem[$CounterTemp]['type']. " - ".$allFieldItemTempMap[$ITEM['name']]['type']."<BR>");
             if($allFieldItemTempMap[$ITEM['name']]['type']=='readonly')  {
                 $FieldName              = $ITEM['name'];
                 $CurrentFieldTypeArray  = $ITEM['FieldTypeArray'];

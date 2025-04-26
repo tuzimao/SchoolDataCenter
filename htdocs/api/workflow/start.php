@@ -789,7 +789,7 @@ if($_GET['action'] == 'GoToEndWork' && $FlowId > 0 && $processid > 0 && $runid >
 
 $runid          = intval($_POST['runid']);
 if($_GET['action'] == 'getApprovalNodes' && $runid > 0)         {
-    $sql        = "select 工作接收时间, 步骤状态, 流程步骤ID, FlowName, 主办说明, 经办步骤 from form_flow_run_process where runid = '$runid' and (步骤状态 = '办结' or 步骤状态 = '退回') order by 工作接收时间 desc ";
+    $sql        = "select 用户ID, USER_NAME, 工作接收时间, 步骤状态, 流程步骤ID, FlowName, 主办说明, 经办步骤 from form_flow_run_process, data_user where data_user.USER_ID = 用户ID and runid = '$runid' and (步骤状态 = '办结' or 步骤状态 = '退回') order by 工作接收时间 desc ";
     $rs         = $db->Execute($sql);
     $rsT        = $rs->GetArray();
     $RS                 = [];
