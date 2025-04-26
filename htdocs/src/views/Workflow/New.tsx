@@ -165,7 +165,7 @@ const NewModel = () => {
                 <Grid item xs={2}>
                   <Paper sx={{ height: 'calc(100vh - 150px)', backgroundColor: 'background.paper' }}>
                     <List>
-                      {allWorkItems && Object.keys(allWorkItems).map((category, index) => (
+                      {allWorkItems && Object.keys(allWorkItems).map((category) => (
                         <ListItemButton
                           key={category}
                           selected={selectedCategory === category}
