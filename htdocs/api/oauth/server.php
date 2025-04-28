@@ -1,27 +1,26 @@
 <?php
+require '../vendor/autoload.php'; // 使用 composer 安装 bshaffer/oauth2-server-php
+
 
 $dsn        = "mysql:dbname=myedu;host=localhost:3386";
 $username   = "root";
 $password   = "6jF0^#12x6^S2zQ#t";
 
-// error reporting (this is a demo, after all!)
-ini_set('display_errors',1);
-error_reporting(E_ALL);
+$oauthDb = new PDO("mysql:host=localhost:3386;dbname=myedu;charset=utf8mb4", "root", "6jF0^#12x6^S2zQ#t");
+$oauthDb->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-// Autoloading (composer is preferred, but for this example let's just do this)
-require_once '../vendor/autoload.php';
-OAuth2\Autoloader::register();
-
-// $dsn is the Data Source Name for your database, for exmaple "mysql:dbname=my_oauth2_db;host=localhost"
 $storage = new OAuth2\Storage\Pdo(array('dsn' => $dsn, 'username' => $username, 'password' => $password));
 
-// Pass a storage object or array of storage objects to the OAuth2 server class
-$server = new OAuth2\Server($storage);
+$server = new OAuth2\Server($storage, [
+    'access_lifetime' => 3600,
+    'enforce_state' => true,
+    'allow_implicit' => false
+]);
 
-// Add the "Client Credentials" grant type (it is the simplest of the grant types)
-$server->addGrantType(new OAuth2\GrantType\ClientCredentials($storage));
-
-// Add the "Authorization Code" grant type (this is where the oauth magic happens)
+// 支持的授权类型
 $server->addGrantType(new OAuth2\GrantType\AuthorizationCode($storage));
+$server->addGrantType(new OAuth2\GrantType\ClientCredentials($storage));
+$server->addGrantType(new OAuth2\GrantType\UserCredentials($storage));
+$server->addGrantType(new OAuth2\GrantType\RefreshToken($storage));
 
-?>
+
