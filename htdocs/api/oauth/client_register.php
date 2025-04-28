@@ -3,8 +3,8 @@ session_start();
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
-require_once('../../vendor/autoload.php');
-require_once('../../config.inc.php');
+require_once('../vendor/autoload.php');
+require_once('../config.inc.php');
 
 $dsn        = "mysql:host=".$DB_HOST.";dbname=".$DB_DATABASE.";charset=utf8mb4";
 $oauthDb    = new PDO($dsn, $DB_USERNAME, $DB_PASSWORD);

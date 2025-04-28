@@ -8,13 +8,14 @@ if (!isset($_GET['code'])) {
 echo "<h3>Callback triggered with code: " . htmlspecialchars($_GET['code']) . "</h3>";
 
 // 模拟 POST 请求来替代 curl
+require_once('config.inc.php');
 $_SERVER['REQUEST_METHOD'] = 'POST';
 $_POST = [
   'grant_type' => 'authorization_code',
   'code' => $_GET['code'],
-  'redirect_uri' => 'http://localhost/api/oauth/client/callback.php',
-  'client_id' => 'd37d1c43f4cbe10548f80d755c18752f',
-  'client_secret' => '1e04093586f2a95f20c2ae1404e3385f8802b0e4c323989ce7e5341612a85874'
+  'redirect_uri' => $redirect_uri,
+  'client_id' => $client_id,
+  'client_secret' => $client_secret
 ];
 
 require_once('../../vendor/autoload.php');

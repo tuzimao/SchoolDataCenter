@@ -1,6 +1,12 @@
 <?php
 require_once('server.php');
 
+$accessToken                    = "dc43a5ebf64febadc0f917b73cbef3436ae1c35b";
+
+$_POST                          = [];
+$_SERVER['REQUEST_METHOD']      = 'GET';
+$_SERVER['HTTP_AUTHORIZATION']  = 'Bearer ' . $accessToken;
+
 $request = OAuth2\Request::createFromGlobals();
 $response = new OAuth2\Response();
 
@@ -14,8 +20,5 @@ if (!$server->verifyResourceRequest($request, $response)) {
 $tokenData = $server->getAccessTokenData($request);
 
 header('Content-Type: application/json');
-echo json_encode([
-    'user_id' => $tokenData['user_id'],
-    'client_id' => $tokenData['client_id'],
-    'message' => 'Protected resource accessed!'
-]);
+
+print_R($tokenData);

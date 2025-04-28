@@ -1,11 +1,11 @@
 <?php
+require_once('config.inc.php');
+
 $params = http_build_query([
     'response_type' => 'code',
-    'client_id' => 'd37d1c43f4cbe10548f80d755c18752f',
-    'redirect_uri' => 'http://localhost/api/oauth/client/callback.php',
+    'client_id' => $client_id,
+    'redirect_uri' => $redirect_uri,
     'state' => 'xyz'
 ]);
 
-
-header('Location: http://localhost/api/oauth/authorize.php?' . $params);
-exit;
+header('Location: '.$authorize_uri.'?' . $params);
