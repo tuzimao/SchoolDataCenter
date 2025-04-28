@@ -13,6 +13,14 @@
 * [AI心理测评](3-schoolai/aixinliceping.md)
 * [AI模块配置](3-schoolai/aiconfig.md)
 
+### 工作流
+
+* [资产采购](15-fixedasset/buy.md)
+* [资产入库](15-fixedasset/warehouse.md)
+* [资产调拨](15-fixedasset/transfer.md)
+* [资产报废](15-fixedasset/discard.md)
+* [网上报修](16-repair/repair.md)
+
 ### 数字校园
 
 * [数据大屏](4-campus/daping.md)
