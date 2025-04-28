@@ -13,21 +13,18 @@ $_POST = [
   'grant_type' => 'authorization_code',
   'code' => $_GET['code'],
   'redirect_uri' => 'http://localhost/api/oauth/client/callback.php',
-  'client_id' => 'f4fd703bbd1582e689b5311840db55ed',
-  'client_secret' => '7547b341efcb298cf63970164f8268bca8a9a28726a2ce45460243d7b15431d3'
+  'client_id' => 'd37d1c43f4cbe10548f80d755c18752f',
+  'client_secret' => '1e04093586f2a95f20c2ae1404e3385f8802b0e4c323989ce7e5341612a85874'
 ];
 
-require '../../vendor/autoload.php'; // 使用 composer 安装 bshaffer/oauth2-server-php
+require_once('../../vendor/autoload.php');
+require_once('../../config.inc.php');
 
-
-$dsn        = "mysql:dbname=myedu;host=localhost:3386";
-$username   = "root";
-$password   = "6jF0^#12x6^S2zQ#t";
-
-$oauthDb = new PDO("mysql:host=localhost:3386;dbname=myedu;charset=utf8mb4", "root", "6jF0^#12x6^S2zQ#t");
+$dsn        = "mysql:host=".$DB_HOST.";dbname=".$DB_DATABASE.";charset=utf8mb4";
+$oauthDb    = new PDO($dsn, $DB_USERNAME, $DB_PASSWORD);
 $oauthDb->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-$storage = new OAuth2\Storage\Pdo(array('dsn' => $dsn, 'username' => $username, 'password' => $password));
+$storage = new OAuth2\Storage\Pdo(array('dsn' => $dsn, 'username' => $DB_USERNAME, 'password' => $DB_PASSWORD));
 
 $server = new OAuth2\Server($storage, [
     'access_lifetime' => 3600,

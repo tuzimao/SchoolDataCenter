@@ -3,7 +3,11 @@ session_start();
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
-$oauthDb = new PDO("mysql:host=localhost:3386;dbname=myedu;charset=utf8mb4", "root", "6jF0^#12x6^S2zQ#t");
+require_once('../../vendor/autoload.php');
+require_once('../../config.inc.php');
+
+$dsn        = "mysql:host=".$DB_HOST.";dbname=".$DB_DATABASE.";charset=utf8mb4";
+$oauthDb    = new PDO($dsn, $DB_USERNAME, $DB_PASSWORD);
 $oauthDb->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -13,7 +17,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (empty($appName) || empty($redirectUri)) {
         $error = "应用名称和回调地址不能为空！";
-    } else {
+    } 
+    else {
         // 生成 client_id 和 client_secret
         $clientId = bin2hex(random_bytes(16));
         $clientSecret = bin2hex(random_bytes(32));
