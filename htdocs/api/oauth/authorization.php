@@ -18,7 +18,7 @@ $response = new OAuth2\Response();
 // 检查授权请求是否合法
 if (!$server->validateAuthorizeRequest($request, $response)) {
     $response->send();
-    file_put_contents('debug.log', "[" . date('Y-m-d H:i:s') . "] Invalid authorize request\n", FILE_APPEND);
+    //file_put_contents('debug.log', "[" . date('Y-m-d H:i:s') . "] Invalid authorize request\n", FILE_APPEND);
     exit;
 }
 
@@ -41,5 +41,5 @@ $isAuthorized = true;
 $server->handleAuthorizeRequest($request, $response, $isAuthorized, $_SESSION['username']);
 $response->send();
 
-file_put_contents('debug.log', "[" . date('Y-m-d H:i:s') . "] Authorization complete and response sent\n", FILE_APPEND);
+//file_put_contents('debug.log', "[" . date('Y-m-d H:i:s') . "] Authorization complete and response sent\n", FILE_APPEND);
 exit;

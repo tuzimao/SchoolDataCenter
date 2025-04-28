@@ -7,7 +7,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['username'] ?? '';
     $password = $_POST['password'] ?? '';
 
-    $stmt = $oauthDb->prepare('INSERT INTO users (username, password) VALUES (:username, :password)');
+    $stmt = $OauthDb->prepare('INSERT INTO users (username, password) VALUES (:username, :password)');
     try {
         $stmt->execute([
             ':username' => $username,

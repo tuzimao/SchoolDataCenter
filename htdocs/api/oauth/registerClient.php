@@ -7,8 +7,8 @@ require_once('../vendor/autoload.php');
 require_once('../config.inc.php');
 
 $dsn        = "mysql:host=".$DB_HOST.";dbname=".$DB_DATABASE.";charset=utf8mb4";
-$oauthDb    = new PDO($dsn, $DB_USERNAME, $DB_PASSWORD);
-$oauthDb->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+$OauthDb    = new PDO($dsn, $DB_USERNAME, $DB_PASSWORD);
+$OauthDb->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // 接收表单数据
@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $clientSecret = bin2hex(random_bytes(32));
 
         // 插入数据库 oauth_clients 表
-        $stmt = $oauthDb->prepare('INSERT INTO oauth_clients (client_id, client_secret, redirect_uri) VALUES (:client_id, :client_secret, :redirect_uri)');
+        $stmt = $OauthDb->prepare('INSERT INTO oauth_clients (client_id, client_secret, redirect_uri) VALUES (:client_id, :client_secret, :redirect_uri)');
         $stmt->execute([
             ':client_id' => $clientId,
             ':client_secret' => $clientSecret,

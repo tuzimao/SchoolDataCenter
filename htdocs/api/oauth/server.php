@@ -3,8 +3,8 @@ require_once('../vendor/autoload.php');
 require_once('../config.inc.php');
 
 $dsn        = "mysql:host=".$DB_HOST.";dbname=".$DB_DATABASE.";charset=utf8mb4";
-$oauthDb    = new PDO($dsn, $DB_USERNAME, $DB_PASSWORD);
-$oauthDb->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+$OauthDb    = new PDO($dsn, $DB_USERNAME, $DB_PASSWORD);
+$OauthDb->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 $storage = new OAuth2\Storage\Pdo(array('dsn' => $dsn, 'username' => $DB_USERNAME, 'password' => $DB_PASSWORD));
 

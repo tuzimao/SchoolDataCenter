@@ -7,7 +7,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['username'] ?? '';
     $password = $_POST['password'] ?? '';
 
-    $stmt = $oauthDb->prepare('SELECT * FROM users WHERE username = :username');
+    $stmt = $OauthDb->prepare('SELECT * FROM users WHERE username = :username');
     $stmt->execute([':username' => $username]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -37,4 +37,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <label>密码：<input type="password" name="password" required></label><br>
     <button type="submit">登录</button>
 </form>
-<p>没有账户？<a href="register.php">注册</a></p>
+<p>没有账户？<a href="registerUser.php">注册</a></p>
