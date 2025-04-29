@@ -85,84 +85,85 @@ class Pdo implements
     }
 
     /**
-     * @param string $client_id
-     * @param null|string $client_secret
+     * @param string $客户端ID
+     * @param null|string $客户端Secret
      * @return bool
      */
-    public function checkClientCredentials($client_id, $client_secret = null)
+    public function checkClientCredentials($客户端ID, $客户端Secret = null)
     {
-        $stmt = $this->db->prepare(sprintf('SELECT * from %s where client_id = :client_id', $this->config['client_table']));
-        $stmt->execute(compact('client_id'));
+        $stmt = $this->db->prepare(sprintf('SELECT * from %s where 客户端ID = :客户端ID', $this->config['client_table']));
+        $stmt->execute(compact('客户端ID'));
         $result = $stmt->fetch(\PDO::FETCH_ASSOC);
 
         // make this extensible
-        return $result && $result['client_secret'] == $client_secret;
+        return $result && $result['客户端Secret'] == $客户端Secret;
     }
 
     /**
-     * @param string $client_id
+     * @param string $客户端ID
      * @return bool
      */
-    public function isPublicClient($client_id)
+    public function isPublicClient($客户端ID)
     {
-        $stmt = $this->db->prepare(sprintf('SELECT * from %s where client_id = :client_id', $this->config['client_table']));
-        $stmt->execute(compact('client_id'));
+        $stmt = $this->db->prepare(sprintf('SELECT * from %s where 客户端ID = :客户端ID', $this->config['client_table']));
+        $stmt->execute(compact('客户端ID'));
 
         if (!$result = $stmt->fetch(\PDO::FETCH_ASSOC)) {
             return false;
         }
 
-        return empty($result['client_secret']);
+        return empty($result['客户端Secret']);
     }
 
     /**
-     * @param string $client_id
+     * @param string $客户端ID
      * @return array|mixed
      */
     public function getClientDetails($client_id)
     {
-        $stmt = $this->db->prepare(sprintf('SELECT * from %s where client_id = :client_id', $this->config['client_table']));
+        $stmt = $this->db->prepare(sprintf('SELECT * from %s where 客户端ID = :client_id', $this->config['client_table']));
         $stmt->execute(compact('client_id'));
-
-        return $stmt->fetch(\PDO::FETCH_ASSOC);
+        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+        print $result;
+        return $result;
     }
 
     /**
-     * @param string $client_id
-     * @param null|string $client_secret
-     * @param null|string $redirect_uri
-     * @param null|array  $grant_types
-     * @param null|string $scope
+     * @param string $客户端ID
+     * @param null|string $客户端Secret
+     * @param null|string $回调地址
+     * @param null|array  $授权类型
+     * @param null|string $授权范围
      * @param null|string $user_id
      * @return bool
      */
-    public function setClientDetails($client_id, $client_secret = null, $redirect_uri = null, $grant_types = null, $scope = null, $user_id = null)
+    public function setClientDetails($客户端ID, $客户端Secret = null, $回调地址 = null, $授权类型 = null, $授权范围 = null, $user_id = null)
     {
         // if it exists, update it.
-        if ($this->getClientDetails($client_id)) {
-            $stmt = $this->db->prepare($sql = sprintf('UPDATE %s SET client_secret=:client_secret, redirect_uri=:redirect_uri, grant_types=:grant_types, scope=:scope, user_id=:user_id where client_id=:client_id', $this->config['client_table']));
+        if ($this->getClientDetails($客户端ID)) {
+            $stmt = $this->db->prepare($sql = sprintf('UPDATE %s SET 客户端Secret=:客户端Secret, 回调地址=:回调地址, 授权类型=:授权类型, 授权范围=:授权范围 where 客户端ID=:客户端ID', $this->config['client_table']));
         } else {
-            $stmt = $this->db->prepare(sprintf('INSERT INTO %s (client_id, client_secret, redirect_uri, grant_types, scope, user_id) VALUES (:client_id, :client_secret, :redirect_uri, :grant_types, :scope, :user_id)', $this->config['client_table']));
+            $stmt = $this->db->prepare(sprintf('INSERT INTO %s (客户端ID, 客户端Secret, 回调地址, 授权类型, 授权范围) VALUES (:客户端ID, :客户端Secret, :回调地址, :授权类型, :授权范围)', $this->config['client_table']));
         }
 
-        return $stmt->execute(compact('client_id', 'client_secret', 'redirect_uri', 'grant_types', 'scope', 'user_id'));
+        return $stmt->execute(compact('客户端ID', '客户端Secret', '回调地址', '授权类型', '授权范围'));
     }
 
     /**
-     * @param $client_id
+     * @param $客户端ID
      * @param $grant_type
      * @return bool
      */
-    public function checkRestrictedGrantType($client_id, $grant_type)
+    public function checkRestrictedGrantType($客户端ID, $grant_type)
     {
-        $details = $this->getClientDetails($client_id);
-        if (isset($details['grant_types'])) {
-            $grant_types = explode(' ', $details['grant_types']);
+        $details = $this->getClientDetails($客户端ID);
+        if (isset($details['授权类型'])) {
+            $授权类型 = explode(' ', $details['授权类型']);
 
-            return in_array($grant_type, (array) $grant_types);
+            return in_array($grant_type, (array) $授权类型);
         }
 
-        // if grant_types are not defined, then none are restricted
+        // if 授权类型 are not defined, then none are restricted
         return true;
     }
 
@@ -185,25 +186,25 @@ class Pdo implements
 
     /**
      * @param string $access_token
-     * @param mixed  $client_id
+     * @param mixed  $客户端ID
      * @param mixed  $user_id
      * @param int    $expires
-     * @param string $scope
+     * @param string $授权范围
      * @return bool
      */
-    public function setAccessToken($access_token, $client_id, $user_id, $expires, $scope = null)
+    public function setAccessToken($access_token, $客户端ID, $user_id, $expires, $授权范围 = null)
     {
         // convert expires to datestring
         $expires = date('Y-m-d H:i:s', $expires);
 
         // if it exists, update it.
         if ($this->getAccessToken($access_token)) {
-            $stmt = $this->db->prepare(sprintf('UPDATE %s SET client_id=:client_id, expires=:expires, user_id=:user_id, scope=:scope where access_token=:access_token', $this->config['access_token_table']));
+            $stmt = $this->db->prepare(sprintf('UPDATE %s SET 客户端ID=:客户端ID, expires=:expires, 授权范围=:授权范围 where access_token=:access_token', $this->config['access_token_table']));
         } else {
-            $stmt = $this->db->prepare(sprintf('INSERT INTO %s (access_token, client_id, expires, user_id, scope) VALUES (:access_token, :client_id, :expires, :user_id, :scope)', $this->config['access_token_table']));
+            $stmt = $this->db->prepare(sprintf('INSERT INTO %s (access_token, 客户端ID, expires, 授权范围) VALUES (:access_token, :客户端ID, :expires, :授权范围)', $this->config['access_token_table']));
         }
 
-        return $stmt->execute(compact('access_token', 'client_id', 'user_id', 'expires', 'scope'));
+        return $stmt->execute(compact('access_token', '客户端ID', 'expires', '授权范围'));
     }
 
     /**
@@ -239,15 +240,15 @@ class Pdo implements
 
     /**
      * @param string $code
-     * @param mixed  $client_id
+     * @param mixed  $客户端ID
      * @param mixed  $user_id
-     * @param string $redirect_uri
+     * @param string $回调地址
      * @param int    $expires
-     * @param string $scope
+     * @param string $授权范围
      * @param string $id_token
      * @return bool|mixed
      */
-    public function setAuthorizationCode($code, $client_id, $user_id, $redirect_uri, $expires, $scope = null, $id_token = null, $code_challenge = null, $code_challenge_method = null)
+    public function setAuthorizationCode($code, $客户端ID, $user_id, $回调地址, $expires, $授权范围 = null, $id_token = null, $code_challenge = null, $code_challenge_method = null)
     {
         if (func_num_args() > 6) {
             // we are calling with an id token
@@ -259,37 +260,37 @@ class Pdo implements
 
         // if it exists, update it.
         if ($this->getAuthorizationCode($code)) {
-            $stmt = $this->db->prepare($sql = sprintf('UPDATE %s SET client_id=:client_id, user_id=:user_id, redirect_uri=:redirect_uri, expires=:expires, scope=:scope, code_challenge=:code_challenge, code_challenge_method=:code_challenge_method where authorization_code=:code', $this->config['code_table']));
+            $stmt = $this->db->prepare($sql = sprintf('UPDATE %s SET 客户端ID=:客户端ID, 回调地址=:回调地址, expires=:expires, 授权范围=:授权范围, code_challenge=:code_challenge, code_challenge_method=:code_challenge_method where authorization_code=:code', $this->config['code_table']));
         } else {
-            $stmt = $this->db->prepare(sprintf('INSERT INTO %s (authorization_code, client_id, user_id, redirect_uri, expires, scope, code_challenge, code_challenge_method) VALUES (:code, :client_id, :user_id, :redirect_uri, :expires, :scope, :code_challenge, :code_challenge_method)', $this->config['code_table']));
+            $stmt = $this->db->prepare(sprintf('INSERT INTO %s (authorization_code, 客户端ID, 回调地址, expires, 授权范围, code_challenge, code_challenge_method) VALUES (:code, :客户端ID, :回调地址, :expires, :授权范围, :code_challenge, :code_challenge_method)', $this->config['code_table']));
         }
 
-        return $stmt->execute(compact('code', 'client_id', 'user_id', 'redirect_uri', 'expires', 'scope', 'code_challenge', 'code_challenge_method'));
+        return $stmt->execute(compact('code', '客户端ID', '回调地址', 'expires', '授权范围', 'code_challenge', 'code_challenge_method'));
     }
 
     /**
      * @param string $code
-     * @param mixed  $client_id
+     * @param mixed  $客户端ID
      * @param mixed  $user_id
-     * @param string $redirect_uri
+     * @param string $回调地址
      * @param string $expires
-     * @param string $scope
+     * @param string $授权范围
      * @param string $id_token
      * @return bool
      */
-    private function setAuthorizationCodeWithIdToken($code, $client_id, $user_id, $redirect_uri, $expires, $scope = null, $id_token = null, $code_challenge = null, $code_challenge_method = null)
+    private function setAuthorizationCodeWithIdToken($code, $客户端ID, $user_id, $回调地址, $expires, $授权范围 = null, $id_token = null, $code_challenge = null, $code_challenge_method = null)
     {
         // convert expires to datestring
         $expires = date('Y-m-d H:i:s', $expires);
 
         // if it exists, update it.
         if ($this->getAuthorizationCode($code)) {
-            $stmt = $this->db->prepare($sql = sprintf('UPDATE %s SET client_id=:client_id, user_id=:user_id, redirect_uri=:redirect_uri, expires=:expires, scope=:scope, id_token =:id_token, code_challenge=:code_challenge, code_challenge_method=:code_challenge_method where authorization_code=:code', $this->config['code_table']));
+            $stmt = $this->db->prepare($sql = sprintf('UPDATE %s SET 客户端ID=:客户端ID, 回调地址=:回调地址, expires=:expires, 授权范围=:授权范围, id_token =:id_token, code_challenge=:code_challenge, code_challenge_method=:code_challenge_method where authorization_code=:code', $this->config['code_table']));
         } else {
-            $stmt = $this->db->prepare(sprintf('INSERT INTO %s (authorization_code, client_id, user_id, redirect_uri, expires, scope, id_token, code_challenge, code_challenge_method) VALUES (:code, :client_id, :user_id, :redirect_uri, :expires, :scope, :id_token, :code_challenge, :code_challenge_method)', $this->config['code_table']));
+            $stmt = $this->db->prepare(sprintf('INSERT INTO %s (authorization_code, 客户端ID, 回调地址, expires, 授权范围, id_token, code_challenge, code_challenge_method) VALUES (:code, :客户端ID, :回调地址, :expires, :授权范围, :id_token, :code_challenge, :code_challenge_method)', $this->config['code_table']));
         }
 
-        return $stmt->execute(compact('code', 'client_id', 'user_id', 'redirect_uri', 'expires', 'scope', 'id_token', 'code_challenge', 'code_challenge_method'));
+        return $stmt->execute(compact('code', '客户端ID', '回调地址', 'expires', '授权范围', 'id_token', 'code_challenge', 'code_challenge_method'));
     }
 
     /**
@@ -393,20 +394,20 @@ class Pdo implements
 
     /**
      * @param string $refresh_token
-     * @param mixed  $client_id
+     * @param mixed  $客户端ID
      * @param mixed  $user_id
      * @param string $expires
-     * @param string $scope
+     * @param string $授权范围
      * @return bool
      */
-    public function setRefreshToken($refresh_token, $client_id, $user_id, $expires, $scope = null)
+    public function setRefreshToken($refresh_token, $客户端ID, $user_id, $expires, $授权范围 = null)
     {
         // convert expires to datestring
         $expires = date('Y-m-d H:i:s', $expires);
 
-        $stmt = $this->db->prepare(sprintf('INSERT INTO %s (refresh_token, client_id, user_id, expires, scope) VALUES (:refresh_token, :client_id, :user_id, :expires, :scope)', $this->config['refresh_token_table']));
+        $stmt = $this->db->prepare(sprintf('INSERT INTO %s (refresh_token, 客户端ID, expires, 授权范围) VALUES (:refresh_token, :客户端ID, :expires, :授权范围)', $this->config['refresh_token_table']));
 
-        return $stmt->execute(compact('refresh_token', 'client_id', 'user_id', 'expires', 'scope'));
+        return $stmt->execute(compact('refresh_token', '客户端ID', 'expires', '授权范围'));
     }
 
     /**
@@ -484,35 +485,35 @@ class Pdo implements
     }
 
     /**
-     * @param string $scope
+     * @param string $授权范围
      * @return bool
      */
-    public function scopeExists($scope)
+    public function scopeExists($授权范围)
     {
-        $scope = explode(' ', $scope);
-        $whereIn = implode(',', array_fill(0, count($scope), '?'));
-        $stmt = $this->db->prepare(sprintf('SELECT count(scope) as count FROM %s WHERE scope IN (%s)', $this->config['scope_table'], $whereIn));
-        $stmt->execute($scope);
+        $授权范围 = explode(' ', $授权范围);
+        $whereIn = implode(',', array_fill(0, count($授权范围), '?'));
+        $stmt = $this->db->prepare(sprintf('SELECT count(授权范围) as count FROM %s WHERE 授权范围 IN (%s)', $this->config['scope_table'], $whereIn));
+        $stmt->execute($授权范围);
 
         if ($result = $stmt->fetch(\PDO::FETCH_ASSOC)) {
-            return $result['count'] == count($scope);
+            return $result['count'] == count($授权范围);
         }
 
         return false;
     }
 
     /**
-     * @param mixed $client_id
+     * @param mixed $客户端ID
      * @return null|string
      */
-    public function getDefaultScope($client_id = null)
+    public function getDefaultScope($客户端ID = null)
     {
-        $stmt = $this->db->prepare(sprintf('SELECT scope FROM %s WHERE is_default=:is_default', $this->config['scope_table']));
+        $stmt = $this->db->prepare(sprintf('SELECT 授权范围 FROM %s WHERE is_default=:is_default', $this->config['scope_table']));
         $stmt->execute(array('is_default' => true));
 
         if ($result = $stmt->fetchAll(\PDO::FETCH_ASSOC)) {
             $defaultScope = array_map(function ($row) {
-                return $row['scope'];
+                return $row['授权范围'];
             }, $result);
 
             return implode(' ', $defaultScope);
@@ -522,49 +523,49 @@ class Pdo implements
     }
 
     /**
-     * @param mixed $client_id
+     * @param mixed $客户端ID
      * @param $subject
      * @return string
      */
-    public function getClientKey($client_id, $subject)
+    public function getClientKey($客户端ID, $subject)
     {
-        $stmt = $this->db->prepare($sql = sprintf('SELECT public_key from %s where client_id=:client_id AND subject=:subject', $this->config['jwt_table']));
+        $stmt = $this->db->prepare($sql = sprintf('SELECT public_key from %s where 客户端ID=:客户端ID AND subject=:subject', $this->config['jwt_table']));
 
-        $stmt->execute(array('client_id' => $client_id, 'subject' => $subject));
+        $stmt->execute(array('客户端ID' => $客户端ID, 'subject' => $subject));
 
         return $stmt->fetchColumn();
     }
 
     /**
-     * @param mixed $client_id
+     * @param mixed $客户端ID
      * @return bool|null
      */
-    public function getClientScope($client_id)
+    public function getClientScope($客户端ID)
     {
-        if (!$clientDetails = $this->getClientDetails($client_id)) {
+        if (!$clientDetails = $this->getClientDetails($客户端ID)) {
             return false;
         }
 
-        if (isset($clientDetails['scope'])) {
-            return $clientDetails['scope'];
+        if (isset($clientDetails['授权范围'])) {
+            return $clientDetails['授权范围'];
         }
 
         return null;
     }
 
     /**
-     * @param mixed $client_id
+     * @param mixed $客户端ID
      * @param $subject
      * @param $audience
      * @param $expires
      * @param $jti
      * @return array|null
      */
-    public function getJti($client_id, $subject, $audience, $expires, $jti)
+    public function getJti($客户端ID, $subject, $audience, $expires, $jti)
     {
-        $stmt = $this->db->prepare($sql = sprintf('SELECT * FROM %s WHERE issuer=:client_id AND subject=:subject AND audience=:audience AND expires=:expires AND jti=:jti', $this->config['jti_table']));
+        $stmt = $this->db->prepare($sql = sprintf('SELECT * FROM %s WHERE issuer=:客户端ID AND subject=:subject AND audience=:audience AND expires=:expires AND jti=:jti', $this->config['jti_table']));
 
-        $stmt->execute(compact('client_id', 'subject', 'audience', 'expires', 'jti'));
+        $stmt->execute(compact('客户端ID', 'subject', 'audience', 'expires', 'jti'));
 
         if ($result = $stmt->fetch(\PDO::FETCH_ASSOC)) {
             return array(
@@ -580,57 +581,57 @@ class Pdo implements
     }
 
     /**
-     * @param mixed $client_id
+     * @param mixed $客户端ID
      * @param $subject
      * @param $audience
      * @param $expires
      * @param $jti
      * @return bool
      */
-    public function setJti($client_id, $subject, $audience, $expires, $jti)
+    public function setJti($客户端ID, $subject, $audience, $expires, $jti)
     {
-        $stmt = $this->db->prepare(sprintf('INSERT INTO %s (issuer, subject, audience, expires, jti) VALUES (:client_id, :subject, :audience, :expires, :jti)', $this->config['jti_table']));
+        $stmt = $this->db->prepare(sprintf('INSERT INTO %s (issuer, subject, audience, expires, jti) VALUES (:客户端ID, :subject, :audience, :expires, :jti)', $this->config['jti_table']));
 
-        return $stmt->execute(compact('client_id', 'subject', 'audience', 'expires', 'jti'));
+        return $stmt->execute(compact('客户端ID', 'subject', 'audience', 'expires', 'jti'));
     }
 
     /**
-     * @param mixed $client_id
+     * @param mixed $客户端ID
      * @return mixed
      */
-    public function getPublicKey($client_id = null)
+    public function getPublicKey($客户端ID = null)
     {
-        $stmt = $this->db->prepare($sql = sprintf('SELECT public_key FROM %s WHERE client_id=:client_id OR client_id IS NULL ORDER BY client_id IS NOT NULL DESC', $this->config['public_key_table']));
+        $stmt = $this->db->prepare($sql = sprintf('SELECT public_key FROM %s WHERE 客户端ID=:客户端ID OR 客户端ID IS NULL ORDER BY 客户端ID IS NOT NULL DESC', $this->config['public_key_table']));
 
-        $stmt->execute(compact('client_id'));
+        $stmt->execute(compact('客户端ID'));
         if ($result = $stmt->fetch(\PDO::FETCH_ASSOC)) {
             return $result['public_key'];
         }
     }
 
     /**
-     * @param mixed $client_id
+     * @param mixed $客户端ID
      * @return mixed
      */
-    public function getPrivateKey($client_id = null)
+    public function getPrivateKey($客户端ID = null)
     {
-        $stmt = $this->db->prepare($sql = sprintf('SELECT private_key FROM %s WHERE client_id=:client_id OR client_id IS NULL ORDER BY client_id IS NOT NULL DESC', $this->config['public_key_table']));
+        $stmt = $this->db->prepare($sql = sprintf('SELECT private_key FROM %s WHERE 客户端ID=:客户端ID OR 客户端ID IS NULL ORDER BY 客户端ID IS NOT NULL DESC', $this->config['public_key_table']));
 
-        $stmt->execute(compact('client_id'));
+        $stmt->execute(compact('客户端ID'));
         if ($result = $stmt->fetch(\PDO::FETCH_ASSOC)) {
             return $result['private_key'];
         }
     }
 
     /**
-     * @param mixed $client_id
+     * @param mixed $客户端ID
      * @return string
      */
-    public function getEncryptionAlgorithm($client_id = null)
+    public function getEncryptionAlgorithm($客户端ID = null)
     {
-        $stmt = $this->db->prepare($sql = sprintf('SELECT encryption_algorithm FROM %s WHERE client_id=:client_id OR client_id IS NULL ORDER BY client_id IS NOT NULL DESC', $this->config['public_key_table']));
+        $stmt = $this->db->prepare($sql = sprintf('SELECT encryption_algorithm FROM %s WHERE 客户端ID=:客户端ID OR 客户端ID IS NULL ORDER BY 客户端ID IS NOT NULL DESC', $this->config['public_key_table']));
 
-        $stmt->execute(compact('client_id'));
+        $stmt->execute(compact('客户端ID'));
         if ($result = $stmt->fetch(\PDO::FETCH_ASSOC)) {
             return $result['encryption_algorithm'];
         }
@@ -649,32 +650,22 @@ class Pdo implements
     public function getBuildSql($dbName = 'oauth2_server_php')
     {
         $sql = "
-        CREATE TABLE {$this->config['client_table']} (
-          client_id             VARCHAR(80)   NOT NULL,
-          client_secret         VARCHAR(80),
-          redirect_uri          VARCHAR(2000),
-          grant_types           VARCHAR(80),
-          scope                 VARCHAR(4000),
-          user_id               VARCHAR(80),
-          PRIMARY KEY (client_id)
-        );
-
             CREATE TABLE {$this->config['access_token_table']} (
               access_token         VARCHAR(40)    NOT NULL,
-              client_id            VARCHAR(80)    NOT NULL,
+              客户端ID            VARCHAR(80)    NOT NULL,
               user_id              VARCHAR(80),
               expires              TIMESTAMP      NOT NULL,
-              scope                VARCHAR(4000),
+              授权范围                VARCHAR(4000),
               PRIMARY KEY (access_token)
             );
 
             CREATE TABLE {$this->config['code_table']} (
               authorization_code  VARCHAR(40)    NOT NULL,
-              client_id           VARCHAR(80)    NOT NULL,
+              客户端ID           VARCHAR(80)    NOT NULL,
               user_id             VARCHAR(80),
-              redirect_uri        VARCHAR(2000),
+              回调地址        VARCHAR(2000),
               expires             TIMESTAMP      NOT NULL,
-              scope               VARCHAR(4000),
+              授权范围               VARCHAR(4000),
               id_token            VARCHAR(1000),
               code_challenge        VARCHAR(1000),
               code_challenge_method VARCHAR(20),
@@ -683,10 +674,10 @@ class Pdo implements
 
             CREATE TABLE {$this->config['refresh_token_table']} (
               refresh_token       VARCHAR(40)    NOT NULL,
-              client_id           VARCHAR(80)    NOT NULL,
+              客户端ID           VARCHAR(80)    NOT NULL,
               user_id             VARCHAR(80),
               expires             TIMESTAMP      NOT NULL,
-              scope               VARCHAR(4000),
+              授权范围               VARCHAR(4000),
               PRIMARY KEY (refresh_token)
             );
 
@@ -697,17 +688,17 @@ class Pdo implements
               last_name           VARCHAR(80),
               email               VARCHAR(80),
               email_verified      BOOLEAN,
-              scope               VARCHAR(4000)
+              授权范围               VARCHAR(4000)
             );
 
             CREATE TABLE {$this->config['scope_table']} (
-              scope               VARCHAR(80)  NOT NULL,
+              授权范围               VARCHAR(80)  NOT NULL,
               is_default          BOOLEAN,
-              PRIMARY KEY (scope)
+              PRIMARY KEY (授权范围)
             );
 
             CREATE TABLE {$this->config['jwt_table']} (
-              client_id           VARCHAR(80)   NOT NULL,
+              客户端ID           VARCHAR(80)   NOT NULL,
               subject             VARCHAR(80),
               public_key          VARCHAR(2000) NOT NULL
             );
@@ -721,7 +712,7 @@ class Pdo implements
             );
 
             CREATE TABLE {$this->config['public_key_table']} (
-              client_id            VARCHAR(80),
+              客户端ID            VARCHAR(80),
               public_key           VARCHAR(2000),
               private_key          VARCHAR(2000),
               encryption_algorithm VARCHAR(100) DEFAULT 'RS256'
