@@ -66,7 +66,7 @@ Source: "{#MyAppSourceDir}\xampp\readme.txt"; DestDir: "{app}\xampp"; Flags: ign
 
 [Icons]
 Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
-Name: "{autodesktop}\{#MyAppName}"; Filename: "http://localhost:80"
+Name: "{autodesktop}\{#MyAppName}"; Filename: "http://localhost:8888"
 
 [Run]
 Filename: "{app}\xampp\readme.txt"; Description: "{cm:LaunchProgram,Readme}"; Flags: shellexec nowait postinstall skipifsilent
