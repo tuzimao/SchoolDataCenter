@@ -1,7 +1,7 @@
 <?php
 require_once('server.php');
 
-$accessToken                    = "dc43a5ebf64febadc0f917b73cbef3436ae1c35b";
+$accessToken                    = "7c1bd30596745f81890b1c73397386da28b34397";
 
 $_POST                          = [];
 $_SERVER['REQUEST_METHOD']      = 'GET';
