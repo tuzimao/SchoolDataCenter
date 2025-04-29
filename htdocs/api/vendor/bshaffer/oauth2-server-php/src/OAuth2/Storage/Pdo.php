@@ -72,7 +72,7 @@ class Pdo implements
         $connection->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 
         $this->config = array_merge(array(
-            'client_table' => 'oauth_clients',
+            'client_table' => 'data_oauth_clients',
             'access_token_table' => 'oauth_access_tokens',
             'refresh_token_table' => 'oauth_refresh_tokens',
             'code_table' => 'oauth_authorization_codes',
