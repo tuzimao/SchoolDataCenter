@@ -74,8 +74,8 @@ class Pdo implements
         $this->config = array_merge(array(
             'client_table' => 'data_oauth_clients',
             'access_token_table' => 'data_oauth_access_tokens',
-            'refresh_token_table' => 'oauth_refresh_tokens',
-            'code_table' => 'oauth_authorization_codes',
+            'refresh_token_table' => 'data_oauth_refresh_tokens',
+            'code_table' => 'data_oauth_authorization_codes',
             'user_table' => 'oauth_users',
             'jwt_table'  => 'oauth_jwt',
             'jti_table'  => 'oauth_jti',
@@ -138,6 +138,8 @@ class Pdo implements
      */
     public function setClientDetails($client_id, $client_secret = null, $redirect_uri = null, $grant_types = null, $scope = '', $user_id = null)
     {
+        $scope                  = strval($scope);
+        $user_id                = strval($user_id);
         // if it exists, update it.
         if ($this->getClientDetails($client_id)) {
             $stmt = $this->db->prepare($sql = sprintf('UPDATE %s SET client_secret=:client_secret, redirect_uri=:redirect_uri, grant_types=:grant_types, scope=:scope, user_id=:user_id where client_id=:client_id', $this->config['client_table']));
@@ -195,7 +197,6 @@ class Pdo implements
     {
         // convert expires to datestring
         $expires    = date('Y-m-d H:i:s', $expires);
-
         $scope      = strval($scope);
 
         // if it exists, update it.
@@ -257,7 +258,11 @@ class Pdo implements
         }
 
         // convert expires to datestring
-        $expires = date('Y-m-d H:i:s', $expires);
+        $expires                = date('Y-m-d H:i:s', $expires);
+        $scope                  = strval($scope);
+        $id_token               = strval($id_token);
+        $code_challenge         = strval($code_challenge);
+        $code_challenge_method  = strval($code_challenge_method);
 
         // if it exists, update it.
         if ($this->getAuthorizationCode($code)) {
@@ -282,7 +287,11 @@ class Pdo implements
     private function setAuthorizationCodeWithIdToken($code, $client_id, $user_id, $redirect_uri, $expires, $scope = '', $id_token = '', $code_challenge = '', $code_challenge_method = '')
     {
         // convert expires to datestring
-        $expires = date('Y-m-d H:i:s', $expires);
+        $expires                = date('Y-m-d H:i:s', $expires);
+        $scope                  = strval($scope);
+        $id_token               = strval($id_token);
+        $code_challenge         = strval($code_challenge);
+        $code_challenge_method  = strval($code_challenge_method);
 
         // if it exists, update it.
         if ($this->getAuthorizationCode($code)) {
@@ -404,7 +413,8 @@ class Pdo implements
     public function setRefreshToken($refresh_token, $client_id, $user_id, $expires, $scope = '')
     {
         // convert expires to datestring
-        $expires = date('Y-m-d H:i:s', $expires);
+        $expires    = date('Y-m-d H:i:s', $expires);
+        $scope      = strval($scope);
 
         $stmt = $this->db->prepare(sprintf('INSERT INTO %s (refresh_token, client_id, user_id, expires, scope) VALUES (:refresh_token, :client_id, :user_id, :expires, :scope)', $this->config['refresh_token_table']));
 
@@ -651,47 +661,6 @@ class Pdo implements
     public function getBuildSql($dbName = 'oauth2_server_php')
     {
         $sql = "
-        CREATE TABLE {$this->config['client_table']} (
-          client_id             VARCHAR(80)   NOT NULL,
-          client_secret         VARCHAR(80),
-          redirect_uri          VARCHAR(2000),
-          grant_types           VARCHAR(80),
-          scope                 VARCHAR(4000),
-          user_id               VARCHAR(80),
-          PRIMARY KEY (client_id)
-        );
-
-            CREATE TABLE {$this->config['access_token_table']} (
-              access_token         VARCHAR(40)    NOT NULL,
-              client_id            VARCHAR(80)    NOT NULL,
-              user_id              VARCHAR(80),
-              expires              TIMESTAMP      NOT NULL,
-              scope                VARCHAR(4000),
-              PRIMARY KEY (access_token)
-            );
-
-            CREATE TABLE {$this->config['code_table']} (
-              authorization_code  VARCHAR(40)    NOT NULL,
-              client_id           VARCHAR(80)    NOT NULL,
-              user_id             VARCHAR(80),
-              redirect_uri        VARCHAR(2000),
-              expires             TIMESTAMP      NOT NULL,
-              scope               VARCHAR(4000),
-              id_token            VARCHAR(1000),
-              code_challenge        VARCHAR(1000),
-              code_challenge_method VARCHAR(20),
-              PRIMARY KEY (authorization_code)
-            );
-
-            CREATE TABLE {$this->config['refresh_token_table']} (
-              refresh_token       VARCHAR(40)    NOT NULL,
-              client_id           VARCHAR(80)    NOT NULL,
-              user_id             VARCHAR(80),
-              expires             TIMESTAMP      NOT NULL,
-              scope               VARCHAR(4000),
-              PRIMARY KEY (refresh_token)
-            );
-
             CREATE TABLE {$this->config['user_table']} (
               username            VARCHAR(80),
               password            VARCHAR(80),
