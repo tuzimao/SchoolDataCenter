@@ -4,15 +4,18 @@ AppSchoolConfigMap['development']     = ["http://localhost:8888/api/", 'SchoolAI
 AppSchoolConfigMap['dandian.net']     = ["https://demoapi.dandian.net/api/", 'SchoolAI', "auth/menus.php", "https://demoapi.dandian.net/api/"] // For School and Demoapi.dandian.net
 AppSchoolConfigMap['fdzyzz.com']      = ["https://fdzz.dandian.net:8443/api/", '福鼎职中', "auth/menus.php", "https://fdzz.dandian.net:8443/api/"]
 AppSchoolConfigMap['fjsmnx.com']      = ["https://dsj.fjsmlyxx.com:1443/api/", '三明林业', "auth/menus.php", "https://dsj.fjsmlyxx.com:1443/api/"]
-const APP_URL = AppSchoolConfigMap["dandian.net"][0]
-const AppName = AppSchoolConfigMap["dandian.net"][1]
-const indexMenuspath = AppSchoolConfigMap["dandian.net"][2]
-const backEndApiAiBaseUrl = AppSchoolConfigMap["dandian.net"][3]
+
+const AppMarkId   = "dandian.net"; //这一行, 一定要写在第8行, 否则需要同时修改Github 的 workflows 文件
+const AppVersion  = '20250430'; //需要刷新客户端JS时需要更新此值
+const APP_URL = AppSchoolConfigMap[AppMarkId][0]
+const AppName = AppSchoolConfigMap[AppMarkId][1]
+const indexMenuspath = AppSchoolConfigMap[AppMarkId][2]
+const backEndApiAiBaseUrl = AppSchoolConfigMap[AppMarkId][3]
 
 export const authConfig = {
     AppName: AppName,
-    AppLogo: '/icons/' + "dandian.net" + '/icon256.png',
-    AppMarkId: "dandian.net",
+    AppLogo: '/icons/' + AppMarkId + '/icon256.png',
+    AppMarkId: AppMarkId,
     AppSchoolConfigMap: AppSchoolConfigMap,
     indexMenuspath: indexMenuspath,
     loginEndpoint: APP_URL + 'jwt.php?action=login',
@@ -21,14 +24,14 @@ export const authConfig = {
     registerEndpoint: APP_URL + 'jwt/register',
     backEndApiHost: APP_URL,
     backEndApiAiBaseUrl: backEndApiAiBaseUrl,
-    indexImageUrl: '/images/school/' + "dandian.net" + '/index.jpg',
-    logoUrl: '/images/school/' + "dandian.net" + '/logo.png'
+    indexImageUrl: '/images/school/' + AppMarkId + '/index.jpg',
+    logoUrl: '/images/school/' + AppMarkId + '/logo.png'
 }
 
 export const defaultConfig = {
   Github: 'https://github.com/SmartSchoolAI/SchoolDataCenter',
   Docs: 'https://docs.dandian.net',
-  AppVersion: '20250430',
+  AppVersion: AppVersion,
   AppVersionType: '试用版本',
   defaultLanguage: 'zh',
   storageTokenKeyName: 'accessToken',
