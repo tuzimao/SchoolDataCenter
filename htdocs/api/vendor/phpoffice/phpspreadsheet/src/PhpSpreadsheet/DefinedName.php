@@ -58,7 +58,7 @@ abstract class DefinedName
         ?Worksheet $worksheet = null,
         ?string $value = null,
         bool $localOnly = false,
-        ?Worksheet $scope = null
+        ?Worksheet $scope = ''
     ) {
         if ($worksheet === null) {
             $worksheet = $scope;
@@ -86,7 +86,7 @@ abstract class DefinedName
         ?Worksheet $worksheet = null,
         ?string $value = null,
         bool $localOnly = false,
-        ?Worksheet $scope = null
+        ?Worksheet $scope = ''
     ): self {
         $value = (string) $value;
         $isFormula = self::testIfFormula($value);

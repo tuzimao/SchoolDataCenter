@@ -28,7 +28,7 @@ interface ResourceControllerInterface
      * @param string            $scope
      * @return mixed
      */
-    public function verifyResourceRequest(RequestInterface $request, ResponseInterface $response, $scope = null);
+    public function verifyResourceRequest(RequestInterface $request, ResponseInterface $response, $scope = '');
 
     /**
      * Get access token data.

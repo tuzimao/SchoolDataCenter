@@ -72,8 +72,8 @@ class Pdo implements
         $connection->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 
         $this->config = array_merge(array(
-            'client_table' => 'oauth_clients',
-            'access_token_table' => 'oauth_access_tokens',
+            'client_table' => 'data_oauth_clients',
+            'access_token_table' => 'data_oauth_access_tokens',
             'refresh_token_table' => 'oauth_refresh_tokens',
             'code_table' => 'oauth_authorization_codes',
             'user_table' => 'oauth_users',
@@ -136,7 +136,7 @@ class Pdo implements
      * @param null|string $user_id
      * @return bool
      */
-    public function setClientDetails($client_id, $client_secret = null, $redirect_uri = null, $grant_types = null, $scope = null, $user_id = null)
+    public function setClientDetails($client_id, $client_secret = null, $redirect_uri = null, $grant_types = null, $scope = '', $user_id = null)
     {
         // if it exists, update it.
         if ($this->getClientDetails($client_id)) {
@@ -191,10 +191,12 @@ class Pdo implements
      * @param string $scope
      * @return bool
      */
-    public function setAccessToken($access_token, $client_id, $user_id, $expires, $scope = null)
+    public function setAccessToken($access_token, $client_id, $user_id, $expires, $scope = '')
     {
         // convert expires to datestring
-        $expires = date('Y-m-d H:i:s', $expires);
+        $expires    = date('Y-m-d H:i:s', $expires);
+
+        $scope      = strval($scope);
 
         // if it exists, update it.
         if ($this->getAccessToken($access_token)) {
@@ -247,7 +249,7 @@ class Pdo implements
      * @param string $id_token
      * @return bool|mixed
      */
-    public function setAuthorizationCode($code, $client_id, $user_id, $redirect_uri, $expires, $scope = null, $id_token = null, $code_challenge = null, $code_challenge_method = null)
+    public function setAuthorizationCode($code, $client_id, $user_id, $redirect_uri, $expires, $scope = '', $id_token = '', $code_challenge = '', $code_challenge_method = '')
     {
         if (func_num_args() > 6) {
             // we are calling with an id token
@@ -277,7 +279,7 @@ class Pdo implements
      * @param string $id_token
      * @return bool
      */
-    private function setAuthorizationCodeWithIdToken($code, $client_id, $user_id, $redirect_uri, $expires, $scope = null, $id_token = null, $code_challenge = null, $code_challenge_method = null)
+    private function setAuthorizationCodeWithIdToken($code, $client_id, $user_id, $redirect_uri, $expires, $scope = '', $id_token = '', $code_challenge = '', $code_challenge_method = '')
     {
         // convert expires to datestring
         $expires = date('Y-m-d H:i:s', $expires);
@@ -399,7 +401,7 @@ class Pdo implements
      * @param string $scope
      * @return bool
      */
-    public function setRefreshToken($refresh_token, $client_id, $user_id, $expires, $scope = null)
+    public function setRefreshToken($refresh_token, $client_id, $user_id, $expires, $scope = '')
     {
         // convert expires to datestring
         $expires = date('Y-m-d H:i:s', $expires);

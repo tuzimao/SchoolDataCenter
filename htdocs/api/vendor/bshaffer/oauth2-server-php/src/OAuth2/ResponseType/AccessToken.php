@@ -91,7 +91,7 @@ class AccessToken implements AccessTokenInterface
      * @see http://tools.ietf.org/html/rfc6749#section-5
      * @ingroup oauth2_section_5
      */
-    public function createAccessToken($client_id, $user_id, $scope = null, $includeRefreshToken = true)
+    public function createAccessToken($client_id, $user_id, $scope = '', $includeRefreshToken = true)
     {
         $token = array(
             "access_token" => $this->generateAccessToken(),

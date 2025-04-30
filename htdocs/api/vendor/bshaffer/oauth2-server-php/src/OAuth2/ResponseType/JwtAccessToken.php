@@ -56,7 +56,7 @@ class JwtAccessToken extends AccessToken
      * @see http://tools.ietf.org/html/rfc6749#section-5
      * @ingroup oauth2_section_5
      */
-    public function createAccessToken($client_id, $user_id, $scope = null, $includeRefreshToken = true)
+    public function createAccessToken($client_id, $user_id, $scope = '', $includeRefreshToken = true)
     {
         // payload to encrypt
         $payload = $this->createPayload($client_id, $user_id, $scope);
@@ -122,7 +122,7 @@ class JwtAccessToken extends AccessToken
      * @param string $scope               - (optional) Scopes to be stored in space-separated string.
      * @return array                      - The access token
      */
-    protected function createPayload($client_id, $user_id, $scope = null)
+    protected function createPayload($client_id, $user_id, $scope = '')
     {
         // token to encrypt
         $expires = time() + $this->config['access_lifetime'];

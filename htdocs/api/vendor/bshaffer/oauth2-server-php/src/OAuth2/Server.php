@@ -422,7 +422,7 @@ class Server implements ResourceControllerInterface,
      * @param string            $scope    - Scope
      * @return mixed
      */
-    public function verifyResourceRequest(RequestInterface $request, ?ResponseInterface $response = null, $scope = null)
+    public function verifyResourceRequest(RequestInterface $request, ?ResponseInterface $response = null, $scope = '')
     {
         $this->response = is_null($response) ? new Response() : $response;
         $value = $this->getResourceController()->verifyResourceRequest($request, $this->response, $scope);

@@ -15,7 +15,7 @@ class NamedRange extends DefinedName
         ?Worksheet $worksheet = null,
         string $range = 'A1',
         bool $localOnly = false,
-        ?Worksheet $scope = null
+        ?Worksheet $scope = ''
     ) {
         if ($worksheet === null && $scope === null) {
             throw new Exception('You must specify a worksheet or a scope for a Named Range');

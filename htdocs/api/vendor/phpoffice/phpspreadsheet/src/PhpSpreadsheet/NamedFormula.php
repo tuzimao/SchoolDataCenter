@@ -14,7 +14,7 @@ class NamedFormula extends DefinedName
         ?Worksheet $worksheet = null,
         ?string $formula = null,
         bool $localOnly = false,
-        ?Worksheet $scope = null
+        ?Worksheet $scope = ''
     ) {
         // Validate data
         if (!isset($formula)) {
