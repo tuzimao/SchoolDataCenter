@@ -1,14 +1,11 @@
-
 export const AppSchoolConfigMap: any  = {}
 AppSchoolConfigMap['production']       = ["/api/", 'SchoolAI', "auth/menus.php", "/api/"] //For Exe Package
 AppSchoolConfigMap['development']     = ["http://localhost:8888/api/", 'SchoolAI', "auth/menus.php", "http://localhost:8888/api/"] //For Local Development
 AppSchoolConfigMap['dandian.net']     = ["https://demoapi.dandian.net/api/", 'SchoolAI', "auth/menus.php", "https://demoapi.dandian.net/api/"] // For School and Demoapi.dandian.net
 AppSchoolConfigMap['fdzyzz.com']      = ["https://fdzz.dandian.net:8443/api/", '福鼎职中', "auth/menus.php", "https://fdzz.dandian.net:8443/api/"]
 AppSchoolConfigMap['fjsmnx.com']      = ["https://dsj.fjsmlyxx.com:1443/api/", '三明林业', "auth/menus.php", "https://dsj.fjsmlyxx.com:1443/api/"]
-
 const AppMarkId   = "dandian.net"; //需要针对每个学校的情况进行修改
 const AppVersion  = '20250430'; //需要刷新客户端JS时需要更新此值
-
 const APP_URL = AppSchoolConfigMap[AppMarkId][0]
 const AppName = AppSchoolConfigMap[AppMarkId][1]
 const indexMenuspath = AppSchoolConfigMap[AppMarkId][2]
