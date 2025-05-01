@@ -112,13 +112,13 @@ function plugin_data_wygl_baoxiuxinxi_6_edit_default_data_before_submit($id)  {
     $sql  = "delete from data_wygl_weixiupingjia where 维修编号='$id'";
     $db->Execute($sql);
 
-    $sql = "insert into data_wygl_weixiupingjia(维修编号,评价名称,评价人,评价等级,备注,创建人,创建时间) values ('$id','服务态度','".$GLOBAL_USER->USER_ID."','".$_POST['服务态度']."','备注','".$GLOBAL_USER->USER_ID."','".date('Y-m-d H:i:s')."') ";
+    $sql = "insert into data_wygl_weixiupingjia(维修编号,评价名称,评价人,评价等级,备注,创建人,创建时间) values ('$id','服务态度','".$GLOBAL_USER->USER_ID."','".ForSqlInjection($_POST['服务态度'])."','备注','".$GLOBAL_USER->USER_ID."','".date('Y-m-d H:i:s')."') ";
     $db->Execute($sql);
-    $sql = "insert into data_wygl_weixiupingjia(维修编号,评价名称,评价人,评价等级,备注,创建人,创建时间) values ('$id','维修质量','".$GLOBAL_USER->USER_ID."','".$_POST['维修质量']."','备注','".$GLOBAL_USER->USER_ID."','".date('Y-m-d H:i:s')."') ";
+    $sql = "insert into data_wygl_weixiupingjia(维修编号,评价名称,评价人,评价等级,备注,创建人,创建时间) values ('$id','维修质量','".$GLOBAL_USER->USER_ID."','".ForSqlInjection($_POST['维修质量'])."','备注','".$GLOBAL_USER->USER_ID."','".date('Y-m-d H:i:s')."') ";
     $db->Execute($sql);
-    $sql = "insert into data_wygl_weixiupingjia(维修编号,评价名称,评价人,评价等级,备注,创建人,创建时间) values ('$id','维修结果','".$GLOBAL_USER->USER_ID."','".$_POST['维修结果']."','备注','".$GLOBAL_USER->USER_ID."','".date('Y-m-d H:i:s')."') ";
+    $sql = "insert into data_wygl_weixiupingjia(维修编号,评价名称,评价人,评价等级,备注,创建人,创建时间) values ('$id','维修结果','".$GLOBAL_USER->USER_ID."','".ForSqlInjection($_POST['维修结果'])."','备注','".$GLOBAL_USER->USER_ID."','".date('Y-m-d H:i:s')."') ";
     $db->Execute($sql);
-    $sql = "insert into data_wygl_weixiupingjia(维修编号,评价名称,评价人,评价等级,备注,创建人,创建时间) values ('$id','意见建议','".$GLOBAL_USER->USER_ID."','".$_POST['意见建议']."','','".$GLOBAL_USER->USER_ID."','".date('Y-m-d H:i:s')."') ";
+    $sql = "insert into data_wygl_weixiupingjia(维修编号,评价名称,评价人,评价等级,备注,创建人,创建时间) values ('$id','意见建议','".$GLOBAL_USER->USER_ID."','".ForSqlInjection($_POST['意见建议'])."','','".$GLOBAL_USER->USER_ID."','".date('Y-m-d H:i:s')."') ";
     $db->Execute($sql);
 
     $sql = "update data_wygl_baoxiuxinxi set 是否评价='是' where id ='$id' ";

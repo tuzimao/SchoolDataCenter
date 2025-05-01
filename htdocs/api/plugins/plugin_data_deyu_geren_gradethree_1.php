@@ -18,7 +18,7 @@ function plugin_data_deyu_geren_gradethree_1_add_default_data_before_submit()  {
     global $GLOBAL_USER;
     global $TableName;
     //Here is your write code
-    $_POST['一级指标'] = returntablefield("data_deyu_geren_gradetwo","二级指标",$_POST['二级指标'],"一级指标")['一级指标'];
+    $_POST['一级指标'] = returntablefield("data_deyu_geren_gradetwo","二级指标",ForSqlInjection($_POST['二级指标']),"一级指标")['一级指标'];
 }
 
 function plugin_data_deyu_geren_gradethree_1_add_default_data_after_submit($id)  {
@@ -54,7 +54,7 @@ function plugin_data_deyu_geren_gradethree_1_edit_default_data_before_submit($id
     global $GLOBAL_USER;
     global $TableName;
     //Here is your write code
-    $_POST['一级指标'] = returntablefield("data_deyu_geren_gradetwo","二级指标",$_POST['二级指标'],"一级指标")['一级指标'];
+    $_POST['一级指标'] = returntablefield("data_deyu_geren_gradetwo","二级指标",ForSqlInjection($_POST['二级指标']),"一级指标")['一级指标'];
 }
 
 function plugin_data_deyu_geren_gradethree_1_edit_default_data_after_submit($id)  {

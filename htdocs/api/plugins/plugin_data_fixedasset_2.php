@@ -53,7 +53,7 @@ function plugin_data_fixedasset_2_edit_default_data_before_submit($id)  {
     global $GLOBAL_USER;
     global $TableName;
     //Here is your write code
-    $数量   = intval($_POST['数量']);
+    $数量   = intval( ForSqlInjection($POST['数量']);
     if($数量<1)    {
         $RS = [];
         $RS['status'] = "ERROR";
@@ -67,7 +67,7 @@ function plugin_data_fixedasset_2_edit_default_data_before_submit($id)  {
     if($数量>intval($rs->fields['数量']))    {
         $RS = [];
         $RS['status'] = "ERROR";
-        $RS['msg'] = "调拨数量不能超过该资产的现有数量:".$rs->fields['数量'];
+        $RS['msg'] = "调拨数量不能超过该资产的现有数量:".$rs->fields['数量']);
         print json_encode($RS);
         exit;
     }
@@ -79,7 +79,7 @@ function plugin_data_fixedasset_2_edit_default_data_before_submit($id)  {
         $Element['id'] = NULL;
         $sql        = "select MAX(资产编码) AS 资产编码 from data_fixedasset";
         $rs         = $db->Execute($sql);
-        $资产编码    = $rs->fields['资产编码'];
+        $资产编码    = $rs->fields['资产编码']);
         $最后五位   = substr($资产编码,-5);
         $最后五位   += 1;
         if(strlen($最后五位)==4) $最后五位 = "0".$最后五位;
@@ -88,14 +88,14 @@ function plugin_data_fixedasset_2_edit_default_data_before_submit($id)  {
         if(strlen($最后五位)==1) $最后五位 = "0000".$最后五位;
         $资产编码   = substr($资产编码,0,-5).$最后五位;
         $Element['资产编码'] = $资产编码;
-        $Element['所属部门'] = $_POST['所属部门'];
-        $Element['使用部门'] = $_POST['使用部门'];
-        $Element['所属班级'] = $_POST['所属班级'];
-        $Element['所属宿舍'] = $_POST['所属宿舍'];
-        $Element['使用人员'] = $_POST['使用人员'];
-        $Element['责任人员'] = $_POST['责任人员'];
-        $Element['存放地点'] = $_POST['存放地点'];
-        $Element['数量']    = $_POST['数量'];
+        $Element['所属部门'] =  ForSqlInjection($POST['所属部门']);
+        $Element['使用部门'] =  ForSqlInjection($POST['使用部门']);
+        $Element['所属班级'] =  ForSqlInjection($POST['所属班级']);
+        $Element['所属宿舍'] =  ForSqlInjection($POST['所属宿舍']);
+        $Element['使用人员'] =  ForSqlInjection($POST['使用人员']);
+        $Element['责任人员'] =  ForSqlInjection($POST['责任人员']);
+        $Element['存放地点'] =  ForSqlInjection($POST['存放地点']);
+        $Element['数量']    =  ForSqlInjection($POST['数量']);
         $KEYS = array_keys($Element);
         $VALUES = array_values($Element);
         $sql = "insert into data_fixedasset (".join(',',$KEYS).") values('".join("','",$VALUES)."')";
@@ -116,12 +116,12 @@ function plugin_data_fixedasset_2_edit_default_data_before_submit($id)  {
     else if($数量==intval($rs->fields['数量']))    {
         $Element            = [];
         $Element['id']      = $id;
-        $Element['所属部门'] = $_POST['所属部门'];
-        $Element['使用部门'] = $_POST['使用部门'];
-        $Element['所属班级'] = $_POST['所属班级'];
-        $Element['所属宿舍'] = $_POST['所属宿舍'];
-        $Element['使用人员'] = $_POST['使用人员'];
-        $Element['责任人员'] = $_POST['责任人员'];
+        $Element['所属部门'] =  ForSqlInjection($POST['所属部门']);
+        $Element['使用部门'] =  ForSqlInjection($POST['使用部门']);
+        $Element['所属班级'] =  ForSqlInjection($POST['所属班级']);
+        $Element['所属宿舍'] =  ForSqlInjection($POST['所属宿舍']);
+        $Element['使用人员'] =  ForSqlInjection($POST['使用人员']);
+        $Element['责任人员'] =  ForSqlInjection($POST['责任人员']);
         [$rs,$sql]  = InsertOrUpdateTableByArray("data_fixedasset",$Element,'id',0,'Update');
         $RS         = [];
         $RS['status'] = "OK";

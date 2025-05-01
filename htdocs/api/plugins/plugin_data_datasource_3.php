@@ -71,7 +71,7 @@ function plugin_data_datasource_3_edit_default_configsetting_data($id)  {
     global $GLOBAL_USER;
     global $TableName;
 
-	  $数据库地址     = $_POST['数据库地址'];
+	$数据库地址     = $_POST['数据库地址'];
     $数据库用户名   = $_POST['数据库用户名'];
     $数据库密码     = $_POST['数据库密码'];
     $数据库名称     = "td_form";

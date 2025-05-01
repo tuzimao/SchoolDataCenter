@@ -18,7 +18,7 @@ function plugin_data_middle_shoufeibiaozhun_1_add_default_data_before_submit()  
     global $GLOBAL_USER;
     global $TableName;
     //Here is your write code
-    $_POST['收费标准'] = $_POST['学期'] ."-". $_POST['学部'];
+    $_POST['收费标准'] = ForSqlInjection($_POST['学期']) ."-". ForSqlInjection($_POST['学部']);
     $_POST['收费合计'] = intval($_POST['学费实收']) + intval($_POST['住宿费']) + intval($_POST['伙食费']) + intval($_POST['床上用品校服费']) + intval($_POST['代管费']);
 }
 
@@ -58,7 +58,7 @@ function plugin_data_middle_shoufeibiaozhun_1_edit_default_data_before_submit($i
     global $GLOBAL_USER;
     global $TableName;
     //Here is your write code
-    $_POST['收费标准'] = $_POST['学期'] ."-". $_POST['学部'];
+    $_POST['收费标准'] = ForSqlInjection($_POST['学期']) ."-". ForSqlInjection($_POST['学部']);
     $_POST['收费合计'] = intval($_POST['学费实收']) + intval($_POST['住宿费']) + intval($_POST['伙食费']) + intval($_POST['床上用品校服费']) + intval($_POST['代管费']);
 }
 

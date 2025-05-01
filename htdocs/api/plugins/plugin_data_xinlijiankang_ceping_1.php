@@ -80,10 +80,10 @@ function plugin_data_xinlijiankang_ceping_1_edit_default_data_before_submit($id)
     $sql        = "select * from `$TableName` where id = '$id'";
     $rs         = $db->Execute($sql);
     $rs_a       = $rs->GetArray();
-    $测评名称旧值 = $rs_a[0]['测评名称'];
+    $测评名称旧值 = ForSqlInjection($rs_a[0]['测评名称']);
     $_POST['测评名称'] = $_POST['测评名称'];
     if($_POST['测评名称'] != "" && $_POST['测评名称'] != $测评名称旧值 && $测评名称旧值!="")  {
-        $sql = "update data_xinlijiankang_cepingxuanxiang set 测评名称='".$_POST['测评名称']."' where 测评名称='$测评名称旧值'";
+        $sql = "update data_xinlijiankang_cepingxuanxiang set 测评名称='".ForSqlInjection($_POST['测评名称'])."' where 测评名称='$测评名称旧值'";
         $db->Execute($sql);
     }
 }

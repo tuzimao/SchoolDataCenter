@@ -993,7 +993,7 @@ function plugin_data_xinlijiankang_ceping_edit_default_data_before_submit($id)  
 
     foreach($题库信息 AS $单个题目) {
         $题目选项 = [];
-        $测评选项 = $_POST['题目_'.$单个题目['id']];
+        $测评选项 = ForSqlInjection($_POST['题目_'.$单个题目['id']]);
         if($测评选项!="")      {
             $Element = [];
             $Element['测评名称'] = $单个题目['测评名称'];

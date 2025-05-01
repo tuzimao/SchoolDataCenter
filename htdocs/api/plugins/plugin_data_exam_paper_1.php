@@ -28,8 +28,8 @@ function plugin_data_exam_paper_1_add_default_data_after_submit($id)  {
     global $TableName;
     //Here is your write code
     if($_POST['试题抽取方式']=="所有学生共用一套试题")   {
-        $单选题目数量   = $_POST['单选题目数量'];
-        $题库分类       = $_POST['题库分类'];
+        $单选题目数量   = ForSqlInjection($POST['单选题目数量']);
+        $题库分类       = ForSqlInjection($POST['题库分类']);
         if($单选题目数量>0) {
             $sql        = "select * from data_exam_question where 题库分类='$题库分类' and 类型='单选'";
             $rs         = $db->Execute($sql);
@@ -40,7 +40,7 @@ function plugin_data_exam_paper_1_add_default_data_after_submit($id)  {
                 $题目序号列表['单选'][] = $Item['id'];
             }
         }
-        $多选题目数量 = $_POST['多选题目数量'];
+        $多选题目数量 = ForSqlInjection($POST['多选题目数量']);
         if($多选题目数量>0) {
             $sql        = "select * from data_exam_question where 题库分类='$题库分类' and 类型='多选'";
             $rs         = $db->Execute($sql);
@@ -51,7 +51,7 @@ function plugin_data_exam_paper_1_add_default_data_after_submit($id)  {
                 $题目序号列表['多选'][] = $Item['id'];
             }
         }
-        $判断题目数量 = $_POST['判断题目数量'];
+        $判断题目数量 = ForSqlInjection($POST['判断题目数量']);
         if($判断题目数量>0) {
             $sql        = "select * from data_exam_question where 题库分类='$题库分类' and 类型='判断'";
             $rs         = $db->Execute($sql);
@@ -94,8 +94,8 @@ function plugin_data_exam_paper_1_edit_default_data_after_submit($id)  {
     global $TableName;
     //Here is your write code
     if($_POST['试题抽取方式']=="所有学生共用一套试题")   {
-        $单选题目数量   = $_POST['单选题目数量'];
-        $题库分类       = $_POST['题库分类'];
+        $单选题目数量   = ForSqlInjection($POST['单选题目数量']);
+        $题库分类       = ForSqlInjection($POST['题库分类']);
         if($单选题目数量>0) {
             $sql        = "select * from data_exam_question where 题库分类='$题库分类' and 类型='单选'";
             $rs         = $db->Execute($sql);
@@ -106,7 +106,7 @@ function plugin_data_exam_paper_1_edit_default_data_after_submit($id)  {
                 $题目序号列表['单选'][] = $Item['id'];
             }
         }
-        $多选题目数量 = $_POST['多选题目数量'];
+        $多选题目数量 = ForSqlInjection($POST['多选题目数量']);
         if($多选题目数量>0) {
             $sql        = "select * from data_exam_question where 题库分类='$题库分类' and 类型='多选'";
             $rs         = $db->Execute($sql);
@@ -117,7 +117,7 @@ function plugin_data_exam_paper_1_edit_default_data_after_submit($id)  {
                 $题目序号列表['多选'][] = $Item['id'];
             }
         }
-        $判断题目数量 = $_POST['判断题目数量'];
+        $判断题目数量 = ForSqlInjection($POST['判断题目数量']);
         if($判断题目数量>0) {
             $sql        = "select * from data_exam_question where 题库分类='$题库分类' and 类型='判断'";
             $rs         = $db->Execute($sql);

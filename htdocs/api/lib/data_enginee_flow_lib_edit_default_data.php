@@ -79,7 +79,7 @@ if( $_GET['action']=="edit_default_data" && in_array('Edit',$Actions_In_List_Row
             $IsExecutionSQL = 1;
         }
     }
-    if($_POST['ChildItemCounter']>0 && $SettingMap['Relative_Child_Table_Edit_Priv'] == "Yes") {
+    if(intval($_POST['ChildItemCounter'])>0 && $SettingMap['Relative_Child_Table_Edit_Priv'] == "Yes") {
         $IsExecutionSQLChildTable = 1;
     }
     //Check Permission For This Record
@@ -245,7 +245,7 @@ if( $_GET['action']=="edit_default_data" && in_array('Edit',$Actions_In_List_Row
                     $rs                         = $db->Execute($sql);
                     $ChildAllFieldsFromTable    = $rs->GetArray();
                     $ChildAllFieldsMap          = [];
-                    $ChildItemCounter           = $_POST['ChildItemCounter'];
+                    $ChildItemCounter           = intval($_POST['ChildItemCounter']);
                     for($X=0;$X<$ChildItemCounter;$X++)                    {
                         $ChildElement = [];
                         foreach($ChildAllFieldsFromTable as $Item)  {
@@ -335,7 +335,7 @@ if( $_GET['action']=="edit_default_data" && in_array('Edit',$Actions_In_List_Row
                 $rs                         = $db->Execute($sql);
                 $ChildAllFieldsFromTable    = $rs->GetArray();
                 $ChildAllFieldsMap          = [];
-                $ChildItemCounter           = $_POST['ChildItemCounter'];
+                $ChildItemCounter           = intval($_POST['ChildItemCounter']);
                 for($X=0;$X<$ChildItemCounter;$X++)                    {
                     $ChildElement = [];
                     foreach($ChildAllFieldsFromTable as $Item)  {
@@ -387,7 +387,7 @@ if( $_GET['action']=="edit_default_data" && in_array('Edit',$Actions_In_List_Row
         print_R(EncryptApiData($RS, $GLOBAL_USER));
         exit;
     }
-    else if($IsExecutionSQL == 0 && $_POST['ChildItemCounter']>0)   {
+    else if($IsExecutionSQL == 0 && intval($_POST['ChildItemCounter'])>0)   {
         $RS = [];
         $RS['status'] = "OK";
         $RS['msg']    = $SettingMap['Tip_When_Edit_Success'];

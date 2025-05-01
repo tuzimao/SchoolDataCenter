@@ -338,8 +338,8 @@ if(($_GET['action']=="edit_default"||$_GET['action']=="view_default")&&$_GET['id
 
 if($_GET['action']=="updateone")  {
     $id     = ForSqlInjection($_POST['id']);
-    $field  = FilterString($_POST['field']);
-    $value  = FilterString($_POST['value']);
+    $field  = ForSqlInjection($_POST['field']);
+    $value  = ForSqlInjection($_POST['value']);
     $primary_key = $MetaColumnNames[0];
     if($id!=""&&$field!=""&&in_array($field,$MetaColumnNames)&&$primary_key!=$field) {
         $sql    = "update $TableName set $field = '$value' where $primary_key = '$id'";

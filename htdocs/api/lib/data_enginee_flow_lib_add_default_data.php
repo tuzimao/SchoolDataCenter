@@ -270,7 +270,7 @@ if( $_GET['action']=="add_default_data" && in_array('Add',$Actions_In_List_Heade
                     $rs                         = $db->Execute($sql);
                     $ChildAllFieldsFromTable    = $rs->GetArray();
                     $ChildAllFieldsMap          = [];
-                    $ChildItemCounter           = $_POST['ChildItemCounter'];
+                    $ChildItemCounter           = intval($_POST['ChildItemCounter']);
                     for($X=0;$X<$ChildItemCounter;$X++)                    {
                         $ChildElement = [];
                         foreach($ChildAllFieldsFromTable as $Item)  {
@@ -293,7 +293,7 @@ if( $_GET['action']=="add_default_data" && in_array('Add',$Actions_In_List_Heade
                                     break;
                             }
                         }
-                        $deleteChildTableItemArray = explode(',',$_POST['deleteChildTableItemArray']);
+                        $deleteChildTableItemArray = explode(',', ForSqlInjection($_POST['deleteChildTableItemArray']));
                         if(!in_array($X, $deleteChildTableItemArray)) {
                             $ChildElement[$Relative_Child_Table_Parent_Field_Name] = $FieldsArray[$Relative_Child_Table_Parent_Field_Name];
                             $ChildKeys      = array_keys($ChildElement);

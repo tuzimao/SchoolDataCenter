@@ -60,7 +60,7 @@ if( $_GET['action']=="import_default_data" && in_array('Import',$Actions_In_List
         exit;
     }
     //Body Data
-    $Import_Fields_Array = explode(',',$_POST['Import_Fields']);
+    $Import_Fields_Array = explode(',', ForSqlInjection($_POST['Import_Fields']));
     for ($row = 1; $row < sizeof($data); $row++) {
         $Element        = [];
         $IsExecutionSQL = 0;
@@ -98,7 +98,7 @@ if( $_GET['action']=="import_default_data" && in_array('Import',$Actions_In_List
                 $Element = $functionNameIndividual($Element);
             }
 
-            $Import_Rule_Method = $_POST['Import_Rule_Method'];
+            $Import_Rule_Method = ForSqlInjection($_POST['Import_Rule_Method']);
             switch($Import_Rule_Method) {
                 case 'BothInsertAndUpdate':
                     [$rs,$sql] = InsertOrUpdateTableByArray($TableName,$Element,join(',',$ImportUniqueFields),0,'InsertOrUpdate');
