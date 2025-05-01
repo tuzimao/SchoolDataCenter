@@ -24,8 +24,7 @@ else {
 $db = NewADOConnection($DB_TYPE='mysqli');
 $db->connect($DB_HOST, $DB_USERNAME, $DB_PASSWORD, $DB_DATABASE);
 $db->setFetchMode(ADODB_FETCH_ASSOC);
-$db->set_charset('utf8mb4');
-
+$db->Execute("SET NAMES 'utf8mb4'");
 //$db->debug=true;
 
 function __($Value) {
@@ -217,10 +216,10 @@ function GetAccessKey($USER_ID = '') {
 }
 
 function CheckAuthUserLoginStatus()  {
-	global $NEXT_PUBLIC_JWT_EXPIRATION;
-	global $NEXT_PUBLIC_JWT_SECRET;
-	global $GLOBAL_USER;
-	JWT::$leeway    	  = $NEXT_PUBLIC_JWT_EXPIRATION;
+  global $NEXT_PUBLIC_JWT_EXPIRATION;
+  global $NEXT_PUBLIC_JWT_SECRET;
+  global $GLOBAL_USER;
+  JWT::$leeway    	  = $NEXT_PUBLIC_JWT_EXPIRATION;
   $accessTokenArray   = explode('::::',$_SERVER['HTTP_AUTHORIZATION']);
   $accessToken		    = $accessTokenArray[0];
   if($accessToken==""||$accessToken==null)   {

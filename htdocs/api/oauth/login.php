@@ -1,5 +1,8 @@
 <?php
 session_start();
+print_R($_SERVER['HTTP_COOKIE']);
+print "<BR>";
+print_R($_SESSION);
 require_once('server.php');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -36,4 +39,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <label>密码：<input type="password" name="password" required></label><br>
     <button type="submit">登录</button>
 </form>
-<p>没有账户？<a href="registerUser.php">注册</a></p>
+<?php
+print_R($_SESSION);
+?>

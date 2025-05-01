@@ -6,9 +6,12 @@
 * Copyright (c) 2007-2025
 * License: 商业授权
 */
+
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 require_once('cors.php');
+session_start(); // 必须位于 headers 之后
+
 require_once('include.inc.php');
 
 /**
@@ -75,6 +78,10 @@ if($_GET['action']=="login")                {
                 $RS['accessToken']      = $accessToken;
                 $RS['accessKey']        = GetAccessKey($userData['USER_ID']);
                 $RS['userData']         = $userData;
+                $_SESSION['DANDIAN_OAUTH_SERVER_USER_ID']   = $userData['USER_ID'];
+                $_SESSION['DANDIAN_OAUTH_SERVER_USER_NAME'] = $userData['USER_NAME'];
+                $_SESSION['DANDIAN_OAUTH_SERVER_USER_TYPE'] = $userData['type'];
+
                 //形成个人信息展示页面的数据列表
                 $USER_PROFILE 	    = array();
                 $USER_PROFILE[] 	= array("左边"=>"用户类型","右边"=>"学生");
@@ -133,8 +140,12 @@ if($_GET['action']=="login")                {
                 $RS['accessToken']      = $accessToken;
                 $RS['accessKey']        = GetAccessKey($userData['USER_ID']);
                 $RS['userData']         = $userData;
+                $_SESSION['DANDIAN_OAUTH_SERVER_USER_ID']   = $userData['USER_ID'];
+                $_SESSION['DANDIAN_OAUTH_SERVER_USER_NAME'] = $userData['USER_NAME'];
+                $_SESSION['DANDIAN_OAUTH_SERVER_USER_TYPE'] = $userData['type'];
                 $RS['status']           = "OK";
                 $RS['msg']              = __("Success");
+
                 //形成个人信息展示页面的数据列表
                 $USER_PROFILE 	    = array();
                 $USER_PROFILE[] 	= array("左边"=>"用户类型","右边"=>"校友");
@@ -184,6 +195,9 @@ if($_GET['action']=="login")                {
             $RS['accessToken']      = $accessToken;
             $RS['accessKey']        = GetAccessKey($userData['USER_ID']);
             $RS['userData']         = $userData;
+            $_SESSION['DANDIAN_OAUTH_SERVER_USER_ID']   = $userData['USER_ID'];
+            $_SESSION['DANDIAN_OAUTH_SERVER_USER_NAME'] = $userData['USER_NAME'];
+            $_SESSION['DANDIAN_OAUTH_SERVER_USER_TYPE'] = $userData['type'];
 
             $GO_SYSTEM                          = [];
             $userInfoX                          = [];
@@ -239,6 +253,18 @@ if($_GET['action']=="refresh")                {
     $RS['accessToken']          = $accessToken;
     $RS['accessKey']            = GetAccessKey($CheckAuthUserLoginStatus->USER_ID);
     $RS['userData']             = (array) $CheckAuthUserLoginStatus;
+    if($CheckAuthUserLoginStatus->USER_ID != "")  {
+        $_SESSION['DANDIAN_OAUTH_SERVER_USER_ID']   = $CheckAuthUserLoginStatus->USER_ID;
+        $_SESSION['DANDIAN_OAUTH_SERVER_USER_NAME'] = $CheckAuthUserLoginStatus->USER_NAME;
+    }
+    if($CheckAuthUserLoginStatus->学号 != "")  {
+        $_SESSION['DANDIAN_OAUTH_SERVER_USER_ID']   = $CheckAuthUserLoginStatus->学号;
+        $_SESSION['DANDIAN_OAUTH_SERVER_USER_NAME'] = $CheckAuthUserLoginStatus->姓名;
+    }
+    if($CheckAuthUserLoginStatus->type != "")  {
+        $_SESSION['DANDIAN_OAUTH_SERVER_USER_TYPE'] = $CheckAuthUserLoginStatus->type;
+    }
+    $RS['_SESSION']          = $_SESSION;
     print_r(json_encode($RS));
     exit;
 }

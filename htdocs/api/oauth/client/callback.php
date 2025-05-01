@@ -60,7 +60,7 @@ print "access_token: ".$access_token."<BR>";
 if($access_token != '')  {
   $url      = $access_token_uri."?accessToken=".$access_token;
   $content  = file_get_contents($url);
-  //print_R($content);
+  print_R($content);
 
   $UserInfor = json_decode($content, true);
   print "用户信息: "; print_R($UserInfor)."<BR>";
