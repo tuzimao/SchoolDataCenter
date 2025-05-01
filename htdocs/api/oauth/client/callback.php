@@ -42,4 +42,26 @@ $server->addGrantType(new OAuth2\GrantType\RefreshToken($storage));
 $request = OAuth2\Request::createFromGlobals();
 $response = new OAuth2\Response();
 // 处理 token 请求（code 换 token）
-$server->handleTokenRequest($request, $response)->send();
+$server->handleTokenRequest($request, $response);
+
+$response = $server->handleTokenRequest($request, $response);
+
+$statusCode = $response->getStatusCode();
+$headers    = $response->getHttpHeaders();
+$body       = $response->getResponseBody();
+$bodyArray  = json_decode($body, true);
+
+$access_token = $bodyArray['access_token'];
+print "access_token: ".$access_token."<BR>";
+
+//把 access_token 转换为 用户信息
+if($access_token != '')  {
+  $url      = $access_token_uri."?accessToken=".$access_token;
+  $content  = file_get_contents($url);
+  $UserInfor = json_decode($content, true);
+  print "用户信息: "; print_R($UserInfor)."<BR>"; exit;
+}
+
+
+print_R($statusCode);
+print_R($bodyArray);

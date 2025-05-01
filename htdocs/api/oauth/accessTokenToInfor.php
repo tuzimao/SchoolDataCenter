@@ -1,7 +1,8 @@
 <?php
 require_once('server.php');
+require_once('../include.inc.php');
 
-$accessToken                    = "7c1bd30596745f81890b1c73397386da28b34397";
+$accessToken                    = filterString($_GET['accessToken']);
 
 $_POST                          = [];
 $_SERVER['REQUEST_METHOD']      = 'GET';
@@ -21,4 +22,4 @@ $tokenData = $server->getAccessTokenData($request);
 
 header('Content-Type: application/json');
 
-print_R($tokenData);
+print_R(json_encode($tokenData));
