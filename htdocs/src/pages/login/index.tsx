@@ -269,13 +269,13 @@ const LoginPage = () => {
                           <Fragment>
                             <span>我同意 </span>
                             <LinkStyled href='/TermsofUse' target="_blank" sx={{mx: 1}}>使用协议</LinkStyled>
-                            <LinkStyled href='/PrivacyPolicy' target="_blank" sx={{mx: 1}}>隐私政策</LinkStyled>
+                            <LinkStyled href='/PrivacyPolicy' target="_blank" sx={{mx: 1}}>隐私政策</LinkStyled>                            
+                            {errors.termsofUse && <span style={{ color: '#FF4C51', marginLeft: '4px'}}>{errors.termsofUse.message} </span>}
                           </Fragment>
                         }
                       />
                     )}
                   />
-                  {errors.termsofUse && <FormHelperText sx={{ color: 'error.main' }}>{errors.termsofUse.message}</FormHelperText>}
                 </FormControl>
               </Box>
               <Button fullWidth size='large' type='submit' variant='contained' sx={{ mb: 7 }}>
