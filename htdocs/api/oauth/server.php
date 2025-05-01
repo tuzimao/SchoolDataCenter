@@ -19,5 +19,3 @@ $server->addGrantType(new OAuth2\GrantType\AuthorizationCode($storage));
 $server->addGrantType(new OAuth2\GrantType\ClientCredentials($storage));
 $server->addGrantType(new OAuth2\GrantType\UserCredentials($storage));
 $server->addGrantType(new OAuth2\GrantType\RefreshToken($storage));
-
-

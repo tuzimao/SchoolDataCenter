@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-if (!isset($_SESSION['user_id'])) {
+if (!isset($_SESSION['DANDIAN_OAUTH_SERVER_USER_ID'])) {
     $_SESSION['redirect_after_login'] = $_SERVER['REQUEST_URI'];
     header('Location: login.php');
     exit;
@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['authorized'] == 'Yes') {
     //同意授权
     $isAuthorized = true;
-    $server->handleAuthorizeRequest($request, $response, $isAuthorized, $_SESSION['username']);
+    $server->handleAuthorizeRequest($request, $response, $isAuthorized, $_SESSION['DANDIAN_OAUTH_SERVER_USER_ID']);
     $response->send();
 }
 

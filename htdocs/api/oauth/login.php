@@ -12,8 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($user && password_verify($password, $user['password'])) {
-        $_SESSION['user_id'] = $user['id'];
-        $_SESSION['username'] = $user['username'];
+        $_SESSION['DANDIAN_OAUTH_SERVER_USER_ID']    = $user['username'];
 
         // 如果登录前是 authorize 重定向来的，跳回
         if (isset($_SESSION['redirect_after_login'])) {

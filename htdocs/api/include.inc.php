@@ -24,7 +24,7 @@ else {
 $db = NewADOConnection($DB_TYPE='mysqli');
 $db->connect($DB_HOST, $DB_USERNAME, $DB_PASSWORD, $DB_DATABASE);
 $db->setFetchMode(ADODB_FETCH_ASSOC);
-$db->Execute("SET NAMES 'utf8'");
+$db->set_charset('utf8mb4');
 
 //$db->debug=true;
 
@@ -186,6 +186,9 @@ function ForSqlInjection($str) 			{
 	$str  = str_replace('select ',"",$str);
 	$str  = str_replace('delete ',"",$str);
 	$str  = str_replace(' from ',"",$str);
+	$str  = str_replace(' or ',"",$str);
+	$str  = str_replace(' xml ',"",$str);
+	$str  = str_replace(' grant ',"",$str);
 	
 	$str  = addslashes($str);
 

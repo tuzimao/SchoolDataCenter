@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 //file_put_contents(__DIR__ . '/callback_debug.log', "[" . date('Y-m-d H:i:s') . "] Called with code: " . ($_GET['code'] ?? 'none') . "\n", FILE_APPEND);
 
 if (!isset($_GET['code'])) {
@@ -58,10 +60,16 @@ print "access_token: ".$access_token."<BR>";
 if($access_token != '')  {
   $url      = $access_token_uri."?accessToken=".$access_token;
   $content  = file_get_contents($url);
-  $UserInfor = json_decode($content, true);
-  print "用户信息: "; print_R($UserInfor)."<BR>"; exit;
-}
+  //print_R($content);
 
+  $UserInfor = json_decode($content, true);
+  print "用户信息: "; print_R($UserInfor)."<BR>";
+  print "用户登录SESSION:";
+  $_SESSION['DANDIAN_OAUTH_CLIENT_USER_ID'] = $UserInfor['USER_ID'];
+  print_R($_SESSION);
+
+  exit;
+}
 
 print_R($statusCode);
 print_R($bodyArray);

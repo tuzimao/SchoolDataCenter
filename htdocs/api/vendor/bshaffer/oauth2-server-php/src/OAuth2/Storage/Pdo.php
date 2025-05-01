@@ -76,7 +76,7 @@ class Pdo implements
             'access_token_table' => 'data_oauth_access_tokens',
             'refresh_token_table' => 'data_oauth_refresh_tokens',
             'code_table' => 'data_oauth_authorization_codes',
-            'user_table' => 'oauth_users',
+            'user_table' => 'data_users',
             'jwt_table'  => 'oauth_jwt',
             'jti_table'  => 'oauth_jti',
             'scope_table'  => 'oauth_scopes',
@@ -458,16 +458,17 @@ class Pdo implements
      */
     public function getUser($username)
     {
-        $stmt = $this->db->prepare($sql = sprintf('SELECT * from %s where username=:username', $this->config['user_table']));
-        $stmt->execute(array('username' => $username));
+        $stmt = $this->db->prepare($sql = sprintf('SELECT * from %s where USER_ID=:username', $this->config['user_table']));
+        $stmt->execute(array('USER_ID' => $username));
 
         if (!$userInfo = $stmt->fetch(\PDO::FETCH_ASSOC)) {
             return false;
         }
+        print_R($userInfo);
 
         // the default behavior is to use "username" as the user_id
         return array_merge(array(
-            'user_id' => $username
+            'USER_ID' => $username
         ), $userInfo);
     }
 
@@ -482,17 +483,6 @@ class Pdo implements
      */
     public function setUser($username, $password, $firstName = null, $lastName = null)
     {
-        // do not store in plaintext
-        $password = $this->hashPassword($password);
-
-        // if it exists, update it.
-        if ($this->getUser($username)) {
-            $stmt = $this->db->prepare($sql = sprintf('UPDATE %s SET password=:password, first_name=:firstName, last_name=:lastName where username=:username', $this->config['user_table']));
-        } else {
-            $stmt = $this->db->prepare(sprintf('INSERT INTO %s (username, password, first_name, last_name) VALUES (:username, :password, :firstName, :lastName)', $this->config['user_table']));
-        }
-
-        return $stmt->execute(compact('username', 'password', 'firstName', 'lastName'));
     }
 
     /**
@@ -661,16 +651,6 @@ class Pdo implements
     public function getBuildSql($dbName = 'oauth2_server_php')
     {
         $sql = "
-            CREATE TABLE {$this->config['user_table']} (
-              username            VARCHAR(80),
-              password            VARCHAR(80),
-              first_name          VARCHAR(80),
-              last_name           VARCHAR(80),
-              email               VARCHAR(80),
-              email_verified      BOOLEAN,
-              scope               VARCHAR(4000)
-            );
-
             CREATE TABLE {$this->config['scope_table']} (
               scope               VARCHAR(80)  NOT NULL,
               is_default          BOOLEAN,
