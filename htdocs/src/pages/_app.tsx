@@ -32,6 +32,7 @@ import AclGuard from 'src/@core/components/auth/AclGuard'
 import ThemeComponent from 'src/@core/theme/ThemeComponent'
 import AuthGuard from 'src/@core/components/auth/AuthGuard'
 import GuestGuard from 'src/@core/components/auth/GuestGuard'
+import AuthAndGuestGuard from 'src/@core/components/auth/AuthAndGuestGuard'
 import WindowWrapper from 'src/@core/components/window-wrapper'
 
 // ** Spinner Import
@@ -73,6 +74,7 @@ type ExtendedAppProps = AppProps & {
 type GuardProps = {
   authGuard: boolean
   guestGuard: boolean
+  AuthAndGuestGuard: boolean
   children: ReactNode
 }
 
@@ -98,12 +100,17 @@ if (themeConfig.routingLoader) {
   })
 }
 
-const Guard = ({ children, authGuard, guestGuard }: GuardProps) => {
-  if (guestGuard) {
+const Guard = ({ children, authGuard, guestGuard, AuthAndGuestGuard }: GuardProps) => {
+  if (AuthAndGuestGuard) {
+    return <AuthAndGuestGuard fallback={<Spinner />}>{children}</AuthAndGuestGuard>
+  }
+  else if (guestGuard) {
     return <GuestGuard fallback={<Spinner />}>{children}</GuestGuard>
-  } else if (!guestGuard && !authGuard) {
+  } 
+  else if (!guestGuard && !authGuard) {
     return <>{children}</>
-  } else {
+  } 
+  else {
     return <AuthGuard fallback={<Spinner />}>{children}</AuthGuard>
   }
 }

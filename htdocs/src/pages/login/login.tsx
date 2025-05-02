@@ -45,6 +45,7 @@ import themeConfig from 'src/configs/themeConfig'
 import BlankLayout from 'src/@core/layouts/BlankLayout'
 
 import { authConfig } from 'src/configs/auth'
+import { useRouter } from 'next/router'
 
 const LinkStyled = styled(Link)(({ theme }) => ({
   fontSize: '0.875rem',
@@ -109,11 +110,12 @@ interface FormData {
   termsofUse: boolean
 }
 
-const LoginPage = ({ setPageModel } : any) => {
+const LoginPage = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false)
 
   // ** Hooks
   const auth = useAuth()
+  const router = useRouter()
   const theme = useTheme()
   const { settings } = useSettings()
   const hidden = useMediaQuery(theme.breakpoints.down('md'))
@@ -144,13 +146,17 @@ const LoginPage = ({ setPageModel } : any) => {
 
     auth.login({Data: base58Encode(base58Encode(JSON.stringify({ username, password, rememberMe: true })))}
       , () => {
+
+        //登录失败
         setError('username', {
           type: 'manual',
           message: '用户名或密码错误'
         })
       }
       , () => {
-        setPageModel('Auth')
+
+        //登录成功
+        router.push('/login/auth')
       }
     )
   }
@@ -294,6 +300,6 @@ const LoginPage = ({ setPageModel } : any) => {
 
 LoginPage.getLayout = (page: ReactNode) => <BlankLayout>{page}</BlankLayout>
 
-LoginPage.guestGuard = true
+LoginPage.AuthAndGuestGuard = true
 
 export default LoginPage
