@@ -68,7 +68,7 @@ const AuthPage = () => {
             <Typography variant="body2">您的用户名, 用户姓名, 部门或班级信息</Typography>
 
           </CardContent>
-          <Box display="flex" justifyContent="space-between" px={2} pb={2}>
+          <Box display="flex" justifyContent="space-between" px={3} pb={2}>
             <Button variant="outlined" size='small'> 拒绝授权 </Button>
             <Button variant="contained" onClick={() => (window.location.href = user.redirectUrl)} >
               授权访问

@@ -109,7 +109,7 @@ interface FormData {
   termsofUse: boolean
 }
 
-const LoginPage = () => {
+const LoginPage = ({ setPageModel } : any) => {
   const [showPassword, setShowPassword] = useState<boolean>(false)
 
   // ** Hooks
@@ -142,25 +142,28 @@ const LoginPage = () => {
       return encoded;
     }
 
-    auth.login({Data: base58Encode(base58Encode(JSON.stringify({ username, password, rememberMe: true })))}, () => {
-      setError('username', {
-        type: 'manual',
-        message: '用户名或密码错误'
-      })
-    })
+    auth.login({Data: base58Encode(base58Encode(JSON.stringify({ username, password, rememberMe: true })))}
+      , () => {
+        setError('username', {
+          type: 'manual',
+          message: '用户名或密码错误'
+        })
+      }
+      , () => {
+        setPageModel('Auth')
+      }
+    )
   }
-
-  console.log("errors", errors)
 
   return (
     <Box className='content-right'>
-      {!hidden ? (
+      {!hidden && (
         <Box sx={{ flex: 1, display: 'flex', position: 'relative', alignItems: 'center', justifyContent: 'center' }}>
             <LoginIllustration
               src={authConfig.indexImageUrl}
             />
         </Box>
-      ) : null}
+      )}
       <RightWrapper sx={skin === 'bordered' && !hidden ? { borderLeft: `1px solid ${theme.palette.divider}` } : {}}>
         <Box
           sx={{

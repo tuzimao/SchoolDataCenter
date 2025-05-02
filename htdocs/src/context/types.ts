@@ -1,5 +1,7 @@
 export type ErrCallbackType = (err: { [key: string]: string }) => void
 
+export type SuccessCallbackType = (err: { [key: string]: string }) => void
+
 export type LoginParams = {
   username: string
   password: string
@@ -29,7 +31,7 @@ export type AuthValuesType = {
   user: UserDataType | null
   setLoading: (value: boolean) => void
   setUser: (value: UserDataType | null) => void
-  login: (params: any, errorCallback?: ErrCallbackType) => void
+  login: (params: any, errorCallback?: ErrCallbackType, successCallback?: SuccessCallbackType) => void
   register: (params: RegisterParams, errorCallback?: ErrCallbackType) => void
   refresh: (user: UserDataType) => void
 }

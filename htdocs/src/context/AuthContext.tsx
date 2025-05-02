@@ -12,7 +12,7 @@ import { authConfig, defaultConfig } from 'src/configs/auth'
 import { DecryptDataAES256GCM } from 'src/configs/functions'
 
 // ** Types
-import { AuthValuesType, RegisterParams, ErrCallbackType, UserDataType } from './types'
+import { AuthValuesType, RegisterParams, ErrCallbackType, UserDataType, SuccessCallbackType } from './types'
 
 // ** Defaults
 const defaultProvider: AuthValuesType = {
@@ -91,7 +91,8 @@ const AuthProvider = ({ children }: Props) => {
       }
       else {
         setLoading(false)
-        if(storedToken == undefined)  {
+        console.log("router.asPath", router.asPath)
+        if(storedToken == undefined && !router.asPath.startsWith('/login/login'))  {
           setTimeout(function() {
             router.replace('/login')
           }, 5000);
@@ -103,7 +104,7 @@ const AuthProvider = ({ children }: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const handleLogin = (params: any, errorCallback?: ErrCallbackType) => {
+  const handleLogin = (params: any, errorCallback?: ErrCallbackType, successCallback?: SuccessCallbackType) => {
     const { Data } = params
 
     axios
@@ -144,8 +145,16 @@ const AuthProvider = ({ children }: Props) => {
           setUser({ ...dataJson.userData })
           true ? window.localStorage.setItem('userData', JSON.stringify(dataJson.userData)) : null
           true ? window.localStorage.setItem('GO_SYSTEM', JSON.stringify(dataJson.GO_SYSTEM)) : null
-          const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
-          router.replace(redirectURL as string)
+          
+          console.log("successCallback", successCallback)
+          if (successCallback)  {
+            successCallback(dataJson)
+          }
+          else {
+            const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
+            router.replace(redirectURL as string)
+          }
+
         }
         else {
           setUser(null)
