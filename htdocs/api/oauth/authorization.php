@@ -4,7 +4,8 @@ require_once('../include.inc.php');
 
 if (!isset($_SESSION['DANDIAN_OAUTH_SERVER_USER_ID'])) {
     $_SESSION['redirect_after_login'] = $_SERVER['REQUEST_URI'];
-    header('Location: http://localhost:3000/oauth?redirect_after_login='.base64_safe_encode($_SESSION['redirect_after_login']));
+    $params = http_build_query([ 'response_type' => $_GET['response_type'], 'client_id' => $_GET['client_id'], 'redirect_uri' => $_GET['redirect_uri'], 'state' => $_GET['state'] ]);
+    header('Location: http://localhost:3000/oauth?' . $params);
     exit;
 }
 

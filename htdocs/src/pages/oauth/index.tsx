@@ -1,23 +1,10 @@
-import bs58 from 'bs58'
 
-// ** React Imports
 import { useState, ReactNode, Fragment, useEffect } from 'react'
 
 // ** MUI Components
-import Button from '@mui/material/Button'
-import Checkbox from '@mui/material/Checkbox'
-import TextField from '@mui/material/TextField'
-import InputLabel from '@mui/material/InputLabel'
-import IconButton from '@mui/material/IconButton'
-import Box, { BoxProps } from '@mui/material/Box'
+import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
-import useMediaQuery from '@mui/material/useMediaQuery'
-import OutlinedInput from '@mui/material/OutlinedInput'
-import { styled, useTheme } from '@mui/material/styles'
-import FormHelperText from '@mui/material/FormHelperText'
-import InputAdornment from '@mui/material/InputAdornment'
-import Typography, { TypographyProps } from '@mui/material/Typography'
-import MuiFormControlLabel, { FormControlLabelProps } from '@mui/material/FormControlLabel'
+import Typography from '@mui/material/Typography'
 
 import CircularProgress from '@mui/material/CircularProgress'
 import BlankLayout from 'src/@core/layouts/BlankLayout'
@@ -28,16 +15,17 @@ import { authConfig, defaultConfig } from 'src/configs/auth'
 import { DecryptDataAES256GCM } from 'src/configs/functions'
 
 import axios from 'axios'
-
+import { useRouter } from 'next/router'
 
 const OAuthPage = () => {
+  const router = useRouter()
   const [pageModel, setPageModel] = useState<string>('Loading')
 
   const handleRefreshToken = () => {
     const token = window.localStorage.getItem(defaultConfig.storageTokenKeyName)
     if(window && token && authConfig)  {
       axios
-        .post(authConfig.refreshEndpoint, {}, { headers: { Authorization: token, 'Content-Type': 'application/json'} })
+        .post(authConfig.refreshEndpoint, { client_id: router.query.client_id }, { headers: { Authorization: token, 'Content-Type': 'application/json'} })
         .then(async (response: any) => {
 
           let dataJson: any = null
@@ -66,6 +54,7 @@ const OAuthPage = () => {
           if(dataJson.status == 'ok' && dataJson.accessToken) {
 
             //认证成功
+            console.log("router", router.query)
             setPageModel('Auth')
           }
 
