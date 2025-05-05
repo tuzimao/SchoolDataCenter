@@ -95,6 +95,6 @@ const OAuthPage = () => {
 
 OAuthPage.getLayout = (page: ReactNode) => <BlankLayout>{page}</BlankLayout>
 
-OAuthPage.AuthAndGuestGuard = true
+OAuthPage.authAndGuestGuard = true
 
 export default OAuthPage

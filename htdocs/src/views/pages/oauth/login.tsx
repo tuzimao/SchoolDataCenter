@@ -300,6 +300,6 @@ const LoginPage = () => {
 
 LoginPage.getLayout = (page: ReactNode) => <BlankLayout>{page}</BlankLayout>
 
-LoginPage.AuthAndGuestGuard = true
+LoginPage.authAndGuestGuard = true
 
 export default LoginPage

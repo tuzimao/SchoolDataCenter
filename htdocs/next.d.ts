@@ -7,6 +7,7 @@ declare module 'next' {
     acl?: ACLObj
     authGuard?: boolean
     guestGuard?: boolean
+    authAndGuestGuard?: boolean
     setConfig?: () => void
     contentHeightFixed?: boolean
     getLayout?: (page: ReactElement) => ReactNode

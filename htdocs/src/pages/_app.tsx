@@ -74,7 +74,7 @@ type ExtendedAppProps = AppProps & {
 type GuardProps = {
   authGuard: boolean
   guestGuard: boolean
-  AuthAndGuestGuard: boolean
+  authAndGuestGuard: boolean
   children: ReactNode
 }
 
@@ -100,8 +100,8 @@ if (themeConfig.routingLoader) {
   })
 }
 
-const Guard = ({ children, authGuard, guestGuard, AuthAndGuestGuard }: GuardProps) => {
-  if (AuthAndGuestGuard) {
+const Guard = ({ children, authGuard, guestGuard, authAndGuestGuard }: GuardProps) => {
+  if (authAndGuestGuard) {
     return <AuthAndGuestGuard fallback={<Spinner />}>{children}</AuthAndGuestGuard>
   }
   else if (guestGuard) {
@@ -130,6 +130,8 @@ const App = (props: ExtendedAppProps) => {
 
   const guestGuard = (Component.guestGuard !== null && Component.guestGuard !== undefined) ? Component.guestGuard : false
 
+  const authAndGuestGuard = Component.authAndGuestGuard ? Component.authAndGuestGuard : false
+
   const aclAbilities = (Component.acl !== null && Component.acl !== undefined) ? Component.acl : defaultACLObj
 
   return (
@@ -151,7 +153,7 @@ const App = (props: ExtendedAppProps) => {
                 return (
                   <ThemeComponent settings={settings}>
                     <WindowWrapper>
-                      <Guard authGuard={authGuard} guestGuard={guestGuard}>
+                      <Guard authGuard={authGuard} guestGuard={guestGuard} authAndGuestGuard={authAndGuestGuard}>
                         <AclGuard aclAbilities={aclAbilities} guestGuard={guestGuard}>
                           {getLayout(<Component {...pageProps} />)}
                         </AclGuard>
