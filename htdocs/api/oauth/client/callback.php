@@ -37,6 +37,7 @@ try {
     $用户信息 = json_decode($Data, true);
 
     //拿到用户信息以后, 请根据自己应用程序的需要, 自行处理用户授权信息
+    print "用户信息获取成功!<BR>";
     print "用户信息: "; print_R($用户信息)."<BR>";
     print "用户登录SESSION:"; print_R($_SESSION);
     exit;
