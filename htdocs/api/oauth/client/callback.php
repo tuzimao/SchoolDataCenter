@@ -1,10 +1,15 @@
 <?php
+//SchoolAI 统一身份认证 Demo程序
+//2025-05-05
+
 session_start();
 require_once('config.inc.php');
 
 if (!isset($_GET['code'])) {
     die('No auth code received');
 }
+
+//注意: code是一次性的, 不能进行刷新, 所以需要第三方应用程序来处理自己的业务逻辑
 
 try {
   //第一步: 使用code拿到accessToken的值, code是一次性的, accessToken的值的有效期是24小时, 可以多次调用
@@ -33,9 +38,11 @@ try {
 
     //拿到用户信息以后, 请根据自己应用程序的需要, 自行处理用户授权信息
     print "用户信息: "; print_R($用户信息)."<BR>";
-    print "用户登录SESSION:";
-    $_SESSION['DANDIAN_OAUTH_CLIENT_USER_ID'] = $UserInfor['USER_ID'];
-    print_R($_SESSION);
+    print "用户登录SESSION:"; print_R($_SESSION);
+    exit;
+  }
+  else {
+    print_R($RS);
     exit;
   }
 } 

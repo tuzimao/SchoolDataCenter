@@ -68,7 +68,7 @@ if($access_token != '')  {
 else {
     $RS = [];
     $RS['status']           = 'error';
-    $RS['message']          = 'get access_token failed or have used';
+    $RS['message']          = 'get access_token failed or code have used';
     print json_encode($RS);
     exit;
 }

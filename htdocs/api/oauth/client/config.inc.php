@@ -1,13 +1,19 @@
 <?php
-
-$redirect_uri       = 'http://localhost:8888/api/oauth/client/callback.php';
-$client_id          = 'b721eb9bef5dbbffd625893d94089763';                                           //From registerClient.php
-$client_secret      = '38f5eb5a441675ad7df78484960d368805f28eb0df36198cd992633d9923dda9';           //From registerClient.php
-$authorize_uri      = 'http://localhost:8888/api/oauth/authorization.php';
-$access_token_uri   = 'http://localhost:8888/api/oauth/accessTokenToUserInfo.php';
-$code_token_uri   = 'http://localhost:8888/api/oauth/codeToToken.php';
+//SchoolAI 统一身份认证 Demo程序
+//2025-05-05
 
 
+$redirect_uri       = 'http://localhost:8888/api/oauth/client/callback.php';                        //授权成功以后, 第三方应用的地址, 在这个地址中, 获得当前用户的信息
+$client_id          = 'b721eb9bef5dbbffd625893d94089763';                                           //在SchoolAI -> 统一身份认证 -> 第三方应用中获取
+$client_secret      = '38f5eb5a441675ad7df78484960d368805f28eb0df36198cd992633d9923dda9';           //在SchoolAI -> 统一身份认证 -> 第三方应用中获取
+
+$OAuthServerUri     = 'http://localhost:8888/api/oauth';
+$authorize_uri      = $OAuthServerUri . '/authorization.php';
+$access_token_uri   = $OAuthServerUri . '/accessTokenToUserInfo.php';
+$code_token_uri     = $OAuthServerUri . '/codeToToken.php';
+
+
+//http请求函数
 function httpRequest($url, $method = 'GET', $data = null, $headers = []) {
     $ch = curl_init();
     

@@ -2,7 +2,8 @@
 require_once('server.php');
 require_once('../include.inc.php');
 
-$accessToken                    = filterString($_POST['accessToken']);
+$_POST['accessToken']   = ForSqlInjection($_POST['accessToken']);
+$accessToken            = filterString($_POST['accessToken']);
 
 if(strlen($accessToken) != 40) {
     $RS                     = [];
