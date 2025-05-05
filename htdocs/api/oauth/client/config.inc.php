@@ -10,7 +10,7 @@ $client_secret      = '38f5eb5a441675ad7df78484960d368805f28eb0df36198cd992633d9
 $OAuthServerUri     = 'http://localhost:8888/api/oauth';
 $authorize_uri      = $OAuthServerUri . '/authorization.php';
 $access_token_uri   = $OAuthServerUri . '/accessTokenToUserInfo.php';
-$code_token_uri     = $OAuthServerUri . '/codeToToken.php';
+$code_token_uri     = $OAuthServerUri . '/codeToAccessToken.php';
 
 
 //http请求函数

@@ -29,8 +29,10 @@ function plugin_data_oauth_clients_1_add_default_data_before_submit()  {
     global $GLOBAL_USER;
     global $TableName;
     //Here is your write code
-    $_POST['客户端ID']      = bin2hex(random_bytes(16));
-    $_POST['客户端Secret']  = bin2hex(random_bytes(32));
+    $_POST['client_id']         = bin2hex(random_bytes(16));
+    $_POST['client_secret']     = bin2hex(random_bytes(32));
+    $_POST['grant_types']       = "authorization_code";
+    //$_POST['应用类型']          = "公开";
 }
 
 function plugin_data_oauth_clients_1_add_default_data_after_submit($id)  {
@@ -40,14 +42,6 @@ function plugin_data_oauth_clients_1_add_default_data_after_submit($id)  {
     global $GLOBAL_USER;
     global $TableName;
     //Here is your write code
-    /*
-    $sql        = "select * from `$TableName` where id = '$id'";
-    $rs         = $db->Execute($sql);
-    $rs_a       = $rs->GetArray();
-    foreach($rs_a as $Line)  {
-        //
-    }
-    */
 }
 
 function plugin_data_oauth_clients_1_edit_default($id)  {
