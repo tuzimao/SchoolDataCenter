@@ -22,6 +22,7 @@ export const authConfig = {
     logoutEndpoint: APP_URL + 'jwt.php?action=logout',
     refreshEndpoint: APP_URL + 'jwt.php?action=refresh',
     registerEndpoint: APP_URL + 'jwt/register',
+    authorizationEndpoint: APP_URL + 'oauth/authorization.php',
     backEndApiHost: APP_URL,
     backEndApiAiBaseUrl: backEndApiAiBaseUrl,
     indexImageUrl: '/images/school/' + AppMarkId + '/index.jpg',

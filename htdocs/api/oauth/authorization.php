@@ -36,8 +36,12 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['authorized'] == 'Yes') {
     //同意授权
     $isAuthorized = true;
-    $server->handleAuthorizeRequest($request, $response, $isAuthorized, $_SESSION['DANDIAN_OAUTH_SERVER_USER_ID']);
-    $response->send();
+    $response->handleAuthorizeRequest($request, $response, $isAuthorized, $_SESSION['DANDIAN_OAUTH_SERVER_USER_ID']);
+    $statusCode = $response->getStatusCode();
+    $headers    = $response->getHttpHeaders();
+    $body       = $response->getResponseBody();
+    $bodyArray  = json_decode($body, true);
+    print_R($bodyArray);
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['authorized'] == 'No') {

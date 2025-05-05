@@ -20,12 +20,15 @@ import { useRouter } from 'next/router'
 const OAuthPage = () => {
   const router = useRouter()
   const [pageModel, setPageModel] = useState<string>('Loading')
-
+  const [clientInfo, setClientInfo] = useState<any>(null)
+  const [userData, setUserData] = useState<any>(null)
+  
   const handleRefreshToken = () => {
     const token = window.localStorage.getItem(defaultConfig.storageTokenKeyName)
-    if(window && token && authConfig)  {
+    console.log("router", router)
+    if(window && token && authConfig && router && router.query && router.query.client_id)  {
       axios
-        .post(authConfig.refreshEndpoint, { client_id: router.query.client_id }, { headers: { Authorization: token, 'Content-Type': 'application/json'} })
+        .get(authConfig.refreshEndpoint + '&client_id=' + router.query.client_id, { headers: { Authorization: token, 'Content-Type': 'application/json'} })
         .then(async (response: any) => {
 
           let dataJson: any = null
@@ -51,10 +54,12 @@ const OAuthPage = () => {
               dataJson = data
           }
 
-          if(dataJson.status == 'ok' && dataJson.accessToken) {
+          if(dataJson.status == 'ok' && dataJson.accessToken && dataJson.ClientInfo) {
 
             //认证成功
             console.log("router", router.query)
+            setClientInfo(dataJson.ClientInfo)
+            setUserData(dataJson.userData)
             setPageModel('Auth')
           }
 
@@ -64,7 +69,7 @@ const OAuthPage = () => {
 
   useEffect(() => {
     handleRefreshToken()
-  },[])
+  },[router])
 
   return (
     <Fragment>
@@ -79,8 +84,8 @@ const OAuthPage = () => {
       {pageModel == "Login" && (
         <LoginPage />
       )}
-      {pageModel == "Auth" && (
-        <AuthPage />
+      {pageModel == "Auth" && clientInfo && userData && (
+        <AuthPage clientInfo={clientInfo} userData={userData} />
       )}
     </Fragment>
   )

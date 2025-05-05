@@ -264,7 +264,14 @@ if($_GET['action']=="refresh")                {
     if($CheckAuthUserLoginStatus->type != "")  {
         $_SESSION['DANDIAN_OAUTH_SERVER_USER_TYPE'] = $CheckAuthUserLoginStatus->type;
     }
-    $RS['_SESSION']          = $_SESSION;
+    $client_id          = ForSqlInjection($_GET['client_id']);
+    if($client_id != "")  {
+        $sql    = "select redirect_uri, 应用名称, 应用描述, 应用LOGO, 应用URL, grant_types from data_oauth_clients where client_id='$client_id'";
+        $rs		= $db->Execute($sql);
+        $ClientInfo = $rs->fields;
+        $RS['ClientInfo']    = $ClientInfo;
+    }
+    $RS['_SESSION']     = $_SESSION;
     print_r(json_encode($RS));
     exit;
 }

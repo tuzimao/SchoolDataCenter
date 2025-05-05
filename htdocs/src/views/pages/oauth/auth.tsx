@@ -13,16 +13,29 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle"
 
 import BlankLayout from 'src/@core/layouts/BlankLayout'
 
-import { authConfig } from 'src/configs/auth'
+import { authConfig, defaultConfig } from 'src/configs/auth'
 
-const AuthPage = () => {
+import axios from 'axios'
+import { useRouter } from 'next/router'
+
+const AuthPage = ({ clientInfo, userData } : any) => {
   
-  const user = {
-    username: "jjyunwang2021",
-    appName: "Ionic by Ionic",
-    redirectUrl: "https://ionic.io",
-  };
+  const router = useRouter()
 
+  const handleAuthorizationToken = () => {
+    const token = window.localStorage.getItem(defaultConfig.storageTokenKeyName)
+    if(window && token && authConfig)  {
+      axios
+        .post(authConfig.authorizationEndpoint, { authorized: 'Yes' },  { headers: { Authorization: token, 'Content-Type': 'application/json'} })
+        .then(async (response: any) => {
+
+          const data = response.data
+          console.log("handleAuthorizationToken", response)
+
+        })
+    }
+  }
+  
   return (
     <Box
       sx={{
@@ -48,7 +61,7 @@ const AuthPage = () => {
           <Avatar sx={{ width: 62, height: 62 }} src={authConfig.logoUrl} />
         </Stack>
         <Typography variant="h5" gutterBottom>
-          授权 {user.appName}
+          授权 {clientInfo.应用名称}
         </Typography>
 
         <Card sx={{ maxWidth: 500, width: "100%", mt: 2 }}>
@@ -56,7 +69,7 @@ const AuthPage = () => {
             <Box display="flex" alignItems="center" mb={2}>
               <Avatar sx={{ width: 48, height: 48 }} src={authConfig.backEndApiHost + "/images/avatars/1.png"} />
               <Typography variant="subtitle1" ml={2}>
-                想要访问您的账户:  <strong>{user.username}</strong> 
+                想要访问您的账户:  <strong>{userData.USER_NAME}</strong> 
               </Typography>
             </Box>
 
@@ -70,7 +83,7 @@ const AuthPage = () => {
           </CardContent>
           <Box display="flex" justifyContent="space-between" px={3} pb={2}>
             <Button variant="outlined" size='small'> 拒绝授权 </Button>
-            <Button variant="contained" onClick={() => (window.location.href = user.redirectUrl)} >
+            <Button variant="contained" onClick={() => handleAuthorizationToken()} >
               授权访问
             </Button>
           </Box>
@@ -89,11 +102,8 @@ const AuthPage = () => {
             }}
           >
             <Typography variant="caption">授权访问同意以后, 将会跳转到:</Typography>
-            <Typography variant="caption" fontWeight="bold">{user.redirectUrl}</Typography>
+            <Typography variant="caption" fontWeight="bold">{clientInfo.应用URL}</Typography>
           </Stack>
-
-
-
 
         </Card>
 
