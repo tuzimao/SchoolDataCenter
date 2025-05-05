@@ -271,6 +271,9 @@ if($_GET['action']=="refresh")                {
         $ClientInfo = $rs->fields;
         $RS['ClientInfo']    = $ClientInfo;
     }
+    else {        
+        $RS['ClientInfo']    = false;
+    }
     $RS['_SESSION']     = $_SESSION;
     print_r(json_encode($RS));
     exit;

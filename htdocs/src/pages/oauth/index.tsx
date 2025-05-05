@@ -55,14 +55,20 @@ const OAuthPage = () => {
               dataJson = data
           }
 
+          //认证成功
           if(dataJson.status == 'ok' && dataJson.accessToken && dataJson.ClientInfo) {
-
-            //认证成功
             console.log("router", router.query)
             setClientInfo(dataJson.ClientInfo)
             setUserData(dataJson.userData)
             setQuery(router.query)
             setPageModel('Auth')
+          }
+
+          //Client_Id 不对
+          if(dataJson.status == 'ok' && dataJson.accessToken && dataJson.ClientInfo == false) {
+            console.log("router", router.query)
+            setQuery(router.query)
+            setPageModel('Error')
           }
 
         })
@@ -88,6 +94,14 @@ const OAuthPage = () => {
       )}
       {pageModel == "Auth" && clientInfo && userData && (
         <AuthPage clientInfo={clientInfo} userData={userData} query={query} />
+      )}
+      {pageModel == "Error" && query && (
+        <Grid item xs={12} sm={12} container justifyContent="space-around">
+          <Box sx={{ mt: 6, mb: 6, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+              <Typography sx={{ mt: 6 }}>以下信息错误:</Typography>
+              <Typography sx={{ mt: 6 }}>client_id: {query.client_id}</Typography>
+          </Box>
+        </Grid>
       )}
     </Fragment>
   )
