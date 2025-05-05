@@ -2,7 +2,7 @@
 require_once('server.php');
 require_once('../include.inc.php');
 
-$accessToken                    = filterString($_GET['accessToken']);
+$accessToken                    = filterString($_POST['accessToken']);
 
 if(strlen($accessToken) != 40) {
     $RS                     = [];

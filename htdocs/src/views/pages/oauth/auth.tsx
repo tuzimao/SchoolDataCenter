@@ -18,21 +18,38 @@ import { authConfig, defaultConfig } from 'src/configs/auth'
 import axios from 'axios'
 import { useRouter } from 'next/router'
 
-const AuthPage = ({ clientInfo, userData } : any) => {
+const AuthPage = ({ clientInfo, userData, query } : any) => {
   
   const router = useRouter()
 
-  const handleAuthorizationToken = () => {
+  console.log("clientInfo", clientInfo)
+
+  const handleAuthorizationAgree = async () => {
     const token = window.localStorage.getItem(defaultConfig.storageTokenKeyName)
     if(window && token && authConfig)  {
-      axios
-        .post(authConfig.authorizationEndpoint, { authorized: 'Yes' },  { headers: { Authorization: token, 'Content-Type': 'application/json'} })
-        .then(async (response: any) => {
+      try{
+        await axios
+          .post(authConfig.authorizationEndpoint + '?response_type=' + query.response_type + '&client_id=' + query.client_id + '&redirect_uri=' + query.redirect_uri + '&state=' + query.state , { authorized: 'Yes' },  { headers: { Authorization: token, 'Content-Type': 'application/json'} })
+          .then(async (response: any) => {
+  
+            const data = response.data
+            console.log("handleAuthorizationAgree response", data)
+            if(data && data.statusCode == 302 && data.Location) {
+              router.push(data.Location)
+            }
+  
+          })
+      }
+      catch(Error: any) {
+          console.log("handleAuthorizationAgree Error", Error)
+      }
+    }
+  }
 
-          const data = response.data
-          console.log("handleAuthorizationToken", response)
-
-        })
+  const handleAuthorizationDisagree = async () => {
+    const token = window.localStorage.getItem(defaultConfig.storageTokenKeyName)
+    if(window && token && authConfig)  {
+      router.push(clientInfo.应用URL)
     }
   }
   
@@ -61,31 +78,32 @@ const AuthPage = ({ clientInfo, userData } : any) => {
           <Avatar sx={{ width: 62, height: 62 }} src={authConfig.logoUrl} />
         </Stack>
         <Typography variant="h5" gutterBottom>
-          授权 {clientInfo.应用名称}
+          <Typography component="span" gutterBottom variant="subtitle1" sx={{ fontSize: '0.8em', verticalAlign: 'top', mr: 1 }}>授权</Typography>
+          {' '}
+          {clientInfo.应用名称}
         </Typography>
+
 
         <Card sx={{ maxWidth: 500, width: "100%", mt: 2 }}>
           <CardContent>
             <Box display="flex" alignItems="center" mb={2}>
               <Avatar sx={{ width: 48, height: 48 }} src={authConfig.backEndApiHost + "/images/avatars/1.png"} />
               <Typography variant="subtitle1" ml={2}>
-                想要访问您的账户:  <strong>{userData.USER_NAME}</strong> 
+                <strong>{userData.USER_NAME}</strong> 想要访问您的账户
               </Typography>
             </Box>
 
             <Divider sx={{ my: 2 }} />
 
             <Typography variant="subtitle2" gutterBottom>
-              访问您的个人资料
+              访问您的以下个人资料:
             </Typography>
-            <Typography variant="body2">您的用户名, 用户姓名, 部门或班级信息</Typography>
+            <Typography variant="body2">用户名, 用户姓名, 部门或班级信息</Typography>
 
           </CardContent>
           <Box display="flex" justifyContent="space-between" px={3} pb={2}>
-            <Button variant="outlined" size='small'> 拒绝授权 </Button>
-            <Button variant="contained" onClick={() => handleAuthorizationToken()} >
-              授权访问
-            </Button>
+            <Button variant="outlined" size='small' onClick={() => handleAuthorizationDisagree()} > 拒绝授权 </Button>
+            <Button variant="contained" onClick={() => handleAuthorizationAgree()} > 授权访问 </Button>
           </Box>
 
           <Stack 

@@ -13,4 +13,10 @@ header("Access-Control-Allow-Headers: Content-Type, cache-control, Authorization
 header("Content-type: text/html; charset=utf-8");
 header('Cache-Control: no-cache');
 
+// Handle preflight requests (OPTIONS)
+if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
+
 ?>

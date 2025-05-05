@@ -22,6 +22,7 @@ const OAuthPage = () => {
   const [pageModel, setPageModel] = useState<string>('Loading')
   const [clientInfo, setClientInfo] = useState<any>(null)
   const [userData, setUserData] = useState<any>(null)
+  const [query, setQuery] = useState<any>(null)
   
   const handleRefreshToken = () => {
     const token = window.localStorage.getItem(defaultConfig.storageTokenKeyName)
@@ -60,6 +61,7 @@ const OAuthPage = () => {
             console.log("router", router.query)
             setClientInfo(dataJson.ClientInfo)
             setUserData(dataJson.userData)
+            setQuery(router.query)
             setPageModel('Auth')
           }
 
@@ -85,7 +87,7 @@ const OAuthPage = () => {
         <LoginPage />
       )}
       {pageModel == "Auth" && clientInfo && userData && (
-        <AuthPage clientInfo={clientInfo} userData={userData} />
+        <AuthPage clientInfo={clientInfo} userData={userData} query={query} />
       )}
     </Fragment>
   )

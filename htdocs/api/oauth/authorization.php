@@ -1,8 +1,9 @@
 <?php
 session_start();
+require_once('../cors.php');
 require_once('../include.inc.php');
 
-if (!isset($_SESSION['DANDIAN_OAUTH_SERVER_USER_ID'])) {
+if (!isset($_SESSION['DANDIAN_OAUTH_SERVER_USER_ID']) && $_SERVER['REQUEST_METHOD'] !== 'POST') {
     $_SESSION['redirect_after_login'] = $_SERVER['REQUEST_URI'];
     $params = http_build_query([ 'response_type' => $_GET['response_type'], 'client_id' => $_GET['client_id'], 'redirect_uri' => $_GET['redirect_uri'], 'state' => $_GET['state'] ]);
     header('Location: http://localhost:3000/oauth?' . $params);
@@ -10,6 +11,9 @@ if (!isset($_SESSION['DANDIAN_OAUTH_SERVER_USER_ID'])) {
 }
 
 require_once('server.php');
+
+$payload        = file_get_contents('php://input');
+$_POST          = json_decode($payload,true);
 
 $request    = OAuth2\Request::createFromGlobals();
 $response   = new OAuth2\Response();
@@ -21,30 +25,19 @@ if (!$server->validateAuthorizeRequest($request, $response)) {
     exit;
 }
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    ?>
-    <form method="post">
-        <h2>授权请求</h2>
-        <p>应用 <strong><?= htmlspecialchars($_GET['client_id']) ?></strong> 请求访问你的账户。</p>
-        <button name="authorized" value="Yes" type="submit">同意</button>
-        <button name="authorized" value="No" type="submit">拒绝</button>
-    </form>
-    <?php
-    exit;
-}
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['authorized'] == 'Yes') {
+    CheckAuthUserLoginStatus();
+    global $GLOBAL_USER;
     //同意授权
     $isAuthorized = true;
-    $response->handleAuthorizeRequest($request, $response, $isAuthorized, $_SESSION['DANDIAN_OAUTH_SERVER_USER_ID']);
+    $response = $server->handleAuthorizeRequest($request, $response, $isAuthorized, $GLOBAL_USER->USER_ID);
     $statusCode = $response->getStatusCode();
     $headers    = $response->getHttpHeaders();
     $body       = $response->getResponseBody();
-    $bodyArray  = json_decode($body, true);
-    print_R($bodyArray);
+    $RS         = [];
+    $RS['Location']     = $headers['Location'];
+    $RS['statusCode']   = $statusCode;
+    $RS['authorized']   = $_POST['authorized'];
+    print_R(json_encode($RS));
+    exit;
 }
-
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['authorized'] == 'No') {
-    //不同意授权
-}
-
