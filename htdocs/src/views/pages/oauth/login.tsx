@@ -45,7 +45,6 @@ import themeConfig from 'src/configs/themeConfig'
 import BlankLayout from 'src/@core/layouts/BlankLayout'
 
 import { authConfig } from 'src/configs/auth'
-import { useRouter } from 'next/router'
 
 const LinkStyled = styled(Link)(({ theme }) => ({
   fontSize: '0.875rem',
@@ -115,7 +114,6 @@ const LoginPage = ({ setPageModel }: any) => {
 
   // ** Hooks
   const auth = useAuth()
-  const router = useRouter()
   const theme = useTheme()
   const { settings } = useSettings()
   const hidden = useMediaQuery(theme.breakpoints.down('md'))
