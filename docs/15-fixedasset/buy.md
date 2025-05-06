@@ -1,5 +1,5 @@
 ---
-icon: calendar-check
+icon: puzzle-piece
 ---
 
 ### 固定资产

@@ -1,5 +1,5 @@
 ---
-icon: calendar-check
+icon: wand-magic-sparkles
 ---
 
 ### 固定资产
