@@ -141,10 +141,14 @@ const App = (props: ExtendedAppProps) => {
         <Head>
           <title>{`${themeConfig.templateName}`}</title>
           <meta name='description' content={`${themeConfig.templateName}`} />
-          <meta name='keywords' content='Chives React Admin, MUI, Admin Template, React Admin Template' />
+          <meta name='keywords' content='SchoolAI, 单点数据中心, 智慧大脑' />
           <meta name='viewport' content='initial-scale=1, width=device-width' />
           <meta name='version' content={`${defaultConfig.AppVersion}`} />
-          <meta httpEquiv='Cache-Control' content='max-age=14400' />
+          <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+          <meta http-equiv="Pragma" content="no-cache" />
+          <meta http-equiv="Expires" content="0" />
+          <meta name="apple-mobile-web-app-capable" content="yes" />
+          <meta name="mobile-web-app-capable" content="yes" />
         </Head>
         
         <AuthProvider>
