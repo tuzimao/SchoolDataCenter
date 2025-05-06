@@ -110,7 +110,7 @@ interface FormData {
   termsofUse: boolean
 }
 
-const LoginPage = () => {
+const LoginPage = ({ setPageModel }: any) => {
   const [showPassword, setShowPassword] = useState<boolean>(false)
 
   // ** Hooks
@@ -155,8 +155,8 @@ const LoginPage = () => {
       }
       , () => {
 
-        //登录成功
-        router.push('/login/auth')
+        //登录成功, 不能注释, 如果注释就是常规的登录操作
+        setPageModel('Auth')
       }
     )
   }

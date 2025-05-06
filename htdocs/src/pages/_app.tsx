@@ -101,6 +101,7 @@ if (themeConfig.routingLoader) {
 }
 
 const Guard = ({ children, authGuard, guestGuard, authAndGuestGuard }: GuardProps) => {
+  console.log("authAndGuestGuard", authAndGuestGuard)
   if (authAndGuestGuard) {
     return <AuthAndGuestGuard fallback={<Spinner />}>{children}</AuthAndGuestGuard>
   }
@@ -154,7 +155,7 @@ const App = (props: ExtendedAppProps) => {
                   <ThemeComponent settings={settings}>
                     <WindowWrapper>
                       <Guard authGuard={authGuard} guestGuard={guestGuard} authAndGuestGuard={authAndGuestGuard}>
-                        <AclGuard aclAbilities={aclAbilities} guestGuard={guestGuard}>
+                        <AclGuard aclAbilities={aclAbilities} guestGuard={guestGuard} authAndGuestGuard={authAndGuestGuard}>
                           {getLayout(<Component {...pageProps} />)}
                         </AclGuard>
                       </Guard>

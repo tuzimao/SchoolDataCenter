@@ -26,7 +26,9 @@ const OAuthPage = () => {
   
   const handleRefreshToken = () => {
     const token = window.localStorage.getItem(defaultConfig.storageTokenKeyName)
-    console.log("router", router)
+    if(window && token == null && authConfig && router && router.query && router.query.client_id)  {
+      setPageModel("Login")
+    }
     if(window && token && authConfig && router && router.query && router.query.client_id)  {
       axios
         .get(authConfig.refreshEndpoint + '&client_id=' + router.query.client_id, { headers: { Authorization: token, 'Content-Type': 'application/json'} })
@@ -77,7 +79,7 @@ const OAuthPage = () => {
 
   useEffect(() => {
     handleRefreshToken()
-  },[router])
+  },[router, pageModel])
 
   return (
     <Fragment>
@@ -90,7 +92,7 @@ const OAuthPage = () => {
         </Grid>
       )}
       {pageModel == "Login" && (
-        <LoginPage />
+        <LoginPage setPageModel={setPageModel} />
       )}
       {pageModel == "Auth" && clientInfo && userData && (
         <AuthPage clientInfo={clientInfo} userData={userData} query={query} />
