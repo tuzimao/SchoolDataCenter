@@ -144,9 +144,9 @@ const App = (props: ExtendedAppProps) => {
           <meta name='keywords' content='SchoolAI, 单点数据中心, 智慧大脑' />
           <meta name='viewport' content='initial-scale=1, width=device-width' />
           <meta name='version' content={`${defaultConfig.AppVersion}`} />
-          <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-          <meta http-equiv="Pragma" content="no-cache" />
-          <meta http-equiv="Expires" content="0" />
+          <meta httpEquiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+          <meta httpEquiv="Pragma" content="no-cache" />
+          <meta httpEquiv="Expires" content="0" />
           <meta name="apple-mobile-web-app-capable" content="yes" />
           <meta name="mobile-web-app-capable" content="yes" />
         </Head>
