@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "单点智慧校园-中小学版"
-#define MyAppVersion "0.5"
+#define MyAppVersion "0.6"
 #define MyAppPublisher "单点科技"
 #define MyAppURL "https://www.dandian.net"
 #define MyAppExeName "MyProg-x64.exe"
