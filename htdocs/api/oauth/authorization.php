@@ -5,8 +5,10 @@ require_once('../include.inc.php');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     $params = http_build_query([ 'response_type' => $_GET['response_type'], 'client_id' => $_GET['client_id'], 'redirect_uri' => $_GET['redirect_uri'], 'state' => $_GET['state'] ]);
-        
-    header('Location: http://localhost:3000/oauth?' . $params); //开发环境使用
+
+    if(strpos($_GET['redirect_uri'], '://localhost') > 0) {
+        header('Location: http://localhost:3000/oauth?' . $params); exit; //开发环境使用
+    }
 
     //生产环境使用
     if ($_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') {

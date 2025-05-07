@@ -13,6 +13,7 @@ require_once('cors.php');
 session_start(); // 必须位于 headers 之后
 
 require_once('include.inc.php');
+require_once('./lib/data_enginee_function.php');
 
 /**
  * IMPORTANT:
@@ -266,8 +267,9 @@ if($_GET['action']=="refresh")                {
     }
     $client_id          = ForSqlInjection($_GET['client_id']);
     if($client_id != "")  {
-        $sql    = "select redirect_uri, 应用名称, 应用描述, 应用LOGO, 应用URL, grant_types from data_oauth_clients where client_id='$client_id'";
+        $sql    = "select id, redirect_uri, 应用名称, 应用描述, 应用LOGO, 应用URL, grant_types from data_oauth_clients where client_id='$client_id'";
         $rs		= $db->Execute($sql);
+        $rs->fields['应用LOGO'] = AttachFieldValueToUrl("data_oauth_clients", $rs->fields['id'], '应用LOGO', 'avatar', $rs->fields['应用LOGO']);
         $ClientInfo = $rs->fields;
         $RS['ClientInfo']    = $ClientInfo;
     }

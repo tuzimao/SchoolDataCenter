@@ -71,7 +71,7 @@ const AuthPage = ({ clientInfo, userData, query } : any) => {
         px={2}
       >
         <Stack direction="row" spacing={2} alignItems="center" mb={3}>
-          <Avatar sx={{ width: 62, height: 62 }} src={authConfig.backEndApiHost + "/images/avatars/1.png"} />
+          <Avatar sx={{ width: 62, height: 62 }} src={authConfig.backEndApiHost + clientInfo.应用LOGO} />
           <Box sx={{ borderTop: '2px dashed grey', width: '28px', mx: 0 }}/>
           <CheckCircleIcon sx={{ color: "green", fontSize: 28 }} />
           <Box sx={{ borderTop: '2px dashed grey', width: '28px', mx: 0 }}/>
@@ -87,7 +87,7 @@ const AuthPage = ({ clientInfo, userData, query } : any) => {
         <Card sx={{ maxWidth: 500, width: "100%", mt: 2 }}>
           <CardContent>
             <Box display="flex" alignItems="center" mb={2}>
-              <Avatar sx={{ width: 48, height: 48 }} src={authConfig.backEndApiHost + "/images/avatars/1.png"} />
+              <Avatar sx={{ width: 48, height: 48 }} src={authConfig.backEndApiHost + clientInfo.应用LOGO} />
               <Typography variant="subtitle1" ml={2}>
                 <strong>{userData.USER_NAME}</strong> 想要访问您的账户
               </Typography>
