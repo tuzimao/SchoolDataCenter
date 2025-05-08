@@ -54,6 +54,7 @@ if( $_GET['action']=="add_default_data" || $_GET['action']=="edit_default_data")
                         $_POST['系部名称']  = $rsf->fields['系部名称'];
                         $_POST['专业名称']  = $rsf->fields['专业名称'];
                         $_POST['班级名称']  = $rsf->fields['班级名称'];
+                        $_POST['联系方式']  = $rsf->fields['学生手机号码'];
                         if(strlen($_POST['出生日期']) == strlen('1983-07-19')) {
                             $birthday       = new DateTime($_POST['出生日期']);
                             $today          = new DateTime();
@@ -137,6 +138,7 @@ if( $_GET['action']=="add_default_data" || $_GET['action']=="edit_default_data")
                     $_POST['系部名称']  = $rsf->fields['系部名称'];
                     $_POST['专业名称']  = $rsf->fields['专业名称'];
                     $_POST['班级名称']  = $rsf->fields['班级名称'];
+                    $_POST['联系方式']  = $rsf->fields['学生手机号码'];
                     if(strlen($_POST['出生日期']) == strlen('1983-07-19')) {
                         $birthday       = new DateTime($_POST['出生日期']);
                         $today          = new DateTime();

@@ -403,10 +403,14 @@ $MAP['学生考勤二级管理'] 	    = '学生考勤二级管理';
 $MAP['学生成绩二级管理'] 	    = '学生成绩二级管理';
 $MAP['班级事务二级管理'] 	    = '班级事务二级管理';
 $MAP['固定资产二级管理'] 	    = '固定资产二级管理';
+$MAP['学生健康二级管理'] 	    = '学生健康二级管理';
 
 $MAP['Columns_Pinned']          = '列锁定';
 $MAP['actions'] 				= '操作';
 $MAP['Disabled'] 	            = '禁用';
+$MAP['selectedRows'] 	        = '选择行数';
+$MAP['StepName'] 	            = '步骤名称';
+$MAP['ShowType_名称'] 	        = '显示类型名称';
 $MAP['Columns_Pinned_Left_Field_One'] 	    = '锁定到左侧第一个字段';
 $MAP['Columns_Pinned_Left_Field_Two'] 	    = '锁定到左侧第二个字段';
 $MAP['Columns_Pinned_Left_Field_Three']     = '锁定到左侧第三个字段';

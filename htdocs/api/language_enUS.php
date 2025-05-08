@@ -406,10 +406,15 @@ $MAP['岗位实习二级管理'] 	                            = 'Internship Seco
 $MAP['学生考勤二级管理'] 	                            = 'Student Attendance Secondary Management';
 $MAP['学生成绩二级管理'] 	                            = 'Student Performance Secondary Management';
 $MAP['班级事务二级管理'] 	                            = 'Class Affairs Secondary Management';
+$MAP['固定资产二级管理'] 	                            = 'Fixed Asset Secondary Management';
+$MAP['学生健康二级管理'] 	                            = 'Student Health Secondary Management';
 
 $MAP['Columns_Pinned']          = 'Pinned Columns';
 $MAP['actions'] 				= 'Actions';
 $MAP['Disabled'] 	            = 'Disabled';
+$MAP['selectedRows'] 	        = 'selectedRows';
+$MAP['StepName'] 	            = 'StepName';
+$MAP['ShowType_名称'] 	        = 'ShowType Name';
 $MAP['Columns_Pinned_Left_Field_One'] 	    = 'Pin to the left, field one';
 $MAP['Columns_Pinned_Left_Field_Two'] 	    = 'Pin to the left, field two';
 $MAP['Columns_Pinned_Left_Field_Three']     = 'Pin to the left, field three';
