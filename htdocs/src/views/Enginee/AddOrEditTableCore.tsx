@@ -3580,7 +3580,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                     else if ((FieldArray.show || fieldArrayShow[FieldArray.name]) && FieldArray.type == "time") {
 
                                                         //console.log("defaultValuesNew[FieldArray.name]***************Begin", FieldArray)
-                                                        if (action.indexOf("edit_default") != -1 && defaultValuesNew[FieldArray.name] != undefined && defaultValuesNew[FieldArray.name] != "" && defaultValuesNew[FieldArray.name].length == 8) {
+                                                        if (action.indexOf("edit_default") != -1 && defaultValuesNew[FieldArray.name] != undefined && defaultValuesNew[FieldArray.name] != "" && (defaultValuesNew[FieldArray.name].length == 5)) {
 
                                                             //console.log("defaultValuesNew[FieldArray.name]***************************", new Date(defaultValuesNew[FieldArray.name]+' 00:00:00'))
                                                             setValue(FieldArray.name, defaultValuesNew[FieldArray.name])
