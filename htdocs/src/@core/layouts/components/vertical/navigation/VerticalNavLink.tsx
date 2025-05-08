@@ -27,7 +27,7 @@ import Translations from 'src/layouts/components/Translations'
 import CanViewNavLink from 'src/layouts/components/acl/CanViewNavLink'
 
 // ** Util Import
-import { handleURLQueries } from 'src/@core/layouts/utils'
+//import { handleURLQueries } from 'src/@core/layouts/utils'
 
 interface Props {
   parent?: boolean
@@ -108,7 +108,9 @@ const VerticalNavLink = ({
     if (path2.charAt(path2.length - 1) === '/') {
       path2 = path2.slice(0, -1);
     }
-    if (router.pathname === item.path || handleURLQueries(router, item.path) || ( item.allpath!=undefined && item.allpath.includes(path2) )) {
+
+    // || handleURLQueries(router, item.path)
+    if (router.pathname === item.path || ( item.allpath!=undefined && item.allpath.includes(path2) )) {
       return true
     } 
     else {
