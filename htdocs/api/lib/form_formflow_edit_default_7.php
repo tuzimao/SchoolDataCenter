@@ -92,6 +92,7 @@ $Faculty_Filter_Field[] = ['value'=>"学生考勤二级管理", 'label'=>__("学
 $Faculty_Filter_Field[] = ['value'=>"学生成绩二级管理", 'label'=>__("学生成绩二级管理")];
 $Faculty_Filter_Field[] = ['value'=>"班级事务二级管理", 'label'=>__("班级事务二级管理")];
 $Faculty_Filter_Field[] = ['value'=>"固定资产二级管理", 'label'=>__("固定资产二级管理")];
+$Faculty_Filter_Field[] = ['value'=>"学生健康二级管理", 'label'=>__("学生健康二级管理")];
 
 $Dormitory_Filter_Field = [];
 $Dormitory_Filter_Field[] = ['value'=>"None", 'label'=>__("None")];

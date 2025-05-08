@@ -189,6 +189,9 @@ if( $_GET['action']=="add_default_data" && in_array('Add',$Actions_In_List_Heade
                 in_array("专业",$MetaColumnNames) ? $FieldsArray['专业'] = $rsf->fields['专业'] : '';
                 in_array("班级",$MetaColumnNames) ? $FieldsArray['班级'] = $rsf->fields['班级'] : '';
                 in_array("姓名",$MetaColumnNames) ? $FieldsArray['姓名'] = $rsf->fields['姓名'] : '';
+                in_array("系部名称",$MetaColumnNames) ? $FieldsArray['系部名称'] = $rsf->fields['系部名称'] : '';
+                in_array("专业名称",$MetaColumnNames) ? $FieldsArray['专业名称'] = $rsf->fields['专业名称'] : '';
+                in_array("班级名称",$MetaColumnNames) ? $FieldsArray['班级名称'] = $rsf->fields['班级名称'] : '';
                 in_array("学生班级",$MetaColumnNames) ? $FieldsArray['学生班级'] = $rsf->fields['学生班级'] : '';
                 in_array("学生姓名",$MetaColumnNames) ? $FieldsArray['学生姓名'] = $rsf->fields['学生姓名'] : '';
                 in_array("身份证号",$MetaColumnNames) ? $FieldsArray['身份证号'] = $rsf->fields['身份证号'] : '';

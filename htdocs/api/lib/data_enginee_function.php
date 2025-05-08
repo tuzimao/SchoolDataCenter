@@ -852,7 +852,7 @@ function getAllFields($AllFieldsFromTable, $AllShowTypesArray, $actionType, $Fil
                 break;
             case 'ChinaIDCard':
                 if($actionType=="EDIT") $InsertOrUpdateFieldArrayForSql[$actionType][$FieldName] = "";
-                $allFieldsMap['Default'][] = ['name' => $FieldName, 'show'=>true, 'FieldTypeArray'=>$CurrentFieldTypeArray, 'type'=>'input', 'label' => $ShowTextName, 'value' => $FieldDefault, 'placeholder' => $Placeholder, 'helptext' => $Helptext, 'rules' => ['required' => $IsMustFill==1?true:false,'xs'=>12, 'sm'=>intval($IsFullWidth), 'disabled' => false,'format'=>'chinaidcard','invalidtext'=>'身份证号不合乎要求','出生日期'=>str_replace("身份证件号","出生日期",$FieldName),'出生年月'=>str_replace("身份证件号","出生年月",$FieldName),'性别'=>str_replace("身份证件号","性别",$FieldName),'年龄'=>str_replace("身份证件号","年龄",$FieldName)], 'mobilekeyboard'=>'idcard'];
+                $allFieldsMap['Default'][] = ['name' => $FieldName, 'show'=>true, 'FieldTypeArray'=>$CurrentFieldTypeArray, 'type'=>'input', 'label' => $ShowTextName, 'value' => $FieldDefault, 'placeholder' => $Placeholder, 'helptext' => $Helptext, 'rules' => ['required' => $IsMustFill==1?true:false,'xs'=>12, 'sm'=>intval($IsFullWidth), 'disabled' => false,'format'=>'chinaidcard','invalidtext'=>'身份证件号不合乎要求','出生日期'=>str_replace("身份证件号","出生日期",$FieldName),'出生年月'=>str_replace("身份证件号","出生年月",$FieldName),'性别'=>str_replace("身份证件号","性别",$FieldName),'年龄'=>str_replace("身份证件号","年龄",$FieldName)], 'mobilekeyboard'=>'idcard'];
                 break;
             case 'ChinaMobile':
                 global $GLOBAL_USER;

@@ -50,6 +50,16 @@ if( $_GET['action']=="add_default_data" || $_GET['action']=="edit_default_data")
                         $_POST['床位号']    = $rsf->fields['床位号'];
                         $_POST['学生状态']  = $rsf->fields['学生状态'];
                         $_POST['学生手机']  = $rsf->fields['学生手机'];
+                        $_POST['学生班级']  = $rsf->fields['学生班级'];
+                        $_POST['系部名称']  = $rsf->fields['系部名称'];
+                        $_POST['专业名称']  = $rsf->fields['专业名称'];
+                        $_POST['班级名称']  = $rsf->fields['班级名称'];
+                        if(strlen($_POST['出生日期']) == strlen('1983-07-19')) {
+                            $birthday       = new DateTime($_POST['出生日期']);
+                            $today          = new DateTime();
+                            $年龄           = $today->diff($birthday)->y; 
+                            $_POST['年龄']  = $年龄;
+                        }
                     }
                     //print_R($rsf->fields);
                     //print_R($_POST);
@@ -123,6 +133,16 @@ if( $_GET['action']=="add_default_data" || $_GET['action']=="edit_default_data")
                     $_POST['床位号']    = $rsf->fields['床位号'];
                     $_POST['学生状态']  = $rsf->fields['学生状态'];
                     $_POST['学生手机']  = $rsf->fields['学生手机'];
+                    $_POST['学生班级']  = $rsf->fields['学生班级'];
+                    $_POST['系部名称']  = $rsf->fields['系部名称'];
+                    $_POST['专业名称']  = $rsf->fields['专业名称'];
+                    $_POST['班级名称']  = $rsf->fields['班级名称'];
+                    if(strlen($_POST['出生日期']) == strlen('1983-07-19')) {
+                        $birthday       = new DateTime($_POST['出生日期']);
+                        $today          = new DateTime();
+                        $年龄           = $today->diff($birthday)->y; 
+                        $_POST['年龄']  = $年龄;
+                    }
                 }
                 //print $sql;
                 //print_R($rsf->fields);
