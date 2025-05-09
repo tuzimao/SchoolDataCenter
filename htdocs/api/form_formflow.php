@@ -204,25 +204,35 @@ if(($_GET['action']=="edit_default_1_data" || $_GET['action']=="edit_default_2_d
         $rs         = $db->Execute($sql);
     }
     if($_POST['Menu_One']!=""&&$_POST['Menu_Two']!=""&&$id!=""&&$_POST['NodeType']=="菜单")   {
-        $sql    = "select id from data_menutwo order by id asc";
-        $rs     = $db->Execute($sql);
-        $rs_a   = $rs->GetArray();
-        $MenuTwoIdList = [];
-        foreach ($rs_a as $Line) {
-            $MenuTwoIdList[] = $Line['id'];
-        }
         $FieldsArray = [];
-        $min        = min($MenuTwoIdList);
-        $max        = max($MenuTwoIdList);
-        $fullRange  = range($min, $max);
-        $missingNumbers = array_diff($fullRange, $MenuTwoIdList);
-        $missingNumbers = array_values($missingNumbers);
-        if(sizeof($missingNumbers) == 0) {
-            $FieldsArray['id']  = $max + 1;
+        //需要判断该菜单是否已经存在, 如果已经存在, 则不需要进行修改data_menutwo的id
+        $sql        = "select id from data_menutwo where FlowId = '$id'";
+        $rs         = $db->Execute($sql);
+        $MenuTwoId  = $rs->fields['id'];
+        if($MenuTwoId > 0) {
+            $FieldsArray['id']  = $MenuTwoId;
         }
         else {
-            $FieldsArray['id']  = $missingNumbers[0];
+            $sql    = "select id from data_menutwo order by id asc";
+            $rs     = $db->Execute($sql);
+            $rs_a   = $rs->GetArray();
+            $MenuTwoIdList = [];
+            foreach ($rs_a as $Line) {
+                $MenuTwoIdList[] = $Line['id'];
+            }
+            $min        = min($MenuTwoIdList);
+            $max        = max($MenuTwoIdList);
+            $fullRange  = range($min, $max);
+            $missingNumbers = array_diff($fullRange, $MenuTwoIdList);
+            $missingNumbers = array_values($missingNumbers);
+            if(sizeof($missingNumbers) == 0) {
+                $FieldsArray['id']  = $max + 1;
+            }
+            else {
+                $FieldsArray['id']  = $missingNumbers[0];
+            }
         }
+        //构建菜单插入语句        
         $FieldsArray['MenuOneName']    = $_POST['Menu_One'];
         $FieldsArray['MenuTwoName']    = $_POST['Menu_Two'];
         $FieldsArray['MenuThreeName']  = $_POST['Menu_Three'];
@@ -240,7 +250,7 @@ if(($_GET['action']=="edit_default_1_data" || $_GET['action']=="edit_default_2_d
         $rs         = $db->Execute($sql);
         $MenuTwoId  = $rs->fields['id'];
         $MenuTwoInterfaceFilePath = "apps/apps_".$MenuTwoId.".php";
-        if($MenuTwoId>0&&!is_file($MenuTwoInterfaceFilePath)||1)   {
+        if($MenuTwoId>0 && !is_file($MenuTwoInterfaceFilePath) || 1)   {
             $Content = '<?php
 /*
 * 基础架构: 单点低代码开发平台
