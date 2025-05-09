@@ -210,9 +210,19 @@ if(($_GET['action']=="edit_default_1_data" || $_GET['action']=="edit_default_2_d
         $rs         = $db->Execute($sql);
         $MenuTwoId  = $rs->fields['id'];
         if($MenuTwoId > 0) {
-            $FieldsArray['id']  = $MenuTwoId;
+            //构建菜单更新语句, 不修改 id 和 SortNumber
+            $FieldsArray['MenuOneName']    = $_POST['Menu_One'];
+            $FieldsArray['MenuTwoName']    = $_POST['Menu_Two'];
+            $FieldsArray['MenuThreeName']  = $_POST['Menu_Three'];
+            $FieldsArray['FaceTo']         = $_POST['FaceTo'];
+            $FieldsArray['MenuTab']        = $_POST['MenuTab'];
+            $FieldsArray['Menu_Three_Icon']= $_POST['Menu_Three_Icon'];
+            $FieldsArray['FlowId']         = $id;
+            $FieldsArray['MenuType']       = "Flow";
+            [$rs,$sql] = InsertOrUpdateTableByArray("data_menutwo",$FieldsArray,'FlowId',0);
         }
         else {
+            //构建菜单插入语句  
             $sql    = "select id from data_menutwo order by id asc";
             $rs     = $db->Execute($sql);
             $rs_a   = $rs->GetArray();
@@ -231,20 +241,20 @@ if(($_GET['action']=="edit_default_1_data" || $_GET['action']=="edit_default_2_d
             else {
                 $FieldsArray['id']  = $missingNumbers[0];
             }
+            //构建菜单插入语句        
+            $FieldsArray['MenuOneName']    = $_POST['Menu_One'];
+            $FieldsArray['MenuTwoName']    = $_POST['Menu_Two'];
+            $FieldsArray['MenuThreeName']  = $_POST['Menu_Three'];
+            $FieldsArray['FaceTo']         = $_POST['FaceTo'];
+            $FieldsArray['MenuTab']        = $_POST['MenuTab'];
+            $FieldsArray['Menu_Three_Icon']= $_POST['Menu_Three_Icon'];
+            $FieldsArray['FlowId']         = $id;
+            $FieldsArray['MenuType']       = "Flow";
+            $FieldsArray['SortNumber']     = $id;
+            $FieldsArray['Creator']        = "admin";
+            $FieldsArray['CreateTime']     = date("Y-m-d H:i:s");
+            [$rs,$sql] = InsertOrUpdateTableByArray("data_menutwo",$FieldsArray,'FlowId',0);
         }
-        //构建菜单插入语句        
-        $FieldsArray['MenuOneName']    = $_POST['Menu_One'];
-        $FieldsArray['MenuTwoName']    = $_POST['Menu_Two'];
-        $FieldsArray['MenuThreeName']  = $_POST['Menu_Three'];
-        $FieldsArray['FaceTo']         = $_POST['FaceTo'];
-        $FieldsArray['MenuTab']        = $_POST['MenuTab'];
-        $FieldsArray['Menu_Three_Icon']= $_POST['Menu_Three_Icon'];
-        $FieldsArray['FlowId']         = $id;
-        $FieldsArray['MenuType']       = "Flow";
-        $FieldsArray['SortNumber']     = $id;
-        $FieldsArray['Creator']        = "admin";
-        $FieldsArray['CreateTime']     = date("Y-m-d H:i:s");
-        [$rs,$sql] = InsertOrUpdateTableByArray("data_menutwo",$FieldsArray,'FlowId',0);
         //Write Interface File In Apps Dir
         $sql        = "select id from data_menutwo where FlowId = '$id'";
         $rs         = $db->Execute($sql);
