@@ -21,6 +21,13 @@
 * [资产报废](15-fixedasset/discard.md)
 * [网上报修](16-repair/repair.md)
 
+### 心理健康
+
+* [心理咨询](18-hearthealth/zixun.md)
+* [心理测评](18-hearthealth/ceping.md)
+* [学生就医](18-hearthealth/jiuyi.md)
+* [传染病](18-hearthealth/chuanranbing.md)
+
 ### 数字校园
 
 * [数据大屏](4-campus/daping.md)
