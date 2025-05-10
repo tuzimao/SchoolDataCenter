@@ -22,6 +22,10 @@ require_once('./lib/data_enginee_function.php');
  * for a list of spec-compliant algorithms.
  */
 
+global $EncryptApiEnable;
+
+$EncryptApiEnable = 1;
+
 if($_GET['action']=="login")                {
     JWT::$leeway    = $NEXT_PUBLIC_JWT_EXPIRATION;
     $payload        = file_get_contents('php://input');
@@ -51,10 +55,10 @@ if($_GET['action']=="login")                {
                 $RS = [];
                 $RS['status']   = "ERROR";
                 $RS['msg']      = $RS['email']    = __("USER NOT EXIST OR PASSWORD IS ERROR!");
-                //$RS['sql']      = $sql;
-                //$RS['_POST']    = $_POST;
+                $RS['sql']      = $sql;
+                $RS['_POST']    = $_POST;
                 SystemLogRecord("Login", __('USER NOT EXIST'), __("USER NOT EXIST OR PASSWORD IS ERROR!"),$USER_ID);
-                print json_encode($RS);
+                print_R(EncryptApiData($RS, (Object)['USER_ID'=>time()], true));
                 exit;
             }
             $PASSWORD_IN_DB         = $StudentInfo['密码'];
@@ -92,7 +96,7 @@ if($_GET['action']=="login")                {
                 $USER_PROFILE[] 	= array("左边"=>"专业","右边"=>$userData['专业']);
                 $USER_PROFILE[] 	= array("左边"=>"系部","右边"=>$userData['系部']);
                 $RS['USER_PROFILE'] = $USER_PROFILE;
-                print_r(json_encode($RS));
+                print_R(EncryptApiData($RS, (Object)['USER_ID'=>time()], true));
                 SystemLogRecord("Login", __("Success"), __("Success"),$USER_ID);
                 exit;
             }
@@ -156,7 +160,7 @@ if($_GET['action']=="login")                {
                 $USER_PROFILE[] 	= array("左边"=>"专业","右边"=>$userData['专业']);
                 $USER_PROFILE[] 	= array("左边"=>"系部","右边"=>$userData['系部']);
                 $RS['USER_PROFILE'] = $USER_PROFILE;
-                print_r(json_encode($RS));
+                print_R(EncryptApiData($RS, (Object)['USER_ID'=>time()], true));
                 SystemLogRecord("Login", __("Success"), __("Success"),$USER_ID);
                 $LOGIN_USER_OPENID = $_POST['LOGIN_USER_OPENID'];
                 if($LOGIN_USER_OPENID!="")   {
@@ -222,7 +226,7 @@ if($_GET['action']=="login")                {
             $USER_PROFILE[] 	= array("左边"=>"角色","右边"=>$userData['PRIV_NAME']);
             $RS['USER_PROFILE'] = $USER_PROFILE;
             SystemLogRecord("Login", __("Success"), __("Success"),$USER_ID);
-            print_r(json_encode($RS));
+            print_R(EncryptApiData($RS, (Object)['USER_ID'=>time()], true));
             exit;
         }
         else {
@@ -277,7 +281,7 @@ if($_GET['action']=="refresh")                {
         $RS['ClientInfo']    = false;
     }
     $RS['_SESSION']     = $_SESSION;
-    print_r(json_encode($RS));
+    print_R(EncryptApiData($RS, (Object)['USER_ID'=>time()], true));
     exit;
 }
 

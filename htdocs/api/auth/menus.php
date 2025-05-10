@@ -219,5 +219,10 @@ $Menu['children'][] = ['title' => 'View', 'children' => $subChildren];
 $Menus[] = $Menu;
 */
 
+global $EncryptApiEnable;
 
-print_R(json_encode($Menus));
+$EncryptApiEnable = 1;
+
+print_R(EncryptApiData($Menus, (Object)['USER_ID'=>time()], true));
+
+//print_R(json_encode($Menus));

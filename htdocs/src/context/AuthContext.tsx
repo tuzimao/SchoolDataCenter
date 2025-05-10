@@ -43,7 +43,6 @@ const AuthProvider = ({ children }: Props) => {
     const initAuth = async (): Promise<void> => {
 
       const storedToken = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
-      const AccessKey = window.localStorage.getItem(defaultConfig.storageAccessKeyName)!
       const userData = window.localStorage.getItem('userData')!
       if(userData) {
         setUser(JSON.parse(userData))
@@ -60,7 +59,8 @@ const AuthProvider = ({ children }: Props) => {
           .then(async response => {
             let dataJson: any = null
             const data = response.data
-            if(data && data.isEncrypted == "1" && data.data)  {
+            if(data && data.isEncrypted == "1" && data.data && data.AccessKey)  {
+                const AccessKey = data.AccessKey
                 const i = data.data.slice(0, 32);
                 const t = data.data.slice(-32);
                 const e = data.data.slice(32, -32);
@@ -113,8 +113,8 @@ const AuthProvider = ({ children }: Props) => {
 
         let dataJson: any = null
         const data = response.data
-        if(data && data.isEncrypted == "1" && data.data)  {
-            const AccessKey = window.localStorage.getItem(defaultConfig.storageAccessKeyName)!
+        if(data && data.isEncrypted == "1" && data.data && data.AccessKey)  {
+            const AccessKey = data.AccessKey
             const i = data.data.slice(0, 32);
             const t = data.data.slice(-32);
             const e = data.data.slice(32, -32);
@@ -176,8 +176,8 @@ const AuthProvider = ({ children }: Props) => {
 
           let dataJson: any = null
           const data = response.data
-          if(data && data.isEncrypted == "1" && data.data)  {
-              const AccessKey = window.localStorage.getItem(defaultConfig.storageAccessKeyName)!
+          if(data && data.isEncrypted == "1" && data.data && data.AccessKey)  {
+              const AccessKey = data.AccessKey
               const i = data.data.slice(0, 32);
               const t = data.data.slice(-32);
               const e = data.data.slice(32, -32);

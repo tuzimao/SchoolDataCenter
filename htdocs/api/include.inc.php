@@ -75,75 +75,82 @@ function DecryptID($data) {
     return strval($decrypted);
 }
 
-function EncryptApiData($JSON, $GLOBAL_USER) {
-  global $EncryptApiEnable;
-  if($EncryptApiEnable) {
+function EncryptApiData($JSON, $GLOBAL_USER, $ShowAccessKey=false) {
+  	global $EncryptApiEnable;
+  	if($EncryptApiEnable) {
 		$cipher = "aes-256-gcm";
 		global $EncryptAESIV;
-    if($GLOBAL_USER->USER_ID!="")   {
-		  $EncryptApiDataAESKey = GetAccessKey($GLOBAL_USER->USER_ID);
-    }
-    else {
-		  $EncryptApiDataAESKey = GetAccessKey($GLOBAL_USER->学号);
-    }
+		if($GLOBAL_USER->USER_ID!="")   {
+			$EncryptApiDataAESKey = GetAccessKey($GLOBAL_USER->USER_ID);
+		}
+		else {
+			$EncryptApiDataAESKey = GetAccessKey($GLOBAL_USER->学号);
+		}
 		$ciphertext = openssl_encrypt(json_encode($JSON), $cipher, $EncryptApiDataAESKey, OPENSSL_RAW_DATA, $EncryptAESIV, $tag);
-		return json_encode(['data'=> bin2hex($EncryptAESIV).bin2hex($ciphertext).bin2hex($tag) , 'isEncrypted'=>'1']);
-  }
-	else {
-    return json_encode($JSON);
-	}
+		if($ShowAccessKey) {
+			//For Login Action
+			return json_encode(['data'=> bin2hex($EncryptAESIV).bin2hex($ciphertext).bin2hex($tag) , 'isEncrypted'=>'1', 'AccessKey'=>$EncryptApiDataAESKey]);
+		}
+		else {
+			//For Other Functions
+			return json_encode(['data'=> bin2hex($EncryptAESIV).bin2hex($ciphertext).bin2hex($tag) , 'isEncrypted'=>'1']);
+		}
+  	}
+  	else {
+    	return json_encode($JSON);
+  	}
 }
 
 function EncryptIDFixed($data) {
-	  global $EncryptAESKey;
-	  $cipher = "AES-256-CBC";
-    $options = OPENSSL_RAW_DATA;
-	  $byteValue 		= 0xFF;
-	  $EncryptAESIV 	= str_repeat(chr($byteValue), 16);
-    $encrypted 		= openssl_encrypt($data, $cipher, $EncryptAESKey, $options, $EncryptAESIV);
-    return base64_safe_encode(base64_safe_encode($encrypted)."::".base64_safe_encode($EncryptAESIV));
+	global $EncryptAESKey;
+	$cipher = "AES-256-CBC";
+	$options = OPENSSL_RAW_DATA;
+	$byteValue 		= 0xFF;
+	$EncryptAESIV 	= str_repeat(chr($byteValue), 16);
+	$encrypted 		= openssl_encrypt($data, $cipher, $EncryptAESKey, $options, $EncryptAESIV);
+	return base64_safe_encode(base64_safe_encode($encrypted)."::".base64_safe_encode($EncryptAESIV));
 }
 
 function DecryptIDFixed($data) {
-  $data = base64_safe_decode($data);
-  $dataArray = explode("::",$data);
-  global $EncryptAESKey;
-  $data = $dataArray[0];
-  $iv = base64_safe_decode($dataArray[1]);
-  $cipher = "AES-256-CBC";
-  $options = OPENSSL_RAW_DATA;
-  $decrypted = openssl_decrypt(base64_safe_decode($data), $cipher, $EncryptAESKey, $options, $iv);
-  return strval($decrypted);
+	$data = base64_safe_decode($data);
+	$dataArray = explode("::",$data);
+	global $EncryptAESKey;
+	$data = $dataArray[0];
+	$iv = base64_safe_decode($dataArray[1]);
+	$cipher = "AES-256-CBC";
+	$options = OPENSSL_RAW_DATA;
+	$decrypted = openssl_decrypt(base64_safe_decode($data), $cipher, $EncryptAESKey, $options, $iv);
+	return strval($decrypted);
 }
 
 function EncryptIDFixedCORS($data) {
-	  $EncryptAESKey = "DandianDataCenter-AES-256-CBC";
-	  $cipher = "AES-256-CBC";
-    $options = OPENSSL_RAW_DATA;
-	  $byteValue 		= 0xFF;
-	  $EncryptAESIV 	= str_repeat(chr($byteValue), 16);
-    $encrypted 		= openssl_encrypt($data, $cipher, $EncryptAESKey, $options, $EncryptAESIV);
-    return base64_safe_encode(base64_safe_encode($encrypted)."::".base64_safe_encode($EncryptAESIV));
+	$EncryptAESKey = "DandianDataCenter-AES-256-CBC";
+	$cipher = "AES-256-CBC";
+	$options = OPENSSL_RAW_DATA;
+	$byteValue 		= 0xFF;
+	$EncryptAESIV 	= str_repeat(chr($byteValue), 16);
+	$encrypted 		= openssl_encrypt($data, $cipher, $EncryptAESKey, $options, $EncryptAESIV);
+	return base64_safe_encode(base64_safe_encode($encrypted)."::".base64_safe_encode($EncryptAESIV));
 }
 
 function DecryptIDFixedCORS($data) {
-  $EncryptAESKey = "DandianDataCenter-AES-256-CBC";
-  $data = base64_safe_decode($data);
-  $dataArray = explode("::",$data);
-  $data = $dataArray[0];
-  $iv = base64_safe_decode($dataArray[1]);
-  $cipher = "AES-256-CBC";
-  $options = OPENSSL_RAW_DATA;
-  $decrypted = openssl_decrypt(base64_safe_decode($data), $cipher, $EncryptAESKey, $options, $iv);
-  return strval($decrypted);
+	$EncryptAESKey = "DandianDataCenter-AES-256-CBC";
+	$data = base64_safe_decode($data);
+	$dataArray = explode("::",$data);
+	$data = $dataArray[0];
+	$iv = base64_safe_decode($dataArray[1]);
+	$cipher = "AES-256-CBC";
+	$options = OPENSSL_RAW_DATA;
+	$decrypted = openssl_decrypt(base64_safe_decode($data), $cipher, $EncryptAESKey, $options, $iv);
+	return strval($decrypted);
 }
 
 function EncryptIDStorage($data, $EncryptAESKey) {
-  $cipher = "SM4-CBC";
-  $options = OPENSSL_RAW_DATA;
-  global $EncryptAESIV;
-  $encrypted = openssl_encrypt($data, $cipher, $EncryptAESKey, $options, $EncryptAESIV);
-  return base64_safe_encode(base64_safe_encode($encrypted)."::".base64_safe_encode($EncryptAESIV));
+	$cipher = "SM4-CBC";
+	$options = OPENSSL_RAW_DATA;
+	global $EncryptAESIV;
+	$encrypted = openssl_encrypt($data, $cipher, $EncryptAESKey, $options, $EncryptAESIV);
+	return base64_safe_encode(base64_safe_encode($encrypted)."::".base64_safe_encode($EncryptAESIV));
 }
 function DecryptIDStorage($data, $EncryptAESKey) {
 	$data = base64_safe_decode($data);
@@ -191,7 +198,7 @@ function ForSqlInjection($str) 			{
 	
 	$str  = addslashes($str);
 
-  return $str;
+	return $str;
 }
 
 function base64_safe_encode($base64) {
@@ -211,8 +218,8 @@ function base64_safe_decode($base64) {
 }
 
 function GetAccessKey($USER_ID = '') {
-  $AccessKey = hash('sha512', $USER_ID . date('Ymd'), false);
-  return substr($AccessKey, 0, 32);
+	$AccessKey = hash('sha512', $USER_ID . date('Ymd'), false);
+	return substr($AccessKey, 0, 32);
 }
 
 function CheckAuthUserLoginStatus()  {
