@@ -36,8 +36,8 @@ const OAuthPage = () => {
 
           let dataJson: any = null
           const data = response.data
-          if(data && data.isEncrypted == "1" && data.data)  {
-              const AccessKey = window.localStorage.getItem(defaultConfig.storageAccessKeyName)!
+          if(data && data.isEncrypted == "1" && data.data && data.AccessKey)  {
+              const AccessKey = data.AccessKey
               const i = data.data.slice(0, 32);
               const t = data.data.slice(-32);
               const e = data.data.slice(32, -32);

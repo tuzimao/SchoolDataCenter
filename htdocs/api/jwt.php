@@ -24,7 +24,7 @@ require_once('./lib/data_enginee_function.php');
 
 global $EncryptApiEnable;
 
-$EncryptApiEnable = 0;
+$EncryptApiEnable = 1;
 
 function getRealIP() {
     $ip = '';
@@ -71,31 +71,36 @@ if($_GET['action']=="login")                {
         $redis->hSet("USER_LOGIN_IP_ADDRESS_LAST_TIME", $getRealIP, 0);
         $redis->hSet("USER_LOGIN_IP_ADDRESS_LIMIT", $getRealIP, 0);
     }
-    //每个外部IP仅限登录10次-开始记录
-    $限制外部IP登录次数 = (int)$redis->hGet("USER_LOGIN_IP_ADDRESS_LIMIT", $getRealIP);
-    if($限制外部IP登录次数 > 3) {
-        $RS             = [];
-        $RS['status']   = "ERROR";
-        $RS['msg']      = __("Malicious ip");
-        $redis->hSet("USER_LOGIN_IP_ADDRESS_LAST_TIME", $getRealIP, time());
-        print_R(EncryptApiData($RS, (Object)['USER_ID'=>time()], true));
-        exit;
+    else {
+        //每个外部IP仅限登录10次-开始记录
+        $限制外部IP登录次数 = (int)$redis->hGet("USER_LOGIN_IP_ADDRESS_LIMIT", $getRealIP);
+        if($限制外部IP登录次数 > 3) {
+            $RS             = [];
+            $RS['status']   = "ERROR";
+            $RS['msg']      = __("Malicious ip");
+            $redis->hSet("USER_LOGIN_IP_ADDRESS_LAST_TIME", $getRealIP, time());
+            print_R(EncryptApiData($RS, (Object)['USER_ID'=>time()], true));
+            exit;
+        }
     }
     //判断用户密码错误次数-过期自动清除
     $用户登录错误时间   = $redis->hGet("USER_LOGIN_ERROR_LAST_TIME", $USER_ID);
+    //print (time() - $用户登录错误时间);
     if($用户登录错误时间 > 0 && (time() - $用户登录错误时间) > 60) {
         $redis->hSet("USER_LOGIN_ERROR_LAST_TIME", $USER_ID, 0);
         $redis->hSet("USER_LOGIN_ERROR_TIMES_LIMIT", $USER_ID, 0);
     }
-    //判断用户密码错误次数-开始记录
-    $用户登录错误次数   = (int)$redis->hGet("USER_LOGIN_ERROR_TIMES_LIMIT", $USER_ID);
-    if($用户登录错误次数 > 3) {
-        $RS             = [];
-        $RS['status']   = "ERROR";
-        $RS['msg']      = __("Malicious login");
-        $redis->hSet("USER_LOGIN_ERROR_LAST_TIME", $USER_ID, time());
-        print_R(EncryptApiData($RS, (Object)['USER_ID'=>time()], true));
-        exit;
+    else {
+        //判断用户密码错误次数-开始记录
+        $用户登录错误次数   = (int)$redis->hGet("USER_LOGIN_ERROR_TIMES_LIMIT", $USER_ID);
+        if($用户登录错误次数 > 3) {
+            $RS             = [];
+            $RS['status']   = "ERROR";
+            $RS['msg']      = __("Malicious login");
+            $redis->hSet("USER_LOGIN_ERROR_LAST_TIME", $USER_ID, time());
+            print_R(EncryptApiData($RS, (Object)['USER_ID'=>time()], true));
+            exit;
+        }
     }
     if($USER_ID!="")   {
         if($EMAIL!="")   {
