@@ -24,7 +24,32 @@ require_once('./lib/data_enginee_function.php');
 
 global $EncryptApiEnable;
 
-$EncryptApiEnable = 1;
+$EncryptApiEnable = 0;
+
+function getRealIP() {
+    $ip = '';
+    $headers = [
+        'HTTP_CLIENT_IP',
+        'HTTP_X_FORWARDED_FOR',
+        'HTTP_X_FORWARDED',
+        'HTTP_X_CLUSTER_CLIENT_IP',
+        'HTTP_FORWARDED_FOR',
+        'HTTP_FORWARDED',
+        'HTTP_CF_CONNECTING_IP', // Cloudflare
+    ];
+
+    foreach ($headers as $header) {
+        if (isset($_SERVER[$header])) {
+            $ips = explode(',', $_SERVER[$header]);
+            $ip = trim($ips[0]);
+            if (filter_var($ip, FILTER_VALIDATE_IP)) {
+                return filter_var($ip, FILTER_VALIDATE_IP);
+            }
+        }
+    }
+
+    return filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP) ?? '0.0.0.0';
+}
 
 if($_GET['action']=="login")                {
     JWT::$leeway    = $NEXT_PUBLIC_JWT_EXPIRATION;
@@ -38,6 +63,40 @@ if($_GET['action']=="login")                {
     $password       = ForSqlInjection($_POST['password']);
     $rememberMe     = ForSqlInjection($_POST['rememberMe']);
     $UserType       = ForSqlInjection($_POST['UserType']);
+
+    $getRealIP      = getRealIP();
+    //每个外部IP仅限登录10次-过期自动清除
+    $限制外部IP登录时间   = $redis->hGet("USER_LOGIN_IP_ADDRESS_LAST_TIME", $getRealIP);
+    if($限制外部IP登录时间 > 0 && (time() - $限制外部IP登录时间) > 60) {
+        $redis->hSet("USER_LOGIN_IP_ADDRESS_LAST_TIME", $getRealIP, 0);
+        $redis->hSet("USER_LOGIN_IP_ADDRESS_LIMIT", $getRealIP, 0);
+    }
+    //每个外部IP仅限登录10次-开始记录
+    $限制外部IP登录次数 = (int)$redis->hGet("USER_LOGIN_IP_ADDRESS_LIMIT", $getRealIP);
+    if($限制外部IP登录次数 > 3) {
+        $RS             = [];
+        $RS['status']   = "ERROR";
+        $RS['msg']      = __("Malicious ip");
+        $redis->hSet("USER_LOGIN_IP_ADDRESS_LAST_TIME", $getRealIP, time());
+        print_R(EncryptApiData($RS, (Object)['USER_ID'=>time()], true));
+        exit;
+    }
+    //判断用户密码错误次数-过期自动清除
+    $用户登录错误时间   = $redis->hGet("USER_LOGIN_ERROR_LAST_TIME", $USER_ID);
+    if($用户登录错误时间 > 0 && (time() - $用户登录错误时间) > 60) {
+        $redis->hSet("USER_LOGIN_ERROR_LAST_TIME", $USER_ID, 0);
+        $redis->hSet("USER_LOGIN_ERROR_TIMES_LIMIT", $USER_ID, 0);
+    }
+    //判断用户密码错误次数-开始记录
+    $用户登录错误次数   = (int)$redis->hGet("USER_LOGIN_ERROR_TIMES_LIMIT", $USER_ID);
+    if($用户登录错误次数 > 3) {
+        $RS             = [];
+        $RS['status']   = "ERROR";
+        $RS['msg']      = __("Malicious login");
+        $redis->hSet("USER_LOGIN_ERROR_LAST_TIME", $USER_ID, time());
+        print_R(EncryptApiData($RS, (Object)['USER_ID'=>time()], true));
+        exit;
+    }
     if($USER_ID!="")   {
         if($EMAIL!="")   {
             $sql = "select * from data_user where EMAIL='$EMAIL'";
@@ -55,10 +114,12 @@ if($_GET['action']=="login")                {
                 $RS = [];
                 $RS['status']   = "ERROR";
                 $RS['msg']      = $RS['email']    = __("USER NOT EXIST OR PASSWORD IS ERROR!");
-                $RS['sql']      = $sql;
-                $RS['_POST']    = $_POST;
-                SystemLogRecord("Login", __('USER NOT EXIST'), __("USER NOT EXIST OR PASSWORD IS ERROR!"),$USER_ID);
+                //$RS['sql']      = $sql;
+                //$RS['_POST']    = $_POST;
+                $redis->hSet("USER_LOGIN_ERROR_TIMES_LIMIT", $USER_ID, $用户登录错误次数+1);
+                $redis->hSet("USER_LOGIN_IP_ADDRESS_LIMIT", $getRealIP, $限制外部IP登录次数+1);
                 print_R(EncryptApiData($RS, (Object)['USER_ID'=>time()], true));
+                SystemLogRecord("Login", __('USER NOT EXIST'), __("USER NOT EXIST OR PASSWORD IS ERROR!"),$USER_ID);
                 exit;
             }
             $PASSWORD_IN_DB         = $StudentInfo['密码'];
@@ -96,6 +157,8 @@ if($_GET['action']=="login")                {
                 $USER_PROFILE[] 	= array("左边"=>"专业","右边"=>$userData['专业']);
                 $USER_PROFILE[] 	= array("左边"=>"系部","右边"=>$userData['系部']);
                 $RS['USER_PROFILE'] = $USER_PROFILE;
+                $redis->hSet("USER_LOGIN_ERROR_TIMES_LIMIT", $USER_ID, 0);
+                $redis->hSet("USER_LOGIN_IP_ADDRESS_LIMIT", $getRealIP, 0);
                 print_R(EncryptApiData($RS, (Object)['USER_ID'=>time()], true));
                 SystemLogRecord("Login", __("Success"), __("Success"),$USER_ID);
                 exit;
@@ -105,8 +168,10 @@ if($_GET['action']=="login")                {
             $RS['msg']      = $RS['email']    = __("USER NOT EXIST OR PASSWORD IS ERROR!");
             //$RS['sql']      = $sql;
             //$RS['_POST']    = $_POST;
+            $redis->hSet("USER_LOGIN_ERROR_TIMES_LIMIT", $USER_ID, $用户登录错误次数+1);
+            $redis->hSet("USER_LOGIN_IP_ADDRESS_LIMIT", $getRealIP, $限制外部IP登录次数+1);
+            print_R(EncryptApiData($RS, (Object)['USER_ID'=>time()], true));
             SystemLogRecord("Login", __('PASSWORD IS ERROR'), __("USER NOT EXIST OR PASSWORD IS ERROR!"),$USER_ID);
-            print json_encode($RS);
             exit;
         }
         if($UserInfo['USER_ID']==""&&$UserType=="校友")  {
@@ -120,7 +185,9 @@ if($_GET['action']=="login")                {
                 //$RS['sql']      = $sql;
                 //$RS['_POST']    = $_POST;
                 SystemLogRecord("Login", __('USER NOT EXIST'), __("USER NOT EXIST OR PASSWORD IS ERROR!"),$USER_ID);
-                print json_encode($RS);
+                $redis->hSet("USER_LOGIN_ERROR_TIMES_LIMIT", $USER_ID, $用户登录错误次数+1);
+                $redis->hSet("USER_LOGIN_IP_ADDRESS_LIMIT", $getRealIP, $限制外部IP登录次数+1);
+                print_R(EncryptApiData($RS, (Object)['USER_ID'=>time()], true));
                 exit;
             }
             $PASSWORD_IN_DB         = $StudentInfo['身份证件号'];
@@ -160,6 +227,8 @@ if($_GET['action']=="login")                {
                 $USER_PROFILE[] 	= array("左边"=>"专业","右边"=>$userData['专业']);
                 $USER_PROFILE[] 	= array("左边"=>"系部","右边"=>$userData['系部']);
                 $RS['USER_PROFILE'] = $USER_PROFILE;
+                $redis->hSet("USER_LOGIN_ERROR_TIMES_LIMIT", $USER_ID, 0);
+                $redis->hSet("USER_LOGIN_IP_ADDRESS_LIMIT", $getRealIP, 0);
                 print_R(EncryptApiData($RS, (Object)['USER_ID'=>time()], true));
                 SystemLogRecord("Login", __("Success"), __("Success"),$USER_ID);
                 $LOGIN_USER_OPENID = $_POST['LOGIN_USER_OPENID'];
@@ -175,7 +244,9 @@ if($_GET['action']=="login")                {
             //$RS['sql']      = $sql;
             //$RS['_POST']    = $_POST;
             SystemLogRecord("Login", __('PASSWORD IS ERROR'), __("USER NOT EXIST OR PASSWORD IS ERROR!"),$USER_ID);
-            print json_encode($RS);
+            $redis->hSet("USER_LOGIN_ERROR_TIMES_LIMIT", $USER_ID, $用户登录错误次数+1);
+            $redis->hSet("USER_LOGIN_IP_ADDRESS_LIMIT", $getRealIP, $限制外部IP登录次数+1);
+            print_R(EncryptApiData($RS, (Object)['USER_ID'=>time()], true));
             exit;
         }
         $PASSWORD_IN_DB         = $UserInfo['PASSWORD'];
@@ -214,19 +285,21 @@ if($_GET['action']=="login")                {
             $userInfoX['t']                     = "function H(...q){return $(re=>Reflect.apply(er.translate,null,[re,...q]),()=>er.parseTranslateArgs(...q),\"translate\",re=>Reflect.apply(re.t,re,[...q]),re=>re,re=>Re.isString(re))}";
             $GO_SYSTEM['userInfo']              = $userInfoX;
             $GO_SYSTEM['fetchInfo']['OSSUrl']   = "/api/goview/bucket/";
-            $RS['GO_SYSTEM']  = $GO_SYSTEM;
+            $RS['GO_SYSTEM']    = $GO_SYSTEM;
 
-            $RS['status']     = "OK";
+            $RS['status']       = "OK";
             //形成个人信息展示页面的数据列表
-            $USER_PROFILE 	  = array();
+            $USER_PROFILE 	    = array();
             $USER_PROFILE[] 	= array("左边"=>"用户类型","右边"=>"教职工");
             $USER_PROFILE[] 	= array("左边"=>"用户名","右边"=>$userData['USER_ID']);
             $USER_PROFILE[] 	= array("左边"=>"姓名","右边"=>$userData['USER_NAME']);
             $USER_PROFILE[] 	= array("左边"=>"部门","右边"=>$userData['DEPT_NAME']);
             $USER_PROFILE[] 	= array("左边"=>"角色","右边"=>$userData['PRIV_NAME']);
             $RS['USER_PROFILE'] = $USER_PROFILE;
-            SystemLogRecord("Login", __("Success"), __("Success"),$USER_ID);
+            $redis->hSet("USER_LOGIN_ERROR_TIMES_LIMIT", $USER_ID, 0);
+            $redis->hSet("USER_LOGIN_IP_ADDRESS_LIMIT", $getRealIP, 0);
             print_R(EncryptApiData($RS, (Object)['USER_ID'=>time()], true));
+            SystemLogRecord("Login", __("Success"), __("Success"),$USER_ID);
             exit;
         }
         else {
@@ -235,7 +308,9 @@ if($_GET['action']=="login")                {
             $RS['msg']      = $RS['email']    = __("USER NOT EXIST OR PASSWORD IS ERROR!");
             //$RS['sql']      = $sql;
             //$RS['_POST']    = $_POST;
-            print json_encode($RS);
+            $redis->hSet("USER_LOGIN_ERROR_TIMES_LIMIT", $USER_ID, $用户登录错误次数+1);
+            $redis->hSet("USER_LOGIN_IP_ADDRESS_LIMIT", $getRealIP, $限制外部IP登录次数+1);
+            print_R(EncryptApiData($RS, (Object)['USER_ID'=>time()], true));
             SystemLogRecord("Login", __('PASSWORD IS ERROR'), __("USER NOT EXIST OR PASSWORD IS ERROR!"),$USER_ID);
             exit;
         }
@@ -244,7 +319,9 @@ if($_GET['action']=="login")                {
         $RS = [];
         $RS['status']   = "ERROR";
         //$RS['_POST']    = $_POST;
-        print json_encode($RS);
+        $redis->hSet("USER_LOGIN_ERROR_TIMES_LIMIT", $USER_ID, $用户登录错误次数+1);
+        $redis->hSet("USER_LOGIN_IP_ADDRESS_LIMIT", $getRealIP, $限制外部IP登录次数+1);
+        print_R(EncryptApiData($RS, (Object)['USER_ID'=>time()], true));
         SystemLogRecord("Login", __('USER NOT EXIST'), __("USER NOT EXIST"),"");
         exit;
     }
@@ -290,7 +367,7 @@ if($_GET['action']=="Logout")                {
     $RS             = [];
     $RS['status']   = "ERROR";
     //$RS['_POST']    = $_POST;
-    print json_encode($RS);
+    print_R(EncryptApiData($RS, (Object)['USER_ID'=>time()], true));
     SystemLogRecord("Logout", __('Logout'), __("USER NOT EXIST"),$USER_ID);
     exit;
 }
