@@ -1,5 +1,5 @@
 ---
-icon: Set up custom authentication for your published content
+icon: puzzle-piece
 ---
 
 ### 学生就医

@@ -1,15 +1,16 @@
 ---
-icon: Set up custom authentication for your published content
+icon: puzzle-piece
 ---
 
 ### 心理健康测评
 #### 支持的心理健康测评模型
-1 中学生心理健康量表(MSSMHS)
+1 中学生心理健康量表(MSSMHS) 
 2 症状自评量表(SCL-90)
 3 中学生学科兴趣测评
 4 中小学生心理健康量表(MHT)
 5 儿童焦虑性情绪障碍筛查表(SCARED)
-6 根据学校需要, 可以增加其它模型量表
+6 在线查看上述5种模型生成的心理健康测评样例, <a target=_blank href='https://github.com/SmartSchoolAI/SchoolDataCenter/tree/main/docs/18-hearthealth/pdf'>样例下载</a>
+7 根据学校需要, 可以增加其它模型量表
 
 #### 主要功能
 1 测评项目

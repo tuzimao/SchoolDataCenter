@@ -1,5 +1,5 @@
 ---
-icon: Set up custom authentication for your published content
+icon: puzzle-piece
 ---
 
 ### 心理健康预约咨询
