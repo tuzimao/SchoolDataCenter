@@ -121,7 +121,7 @@ $ColumnWidth[] = ['value'=>260, 'label'=>'260px'];
 $ColumnWidth[] = ['value'=>280, 'label'=>'280px'];
 $ColumnWidth[] = ['value'=>300, 'label'=>'300px'];
 $ColumnWidth[] = ['value'=>320, 'label'=>'320px'];
-$allFieldsAdd[] = ['name' => 'ColumnWidth', 'show'=>true, 'type'=>'select', 'options'=>$ColumnWidth, 'label' => __('Column Width'), 'value' => $ColumnWidth[5]['value'], 'placeholder' => __(''), 'helptext' => __('Column Width In List Page'), 'rules' => ['required' => true,'xs'=>12, 'sm'=>4,'disabled' => false]];
+$allFieldsAdd[] = ['name' => 'ColumnWidth', 'show'=>true, 'type'=>'select', 'options'=>$ColumnWidth, 'label' => __('Column Width'), 'value' => $ColumnWidth[10]['value'], 'placeholder' => __(''), 'helptext' => __('Column Width In List Page'), 'rules' => ['required' => true,'xs'=>12, 'sm'=>4,'disabled' => false]];
 
 
 //$allFieldsAdd[] = ['name' => 'ColumnWidth', 'show'=>true, 'type'=>'number', 'label' => __('Column Width'), 'value' => '200', 'placeholder' => __('Column Width'), 'helptext' => __('Column Width In List Page'), 'rules' => ['required' => true,'xs'=>12, 'sm'=>4, 'disabled' => false,'min'=>0,'max'=>4]];

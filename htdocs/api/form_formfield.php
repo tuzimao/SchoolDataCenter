@@ -50,7 +50,7 @@ $allFieldsAdd[] = ['name' => 'ChineseName', 'show'=>true, 'type'=>'input', 'labe
 $sql = "select `FieldType` as value, `FieldType` as label from form_formfield_logictype order by SortNumber asc, id asc";
 $rs = $db->Execute($sql);
 $FieldType = $rs->GetArray();
-$allFieldsAdd[] = ['name' => 'FieldType', 'show'=>true, 'type'=>'select', 'options'=>$FieldType, 'label' => __('Field Type'), 'value' => $FieldType[2]['value'], 'placeholder' => __('Field Type in Database'), 'helptext' => __('Field Type in Database'), 'rules' => ['required' => true,'xs'=>12, 'sm'=>3,'disabled' => false]];
+$allFieldsAdd[] = ['name' => 'FieldType', 'show'=>true, 'type'=>'select', 'options'=>$FieldType, 'label' => __('Field Type'), 'value' => $FieldType[1]['value'], 'placeholder' => __('Field Type in Database'), 'helptext' => __('Field Type in Database'), 'rules' => ['required' => true,'xs'=>12, 'sm'=>3,'disabled' => false]];
 
 $sql            = "select `Name` as value, `Name` as label, EnableFields, DisableFields from form_formfield_showtype order by SortNumber asc, id asc";
 $rs             = $db->Execute($sql);
@@ -62,7 +62,7 @@ foreach ($ShowType as $Line) {
     $EnableFields[$Line['value']] = explode(',',$Line['EnableFields']);
     $DisableFields[$Line['value']] = explode(',',$Line['DisableFields']);
 }
-$allFieldsAdd[] = ['name' => 'ShowType', 'code' => 'ShowType', 'show'=>true, 'type'=>'autocomplete', 'options'=>$ShowType, 'label' => __('Show Type'), 'value' => $ShowType[1]['value'], 'placeholder' => __('Show Type in UI'), 'helptext' => __('Show Type in UI'), 'rules' => ['required' => true,'xs'=>12, 'sm'=>5,'disabled' => false], 'freeSolo'=>false, 'EnableFields'=>$EnableFields, 'DisableFields'=>$DisableFields];
+$allFieldsAdd[] = ['name' => 'ShowType', 'code' => 'ShowType', 'show'=>true, 'type'=>'autocomplete', 'options'=>$ShowType, 'label' => __('Show Type'), 'value' => $ShowType[2]['value'], 'placeholder' => __('Show Type in UI'), 'helptext' => __('Show Type in UI'), 'rules' => ['required' => true,'xs'=>12, 'sm'=>5,'disabled' => false], 'freeSolo'=>false, 'EnableFields'=>$EnableFields, 'DisableFields'=>$DisableFields];
 $allFieldsAdd[] = ['name' => 'SortNumber', 'show'=>true, 'type'=>'number', 'label' => __('SortNumber'), 'value' => '0', 'placeholder' => __('Sort number in form'), 'helptext' => __('Sort number'), 'rules' => ['required' => true,'xs'=>12, 'sm'=>2,'disabled' => false]];
 $allFieldsAdd[] = ['name' => 'FieldDefault', 'show'=>true, 'type'=>'input', 'label' => __('Default'), 'value' => '', 'placeholder' => __('Field default value, you can leave it blank'), 'helptext' => __('Default value'), 'rules' => ['required' => false,'xs'=>12, 'sm'=>2,'disabled' => false]];
 
@@ -85,7 +85,7 @@ $allFieldsAdd[] = ['name' => 'FormulaMethodTarget', 'show'=>false, 'type'=>'inpu
 $allFieldsAdd[] = ['name' => 'StartDate', 'show'=>false, 'type'=>'date', 'label' => __('Start Date'), 'value' => '', 'placeholder' => __('Start Date'), 'helptext' => __('Start Date'), 'rules' => ['required' => false,'xs'=>12, 'sm'=>4, 'disabled' => false, 'nullable'=>true], 'dateFormat' => 'yyyy-MM-dd','timeZone'=>'America/Los_Angeles'];
 $allFieldsAdd[] = ['name' => 'EndDate', 'show'=>false, 'type'=>'date', 'label' => __('End Date'), 'value' => '', 'placeholder' => __('End Date'), 'helptext' => __('End Date'), 'rules' => ['required' => false,'xs'=>12, 'sm'=>4, 'disabled' => false, 'nullable'=>true], 'dateFormat' => 'yyyy-MM-dd','timeZone'=>'America/Los_Angeles'];
 $allFieldsAdd[] = ['name' => 'FieldDefaultDate', 'show'=>false, 'type'=>'date', 'label' => __('Field Default Date'), 'value' => '', 'placeholder' => __('Field default value, you can leave it blank'), 'helptext' => __('Default value, or blank'), 'rules' => ['required' => false,'xs'=>12, 'sm'=>4,'disabled' => false, 'nullable'=>true], 'dateFormat' => 'yyyy-MM-dd','timeZone'=>'America/Los_Angeles'];
-$allFieldsAdd[] = ['name' => 'DateFormat', 'show'=>false, 'type'=>'input', 'label' => __('DateFormat'), 'value' => 'yyyyMMdd', 'placeholder' => __('DateFormat'), 'helptext' => __('DateFormat').":yyyy-MM-dd", 'rules' => ['required' => false,'xs'=>12, 'sm'=>12,'disabled' => false, 'nullable'=>true], 'dateFormat' => 'yyyy-MM-dd','timeZone'=>'America/Los_Angeles'];
+$allFieldsAdd[] = ['name' => 'DateFormat', 'show'=>false, 'type'=>'input', 'label' => __('DateFormat'), 'value' => 'yyyy-MM-dd', 'placeholder' => __('DateFormat'), 'helptext' => __('DateFormat').":yyyy-MM-dd", 'rules' => ['required' => false,'xs'=>12, 'sm'=>12,'disabled' => false, 'nullable'=>true], 'dateFormat' => 'yyyy-MM-dd','timeZone'=>'America/Los_Angeles'];
 
 $allFieldsAdd[] = ['name' => 'StartTime', 'show'=>false, 'type'=>'Time', 'label' => __('Start Time'), 'value' => '', 'placeholder' => __('Start Time'), 'helptext' => __('Start Time'), 'rules' => ['required' => false,'xs'=>12, 'sm'=>12, 'disabled' => false, 'nullable'=>true], 'dateFormat' => 'HH:mm:ss','timeZone'=>'America/Los_Angeles'];
 $allFieldsAdd[] = ['name' => 'EndTime', 'show'=>false, 'type'=>'Time', 'label' => __('End Time'), 'value' => '', 'placeholder' => __('End Time'), 'helptext' => __('End Time'), 'rules' => ['required' => false,'xs'=>12, 'sm'=>12, 'disabled' => false, 'nullable'=>true], 'dateFormat' => 'HH:mm:ss','timeZone'=>'America/Los_Angeles'];
@@ -132,7 +132,7 @@ $ColumnWidth[] = ['value'=>260, 'label'=>'260px'];
 $ColumnWidth[] = ['value'=>280, 'label'=>'280px'];
 $ColumnWidth[] = ['value'=>300, 'label'=>'300px'];
 $ColumnWidth[] = ['value'=>320, 'label'=>'320px'];
-$allFieldsAdd[] = ['name' => 'ColumnWidth', 'show'=>true, 'type'=>'select', 'options'=>$ColumnWidth, 'label' => __('Column Width'), 'value' => $ColumnWidth[5]['value'], 'placeholder' => __(''), 'helptext' => __('Column Width In List Page'), 'rules' => ['required' => true,'xs'=>12, 'sm'=>4,'disabled' => false]];
+$allFieldsAdd[] = ['name' => 'ColumnWidth', 'show'=>true, 'type'=>'select', 'options'=>$ColumnWidth, 'label' => __('Column Width'), 'value' => $ColumnWidth[10]['value'], 'placeholder' => __(''), 'helptext' => __('Column Width In List Page'), 'rules' => ['required' => true,'xs'=>12, 'sm'=>4,'disabled' => false]];
 
 
 //$allFieldsAdd[] = ['name' => 'ColumnWidth', 'show'=>true, 'type'=>'number', 'label' => __('Column Width'), 'value' => '200', 'placeholder' => __('Column Width'), 'helptext' => __('Column Width In List Page'), 'rules' => ['required' => true,'xs'=>12, 'sm'=>4, 'disabled' => false,'min'=>0,'max'=>4]];
