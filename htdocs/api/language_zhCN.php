@@ -793,4 +793,8 @@ $MAP['TextareaRows'] 	        = '多行文本框高度';
 $MAP['Do you really want to change multiple item values at this time?'] = "您确认要修改多个选定记录的值么？";
 $MAP['Change multiple item values one time'] = "一次修改多个记录的值";
 
+$MAP['Malicious login']         = '恶意登录';
+$MAP['Malicious ip'] 	        = '恶意IP';
+
+
 ?>

@@ -793,5 +793,7 @@ $MAP['TextareaRows'] 	        = 'Textarea Rows';
 $MAP['Do you really want to change multiple item values at this time?'] = "Do you really want to change multiple item values at this time?";
 $MAP['Change multiple item values one time'] = "Change multiple item values one time";
 
+$MAP['Malicious login']         = 'Malicious login';
+$MAP['Malicious ip'] 	        = 'Malicious ip';
 
 ?>
