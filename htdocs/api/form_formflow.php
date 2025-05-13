@@ -199,6 +199,22 @@ if(($_GET['action']=="edit_default_6_data") && $id!="")     {
 
 if(($_GET['action']=="edit_default_1_data" || $_GET['action']=="edit_default_2_data" || $_GET['action']=="edit_default_3_data" || $_GET['action']=="edit_default_4_data" || $_GET['action']=="edit_default_5_data" || $_GET['action']=="edit_default_7_data") && $id!="")     {
 
+    //处理一些特殊情况, 在流程中批量设置多个字段的值为某一个值的时候, 会使用到
+    if($_GET['action']=="edit_default_1_data" && $_POST['FormSubmitButtonText']=='全部设置为编辑只读') {
+        $FormId     = returntablefield("form_formflow","id",$id,"FormId")['FormId'];;
+        $sql        = "select * from form_formfield where FormId='$FormId' and IsEnable='1' order by SortNumber asc, id asc";
+        $rs         = $db->Execute($sql);
+        $AllFieldsFromTable   = $rs->GetArray();
+        foreach($AllFieldsFromTable as $Item)  {
+            $FieldName  = $Item['FieldName'];
+            if($_POST['FieldType_'.$FieldName] != "")  {
+                $_POST['FieldType_'.$FieldName] = 'ListAddView_Use_Edit_Readonly';
+            }
+            //print $_POST['FieldType_'.$FieldName]."<BR>";
+        }
+        //print_R($_POST);exit;
+    }
+
     if($id!=""&&$_POST['NodeType']=="工作流")   {
         $sql        = "delete from data_menutwo where FlowId = '$id'";
         $rs         = $db->Execute($sql);

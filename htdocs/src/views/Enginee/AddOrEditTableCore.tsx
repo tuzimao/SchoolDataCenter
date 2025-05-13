@@ -596,7 +596,8 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
         resolver: yupResolver(yupCheckMapSchema)
     })
 
-    const onSubmit = (data: {[key:string]:any}) => {
+    const onSubmit = (data: {[key:string]:any}, event: any) => {
+
         console.log("addEditStructInfo2.childtable", addEditStructInfo2.childtable)
         if(addEditStructInfo2 && addEditStructInfo2.childtable && addEditStructInfo2.childtable.Type == "从子表中选择记录" && addEditStructInfo2.childtable.Select == true && selectedRows && selectedRows.length == 0 )   {
             toast.error('至少要选择一项记录')
@@ -615,11 +616,12 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
             return
         }
 
-        console.log("Menu_Three_Icon data", data)
-        console.log("loopModelDataStorage", loopModelDataStorage)
+        //console.log("Menu_Three_Icon data", data)
+        //console.log("loopModelDataStorage", loopModelDataStorage)
 
         //upload file
         const formData = new FormData();
+        formData.append('FormSubmitButtonText', event?.nativeEvent?.submitter?.innerText);
 
         const dataMap = new Map(Object.entries({...data, ...loopModelDataStorage}));
         for (const [key, value] of dataMap.entries()) {
@@ -5307,7 +5309,7 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                         {((addEditStructInfo2.submittext && addEditStructInfo2.submittext) || (addEditStructInfo2.canceltext && addEditStructInfo2.canceltext)) && ((singleModelCounter == (fieldIdValue+1) ) || FieldShowStatus == 2) ?
                             <Grid item xs={12} sm={12} container justifyContent="space-around" sx={{ pt: 5 }}>
                                 <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
-                                    {addEditStructInfo2.submittext && addEditStructInfo2.submittext != "" ?
+                                    {addEditStructInfo2.submittext && addEditStructInfo2.submittext != "" && (
                                         <Tooltip title="Alt+s">
                                             <Button size={isMobileData == true ? 'medium' : componentsize} disabled={isSubmitLoading} type='submit' variant='contained' sx={{ width: isMobileData == true ? '100%' : '', whiteSpace: 'nowrap', px: 15 }}>
                                                 {isSubmitLoading ? (
@@ -5323,16 +5325,31 @@ const AddOrEditTableCore = (props: AddOrEditTableType) => {
                                                 {addEditStructInfo2.submittext}
                                             </Button>
                                         </Tooltip>
-                                        : ''
-                                    }
-                                    {isMobileData == false && addEditStructInfo2.canceltext && addEditStructInfo2.canceltext != "" ?
+                                    )}
+                                    {isMobileData == false && addEditStructInfo2.canceltext && addEditStructInfo2.canceltext != "" && (
                                         <Tooltip title="Alt+c">
                                             <Button size='small' sx={{ml: 3}} disabled={isSubmitLoading} variant='outlined' color='secondary' onClick={handleClose}>
                                                 {addEditStructInfo2.canceltext}
                                             </Button>
                                         </Tooltip>
-                                        : ''
-                                    }
+                                    )}
+                                    {isMobileData == false && addEditStructInfo2.submittext1 && addEditStructInfo2.submittext1 != "" && (
+                                        <Tooltip title="Alt+s">
+                                            <Button size={componentsize} disabled={isSubmitLoading} type='submit' variant='contained' sx={{ ml: 3, width: '150px', whiteSpace: 'nowrap', px: 15 }} >
+                                                {isSubmitLoading ? (
+                                                    <CircularProgress
+                                                        sx={{
+                                                            color: 'common.white',
+                                                            width: '20px !important',
+                                                            height: '20px !important',
+                                                            mr: (theme: any) => theme.spacing(2)
+                                                        }}
+                                                    />
+                                                ) : null}
+                                                {addEditStructInfo2.submittext1}
+                                            </Button>
+                                        </Tooltip>
+                                    )}
                                 </Box>
                             </Grid>
                             : ''

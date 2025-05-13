@@ -154,17 +154,17 @@ if( $_GET['action']=="add_default_data" && in_array('Add',$Actions_In_List_Heade
         }
     }
     if($IsExecutionSQL)   {
-        global $InsertOrUpdateFieldArrayForSql; //Define in data_enginee_function.php
-            foreach($InsertOrUpdateFieldArrayForSql['ADD'] as $FieldName=>$FieldValue)  {
-                if($FieldValue=="EncryptField"&&$_POST[$FieldName]=="") {
-                    //Not Need To Update Field Value
-                }
-                else if($FieldValue=="EncryptField"&&$_POST[$FieldName]!="") {
-                    $FieldsArray[$FieldName]       = addslashes($_POST[$FieldName]);
-                }
-                else if($FieldValue!="")   {
-                    $FieldsArray[$FieldName]        = $FieldValue;
-                }
+        global $InsertOrUpdateFieldArrayForSql; //Define in data_enginee_function.
+        foreach($InsertOrUpdateFieldArrayForSql['ADD'] as $FieldName=>$FieldValue)  {
+            if($FieldValue=="EncryptField"&&$_POST[$FieldName]=="") {
+                //Not Need To Update Field Value
+            }
+            else if($FieldValue=="EncryptField"&&$_POST[$FieldName]!="") {
+                $FieldsArray[$FieldName]       = addslashes($_POST[$FieldName]);
+            }
+            else if($FieldValue!="")   {
+                $FieldsArray[$FieldName]        = $FieldValue;
+            }
         }
 
         //Split Multi Records

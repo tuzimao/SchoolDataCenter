@@ -117,6 +117,10 @@ if($_GET['action'] == 'NewWorkflow' && $FlowId > 0 && $processid == 0)          
     $rs_a       = $rs->GetArray();
     $工作ID     = intval($rs_a[0]['NUM']) + 100000 + 1;
     $工作名称   = "No. ".$工作ID." ".$FormName."-".$GLOBAL_USER->USER_NAME;
+
+    //业务数据表-初始化一条记录进去
+    $DefaultValue['id'] = $工作ID;
+    AddOneRecordToTable($TableName, $FormId, $FlowId, $DefaultValue);
     
     //我的工作
     $Element = []; 
@@ -148,10 +152,6 @@ if($_GET['action'] == 'NewWorkflow' && $FlowId > 0 && $processid == 0)          
     $Element['工作创建时间']    = date('Y-m-d H:i:s');
     [$rs,$sql]  = InsertOrUpdateTableByArray("form_flow_run_process",$Element,"工作ID,用户ID,流程步骤ID",0,'Insert');
     $ProcessId  = $db->Insert_ID('form_flow_run_process');
-
-    //业务数据表-初始化一条记录进去
-    $DefaultValue['id'] = $工作ID;
-    AddOneRecordToTable($TableName, $FormId, $FlowId, $DefaultValue);
 
     $data                   = [];
     $data['id']             = EncryptID($工作ID); 

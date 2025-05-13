@@ -100,6 +100,14 @@ if( $_GET['action']=="add_default_data" || $_GET['action']=="edit_default_data")
                     $_POST['二级指标']      = $rsf->fields['二级指标'];
                     $_POST['积分分值']      = $rsf->fields['积分分值'];
                     break;
+                case '科研:我的科研申报项目':
+                    $sql     = "select 项目计划, 项目名称, 项目编号 from data_keyan_shenbao where 项目编号 = '".ForSqlInjection($_POST[$Item['FieldName']])."'";
+                    $rsf     = $db->Execute($sql);
+                    $_POST['项目计划']      = $rsf->fields['项目计划'];
+                    $_POST['项目名称']      = $rsf->fields['项目名称'];
+                    $_POST['项目编号']      = $rsf->fields['项目编号'];
+                    //print_R($_POST);exit;
+                    break;
             }
         }
         //Reset Value By System Setting

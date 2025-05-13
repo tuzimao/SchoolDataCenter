@@ -814,14 +814,65 @@ function AddOneRecordToTable($TableName, $FormId, $FlowId, $DefaultValue) {
     $AllFieldsFromFlow   = $rs->GetArray();
     $SettingMap = unserialize(base64_decode($AllFieldsFromFlow[0]['Setting']));
 
+	global $MetaColumnNames;
 	foreach($AllFieldsFromTable as $Item)  {
         $Item['Setting']    = json_decode($Item['Setting'], true);
         $FieldName  		= $Item['FieldName'];
         $ShowType   		= $Item['ShowType'];
 		$流程中的设定 		 = $SettingMap['FieldType_'.$FieldName];
+		//print $FieldName."----".$流程中的设定."<BR>";
         switch($流程中的设定) {
+            case 'HiddenUserID':
+                $DefaultFieldValue[$FieldName] = $GLOBAL_USER->USER_ID;
+				if($_GET['action']=="NewWorkflow")  {
+					//同时要求这些字段为隐藏, 否则容易发生值被修改
+					//if(in_array("所在部门", $MetaColumnNames)) 	$DefaultFieldValue['所在部门'] 	= $GLOBAL_USER->DEPT_ID;
+					//if(in_array("部门名称", $MetaColumnNames)) 	$DefaultFieldValue['部门名称'] 	= $GLOBAL_USER->DEPT_NAME;
+					//if(in_array("性别", $MetaColumnNames)) 		$DefaultFieldValue['性别']		= $GLOBAL_USER->GENDER;
+					//if(in_array("联系方式", $MetaColumnNames)) 	$DefaultFieldValue['联系方式'] 	= $GLOBAL_USER->MOBILE_NO;
+					//if(in_array("联系电话", $MetaColumnNames)) 	$DefaultFieldValue['联系电话'] 	= $GLOBAL_USER->MOBILE_NO;
+				}
+                break;
+            case 'HiddenUsername':
+                $DefaultFieldValue[$FieldName] = $GLOBAL_USER->USER_NAME;
+                break;
+            case 'HiddenDeptID':
+                $DefaultFieldValue[$FieldName] = $GLOBAL_USER->DEPT_ID;
+                break;
+            case 'HiddenDeptName':
+                $DefaultFieldValue[$FieldName] = $GLOBAL_USER->DEPT_NAME;
+                break;
             case 'HiddenStudentID':
                 $DefaultFieldValue[$FieldName] = $GLOBAL_USER->学号;
+				if($_GET['action']=="NewWorkflow")  {
+                    $sql     = "select * from data_student where 学号 = '".ForSqlInjection($GLOBAL_USER->学号)."'";
+                    $rsf     = $db->Execute($sql);
+					if(in_array("姓名", $MetaColumnNames)) $DefaultFieldValue['姓名'] = $rsf->fields['姓名'];
+					if(in_array("系部", $MetaColumnNames)) $DefaultFieldValue['系部'] = $rsf->fields['系部'];
+					if(in_array("专业", $MetaColumnNames)) $DefaultFieldValue['专业'] = $rsf->fields['专业'];
+					if(in_array("班级", $MetaColumnNames)) $DefaultFieldValue['班级'] = $rsf->fields['班级'];
+					if(in_array("身份证号", $MetaColumnNames)) $DefaultFieldValue['身份证号'] = $rsf->fields['身份证号'];
+					if(in_array("出生日期", $MetaColumnNames)) $DefaultFieldValue['出生日期'] = $rsf->fields['出生日期'];
+					if(in_array("性别", $MetaColumnNames)) $DefaultFieldValue['性别'] = $rsf->fields['性别'];
+					if(in_array("座号", $MetaColumnNames)) $DefaultFieldValue['座号'] = $rsf->fields['座号'];
+					if(in_array("学生宿舍", $MetaColumnNames)) $DefaultFieldValue['学生宿舍'] = $rsf->fields['学生宿舍'];
+					if(in_array("床位号", $MetaColumnNames)) $DefaultFieldValue['床位号'] = $rsf->fields['床位号'];
+					if(in_array("学生状态", $MetaColumnNames)) $DefaultFieldValue['学生状态'] = $rsf->fields['学生状态'];
+					if(in_array("学生手机", $MetaColumnNames)) $DefaultFieldValue['学生手机'] = $rsf->fields['学生手机'];
+					if(in_array("学生班级", $MetaColumnNames)) $DefaultFieldValue['学生班级'] = $rsf->fields['学生班级'];
+					if(in_array("系部名称", $MetaColumnNames)) $DefaultFieldValue['系部名称'] = $rsf->fields['系部名称'];
+					if(in_array("专业名称", $MetaColumnNames)) $DefaultFieldValue['专业名称'] = $rsf->fields['专业名称'];
+					if(in_array("班级名称", $MetaColumnNames)) $DefaultFieldValue['班级名称'] = $rsf->fields['班级名称'];
+					if(in_array("联系方式", $MetaColumnNames)) $DefaultFieldValue['联系方式'] = $rsf->fields['学生手机号码'];
+					if(in_array("系部名称", $MetaColumnNames)) $DefaultFieldValue['系部名称'] = $rsf->fields['系部名称'];
+					if(in_array("系部名称", $MetaColumnNames)) $DefaultFieldValue['系部名称'] = $rsf->fields['系部名称'];
+                    if(in_array("出生日期", $MetaColumnNames) && in_array("年龄", $MetaColumnNames) && strlen($_POST['出生日期']) == strlen('1983-07-19')) {
+                        $birthday       = new DateTime($_POST['出生日期']);
+                        $today          = new DateTime();
+                        $年龄           = $today->diff($birthday)->y; 
+                        $DefaultFieldValue['年龄']	= $年龄;
+                    }
+                }
                 break;
             case 'HiddenStudentName':
                 $DefaultFieldValue[$FieldName] = $GLOBAL_USER->姓名;
@@ -831,6 +882,7 @@ function AddOneRecordToTable($TableName, $FormId, $FlowId, $DefaultValue) {
                 break;
         }
     }
+	//print_R($DefaultFieldValue);exit;
     [$rs,$sql] = InsertOrUpdateTableByArray($TableName, $DefaultFieldValue, "工作ID,FlowId", 0, 'Insert');
 }
 

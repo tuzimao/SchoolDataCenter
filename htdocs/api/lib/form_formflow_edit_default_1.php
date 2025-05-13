@@ -136,6 +136,8 @@ if($_GET['action']=="edit_default_1"&&$id!='')         {
     $edit_default['componentsize']  = "small";
     $edit_default['submitaction']   = "edit_default_1_data";
     $edit_default['submittext']     = __("Submit");
+    $edit_default['submitaction1']   = "edit_default_1_data1";
+    $edit_default['submittext1']     = "全部设置为编辑只读";
     $edit_default['canceltext']     = __("Cancel");
     $edit_default['titletext']      = __("Design Form Field Type");
     $edit_default['titlememo']      = __("Manage All Form Fields in Table");

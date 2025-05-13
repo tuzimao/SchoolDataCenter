@@ -1165,6 +1165,15 @@ function getAllFields($AllFieldsFromTable, $AllShowTypesArray, $actionType, $Fil
                 if($actionType=="EDIT") $InsertOrUpdateFieldArrayForSql[$actionType][$FieldName] = "";
                 $allFieldsMap['Default'][] = ['name' => $FieldName, 'show'=>true, 'FieldTypeArray'=>$CurrentFieldTypeArray, 'type'=>$CurrentFieldTypeArray[0], 'label' => $ShowTextName, 'value' => $FieldDefault, 'GroupOneMenuName'=>"楼房属性", 'GroupTwoMenuName'=>"楼房名称", 'GroupOneMenuValue'=>$一级菜单[2], 'GroupTwoMenuValue'=>$二级菜单MAP[$一级菜单[2]][0], 'GroupOneMenuArray'=>$一级菜单, 'GroupTwoMenuArray'=>$二级菜单MAP, 'placeholder' => $Placeholder, 'helptext' => $Helptext, 'rules' => ['required' => $IsMustFill==1?true:false,'xs'=>12, 'sm'=>intval($IsFullWidth), 'disabled' => false], 'SelectBuildingData'=>"SelectBuilding_".$Item['id'], 'GroupTwoMap'=>$GroupTwoMap];
                 break;
+            case '我的科研申报项目':
+                //我的科研申报项目
+                $其它建筑 = [];
+                $sql	    = "select 项目计划,项目名称 as label, 项目编号 as value from data_keyan_shenbao where 申请人='".$GLOBAL_USER->USER_ID."' and 立项状态='已立项' order by 项目名称";
+                $rs         = $db->Execute($sql) or print($sql);
+                $FieldType  = $rs->GetArray();
+                if($actionType=="ADD"||$actionType=="EDIT") $InsertOrUpdateFieldArrayForSql[$actionType][$FieldName] = "";
+                $allFieldsMap['Default'][] = ['name' => $FieldName, 'show'=>true, 'FieldTypeArray'=>['tablefilter'], 'type'=>'tablefilter', 'options'=>$FieldType, 'label' => $ShowTextName, 'value' => $DefaultValue, 'placeholder' => $Placeholder, 'helptext' => $Helptext, 'rules' => ['required' => $IsMustFill==1?true:false,'xs'=>12, 'sm'=>intval($IsFullWidth),'disabled' => $disabledItem==true?true:false, 'row'=>true], 'sql'=>$sql, 'CurrentFieldTypeArray'=>$CurrentFieldTypeArray, 'MetaColumnNamesTemp'=>$MetaColumnNamesTemp];
+                break;
             case '报修故障分类':
                 //报修故障分类
                 $其它建筑 = [];

@@ -29,7 +29,6 @@ $NodeType_Array[]  = ['value'=>"工作流",'label'=>"工作流"];
 $NodeType_Array[]  = ['value'=>"菜单",'label'=>"菜单"];
 
 $edit_default_7['Menu_Location'][] = ['name' => "NodeType", 'show'=>true, 'type'=>'select', 'options'=>$NodeType_Array, 'label' => __("NodeType"), 'value' => $NodeType_Array[1]['value'], 'placeholder' => "", 'helptext' => __("NodeTypeHelpText"), 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
-$edit_default_7['Menu_Location'][] = ['name' => "NextStep", 'show'=>true, 'type'=>"input", 'label' => __("NextStep"), 'value' => "", 'placeholder' => "", 'helptext' => __("NextStepHelpText"), 'rules' => ['required' => false,'xs'=>12, 'sm'=>4, 'disabled' => false]];
 $MenuTab_Options = [];
 $MenuTab_Options[] = ['value'=>'Yes', 'label'=>__('Yes')];
 $MenuTab_Options[] = ['value'=>'No', 'label'=>__('No')];
@@ -41,6 +40,9 @@ for($X=1;$X<=15;$X++) {
     $StepNameArray[] = ['value'=>$X, 'label'=>$X];
 }
 $edit_default_7['Menu_Location'][] = ['name' => "StepName", 'show'=>true, 'type'=>'select', 'options'=>$StepNameArray, 'label' => __("StepName"), 'value' => 0, 'placeholder' => "", 'helptext' => __(""), 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>2]];
+
+$edit_default_7['Menu_Location'][] = ['name' => "NextStep", 'show'=>true, 'type'=>"input", 'label' => __("NextStep"), 'value' => "", 'placeholder' => "", 'helptext' => __("NextStepHelpText"), 'rules' => ['required' => false,'xs'=>12, 'sm'=>4, 'disabled' => false]];
+
 $edit_default_7['Menu_Location'][] = ['name' => "Menu_One", 'show'=>true, 'type'=>'select', 'options'=>$MenuOneNameArray, 'label' => __("Menu_One"), 'value' => $MetaColumnNamesOptionsAll[1]['value'], 'placeholder' => "", 'helptext' => __("Allow_Repeat"), 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
 $edit_default_7['Menu_Location'][] = ['name' => "Menu_Two", 'show'=>true, 'type'=>"input", 'label' => __("Menu_Two"), 'value' => "", 'placeholder' => "", 'helptext' => __("Allow_Repeat"), 'rules' => ['required' => false,'xs'=>12, 'sm'=>4, 'disabled' => false]];
 $edit_default_7['Menu_Location'][] = ['name' => "Menu_Three", 'show'=>true, 'type'=>"input", 'label' => __("Menu_Three"), 'value' => "", 'placeholder' => "", 'helptext' => __("Optional"), 'rules' => ['required' => false,'xs'=>12, 'sm'=>4, 'disabled' => false]];
