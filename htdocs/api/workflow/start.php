@@ -29,7 +29,7 @@ if($_GET['action'] == 'MyNewWorkflow')       {
                 form_formflow.FaceTo = '$FaceTo' and 
                 form_formflow.FormId = form_formname.id
             order by 
-                form_formflow.Step asc
+                form_formname.id asc, form_formflow.Step asc
                 ";
     $rs     = $db->Execute($sql);
     $rs_a   = $rs->GetArray();

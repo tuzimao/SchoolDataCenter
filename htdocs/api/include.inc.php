@@ -782,6 +782,7 @@ function AddOneRecordToTable($TableName, $FormId, $FlowId, $DefaultValue) {
                 $DefaultFieldValue[$FieldName] = getCurrentXueQi();
                 break;
             case 'Input:Increasement[Fromat1]':
+			case 'Input:Increasement[FormatDate]':
                 $DefaultFieldValue[$FieldName] = $DefaultValue['id'];
                 break;
             case 'Hidden:Createtime':
