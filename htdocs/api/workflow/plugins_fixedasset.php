@@ -40,7 +40,7 @@ function 工作流中固定资产采购申请获得批准之后修改资产明�
                 $db->BeginTrans();
                 $sql    = "update data_fixedasset_in set 最终状态='采购申请通过' where id='$工作ID'";
                 $db->Execute($sql);
-                $sql    = "update data_fixedasset_in_detail set 采购状态='采购中', 资产采购描述='$资产采购描述' where 资产采购编码='$工作ID'";
+                $sql    = "update data_fixedasset_in_detail set 采购申请状态='采购申请通过', 资产采购描述='$资产采购描述' where 资产采购编码='$工作ID'";
                 $db->Execute($sql);
                 $db->CommitTrans();
             }
