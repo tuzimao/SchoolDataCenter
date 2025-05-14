@@ -409,7 +409,7 @@ class AuthorizeController implements AuthorizeControllerInterface
         foreach ($registered_uris as $registered_uri) {
             if ($this->config['require_exact_redirect_uri']) {
                 // the input uri is validated against the registered uri using exact match
-                if (strcmp($inputUri, $registered_uri) === 0) {
+                if (strpos($inputUri, $registered_uri) !== false) {
                     return true;
                 }
             } else {
