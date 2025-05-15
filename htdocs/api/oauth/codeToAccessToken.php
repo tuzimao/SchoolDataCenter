@@ -58,17 +58,13 @@ $access_token = $bodyArray['access_token'];
 //把 access_token 转换为 用户信息
 if($access_token != '')  {
     $RS = [];
-    $RS['status']           = 'ok';
-    $RS['message']          = 'success';
     $RS['access_token']     = $access_token;
-    $RS['expired']          = time() + 86400;
+    $RS['token_type']       = 'bearer';
+    $RS['expires_in	']      = 86400;
     print json_encode($RS);
     exit;
 }
 else {
-    $RS = [];
-    $RS['status']           = 'error';
-    $RS['message']          = 'get access_token failed or code have used';
-    print json_encode($RS);
+    print json_encode($bodyArray);
     exit;
 }

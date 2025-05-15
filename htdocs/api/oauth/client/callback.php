@@ -27,7 +27,7 @@ try {
   $RS     = json_decode($Data, true);
   
   //成功获取到access_token的值
-  if($RS['status'] == "ok" && $RS['access_token'] != "") {
+  if($RS['access_token'] != "") {
     
     //使用access_token的值来获取用户的信息, access_token的值为了不让在网络传输中被记录, access_token的值放入POST中进行传输
     $_POST    = [ 'accessToken' => $RS['access_token'] ];
