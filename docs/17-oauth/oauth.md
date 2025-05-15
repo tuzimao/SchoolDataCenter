@@ -31,18 +31,19 @@ uidKey = id
     'grant_type' => 'authorization_code',
     'code' => $_GET['code'],
     'redirect_uri' => $redirect_uri,
-    'client_id' => $client_id
+    'client_id' => $client_id,
+    'client_secret' => $client_secret
   ]
-Header: [ 'authorization: ' . $client_secret ]
-返回：[ 'status' => $httpCode, 'body' => .... ]
+Header: []
+返回：[ 'access_token' => $access_token, .... ]
 Demo PHP Code: https://github.com/SmartSchoolAI/SchoolDataCenter/blob/main/htdocs/api/oauth/client/callback.php
 
 ##### accessTokenToUserInfo.php
 作用：根据access token转换为用户信息
 方法：POST
 提交表单对像： [ 'accessToken' => $RS['access_token'] ]
-Header: [ 'authorization: ' . $client_secret ]
-返回：[ 'status' => 'ok', .... ];
+Header: []
+返回：[ 'id' => $id, .... ];
 Demo PHP Code: https://github.com/SmartSchoolAI/SchoolDataCenter/blob/main/htdocs/api/oauth/client/callback.php
 
 
