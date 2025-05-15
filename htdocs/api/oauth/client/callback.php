@@ -33,7 +33,7 @@ try {
     $_POST    = [ 'accessToken' => $RS['access_token'] ];
     $result   = httpRequest($access_token_uri, 'POST', $_POST, []);
     $Data     = $result['body'];
-    
+
     //得到用户的信息
     $用户信息 = json_decode($Data, true);
 

@@ -59,6 +59,7 @@ $access_token = $bodyArray['access_token'];
 if($access_token != '')  {
     $RS = [];
     $RS['access_token']     = $access_token;
+    $RS['tokenKey']         = $access_token;
     $RS['token_type']       = 'bearer';
     $RS['expires_in	']      = 86400;
     print json_encode($RS);

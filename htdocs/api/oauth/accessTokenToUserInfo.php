@@ -39,6 +39,7 @@ if($expires > time() && $tokenData['user_id'] != '')  {
     $RS['client_id']        = $tokenData['client_id'];
     $RS['expires']          = $tokenData['expires'];
     $RS['user_id']          = $tokenData['user_id'];
+    
 
     $USER_ID = $tokenData['user_id'];
     $sql    = "select * from data_user where USER_ID='$USER_ID'";
@@ -60,6 +61,7 @@ if($expires > time() && $tokenData['user_id'] != '')  {
         $userData['role']       = $userData['PRIV_NAME'];
         $userData['type']       = "User";
         $RS['userData']         = $userData;
+        $RS['id']               = $UserInfo['id'];
     }
     else {
         $sql    = "select * from data_student where 学号='$USER_ID'";
@@ -80,6 +82,7 @@ if($expires > time() && $tokenData['user_id'] != '')  {
         $userData['role']       = "学生";
         $userData['type']       = "Student";
         $RS['userData']         = $userData;
+        $RS['id']               = $StudentInfo['id'];
     }
     header('Content-Type: application/json');
     print_R(json_encode($RS));
