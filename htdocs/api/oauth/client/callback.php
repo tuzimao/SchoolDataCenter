@@ -13,10 +13,10 @@ if (!isset($_GET['code'])) {
 
 try {
   //第一步: 使用code拿到accessToken的值, code是一次性的, accessToken的值的有效期是24小时, 可以多次调用
-  $url      = $code_token_uri."?code=".$_GET['code'];
+  $url      = $code_token_uri;
   $_POST    = [
     'grant_type' => 'authorization_code',
-    'code' => $_GET['code'],
+    'code' => $_POST['code'],
     'redirect_uri' => $redirect_uri,
     'client_id' => $client_id
   ];

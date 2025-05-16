@@ -4,18 +4,18 @@ require_once('../vendor/autoload.php');
 require_once('../config.inc.php');
 require_once('../include.inc.php');
 
-if (!isset($_GET['code'])) {
+if (!isset($_POST['code'])) {
     die('No auth code received');
 }
 
-if (!isset($_SERVER['HTTP_AUTHORIZATION'])) {
-    die('No client_secret received');
+if (!isset($_POST['redirect_uri'])) {
+    die('No auth redirect_uri received');
 }
 
-$code               = ForSqlInjection($_GET['code']);
+$code               = ForSqlInjection($_POST['code']);
 $redirect_uri       = ForSqlInjection($_POST['redirect_uri']);
 $client_id          = ForSqlInjection($_POST['client_id']);
-$HTTP_AUTHORIZATION = ForSqlInjection($_SERVER['HTTP_AUTHORIZATION']);
+$client_secret      = ForSqlInjection($_POST['client_secret']);
 
 // 模拟 POST 请求来替代 curl
 $_SERVER['REQUEST_METHOD'] = 'POST';
@@ -24,7 +24,7 @@ $_POST = [
   'code' => $code,
   'redirect_uri' => $redirect_uri,
   'client_id' => $client_id,
-  'client_secret' => $HTTP_AUTHORIZATION
+  'client_secret' => $client_secret
 ];
 //print_R($_POST);exit;
 
