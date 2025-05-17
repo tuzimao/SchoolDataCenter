@@ -16,13 +16,14 @@ try {
   $url      = $code_token_uri;
   $_POST    = [
     'grant_type' => 'authorization_code',
-    'code' => $_POST['code'],
+    'code' => $_GET['code'],
     'redirect_uri' => $redirect_uri,
-    'client_id' => $client_id
+    'client_id' => $client_id,
+    'client_secret' => $client_secret
   ];
   
   //client_secret的值是不可以外泄漏的, 所以client_secret的值需要放到header里面进行传输
-  $result = httpRequest($url, 'POST', $_POST, [ 'authorization: ' . $client_secret ]);
+  $result = httpRequest($url, 'POST', $_POST, []);
   $Data   = $result['body'];
   $RS     = json_decode($Data, true);
   

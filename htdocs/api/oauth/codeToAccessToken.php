@@ -62,10 +62,12 @@ if($access_token != '')  {
     $RS['tokenKey']         = $access_token;
     $RS['token_type']       = 'bearer';
     $RS['expires_in	']      = 86400;
+    header('Content-Type: application/json');
     print json_encode($RS);
     exit;
 }
 else {
+    header('Content-Type: application/json');
     print json_encode($bodyArray);
     exit;
 }
