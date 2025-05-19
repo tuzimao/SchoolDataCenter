@@ -97,6 +97,11 @@ const AuthProvider = ({ children }: Props) => {
             router.replace('/login')
           }, 5000);
         }
+        if(storedToken == undefined && !router.asPath.startsWith('/cas/'))  {
+          setTimeout(function() {
+            router.replace('/cas')
+          }, 5000);
+        }
       }
     }
 

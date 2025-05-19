@@ -8,7 +8,6 @@ import Typography from '@mui/material/Typography'
 
 import CircularProgress from '@mui/material/CircularProgress'
 import BlankLayout from 'src/@core/layouts/BlankLayout'
-import AuthPage from 'src/views/pages/oauth/auth'
 import LoginPage from 'src/views/pages/oauth/login'
 
 import { authConfig, defaultConfig } from 'src/configs/auth'
@@ -17,21 +16,19 @@ import { DecryptDataAES256GCM } from 'src/configs/functions'
 import axios from 'axios'
 import { useRouter } from 'next/router'
 
-const OAuthPage = () => {
+const CasPage = () => {
   const router = useRouter()
   const [pageModel, setPageModel] = useState<string>('Loading')
-  const [clientInfo, setClientInfo] = useState<any>(null)
-  const [userData, setUserData] = useState<any>(null)
   const [query, setQuery] = useState<any>(null)
   
   const handleRefreshToken = () => {
     const token = window.localStorage.getItem(defaultConfig.storageTokenKeyName)
-    if(window && token == null && authConfig && router && router.query && router.query.client_id)  {
+    if(window && token == null && authConfig && router && router.query && router.query.service)  {
       setPageModel("Login")
     }
-    if(window && token && authConfig && router && router.query && router.query.client_id)  {
+    if(window && token && authConfig && router && router.query && router.query.service)  {
       axios
-        .get(authConfig.refreshEndpoint + '&client_id=' + router.query.client_id, { headers: { Authorization: token, 'Content-Type': 'application/json'} })
+        .get(authConfig.refreshEndpoint + '&service=' + router.query.service, { headers: { Authorization: token, 'Content-Type': 'application/json'} })
         .then(async (response: any) => {
 
           let dataJson: any = null
@@ -56,19 +53,18 @@ const OAuthPage = () => {
 
               dataJson = data
           }
+          console.log("dataJson", dataJson)
 
           //认证成功
-          if(dataJson.status == 'ok' && dataJson.accessToken && dataJson.ClientInfo) {
-            console.log("router", router.query)
-            setClientInfo(dataJson.ClientInfo)
-            setUserData(dataJson.userData)
-            setQuery(router.query)
-            setPageModel('Auth')
+          if(dataJson.status == 'ok' && dataJson.accessToken && dataJson.ClientInfo && dataJson.ClientInfo.Type && dataJson.ClientInfo.Type == 'CAS' && dataJson.ClientInfo.Ticket && dataJson.ClientInfo.Ticket != '' && router.query && router.query.service) {
+            const RedirectURL = router.query.service + "?ticket=" + dataJson.ClientInfo.Ticket
+            console.log("RedirectURL", RedirectURL)
+            router.push(RedirectURL)
           }
 
-          //Client_Id 不对
+          //service 不对
           if(dataJson.status == 'ok' && dataJson.accessToken && dataJson.ClientInfo == false) {
-            console.log("dataJson", dataJson)
+            console.log("router", router.query)
             setQuery(router.query)
             setPageModel('Error')
           }
@@ -94,14 +90,11 @@ const OAuthPage = () => {
       {pageModel == "Login" && (
         <LoginPage setPageModel={setPageModel} />
       )}
-      {pageModel == "Auth" && clientInfo && userData && (
-        <AuthPage clientInfo={clientInfo} userData={userData} query={query} />
-      )}
       {pageModel == "Error" && query && (
         <Grid item xs={12} sm={12} container justifyContent="space-around">
           <Box sx={{ mt: 6, mb: 6, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
               <Typography sx={{ mt: 6 }}>以下信息错误:</Typography>
-              <Typography sx={{ mt: 6 }}>client_id: {query.client_id}</Typography>
+              <Typography sx={{ mt: 6 }}>service: {query.service}</Typography>
           </Box>
         </Grid>
       )}
@@ -109,8 +102,8 @@ const OAuthPage = () => {
   )
 }
 
-OAuthPage.getLayout = (page: ReactNode) => <BlankLayout>{page}</BlankLayout>
+CasPage.getLayout = (page: ReactNode) => <BlankLayout>{page}</BlankLayout>
 
-OAuthPage.authAndGuestGuard = true
+CasPage.authAndGuestGuard = true
 
-export default OAuthPage
+export default CasPage

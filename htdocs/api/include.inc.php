@@ -887,6 +887,67 @@ function AddOneRecordToTable($TableName, $FormId, $FlowId, $DefaultValue) {
     [$rs,$sql] = InsertOrUpdateTableByArray($TableName, $DefaultFieldValue, "工作ID,FlowId", 0, 'Insert');
 }
 
+
+function getRealIP() {
+    $ip = '';
+    $headers = [
+        'HTTP_CLIENT_IP',
+        'HTTP_X_FORWARDED_FOR',
+        'HTTP_X_FORWARDED',
+        'HTTP_X_CLUSTER_CLIENT_IP',
+        'HTTP_FORWARDED_FOR',
+        'HTTP_FORWARDED',
+        'HTTP_CF_CONNECTING_IP', // Cloudflare
+    ];
+
+    foreach ($headers as $header) {
+        if (isset($_SERVER[$header])) {
+            $ips = explode(',', $_SERVER[$header]);
+            $ip = trim($ips[0]);
+            if (filter_var($ip, FILTER_VALIDATE_IP)) {
+                return filter_var($ip, FILTER_VALIDATE_IP);
+            }
+        }
+    }
+
+    return filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP) ?? '0.0.0.0';
+}
+
+function generateRandomLetters($length = 28) {
+    $letters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $result = '';
+    for ($i = 0; $i < $length; $i++) {
+        $result .= $letters[random_int(0, strlen($letters) - 1)];
+    }
+    return $result;
+}
+
+function decodeBase58($base58) {
+    $alphabet = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+    $base = strlen($alphabet);
+    $indexes = array_flip(str_split($alphabet));
+    $chars = str_split($base58);
+    $decimal = $indexes[$chars[0]];
+    for($i = 1, $l = count($chars); $i < $l; $i++) {
+        $decimal = bcmul($decimal, $base);
+        $decimal = bcadd($decimal, $indexes[$chars[$i]]);
+    }
+    $output = '';
+    while($decimal > 0) {
+        $byte = (int)bcmod($decimal, 256);
+        $output = pack('C', $byte).$output;
+        $decimal = bcdiv($decimal, 256, 0);
+    }
+    foreach($chars as $char) {
+        if($indexes[$char] === 0) {
+            $output = "\x00".$output;
+            continue;
+        }
+        break;
+    }
+    return $output;
+}
+
 if(is_file("function.xmjs.php")) {
 	require_once('function.xmjs.php');
 }

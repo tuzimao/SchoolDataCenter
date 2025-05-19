@@ -10,7 +10,7 @@
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 require_once('cors.php');
-session_start(); // 必须位于 headers 之后
+//session_start(); // 必须位于 headers 之后
 
 require_once('include.inc.php');
 require_once('./lib/data_enginee_function.php');
@@ -25,31 +25,6 @@ require_once('./lib/data_enginee_function.php');
 global $EncryptApiEnable;
 
 $EncryptApiEnable = 1;
-
-function getRealIP() {
-    $ip = '';
-    $headers = [
-        'HTTP_CLIENT_IP',
-        'HTTP_X_FORWARDED_FOR',
-        'HTTP_X_FORWARDED',
-        'HTTP_X_CLUSTER_CLIENT_IP',
-        'HTTP_FORWARDED_FOR',
-        'HTTP_FORWARDED',
-        'HTTP_CF_CONNECTING_IP', // Cloudflare
-    ];
-
-    foreach ($headers as $header) {
-        if (isset($_SERVER[$header])) {
-            $ips = explode(',', $_SERVER[$header]);
-            $ip = trim($ips[0]);
-            if (filter_var($ip, FILTER_VALIDATE_IP)) {
-                return filter_var($ip, FILTER_VALIDATE_IP);
-            }
-        }
-    }
-
-    return filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP) ?? '0.0.0.0';
-}
 
 if($_GET['action']=="login")                {
     JWT::$leeway    = $NEXT_PUBLIC_JWT_EXPIRATION;
@@ -149,9 +124,9 @@ if($_GET['action']=="login")                {
                 $RS['accessToken']      = $accessToken;
                 $RS['accessKey']        = GetAccessKey($userData['USER_ID']);
                 $RS['userData']         = $userData;
-                $_SESSION['DANDIAN_OAUTH_SERVER_USER_ID']   = $userData['USER_ID'];
-                $_SESSION['DANDIAN_OAUTH_SERVER_USER_NAME'] = $userData['USER_NAME'];
-                $_SESSION['DANDIAN_OAUTH_SERVER_USER_TYPE'] = $userData['type'];
+                //$_SESSION['DANDIAN_OAUTH_SERVER_USER_ID']   = $userData['USER_ID'];
+                //$_SESSION['DANDIAN_OAUTH_SERVER_USER_NAME'] = $userData['USER_NAME'];
+                //$_SESSION['DANDIAN_OAUTH_SERVER_USER_TYPE'] = $userData['type'];
 
                 //形成个人信息展示页面的数据列表
                 $USER_PROFILE 	    = array();
@@ -217,9 +192,9 @@ if($_GET['action']=="login")                {
                 $RS['accessToken']      = $accessToken;
                 $RS['accessKey']        = GetAccessKey($userData['USER_ID']);
                 $RS['userData']         = $userData;
-                $_SESSION['DANDIAN_OAUTH_SERVER_USER_ID']   = $userData['USER_ID'];
-                $_SESSION['DANDIAN_OAUTH_SERVER_USER_NAME'] = $userData['USER_NAME'];
-                $_SESSION['DANDIAN_OAUTH_SERVER_USER_TYPE'] = $userData['type'];
+                //$_SESSION['DANDIAN_OAUTH_SERVER_USER_ID']   = $userData['USER_ID'];
+                //$_SESSION['DANDIAN_OAUTH_SERVER_USER_NAME'] = $userData['USER_NAME'];
+                //$_SESSION['DANDIAN_OAUTH_SERVER_USER_TYPE'] = $userData['type'];
                 $RS['status']           = "OK";
                 $RS['msg']              = __("Success");
 
@@ -276,9 +251,9 @@ if($_GET['action']=="login")                {
             $RS['accessToken']      = $accessToken;
             $RS['accessKey']        = GetAccessKey($userData['USER_ID']);
             $RS['userData']         = $userData;
-            $_SESSION['DANDIAN_OAUTH_SERVER_USER_ID']   = $userData['USER_ID'];
-            $_SESSION['DANDIAN_OAUTH_SERVER_USER_NAME'] = $userData['USER_NAME'];
-            $_SESSION['DANDIAN_OAUTH_SERVER_USER_TYPE'] = $userData['type'];
+            //$_SESSION['DANDIAN_OAUTH_SERVER_USER_ID']   = $userData['USER_ID'];
+            //$_SESSION['DANDIAN_OAUTH_SERVER_USER_NAME'] = $userData['USER_NAME'];
+            //$_SESSION['DANDIAN_OAUTH_SERVER_USER_TYPE'] = $userData['type'];
 
             $GO_SYSTEM                          = [];
             $userInfoX                          = [];
@@ -341,28 +316,58 @@ if($_GET['action']=="refresh")                {
     $RS['accessKey']            = GetAccessKey($CheckAuthUserLoginStatus->USER_ID);
     $RS['userData']             = (array) $CheckAuthUserLoginStatus;
     if($CheckAuthUserLoginStatus->USER_ID != "")  {
-        $_SESSION['DANDIAN_OAUTH_SERVER_USER_ID']   = $CheckAuthUserLoginStatus->USER_ID;
-        $_SESSION['DANDIAN_OAUTH_SERVER_USER_NAME'] = $CheckAuthUserLoginStatus->USER_NAME;
+        //$_SESSION['DANDIAN_OAUTH_SERVER_USER_ID']   = $CheckAuthUserLoginStatus->USER_ID;
+        //$_SESSION['DANDIAN_OAUTH_SERVER_USER_NAME'] = $CheckAuthUserLoginStatus->USER_NAME;
     }
     if($CheckAuthUserLoginStatus->学号 != "")  {
-        $_SESSION['DANDIAN_OAUTH_SERVER_USER_ID']   = $CheckAuthUserLoginStatus->学号;
-        $_SESSION['DANDIAN_OAUTH_SERVER_USER_NAME'] = $CheckAuthUserLoginStatus->姓名;
+        //$_SESSION['DANDIAN_OAUTH_SERVER_USER_ID']   = $CheckAuthUserLoginStatus->学号;
+        //$_SESSION['DANDIAN_OAUTH_SERVER_USER_NAME'] = $CheckAuthUserLoginStatus->姓名;
     }
     if($CheckAuthUserLoginStatus->type != "")  {
-        $_SESSION['DANDIAN_OAUTH_SERVER_USER_TYPE'] = $CheckAuthUserLoginStatus->type;
+        //$_SESSION['DANDIAN_OAUTH_SERVER_USER_TYPE'] = $CheckAuthUserLoginStatus->type;
     }
+
+    $RS['ClientInfo']       = false;
+    //OAuth2
     $client_id          = ForSqlInjection($_GET['client_id']);
     if($client_id != "")  {
         $sql    = "select id, redirect_uri, 应用名称, 应用描述, 应用LOGO, 应用URL, grant_types from data_oauth_clients where client_id='$client_id'";
         $rs		= $db->Execute($sql);
+        $rs->fields['Type']     = "OAuth2";
         $rs->fields['应用LOGO'] = AttachFieldValueToUrl("data_oauth_clients", $rs->fields['id'], '应用LOGO', 'avatar', $rs->fields['应用LOGO']);
         $ClientInfo = $rs->fields;
-        $RS['ClientInfo']    = $ClientInfo;
+        $RS['ClientInfo']       = $ClientInfo;
     }
-    else {        
-        $RS['ClientInfo']    = false;
+    //CAS
+    $service          = ForSqlInjection($_GET['service']);
+    if($service != "")  {
+        $sql    = "select id, 名称, 客户端地址 from data_cas_client where 客户端地址='$service' and 启用='是'";
+        $rs		= $db->Execute($sql);
+        $rs->fields['Type'] = "CAS";
+        $ClientInfo = $rs->fields;
+        
+        //生成CAS 令牌 
+        $Element                = [];
+        $Element['应用']        = ForSqlInjection($ClientInfo['名称']);
+        $Element['客户端地址']   = ForSqlInjection($ClientInfo['客户端地址']);
+        $Element['令牌']        = 'ST-' . generateRandomLetters(30);
+        $Element['是否有效']    = '1';
+        $Element['创建时间']    = date('Y-m-d H:i:s');
+        $Element['过期时间']    = date('Y-m-d H:i:s', strtotime('+1 hours'));
+        if($CheckAuthUserLoginStatus->USER_ID != "")  {
+            $Element['用户名']      = base64_encode($CheckAuthUserLoginStatus->USER_ID);
+        }
+        else {
+            $Element['用户名']      = base64_encode($CheckAuthUserLoginStatus->学号);
+        }
+        $KEYS   = array_keys($Element);
+        $VALUES = array_values($Element);
+        $sql    = "insert into data_cas_ticket(".join(',',$KEYS).") values('".join("','",$VALUES)."')";
+        $db->Execute($sql);
+        $ClientInfo['Ticket']   = $Element['令牌'];
+        $RS['ClientInfo']       = $ClientInfo;
     }
-    $RS['_SESSION']     = $_SESSION;
+    //$RS['_SESSION']             = $_SESSION;
     print_R(EncryptApiData($RS, (Object)['USER_ID'=>time()], true));
     exit;
 }
@@ -377,30 +382,5 @@ if($_GET['action']=="Logout")                {
     exit;
 }
 
-function decodeBase58($base58) {
-    $alphabet = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
-    $base = strlen($alphabet);
-    $indexes = array_flip(str_split($alphabet));
-    $chars = str_split($base58);
-    $decimal = $indexes[$chars[0]];
-    for($i = 1, $l = count($chars); $i < $l; $i++) {
-        $decimal = bcmul($decimal, $base);
-        $decimal = bcadd($decimal, $indexes[$chars[$i]]);
-    }
-    $output = '';
-    while($decimal > 0) {
-        $byte = (int)bcmod($decimal, 256);
-        $output = pack('C', $byte).$output;
-        $decimal = bcdiv($decimal, 256, 0);
-    }
-    foreach($chars as $char) {
-        if($indexes[$char] === 0) {
-            $output = "\x00".$output;
-            continue;
-        }
-        break;
-    }
-    return $output;
-}
 
 ?>
