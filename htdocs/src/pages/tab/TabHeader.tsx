@@ -79,7 +79,7 @@ const TabHeader = ({ tab, allTabs }: { tab: string; allTabs: {[key:string]:any} 
               >
                 {Object.entries(allTabs).map(([TabValue, Item]) => {
                   if (TabGroupValue == Item['group']) {
-                    console.log("Item.label.length", Item.label.length)
+
                     return (
                       <Tab
                         key={TabValue}
