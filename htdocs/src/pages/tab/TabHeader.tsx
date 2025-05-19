@@ -79,15 +79,16 @@ const TabHeader = ({ tab, allTabs }: { tab: string; allTabs: {[key:string]:any} 
               >
                 {Object.entries(allTabs).map(([TabValue, Item]) => {
                   if (TabGroupValue == Item['group']) {
+                    console.log("Item.label.length", Item.label.length)
                     return (
                       <Tab
                         key={TabValue}
                         value={Item.value}
-                        sx={{ width: '100px', minWidth: '100px' }}
+                        sx={{ width: '130px', minWidth: '130px' }}
                         label={
-                          <Box sx={{ display: 'flex', alignItems: 'center', ...(!hideText && { '& svg': { mr: 1 } }), width: '100px', minWidth: '100px'}}>
+                          <Box sx={{ px: 2, display: 'flex', alignItems: 'center', ...(!hideText && Item.label && Item.label.length > 4 && { ml: 2 }), width: '130px', minWidth: '130px'}}>
                             <Icon icon={`mdi-${Item.icon}`} />
-                            {!hideText && Item.label}
+                            <span style={{...(!hideText && Item.label && Item.label.length <= 4 && { marginLeft: 2 })}}>{!hideText && Item.label}</span>                            
                           </Box>
                         }
                       />
