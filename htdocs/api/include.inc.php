@@ -604,8 +604,8 @@ function SystemLogRecord($LogAction,$BeforeRecord='',$AfterRecord='',$LoginUser=
 	$Element['id'] 				= NULL;
 	$Element['LogAction'] 		= $LogAction;
 	$Element['LogTime'] 		= date("Y-m-d H:i:s");
-	$Element['REMOTE_ADDR'] 	= addslashes($_SERVER['REMOTE_ADDR']);
-	$Element['HTTP_USER_AGENT'] = base64_encode($_SERVER['HTTP_USER_AGENT']);
+	$Element['REMOTE_ADDR'] 	= addslashes(getRealIP());
+	$Element['HTTP_USER_AGENT'] = ForSqlInjection($_SERVER['HTTP_USER_AGENT']);
 	$Element['QUERY_STRING'] 	= addslashes($_SERVER['QUERY_STRING']);
 	$Element['SCRIPT_NAME'] 	= addslashes($_SERVER['SCRIPT_NAME']);
 	$Element['USERID'] 			= $LoginUser?$LoginUser:$GLOBAL_USER->USER_ID;

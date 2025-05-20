@@ -2,8 +2,28 @@
 require_once('server.php');
 require_once('../include.inc.php');
 
+$getRealIP  = getRealIP();
+//每个外部IP仅限登录10次-过期自动清除
+$限制外部IP登录时间   = $redis->hGet("OAUTH_AccessTokenToUser_ADDRESS_LAST_TIME", $getRealIP);
+if($限制外部IP登录时间 > 0 && (time() - $限制外部IP登录时间) > 60) {
+    $redis->hSet("OAUTH_AccessTokenToUser_ADDRESS_LAST_TIME", $getRealIP, 0);
+    $redis->hSet("OAUTH_AccessTokenToUser_ADDRESS_LIMIT", $getRealIP, 0);
+}
+else {
+    //每个外部IP仅限登录10次-开始记录
+    $限制外部IP登录次数 = (int)$redis->hGet("OAUTH_AccessTokenToUser_ADDRESS_LIMIT", $getRealIP);
+    if($限制外部IP登录次数 > 5) {
+        $RS             = [];
+        $RS['status']   = "ERROR";
+        $RS['msg']      = __("Malicious ip");
+        $redis->hSet("OAUTH_AccessTokenToUser_ADDRESS_LAST_TIME", $getRealIP, time());
+        print_R(EncryptApiData($RS, (Object)['USER_ID'=>time()], true));
+        exit;
+    }
+}
+
 $_POST['accessToken']   = ForSqlInjection($_POST['accessToken']);
-$accessToken            = filterString($_POST['accessToken']);
+$accessToken            = ForSqlInjection($_POST['accessToken']);
 
 if(strlen($accessToken) != 40) {
     $RS                     = [];
@@ -11,6 +31,7 @@ if(strlen($accessToken) != 40) {
     $RS['message']          = 'accessToken is invalid';
     header('Content-Type: application/json');
     print_R(json_encode($RS));
+    $redis->hSet("CAS_AccessTokenToUser_ADDRESS_LIMIT", $getRealIP, $限制外部IP登录次数+1);
     exit;
 }
 
@@ -86,6 +107,7 @@ if($expires > time() && $tokenData['user_id'] != '')  {
     }
     header('Content-Type: application/json');
     print_R(json_encode($RS));
+    $redis->hSet("CAS_AccessTokenToUser_ADDRESS_LIMIT", $getRealIP, 0);
     exit;
 }
 else {
@@ -98,6 +120,7 @@ else {
     $RS['expires']          = $tokenData['expires'];
     header('Content-Type: application/json');
     print_R(json_encode($RS));
+    $redis->hSet("CAS_AccessTokenToUser_ADDRESS_LIMIT", $getRealIP, $限制外部IP登录次数+1);
     exit;
 }
 

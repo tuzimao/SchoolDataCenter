@@ -5,12 +5,33 @@ require_once('../include.inc.php');
 $service    = ForSqlInjection($_GET['service']);
 $ticket     = ForSqlInjection($_GET['ticket']);
 
+$getRealIP  = getRealIP();
+//每个外部IP仅限登录10次-过期自动清除
+$限制外部IP登录时间   = $redis->hGet("CAS_LOGIN_IP_ADDRESS_LAST_TIME", $getRealIP);
+if($限制外部IP登录时间 > 0 && (time() - $限制外部IP登录时间) > 60) {
+    $redis->hSet("CAS_LOGIN_IP_ADDRESS_LAST_TIME", $getRealIP, 0);
+    $redis->hSet("CAS_LOGIN_IP_ADDRESS_LIMIT", $getRealIP, 0);
+}
+else {
+    //每个外部IP仅限登录10次-开始记录
+    $限制外部IP登录次数 = (int)$redis->hGet("CAS_LOGIN_IP_ADDRESS_LIMIT", $getRealIP);
+    if($限制外部IP登录次数 > 5) {
+        $RS             = [];
+        $RS['status']   = "ERROR";
+        $RS['msg']      = __("Malicious ip");
+        $redis->hSet("CAS_LOGIN_IP_ADDRESS_LAST_TIME", $getRealIP, time());
+        print_R(EncryptApiData($RS, (Object)['USER_ID'=>time()], true));
+        exit;
+    }
+}
+
 if (!$service) {
     $RS                     = [];
     $RS['status']           = 'error';
     $RS['message']          = 'Client url is null';
     header('Content-Type: application/json');
     print_R(json_encode($RS));
+    $redis->hSet("CAS_LOGIN_IP_ADDRESS_LIMIT", $getRealIP, $限制外部IP登录次数+1);
     exit;
 }
 if (!$ticket) {
@@ -19,6 +40,7 @@ if (!$ticket) {
     $RS['message']          = 'Ticket is null';
     header('Content-Type: application/json');
     print_R(json_encode($RS));
+    $redis->hSet("CAS_LOGIN_IP_ADDRESS_LIMIT", $getRealIP, $限制外部IP登录次数+1);
     exit;
 }
 
@@ -32,6 +54,7 @@ if($rs_a == null || sizeof($rs_a) == 0) {
     $RS['message']          = 'Ticket is invalid';
     header('Content-Type: application/json');
     print_R(json_encode($RS));
+    $redis->hSet("CAS_LOGIN_IP_ADDRESS_LIMIT", $getRealIP, $限制外部IP登录次数+1);
     exit;
 }
 $是否有效 = $rs_a[0]['是否有效'];
@@ -41,6 +64,7 @@ if($是否有效 == 0)  {
     $RS['message']          = 'Ticket expired';
     header('Content-Type: application/json');
     print_R(json_encode($RS));
+    $redis->hSet("CAS_LOGIN_IP_ADDRESS_LIMIT", $getRealIP, $限制外部IP登录次数+1);
     exit;
 }
 $用户名 = $rs_a[0]['用户名'];
@@ -50,6 +74,7 @@ if($用户名 == '')  {
     $RS['message']          = 'Ticket not relative user file';
     header('Content-Type: application/json');
     print_R(json_encode($RS));
+    $redis->hSet("CAS_LOGIN_IP_ADDRESS_LIMIT", $getRealIP, $限制外部IP登录次数+1);
     exit;
 }
 $客户端地址 = $rs_a[0]['客户端地址'];
@@ -59,6 +84,7 @@ if($客户端地址 != $service)  {
     $RS['message']          = 'Client url is invalid';
     header('Content-Type: application/json');
     print_R(json_encode($RS));
+    $redis->hSet("CAS_LOGIN_IP_ADDRESS_LIMIT", $getRealIP, $限制外部IP登录次数+1);
     exit;
 }
 $过期时间 = $rs_a[0]['过期时间'];
@@ -68,6 +94,7 @@ if($过期时间 < date('Y-m-d H:i:s'))  {
     $RS['message']          = 'Ticket is invalid and expired';
     header('Content-Type: application/json');
     print_R(json_encode($RS));
+    $redis->hSet("CAS_LOGIN_IP_ADDRESS_LIMIT", $getRealIP, $限制外部IP登录次数+1);
     exit;
 }
 
@@ -129,6 +156,8 @@ if($用户名 != '')  {
     }
     header('Content-Type: application/json');
     print_R(json_encode($RS));
+    CasLogRecord($service, $ticket, "成功", $用户名);
+    $redis->hSet("CAS_LOGIN_IP_ADDRESS_LIMIT", $getRealIP, 0);
     exit;
 }
 else {
@@ -138,7 +167,22 @@ else {
     $RS['message']          = 'Token has error';
     header('Content-Type: application/json');
     print_R(json_encode($RS));
+    $redis->hSet("CAS_LOGIN_IP_ADDRESS_LIMIT", $getRealIP, $限制外部IP登录次数+1);
     exit;
 }
 
 
+function CasLogRecord($客户端, $令牌, $结果, $用户名) {
+	global $db;
+	$Element 					= [];
+	$Element['id'] 				= NULL;
+	$Element['客户端'] 		    = $客户端;
+	$Element['访问时间'] 		= date("Y-m-d H:i:s");
+	$Element['令牌'] 	        = $令牌;
+	$Element['远程IP']          = addslashes(getRealIP());
+	$Element['浏览器标识'] 	    = ForSqlInjection($_SERVER['HTTP_USER_AGENT']);
+	$Element['结果'] 	        = $结果;
+	$Element['用户名'] 	        = $用户名;
+	$sql = "insert into data_cas_access_log(".join(",",array_keys($Element)).") values('".join("','",array_values($Element))."');";
+	$db->Execute($sql);
+}

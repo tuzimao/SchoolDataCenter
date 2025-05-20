@@ -3,12 +3,43 @@ require_once('../vendor/autoload.php');
 require_once('../config.inc.php');
 require_once('../include.inc.php');
 
+//记录调用日志
+$datetime = date('Y-m-d H:i:s');
+$redis->hset("TEST_INFO_POST", $datetime, json_encode($_POST));
+$redis->hset("TEST_INFO_GET", $datetime, json_encode($_GET));
+$redis->hset("TEST_INFO_PAYLOAD", $datetime, file_get_contents('php://input'));
+$TEST_INFO_TIME = $redis->get("TEST_INFO_TIME");
+$TEST_INFO_TIME = (array)json_decode($TEST_INFO_TIME, true);
+array_unshift($TEST_INFO_TIME, $datetime);
+$redis->set("TEST_INFO_TIME", json_encode($TEST_INFO_TIME));
+
+//判断传入条件
 if (!isset($_POST['code'])) {
     die('No auth code received');
 }
 
 if (!isset($_POST['redirect_uri'])) {
     die('No auth redirect_uri received');
+}
+
+$getRealIP  = getRealIP();
+//每个外部IP仅限登录10次-过期自动清除
+$限制外部IP登录时间   = $redis->hGet("OAUTH_CodeToAccessToken_ADDRESS_LAST_TIME", $getRealIP);
+if($限制外部IP登录时间 > 0 && (time() - $限制外部IP登录时间) > 60) {
+    $redis->hSet("OAUTH_CodeToAccessToken_ADDRESS_LAST_TIME", $getRealIP, 0);
+    $redis->hSet("OAUTH_CodeToAccessToken_ADDRESS_LIMIT", $getRealIP, 0);
+}
+else {
+    //每个外部IP仅限登录10次-开始记录
+    $限制外部IP登录次数 = (int)$redis->hGet("OAUTH_CodeToAccessToken_ADDRESS_LIMIT", $getRealIP);
+    if($限制外部IP登录次数 > 5) {
+        $RS             = [];
+        $RS['status']   = "ERROR";
+        $RS['msg']      = __("Malicious ip");
+        $redis->hSet("OAUTH_CodeToAccessToken_ADDRESS_LAST_TIME", $getRealIP, time());
+        print_R(EncryptApiData($RS, (Object)['USER_ID'=>time()], true));
+        exit;
+    }
 }
 
 $code               = ForSqlInjection($_POST['code']);
@@ -63,10 +94,12 @@ if($access_token != '')  {
     $RS['expires_in	']      = 86400;
     header('Content-Type: application/json');
     print json_encode($RS);
+    $redis->hSet("CAS_CodeToAccessToken_ADDRESS_LIMIT", $getRealIP, 0);
     exit;
 }
 else {
     header('Content-Type: application/json');
     print json_encode($bodyArray);
+    $redis->hSet("CAS_CodeToAccessToken_ADDRESS_LIMIT", $getRealIP, $限制外部IP登录次数+1);
     exit;
 }

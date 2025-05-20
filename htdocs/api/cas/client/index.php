@@ -15,6 +15,7 @@ else {
     $URL    = $CAS_VALIDATE."?service=".$CAS_CLIENT."&ticket=".$ticket;
     $Content = file_get_contents($URL);
     $Array = json_decode($Content, true);
+    print "访问URL: $URL<BR>";
     print "用户信息:<BR>";
     print_R($Array);
     exit;    
