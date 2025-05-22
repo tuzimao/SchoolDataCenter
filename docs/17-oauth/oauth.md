@@ -24,7 +24,7 @@ oauth2ResourceUrl = ${oauth2UrlPrefix}/accessTokenToUserInfo.php
 uidKey = id
 
 #### API 接口说明
-##### codeToAccessToken.php
+##### http://demoapi.dandian.net/api/oauth/codeToAccessToken.php
 作用：把code转为access token
 方法：POST
 提交表单对像： [
@@ -37,7 +37,7 @@ uidKey = id
 返回：[ 'access_token' => $access_token, .... ]
 Demo PHP Code: https://github.com/SmartSchoolAI/SchoolDataCenter/blob/main/htdocs/api/oauth/client/callback.php
 
-##### accessTokenToUserInfo.php
+##### http://demoapi.dandian.net/api/oauth/accessTokenToUserInfo.php
 作用：根据access token转换为用户信息
 方法：POST
 提交表单对像： [ 'access_token' => $RS['access_token'] ]

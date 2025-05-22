@@ -27,7 +27,7 @@ $accessToken            = ForSqlInjection($_POST['access_token']);
 if(strlen($accessToken) != 40) {
     $RS                     = [];
     $RS['status']           = 'error';
-    $RS['message']          = 'accessToken is invalid';
+    $RS['message']          = 'access_token is invalid';
     header('Content-Type: application/json');
     print_R(json_encode($RS));
     $redis->hSet("CAS_AccessTokenToUser_ADDRESS_LIMIT", $getRealIP, $限制外部IP登录次数+1);

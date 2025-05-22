@@ -38,9 +38,10 @@
 
 ### 第三方业务对接
 
-### 统一身份认证系统(OAuth2)
+### 统一身份认证系统(OAuth2 & CAS)
 
 * [OAuth2](17-oauth/oauth.md)
+* [CAS](17-oauth/CAS.md)
 
 ### 微信小程序集成
 
