@@ -22,8 +22,7 @@ else {
     }
 }
 
-$_POST['accessToken']   = ForSqlInjection($_POST['accessToken']);
-$accessToken            = ForSqlInjection($_POST['accessToken']);
+$accessToken            = ForSqlInjection($_POST['access_token']);
 
 if(strlen($accessToken) != 40) {
     $RS                     = [];

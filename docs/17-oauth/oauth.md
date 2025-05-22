@@ -34,14 +34,13 @@ uidKey = id
     'client_id' => $client_id,
     'client_secret' => $client_secret
   ]
-Header: []
 返回：[ 'access_token' => $access_token, .... ]
 Demo PHP Code: https://github.com/SmartSchoolAI/SchoolDataCenter/blob/main/htdocs/api/oauth/client/callback.php
 
 ##### accessTokenToUserInfo.php
 作用：根据access token转换为用户信息
 方法：POST
-提交表单对像： [ 'accessToken' => $RS['access_token'] ]
+提交表单对像： [ 'access_token' => $RS['access_token'] ]
 Header: []
 返回：[ 'id' => $id, .... ];
 Demo PHP Code: https://github.com/SmartSchoolAI/SchoolDataCenter/blob/main/htdocs/api/oauth/client/callback.php
