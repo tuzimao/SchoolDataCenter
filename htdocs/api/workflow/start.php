@@ -160,7 +160,7 @@ if($_GET['action'] == 'NewWorkflow' && $FlowId > 0 && $processid == 0)          
     $data['runid']          = $RunId; 
     $data['工作名称']       = $工作名称; 
     $data['表单名称']       = $FormName; 
-    $data['步骤名称']       = "主办(第".$StepName."步： ".$FlowName.")"; 
+    $data['步骤名称']       = "主办(第".$StepName."步： ".$FlowName.")";
     $data['工作等级']       = "普通";
     $RS             = [];
     $RS['data']     = $data;
@@ -220,20 +220,78 @@ if($_GET['action'] == 'GetNextApprovalUsers' && $FlowId > 0 && $processid > 0)  
     }
     //个性化代码-非通用代码-网上报修-根据楼房属性来判断流程走向-结束
 
-    if($NextStep != "" && $NextStep != "[结束]") {
+    if($NextStep != "" && $NextStep != "[结束]")    {
         $NextStepArray = explode(',', $NextStep);
         $sql        = "select * from form_formflow where step in ('".join("','", $NextStepArray)."') and FormId = '$FormId'";
         $rs         = $db->Execute($sql);
         $rs_a       = $rs->GetArray();
         $下一步骤可选节点 = [];
+        $下一步骤可选节点序号 = [];
         foreach($rs_a as $item)             {
 
-            $可选节点               = [];
-            $NodeFlow_AuthorizedUser = [];
+            $可选节点                    = [];
+            $NodeFlow_AuthorizedUser    = [];
 
             $SettingData    = unserialize(base64_decode($item['Setting']));
             $StepName       = $SettingData['StepName'];
             if($StepName == null) $StepName = $item['Step'];
+
+            //目标节点的前置条件判断
+            $目标节点的前置条件判断 = true;
+            $NodeFlow_Authorized_Requirement_Array = explode(',', $SettingData['NodeFlow_Authorized_Requirement']);
+            foreach($NodeFlow_Authorized_Requirement_Array as $NodeFlow_Authorized_Requirement_Item) {
+                $NodeFlow_Authorized_Requirement_Item_Array = explode(':', $NodeFlow_Authorized_Requirement_Item);
+                $规则名称 = $NodeFlow_Authorized_Requirement_Item_Array[0];
+                $规则的值1 = $NodeFlow_Authorized_Requirement_Item_Array[1];
+                $规则的值2 = $NodeFlow_Authorized_Requirement_Item_Array[2];
+                switch($规则名称) {
+                    case '发起人部门条件限制':
+                        $部门名称 = $GLOBAL_USER->DEPT_NAME;
+                        switch($规则的值1) {
+                            case '系部':
+                                if(substr($部门名称, -2) != '系') {
+                                    $目标节点的前置条件判断 = false; //此值默认为true, 所以只需要记录为false的情况
+                                }
+                                break;
+                            case '非系部':
+                                if(substr($部门名称, -2) == '系') {
+                                    $目标节点的前置条件判断 = false; //此值默认为true, 所以只需要记录为false的情况
+                                }
+                                break;
+                        }
+                        break;
+                    case '表单字段限制':
+                        $sql        = "select 工作ID from form_flow_run_process where id = '$processid'";
+                        $rs         = $db->Execute($sql);
+                        $工作ID     = $rs->fields['工作ID'];
+                        if($工作ID != "" && $TableName != "")  {
+                            $sql        = "select * from $TableName where id = '$工作ID'";
+                            $rs         = $db->Execute($sql);
+                            $表单数据 = $rs->fields;
+                            //匹配指定的字段在表单中是否有值
+                            $匹配指定的字段在表单中的值 = $表单数据[$规则的值1];
+                            //判断条件
+                            if(substr($规则的值2, 0, 2) == '!=')  {
+                                $规则的值2Value = substr($规则的值2, 2, strlen($规则的值2));
+                                //判断 != 的情况, 但是只记录合法的记录, 所以判断要使用 ==
+                                if($规则的值2Value == $匹配指定的字段在表单中的值)  {
+                                    $目标节点的前置条件判断 = false; //此值默认为true, 所以只需要记录为false的情况
+                                }
+                            }
+                            //判断 == 的情况
+                            else {
+                                //判断 == 的情况, 但是只记录不合法的记录, 所以判断要使用 !=
+                                if($规则的值2 != $匹配指定的字段在表单中的值)  {
+                                    $目标节点的前置条件判断 = false; //此值默认为true, 所以只需要记录为false的情况
+                                }
+                            }
+                        }
+                        break;
+                }
+            }
+            if($目标节点的前置条件判断 == false)  {
+                break;
+            }
 
             $Page_Role_Name = $SettingData['Page_Role_Name'];
             if($Page_Role_Name == "ClassMaster")    {
@@ -408,7 +466,10 @@ if($_GET['action'] == 'GetNextApprovalUsers' && $FlowId > 0 && $processid > 0)  
             $可选节点['经办步骤id']                 = $item['id'];
             $可选节点['经办步骤Step']               = $item['Step'];
             $可选节点['经办步骤FlowId']             = $item['id'];
-            $下一步骤可选节点[] = $可选节点;
+            if(count($可选节点['NodeFlow_AuthorizedUser']) > 0) {
+                $下一步骤可选节点[] = $可选节点;
+                $下一步骤可选节点序号[] = $item['Step'];
+            }
         }
 
     }
@@ -416,7 +477,7 @@ if($_GET['action'] == 'GetNextApprovalUsers' && $FlowId > 0 && $processid > 0)  
     $RS             = [];
     $RS['data']     = $下一步骤可选节点;
     $RS['status']   = 'ok';
-    $RS['NextStep'] = $NextStep;
+    $RS['NextStep'] = join(',', $下一步骤可选节点序号);
     print_R(json_encode($RS));
     exit;
 }

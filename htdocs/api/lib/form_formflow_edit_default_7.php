@@ -142,6 +142,10 @@ $edit_default_7['Page_Role'][] = ['name' => "Extra_Priv_Filter_Or_Method_Three",
 $edit_default_7['Page_Role'][] = ['name' => "Extra_Priv_Filter_Or_Value_Three", 'show'=>true, 'type'=>"input", 'label' => __("Extra_Priv_Filter_Or_Value_Three"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>4, 'disabled' => false]];
 
 $edit_default_7['AuthorizedControl'][] = ['name' => "divider", 'show'=>true, 'type'=>"divider", 'label' => __("divider"), 'value' => "", 'placeholder' => "", 'helptext' => __(""), 'rules' => ['required' => false,'xs'=>12, 'sm'=>12, 'disabled' => false]];
+
+$edit_default_7['AuthorizedControl'][] = ['name' => "NodeFlow_Authorized_Requirement", 'code' => "NodeFlow_Authorized_Requirement", 'FieldTypeArray'=>$CurrentUserFieldTypeArray, 'show'=>true, 'type'=>"input", 'label' => __("NodeFlow_Authorized_Requirement"), 'value' => '', 'placeholder' => __(""), 'helptext' => "常用规则如下: 发起人部门条件限制:系部, 发起人部门条件限制:非系部, 表单字段限制:采购类型:教学, 表单字段限制:采购类型:!=教学", 'rules' => ['required' => false,'xs'=>12, 'sm'=>12,'disabled' => false]];
+
+
 $edit_default_7['AuthorizedControl'][] = ['name' => "NodeFlow_AuthorizedUser_名称", 'code' => "NodeFlow_AuthorizedUser", 'FieldTypeArray'=>$CurrentUserFieldTypeArray, 'show'=>true, 'type'=>"autocompletemulti", 'options'=>$UserRecords, 'label' => __("NodeFlow_AuthorizedUser"), 'value' => '', 'placeholder' => __(""), 'helptext' => __("NodeFlow_AuthorizedHelpText"), 'rules' => ['required' => false,'xs'=>12, 'sm'=>12,'disabled' => false]];
 
 $CurrentDepartmentFieldTypeArray = explode(":","autocompletemulti:data_department:0:1:");
