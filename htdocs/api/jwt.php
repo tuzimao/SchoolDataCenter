@@ -25,14 +25,48 @@ require_once('./lib/data_enginee_function.php');
 global $EncryptApiEnable;
 
 $EncryptApiEnable = 1;
+$difficulty = '0000';
+
+if($_GET['action']=='pow') {
+    header('Content-Type: application/json');
+    $challenge = bin2hex(random_bytes(16)); // 32 字符
+    print json_encode(['challenge' => $challenge, 'difficulty' => $difficulty]);
+    RedisAddElement("JWT_POW_CHALLENGE_CHAR", $challenge, 600);
+    exit;
+}
 
 if($_GET['action']=="login")                {
+
     JWT::$leeway    = $NEXT_PUBLIC_JWT_EXPIRATION;
     $payload        = file_get_contents('php://input');
     $_POST          = json_decode($payload,true);
     $Data           = $_POST['Data'];
     $Data           = decodeBase58(decodeBase58($Data));
     $_POST          = json_decode($Data, true);
+    
+    //POW计算证明校验
+    $challenge      = ForSqlInjection($_POST['challenge']);
+    $nonce          = ForSqlInjection($_POST['nonce']);
+    $hash           = ForSqlInjection($_POST['hash']);
+    if(strlen($challenge)!=32 && strlen($hash)!=64)  {
+        $RS = [];
+        $RS['status']   = "ERROR";
+        $RS['msg']      = $RS['email']    = "用户客户端工作量证明内容失败";
+        print_R(EncryptApiData($RS, (Object)['USER_ID'=>time()], true));
+        exit;
+    }
+    $challengeValue = RedisGetElement("JWT_POW_CHALLENGE_CHAR", $challenge);
+    if(strlen($challengeValue)==32) {
+        $test = $challengeValue . $nonce;
+        $hash = hash('sha256', $test);
+        if(substr($hash, 0, strlen($difficulty)) != $difficulty) {
+            $RS['status']   = "ERROR";
+            $RS['msg']      = $RS['email']    = "用户客户端工作量证明验证失败";
+            print_R(EncryptApiData($RS, (Object)['USER_ID'=>time()], true));
+            exit;
+        }
+    }
+
     $EMAIL          = ForSqlInjection($_POST['email']);
     $USER_ID        = ForSqlInjection($_POST['username']);
     $password       = ForSqlInjection($_POST['password']);
@@ -307,7 +341,7 @@ if($_GET['action']=="login")                {
     }
 }
 
-if($_GET['action']=="refresh")                {
+if($_GET['action']=="refresh")              {
     $CheckAuthUserLoginStatus               = CheckAuthUserLoginStatus();
     $CheckAuthUserLoginStatus->ExpireTime   = time() + (3 * 60 * 30);
     $accessToken                = EncryptID(JWT::encode((array) $CheckAuthUserLoginStatus, $NEXT_PUBLIC_JWT_SECRET, 'HS256'));
@@ -373,7 +407,8 @@ if($_GET['action']=="refresh")                {
 }
 
 if($_GET['action']=="Logout")                {
-    $USER_ID        = ForSqlInjection($_GET['USER_ID']);
+    $CheckAuthUserLoginStatus   = CheckAuthUserLoginStatus();
+    $USER_ID        = $CheckAuthUserLoginStatus->USER_ID;
     $RS             = [];
     $RS['status']   = "ERROR";
     //$RS['_POST']    = $_POST;

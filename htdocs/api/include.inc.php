@@ -887,6 +887,26 @@ function AddOneRecordToTable($TableName, $FormId, $FlowId, $DefaultValue) {
     [$rs,$sql] = InsertOrUpdateTableByArray($TableName, $DefaultFieldValue, "工作ID,FlowId", 0, 'Insert');
 }
 
+function RedisAddElement($zsetKey, $member, $ttl) {
+	global $redis;
+    $expireAt = time() + $ttl;
+    $redis->zAdd($zsetKey, $expireAt, $member);
+}
+
+function RedisGetElement($zsetKey, $member) {
+	global $redis;
+    $score = $redis->zScore($zsetKey, $member);
+    if ($score !== false && $score > time()) {
+        return $member;
+    } else {
+        $redis->zRem($zsetKey, $member);
+        return null;
+    }
+}
+function RedisClearElement($zsetKey) {
+	global $redis;
+    $redis->zRemRangeByScore($zsetKey, '-inf', time());
+}
 
 function getRealIP() {
     $ip = '';

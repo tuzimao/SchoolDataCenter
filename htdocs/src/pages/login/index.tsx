@@ -35,6 +35,7 @@ import AddOrEditTableLanguage from 'src/types/forms/AddOrEditTableLanguage';
 setLocale(AddOrEditTableLanguage);
 
 // ** Hooks
+import axios from 'axios';
 import { useAuth } from 'src/hooks/useAuth'
 import { useSettings } from 'src/@core/hooks/useSettings'
 
@@ -117,6 +118,8 @@ const LoginPage = () => {
   const theme = useTheme()
   const { settings } = useSettings()
   const hidden = useMediaQuery(theme.breakpoints.down('md'))
+  const [loginButtonText, setLoginButtonText] = useState<string>("登录");
+  const [loginButtonDisabled, setLoginButtonDisabled] = useState<boolean>(false);
 
   // ** Vars
   const { skin } = settings
@@ -132,25 +135,57 @@ const LoginPage = () => {
     resolver: yupResolver(schema)
   })
 
-  const onSubmit = (data: FormData) => {
+  function sha256(str: string): Promise<string> {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(str);
+    
+    return crypto.subtle.digest('SHA-256', data).then(buf => {
+      return Array.from(new Uint8Array(buf))
+        .map(b => b.toString(16).padStart(2, '0'))
+        .join('');
+    });
+  }
+
+  function base58Encode(data: string) {
+    const bytes = Buffer.from(data, 'utf8');
+    const encoded = bs58.encode(bytes);
+
+    return encoded;
+  }
+
+  const onSubmit = async (data: FormData) => {
     const { username, password } = data
 
-    function base58Encode(data: string) {
-      const bytes = Buffer.from(data, 'utf8');
-      const encoded = bs58.encode(bytes);
+    const res = await axios.get(authConfig.powEndpoint);
+    const challenge = res.data.challenge;
+    const difficulty = res.data.difficulty;
+    let nonce = 0;
+    let hash = '';
 
-      return encoded;
+    setLoginButtonDisabled(true)
+    setLoginButtonText('开始客户端工作证明中...');
+  
+    while (true) {
+      const test = challenge + nonce.toString();
+      hash = await sha256(test);
+      if (hash.startsWith(difficulty)) {
+        break;
+      }
+      nonce++;
     }
+    console.log("Challenge string:", challenge)
+    console.log("Challenge Result:", hash)
 
-    auth.login({Data: base58Encode(base58Encode(JSON.stringify({ username, password, rememberMe: true })))}, () => {
+    auth.login({Data: base58Encode(base58Encode(JSON.stringify({ username, password, rememberMe: true, challenge, hash, nonce})))}, () => {
       setError('username', {
         type: 'manual',
         message: '用户名或密码错误'
       })
+      setLoginButtonDisabled(false)
     })
-  }
+    setLoginButtonText('登录');
 
-  console.log("errors", errors)
+  }
 
   return (
     <Box className='content-right'>
@@ -278,8 +313,8 @@ const LoginPage = () => {
                   />
                 </FormControl>
               </Box>
-              <Button fullWidth size='large' type='submit' variant='contained' sx={{ mb: 7 }}>
-                登录
+              <Button fullWidth size='large' type='submit' variant='contained' sx={{ mb: 7 }} disabled={loginButtonDisabled}>
+                {loginButtonText}
               </Button>
             </form>
           </BoxWrapper>
