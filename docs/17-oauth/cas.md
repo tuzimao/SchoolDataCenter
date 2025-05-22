@@ -1,5 +1,5 @@
 ---
-icon: Set up custom authentication for your published content
+icon: users
 ---
 
 ### SchoolAI 统一身份认证系统
