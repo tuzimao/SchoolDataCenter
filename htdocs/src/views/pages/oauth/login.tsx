@@ -35,6 +35,7 @@ import AddOrEditTableLanguage from 'src/types/forms/AddOrEditTableLanguage';
 setLocale(AddOrEditTableLanguage);
 
 // ** Hooks
+import axios from 'axios'
 import { useAuth } from 'src/hooks/useAuth'
 import { useSettings } from 'src/@core/hooks/useSettings'
 
@@ -117,6 +118,8 @@ const LoginPage = ({ setPageModel }: any) => {
   const theme = useTheme()
   const { settings } = useSettings()
   const hidden = useMediaQuery(theme.breakpoints.down('md'))
+  const [loginButtonText, setLoginButtonText] = useState<string>("登录");
+  const [loginButtonDisabled, setLoginButtonDisabled] = useState<boolean>(false);
 
   // ** Vars
   const { skin } = settings
@@ -132,31 +135,71 @@ const LoginPage = ({ setPageModel }: any) => {
     resolver: yupResolver(schema)
   })
 
-  const onSubmit = (data: FormData) => {
+  function sha256(str: string): Promise<string> {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(str);
+
+    return crypto.subtle.digest('SHA-256', data).then(buf => {
+      return Array.from(new Uint8Array(buf))
+        .map(b => b.toString(16).padStart(2, '0'))
+        .join('');
+    });
+  }
+
+  function base58Encode(data: string) {
+    const bytes = Buffer.from(data, 'utf8');
+    const encoded = bs58.encode(bytes);
+
+    return encoded;
+  }
+
+  const onSubmit = async (data: FormData) => {
     const { username, password } = data
+    
+    try {
+      const res = await axios.get(authConfig.powEndpoint);
+      const challenge = res.data.challenge;
+      const difficulty = res.data.difficulty;
+      const loadingButtonText = res.data.loadingButtonText;
+      let nonce = 0;
+      let hash = '';
 
-    function base58Encode(data: string) {
-      const bytes = Buffer.from(data, 'utf8');
-      const encoded = bs58.encode(bytes);
+      setLoginButtonDisabled(true)
+      setLoginButtonText(loadingButtonText);
+    
+      while (true) {
+        const test = challenge + nonce.toString();
+        hash = await sha256(test);
+        if (hash.startsWith(difficulty)) {
+          break;
+        }
+        nonce++;
+      }
+      console.log("Challenge string:", challenge)
+      console.log("Challenge Result:", hash)
 
-      return encoded;
+      auth.login({Data: base58Encode(base58Encode(JSON.stringify({ username, password, rememberMe: true, challenge, hash, nonce})))}
+        , () => {
+
+          //登录失败
+          setError('username', {
+            type: 'manual',
+            message: '用户名或密码错误'
+          })
+        }
+        , () => {
+
+          //登录成功, 不能注释, 如果注释就是常规的登录操作
+          setPageModel('Auth')
+        }
+      )
+      setLoginButtonText('登录');
+
+    }
+    catch(Error: any) {
+      console.log("Login onSubmit error:", Error)
     }
 
-    auth.login({Data: base58Encode(base58Encode(JSON.stringify({ username, password, rememberMe: true })))}
-      , () => {
-
-        //登录失败
-        setError('username', {
-          type: 'manual',
-          message: '用户名或密码错误'
-        })
-      }
-      , () => {
-
-        //登录成功, 不能注释, 如果注释就是常规的登录操作
-        setPageModel('Auth')
-      }
-    )
   }
 
   return (
@@ -219,6 +262,7 @@ const LoginPage = ({ setPageModel }: any) => {
                       value={value}
                       onBlur={onBlur}
                       onChange={onChange}
+                      disabled={loginButtonDisabled}
                       error={Boolean(errors.username)}
                       placeholder=''
                     />
@@ -240,6 +284,7 @@ const LoginPage = ({ setPageModel }: any) => {
                       onBlur={onBlur}
                       label='密码'
                       onChange={onChange}
+                      disabled={loginButtonDisabled}
                       id='auth-login-v2-password'
                       error={Boolean(errors.password)}
                       type={showPassword ? 'text' : 'password'}
@@ -247,6 +292,7 @@ const LoginPage = ({ setPageModel }: any) => {
                         <InputAdornment position='end'>
                           <IconButton
                             edge='end'
+                            disabled={loginButtonDisabled}
                             onMouseDown={e => e.preventDefault()}
                             onClick={() => setShowPassword(!showPassword)}
                           >
@@ -271,6 +317,7 @@ const LoginPage = ({ setPageModel }: any) => {
                     rules={{ required: true }}
                     render={({ field: { value, onChange } }) => (
                       <FormControlLabel
+                        disabled={loginButtonDisabled}
                         control={<Checkbox checked={value} onChange={onChange} />}
                         label={
                           <Fragment>
@@ -285,8 +332,8 @@ const LoginPage = ({ setPageModel }: any) => {
                   />
                 </FormControl>
               </Box>
-              <Button fullWidth size='large' type='submit' variant='contained' sx={{ mb: 7 }}>
-                登录
+              <Button fullWidth size='large' type='submit' variant='contained' sx={{ mb: 7 }} disabled={loginButtonDisabled}>
+                {loginButtonText}
               </Button>
             </form>
           </BoxWrapper>

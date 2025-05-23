@@ -30,7 +30,7 @@ $difficulty = '0000';
 if($_GET['action']=='pow') {
     header('Content-Type: application/json');
     $challenge = bin2hex(random_bytes(16)); // 32 字符
-    print json_encode(['challenge' => $challenge, 'difficulty' => $difficulty]);
+    print json_encode(['challenge' => $challenge, 'difficulty' => $difficulty, 'loadingButtonText' => '开始客户端工作证明中......']);
     RedisAddElement("JWT_POW_CHALLENGE_CHAR", $challenge, 600);
     exit;
 }
