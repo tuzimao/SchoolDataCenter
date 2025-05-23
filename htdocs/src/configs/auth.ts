@@ -6,7 +6,7 @@ AppSchoolConfigMap['fdzyzz.com']      = ["https://fdzz.dandian.net:8443/api/", '
 AppSchoolConfigMap['fjsmnx.com']      = ["https://dsj.fjsmlyxx.com:1443/api/", '三明林业', "auth/menus.php", "https://dsj.fjsmlyxx.com:1443/api/"]
 
 const AppMarkId   = "dandian.net"; //这一行, 一定要写在第8行, 否则需要同时修改Github 的 workflows 文件
-const AppVersion  = '20250515'; //需要刷新客户端JS时需要更新此值
+const AppVersion  = '20250525'; //需要刷新客户端JS时需要更新此值
 const APP_URL = AppSchoolConfigMap[AppMarkId][0]
 const AppName = AppSchoolConfigMap[AppMarkId][1]
 const indexMenuspath = AppSchoolConfigMap[AppMarkId][2]
@@ -21,6 +21,7 @@ export const authConfig = {
     loginEndpoint: APP_URL + 'jwt.php?action=login',
     logoutEndpoint: APP_URL + 'jwt.php?action=logout',
     refreshEndpoint: APP_URL + 'jwt.php?action=refresh',
+    powEndpoint: APP_URL + 'jwt.php?action=pow',
     registerEndpoint: APP_URL + 'jwt/register',
     authorizationEndpoint: APP_URL + 'oauth/authorization.php',
     backEndApiHost: APP_URL,
