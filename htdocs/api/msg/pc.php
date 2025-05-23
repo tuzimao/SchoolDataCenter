@@ -4,6 +4,8 @@
 @ini_set('zlib.output_compression', 0);
 @ini_set('implicit_flush', 1);
 
+exit;
+
 ini_set('max_execution_time', 0);
 ini_set('memory_limit', '512M');
 ignore_user_abort(false); // 客户端断开时停止脚本

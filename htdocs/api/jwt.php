@@ -29,8 +29,9 @@ $difficulty = '0000';
 
 if($_GET['action']=='pow') {
     header('Content-Type: application/json');
-    $challenge = bin2hex(random_bytes(16)); // 32 字符
-    print json_encode(['challenge' => $challenge, 'difficulty' => $difficulty, 'loadingButtonText' => '开始客户端工作证明中......']);
+    $challenge  = bin2hex(random_bytes(16)); // 32 字符
+    $RS         = ['challenge' => $challenge, 'difficulty' => $difficulty, 'loadingButtonText' => '开始客户端工作证明中......'];
+    print_R(EncryptApiData($RS, (Object)['USER_ID'=>time()], true));
     RedisAddElement("JWT_POW_CHALLENGE_CHAR", $challenge, 600);
     exit;
 }

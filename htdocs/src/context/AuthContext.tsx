@@ -70,7 +70,7 @@ const AuthProvider = ({ children }: Props) => {
                     dataJson = JSON.parse(DecryptDataAES256GCMData)
                 }
                 catch(Error: any) {
-                    console.log("DecryptDataAES256GCMData view_default Error", Error)
+                    console.log("DecryptDataAES256GCMData authConfig.refreshEndpoint Error", Error)
 
                     dataJson = data
                 }
@@ -124,13 +124,11 @@ const AuthProvider = ({ children }: Props) => {
                 dataJson = JSON.parse(DecryptDataAES256GCMData)
             }
             catch(Error: any) {
-                console.log("DecryptDataAES256GCMData view_default Error", Error)
-
+                console.log("DecryptDataAES256GCMData authConfig.loginEndpoint Error", Error)
                 dataJson = data
             }
         }
         else {
-
             dataJson = data
         }
 

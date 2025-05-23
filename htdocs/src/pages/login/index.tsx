@@ -19,6 +19,8 @@ import InputAdornment from '@mui/material/InputAdornment'
 import Typography, { TypographyProps } from '@mui/material/Typography'
 import MuiFormControlLabel, { FormControlLabelProps } from '@mui/material/FormControlLabel'
 
+import { DecryptDataAES256GCM } from 'src/configs/functions'
+
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
 import Link from 'next/link'
@@ -158,9 +160,30 @@ const LoginPage = () => {
 
     try {
       const res = await axios.get(authConfig.powEndpoint);
-      const challenge = res.data.challenge;
-      const difficulty = res.data.difficulty;
-      const loadingButtonText = res.data.loadingButtonText;
+      let dataJson: any = null
+      const data = res.data
+      if(data && data.isEncrypted == "1" && data.data && data.AccessKey)  {
+          const AccessKey = data.AccessKey
+          const i = data.data.slice(0, 32);
+          const t = data.data.slice(-32);
+          const e = data.data.slice(32, -32);
+          const k = AccessKey;
+          const DecryptDataAES256GCMData = DecryptDataAES256GCM(e, i, t, k)
+          try {
+              dataJson = JSON.parse(DecryptDataAES256GCMData)
+          }
+          catch(Error: any) {
+              console.log("DecryptDataAES256GCMData authConfig.powEndpoint Error", Error)
+              dataJson = data
+          }
+      }
+      else {
+          dataJson = data
+      }
+      const challenge = dataJson.challenge;
+      const difficulty = dataJson.difficulty;
+      const loadingButtonText = dataJson.loadingButtonText;
+      
       let nonce = 0;
       let hash = '';
 
