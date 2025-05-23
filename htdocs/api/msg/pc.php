@@ -4,6 +4,7 @@
 @ini_set('zlib.output_compression', 0);
 @ini_set('implicit_flush', 1);
 
+require_once('../cors.php');
 exit;
 
 ini_set('max_execution_time', 0);
