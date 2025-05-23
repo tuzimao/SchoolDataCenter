@@ -31,5 +31,6 @@ icon: globe-pointer
 
 | <img src="./images/01.png" > | <img src="./images/02.png" > |
 |------------------------------------------|------------------------------------------|
-| <img src="./images/03.png" > | <img src="./images/04.png" > |
-| <img src="./images/05.png" > |  |
+| <img src="./images/03.png" > | <img src="./images/05.png" > |
+| <img src="./images/11.png" > | <img src="./images/12.png" > |
+
