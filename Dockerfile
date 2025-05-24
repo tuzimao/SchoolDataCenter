@@ -1,5 +1,6 @@
 # 构建SchoolAI项目
 # 当前镜像仅为提供在LINUX或是MAC下面开发使用, 不要应用于生产环境
+# 当前MYSQL的数据库文件不是最新的, 仅供开发和测试使用, 生产环境或是需要最新的MYSQL数据, 请使用WINDOWS环境.
 
 # 使用官方的 PHP 8.2 镜像，并包含 Apache
 FROM php:8.2-apache
@@ -70,9 +71,9 @@ CMD ["bash", "-c", "\
     echo 'Starting Apache...'; \
     apache2-foreground"]
 
-
 # docker build -t schoolai . 构建镜像
 # docker run -d -p 8888:80 -p 1922:22 schoolai 启动容器
 # apachectl graceful 重新启动Apache
+# mysql -u root -p myedu < /var/www/SchoolDataCenter/docker/myedu.sql
 
 
