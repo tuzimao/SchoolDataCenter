@@ -3,20 +3,34 @@
 # 使用官方的 PHP 8.2 镜像，并包含 Apache
 FROM php:8.2-apache
 
-# 安装所需的 PHP 扩展
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    libzip-dev \
-    libcurl4-openssl-dev \
-    libgmp-dev \
-    libicu-dev \
-    libbz2-dev \
-    unzip \
-    zlib1g-dev \
-    && docker-php-ext-install zip curl pdo_mysql pdo_sqlite openssl intl gmp gettext bz2 fileinfo mysqli \
-    
+ENV DEBIAN_FRONTEND=noninteractive
 
-# 安装 PHP 的 Redis 扩展
+# 安装 MySQL Server 和依赖
+RUN apt-get update
+RUN apt-get install -y gnupg lsb-release wget default-mysql-server procps
+
+# 修改 MySQL 端口为 3386
+RUN sed -i 's/3306/3386/' /etc/mysql/mysql.conf.d/mysqld.cnf || true
+
+
+# 安装所需的 PHP 扩展
+RUN apt-get install -y --no-install-recommends build-essential libzip-dev libcurl4-openssl-dev libgmp-dev libicu-dev libbz2-dev zlib1g-dev libssl-dev libxml2-dev unzip openssh-server
+
+RUN docker-php-ext-configure zip
+
+RUN docker-php-ext-install zip curl pdo_mysql
+
+RUN docker-php-ext-install intl gettext fileinfo gmp
+
 RUN pecl install redis && docker-php-ext-enable redis
+
+RUN a2enmod rewrite
+
+# openssh-server
+RUN mkdir /var/run/sshd
+RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+RUN echo "root:MyRootPass123!" | chpasswd
+
 
 # 启用 Apache 的 rewrite 模块
 RUN a2enmod rewrite
@@ -25,25 +39,44 @@ RUN a2enmod rewrite
 RUN mkdir -p /var/www/
 WORKDIR /var/www/
 
+# 安装 git Node.js 和 npm, 主要用于安装和编译前端项目
+RUN apt-get install -y git nodejs npm vim
+
 # 克隆项目到 /var/www/
-RUN git clone https://github.com/SmartSchoolAI/SchoolDataCenter.git /var/www/
+RUN git clone https://github.com/SmartSchoolAI/SchoolDataCenter.git
+
+RUN ls -l /var/www/SchoolDataCenter/htdocs/output/
 
 # 解压webroot.zip文件
-RUN unzip /var/www/htdocs/output/webroot.zip -d /var/www/html
+# RUN unzip /var/www/SchoolDataCenter/htdocs/output/webroot.zip -d /var/www/html
 
-# 安装 git Node.js 和 npm, 主要用于安装和编译前端项目
-RUN apt-get update && apt-get install -y git nodejs npm
-
-# 修改 Config.ts 文件中的 BackendApi 值
-# 源代码中是后端的演示地址, 需要在前端中修改为DOCKER中本地镜像中的地址.
-# 因为前端项目编译为静态的HTML和CSS文件以后,和后端的项目是在同一个Webroot下面,所以路径只需要写为 /aipptx/ , 如果你的后端是一个独立的URL地址, 则需要写完整的地址.
-
-WORKDIR /var/www/SmartSchoolAI/htdocs
+WORKDIR /var/www/SchoolDataCenter/htdocs
 RUN npm install
-# RUN npm run build
+RUN npm run build
 
 # 暴露端口 80（Apache 默认端口）和 6379（Redis 默认端口）
-EXPOSE 8888
+EXPOSE 8888 22
 
-# 启动 Apache 和 Redis
-CMD ["sh", "-c", "redis-server --daemonize yes && apache2-foreground"]
+# 启动脚本：先启动 MySQL，初始化 root 密码，再启动 Apache
+CMD ["bash", "-c", "\
+    /usr/sbin/sshd && \
+    echo 'Starting MySQL...' && \
+    mysqld_safe & \
+    echo 'Waiting for MySQL...' && \
+    for i in {1..30}; do mysqladmin ping --silent && break; sleep 1; done && \
+    echo 'Initializing MySQL root password...' && \
+    echo \"SET PASSWORD FOR 'root'@'localhost' = PASSWORD('MyNewRootPass123!'); FLUSH PRIVILEGES;\" | mysql -u root || echo 'MySQL already initialized.' && \
+    echo 'Starting Redis...' && \
+    redis-server --daemonize yes && \
+    echo 'Starting Apache...' && \
+    apache2-foreground"]
+
+
+
+
+
+# docker build -t schoolai .
+# docker run -d -p 8888:80 -p 2222:22 schoolai
+
+
+
