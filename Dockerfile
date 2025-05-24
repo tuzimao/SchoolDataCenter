@@ -66,6 +66,13 @@ CMD ["bash", "-c", "\
     /usr/sbin/sshd; \
     echo 'Starting MySQL...'; \
     mysqld_safe & \
+    echo 'Waiting for MySQL to be ready...'; \
+    until mysqladmin ping -uroot --silent; do \
+        echo 'Waiting for MySQL...'; \
+        sleep 2; \
+    done; \
+    echo 'Importing SQL...'; \
+    mysql -u root myedu < /var/www/SchoolDataCenter/docker/myedu.sql; \
     echo 'Starting Redis...'; \
     redis-server --daemonize yes; \
     echo 'Starting Apache...'; \
@@ -74,6 +81,6 @@ CMD ["bash", "-c", "\
 # docker build -t schoolai . 构建镜像
 # docker run -d -p 8888:80 -p 1922:22 schoolai 启动容器
 # apachectl graceful 重新启动Apache
-# mysql -u root -p myedu < /var/www/SchoolDataCenter/docker/myedu.sql
+# mysql -u root myedu < /var/www/SchoolDataCenter/docker/myedu.sql
 
 
