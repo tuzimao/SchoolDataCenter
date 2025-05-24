@@ -1,4 +1,5 @@
 # 构建SchoolAI项目
+# 当前镜像仅为提供在LINUX或是MAC下面开发使用, 不要应用于生产环境
 
 # 使用官方的 PHP 8.2 镜像，并包含 Apache
 FROM php:8.2-apache
@@ -47,7 +48,7 @@ RUN git clone https://github.com/SmartSchoolAI/SchoolDataCenter.git
 
 # 替换 Apache 配置文件
 RUN cp /var/www/SchoolDataCenter/docker/000-default.conf /etc/apache2/sites-available/000-default.conf
-# RUN cp /var/www/SchoolDataCenter/docker/php.ini /usr/local/etc/php/php.ini
+RUN cp /var/www/SchoolDataCenter/docker/php.ini /usr/local/etc/php/php.ini
 
 # 解压webroot.zip文件
 # RUN unzip /var/www/SchoolDataCenter/htdocs/output/webroot.zip -d /var/www/html
@@ -57,17 +58,13 @@ RUN npm install
 RUN npm run build
 
 # 暴露端口 80（Apache 默认端口）和 6379（Redis 默认端口）
-EXPOSE 8888 22
+EXPOSE 8888 22 3386 3000
 
 # 启动脚本：先启动 MySQL，初始化 root 密码，再启动 Apache
 CMD ["bash", "-c", "\
     /usr/sbin/sshd; \
     echo 'Starting MySQL...'; \
     mysqld_safe & \
-    echo 'Waiting for MySQL...'; \
-    for i in {1..30}; do mysqladmin ping --silent && break; sleep 1; done; \
-    echo 'Initializing MySQL root password...'; \
-    echo \"SET PASSWORD FOR 'root'@'localhost' = PASSWORD('MyNewRootPass123!'); FLUSH PRIVILEGES;\" | mysql -u root || echo 'MySQL already initialized.'; \
     echo 'Starting Redis...'; \
     redis-server --daemonize yes; \
     echo 'Starting Apache...'; \
