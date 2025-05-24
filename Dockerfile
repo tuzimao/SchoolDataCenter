@@ -58,7 +58,7 @@ RUN npm install
 RUN npm run build
 
 # 暴露端口 80（Apache 默认端口）和 6379（Redis 默认端口）
-EXPOSE 8888 22 3386 3000
+EXPOSE 8888 22 3000
 
 # 启动脚本：先启动 MySQL，初始化 root 密码，再启动 Apache
 CMD ["bash", "-c", "\
