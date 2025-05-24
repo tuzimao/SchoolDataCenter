@@ -20,7 +20,7 @@ RUN apt-get install -y --no-install-recommends build-essential libzip-dev libcur
 
 RUN docker-php-ext-configure zip
 
-RUN docker-php-ext-install zip curl pdo_mysql
+RUN docker-php-ext-install zip curl pdo_mysql bcmath
 
 RUN docker-php-ext-install intl gettext fileinfo gmp mysqli
 
@@ -65,22 +65,25 @@ EXPOSE 8888 22 3000
 CMD ["bash", "-c", "\
     /usr/sbin/sshd; \
     echo 'Starting MySQL...'; \
-    mysqld_safe & \
+    mysqld_safe --port=3386 & \
     echo 'Waiting for MySQL to be ready...'; \
     until mysqladmin ping -uroot --silent; do \
         echo 'Waiting for MySQL...'; \
         sleep 2; \
     done; \
     echo 'Importing SQL...'; \
+    mysql -uroot -e 'CREATE DATABASE IF NOT EXISTS myedu'; \
     mysql -u root myedu < /var/www/SchoolDataCenter/docker/myedu.sql; \
     echo 'Starting Redis...'; \
     redis-server --daemonize yes; \
     echo 'Starting Apache...'; \
     apache2-foreground"]
 
-# docker build -t schoolai . 构建镜像
-# docker run -d -p 8888:80 -p 1922:22 schoolai 启动容器
-# apachectl graceful 重新启动Apache
-# mysql -u root myedu < /var/www/SchoolDataCenter/docker/myedu.sql
+# 构建镜像:         docker build -t schoolai .
+# 带端口启动容器:   docker run -d -p 8888:80 -p 1922:22 schoolai
+# 重新启动Apache:   apachectl graceful
+# 导入MYSQL:        mysql -u root myedu < /var/www/SchoolDataCenter/docker/myedu.sql
+# ssh-keygen -R [127.0.0.1]:1922
+# 清空DOCKER缓存:   docker builder prune --all --force
 
-
+# SET PASSWORD FOR 'root'@'localhost' = PASSWORD('6jF0^#12x6^S2zQ#t'); FLUSH PRIVILEGES;
