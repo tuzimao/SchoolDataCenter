@@ -7,7 +7,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 # 安装 MySQL Server 和依赖
 RUN apt-get update
-RUN apt-get install -y gnupg lsb-release wget default-mysql-server procps
+RUN apt-get install -y redis-server gnupg lsb-release wget default-mysql-server procps
 
 # 修改 MySQL 端口为 3386
 RUN sed -i 's/3306/3386/' /etc/mysql/mysql.conf.d/mysqld.cnf || true
@@ -20,7 +20,7 @@ RUN docker-php-ext-configure zip
 
 RUN docker-php-ext-install zip curl pdo_mysql
 
-RUN docker-php-ext-install intl gettext fileinfo gmp
+RUN docker-php-ext-install intl gettext fileinfo gmp mysqli
 
 RUN pecl install redis && docker-php-ext-enable redis
 
@@ -45,7 +45,9 @@ RUN apt-get install -y git nodejs npm vim
 # 克隆项目到 /var/www/
 RUN git clone https://github.com/SmartSchoolAI/SchoolDataCenter.git
 
-RUN ls -l /var/www/SchoolDataCenter/htdocs/output/
+# 替换 Apache 配置文件
+RUN cp /var/www/SchoolDataCenter/docker/000-default.conf /etc/apache2/sites-available/000-default.conf
+# RUN cp /var/www/SchoolDataCenter/docker/php.ini /usr/local/etc/php/php.ini
 
 # 解压webroot.zip文件
 # RUN unzip /var/www/SchoolDataCenter/htdocs/output/webroot.zip -d /var/www/html
@@ -59,24 +61,21 @@ EXPOSE 8888 22
 
 # 启动脚本：先启动 MySQL，初始化 root 密码，再启动 Apache
 CMD ["bash", "-c", "\
-    /usr/sbin/sshd && \
-    echo 'Starting MySQL...' && \
+    /usr/sbin/sshd; \
+    echo 'Starting MySQL...'; \
     mysqld_safe & \
-    echo 'Waiting for MySQL...' && \
-    for i in {1..30}; do mysqladmin ping --silent && break; sleep 1; done && \
-    echo 'Initializing MySQL root password...' && \
-    echo \"SET PASSWORD FOR 'root'@'localhost' = PASSWORD('MyNewRootPass123!'); FLUSH PRIVILEGES;\" | mysql -u root || echo 'MySQL already initialized.' && \
-    echo 'Starting Redis...' && \
-    redis-server --daemonize yes && \
-    echo 'Starting Apache...' && \
+    echo 'Waiting for MySQL...'; \
+    for i in {1..30}; do mysqladmin ping --silent && break; sleep 1; done; \
+    echo 'Initializing MySQL root password...'; \
+    echo \"SET PASSWORD FOR 'root'@'localhost' = PASSWORD('MyNewRootPass123!'); FLUSH PRIVILEGES;\" | mysql -u root || echo 'MySQL already initialized.'; \
+    echo 'Starting Redis...'; \
+    redis-server --daemonize yes; \
+    echo 'Starting Apache...'; \
     apache2-foreground"]
 
 
-
-
-
-# docker build -t schoolai .
-# docker run -d -p 8888:80 -p 2222:22 schoolai
-
+# docker build -t schoolai . 构建镜像
+# docker run -d -p 8888:80 -p 1922:22 schoolai 启动容器
+# apachectl graceful 重新启动Apache
 
 
