@@ -1,6 +1,12 @@
-# 构建SchoolAI项目
+# 本项目用于构建SmartSchoolAI/SchoolDataCenter项目的Docker镜像环境
 # 当前镜像仅为提供在LINUX或是MAC下面开发使用, 不要应用于生产环境
-# 当前MYSQL的数据库文件不是最新的, 仅供开发和测试使用, 生产环境或是需要最新的MYSQL数据, 请使用WINDOWS环境.
+# 当前MYSQL的数据库文件不是最新的, 仅供开发和测试使用, 生产环境或是需要最新的MYSQL数据, 请使用WINDOWS环境
+# 第一次启动的时候, MYSQL需要导入SQL文件, 可能需要3分钟左右时间
+# 目前是可以用于演示环境, 如果需要进行开发, 则需要根据需要修改auth.ts文件, 用于指向不同的后端路径
+# 当前Docker是可以做后端API来使用, 然后前端放入自己本机进行开发
+# Docker中操作系统的用户名: root, 密码: MyRootPass123!
+# 可以使用VSCODE中的RemoteSSH来进行远程打开代码进行修改后端代码, 前端代码建议使用本机
+# 最为理想的开发环境建议使用Windows, 而不是使用Docker
 
 # 使用官方的 PHP 8.2 镜像，并包含 Apache
 FROM php:8.2-apache
