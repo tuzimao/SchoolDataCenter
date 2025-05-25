@@ -22,13 +22,17 @@
 
 ## 主要功能
 
-1. 教育AI功能
-2. 数字校园功能
-3. 第三方业务对接
-4. 校园门户系统
-5. 微信小程序集成
-6. 智慧大脑数据中台
-7. 低代码开发平台
+1. 教育AI功能 ([在线文档](https://docs.dandian.net/jiao-yu-ai/aichat))
+2. 数字校园功能 ([在线文档](https://docs.dandian.net/shu-zi-xiao-yuan/jiaowu))
+3. 统一身份认证系统 ([在线文档](https://docs.dandian.net/tong-yi-shen-fen-ren-zheng-xi-tong/oauth))
+4. 校园门户系统 
+5. 新生报名缴费(中小学适用)  ([在线文档](https://docs.dandian.net/wei-xin-xiao-cheng-xu-ji-cheng/7-wechat))
+6. 智慧大脑数据中台  ([在线文档](https://docs.dandian.net/zhi-hui-da-nao-shu-ju-zhong-tai/dataset))
+7. 低代码开发平台  ([在线文档](https://docs.dandian.net/di-dai-ma-kai-fa-ping-tai/9-lowcode))
+8. 心理健康管理  ([在线文档](https://docs.dandian.net/xin-li-jian-kang/zixun))
+9. 固定资产管理  ([在线文档](https://docs.dandian.net/gong-zuo-liu/buy))
+10. 网上报修管理  ([在线文档](https://docs.dandian.net/gong-zuo-liu/repair))
+11. 系统安全机制  ([在线文档](https://docs.dandian.net/xi-tong-an-quan/system))
 
 ## 商业授权
 
