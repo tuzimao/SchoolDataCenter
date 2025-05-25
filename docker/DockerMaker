@@ -1,0 +1,27 @@
+docker login
+    chatbookai
+    password
+
+docker build -t chatbookai/schooldatacenter:0.1 .
+
+docker push chatbookai/schooldatacenter:0.1
+
+docker rm 22cc2dece268
+
+docker ps -a
+
+docker stop 22cc2dece268
+
+# 下载镜像
+docker pull chatbookai/schooldatacenter:0.1
+
+# 带端口启动容器
+docker run -d -p 8888:80 -p 1922:22 chatbookai/schooldatacenter:0.1
+
+
+# 构建镜像:         docker build -t schoolai .
+# 带端口启动容器:   docker run -d -p 8888:80 -p 1922:22 schoolai
+# 重新启动Apache:   apachectl graceful
+# 导入MYSQL:        mysql -u root myedu < /var/www/SchoolDataCenter/docker/myedu.sql
+# ssh-keygen -R [127.0.0.1]:1922
+# 清空DOCKER缓存:   docker builder prune --all --force

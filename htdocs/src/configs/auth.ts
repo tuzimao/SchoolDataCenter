@@ -5,7 +5,7 @@ AppSchoolConfigMap['dandian.net']     = ["https://demoapi.dandian.net/api/", 'Sc
 AppSchoolConfigMap['fdzyzz.com']      = ["https://fdzz.dandian.net:8443/api/", '福鼎职中', "auth/menus.php", "https://fdzz.dandian.net:8443/api/"]
 AppSchoolConfigMap['fjsmnx.com']      = ["https://dsj.fjsmlyxx.com:1443/api/", '三明林业', "auth/menus.php", "https://dsj.fjsmlyxx.com:1443/api/"]
 
-const AppMarkId   = "development"; //这一行, 一定要写在第8行, 否则需要同时修改Github 的 workflows 文件
+const AppMarkId   = "production"; //这一行, 一定要写在第8行, 否则需要同时修改Github 的 workflows 文件
 const AppVersion  = '20250525'; //需要刷新客户端JS时需要更新此值
 const APP_URL = AppSchoolConfigMap[AppMarkId][0]
 const AppName = AppSchoolConfigMap[AppMarkId][1]
