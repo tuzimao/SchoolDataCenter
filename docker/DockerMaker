@@ -2,8 +2,10 @@ docker login
     chatbookai
     password
 
+# 制作镜像
 docker build -t chatbookai/schooldatacenter:0.1 .
 
+# 上传镜像
 docker push chatbookai/schooldatacenter:0.1
 
 docker rm 22cc2dece268
@@ -15,8 +17,9 @@ docker stop 22cc2dece268
 # 下载镜像
 docker pull chatbookai/schooldatacenter:0.1
 
-# 带端口启动容器
-docker run -d -p 9999:80 -p 1923:22 chatbookai/schooldatacenter:0.1
+# 带端口启动容器 Docker中操作系统的用户名: root, 密码: MyRootPass123! 
+# 可以使用VSCODE中的RemoteSSH来进行远程打开代码进行修改后端代码, 前端代码建议使用本机
+docker run -d -p 9999:80 -p 1922:22 chatbookai/schooldatacenter:0.1
 
 # 清空DOCKER缓存
 docker builder prune --all --force
