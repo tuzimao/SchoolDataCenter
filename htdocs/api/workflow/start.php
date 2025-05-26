@@ -249,12 +249,12 @@ if($_GET['action'] == 'GetNextApprovalUsers' && $FlowId > 0 && $processid > 0)  
                         $部门名称 = $GLOBAL_USER->DEPT_NAME;
                         switch($规则的值1) {
                             case '系部':
-                                if(substr($部门名称, -2) != '系') {
+                                if(substr($部门名称, -3) != '系') {
                                     $目标节点的前置条件判断 = false; //此值默认为true, 所以只需要记录为false的情况
                                 }
                                 break;
                             case '非系部':
-                                if(substr($部门名称, -2) == '系') {
+                                if(substr($部门名称, -3) == '系') {
                                     $目标节点的前置条件判断 = false; //此值默认为true, 所以只需要记录为false的情况
                                 }
                                 break;
@@ -289,195 +289,199 @@ if($_GET['action'] == 'GetNextApprovalUsers' && $FlowId > 0 && $processid > 0)  
                         break;
                 }
             }
-            if($目标节点的前置条件判断 == false)  {
-                break;
-            }
-
-            $Page_Role_Name = $SettingData['Page_Role_Name'];
-            if($Page_Role_Name == "ClassMaster")    {
-                //额外限制权限为: 班主任
-                $sql        = "select 工作ID from form_flow_run_process where id = '$processid'";
-                $rs         = $db->Execute($sql);
-                $工作ID     = $rs->fields['工作ID'];
-                if($工作ID != "" && $TableName != "")  {
-                    $sql = "select * from $TableName where id = '$工作ID' ";
+            
+            //允许执行当前节点-结束
+            if($目标节点的前置条件判断 == true)  {
+                
+                $Page_Role_Name = $SettingData['Page_Role_Name'];
+                if($Page_Role_Name == "ClassMaster")    {
+                    //额外限制权限为: 班主任
+                    $sql        = "select 工作ID from form_flow_run_process where id = '$processid'";
                     $rs         = $db->Execute($sql);
-                    $涉及记录    = $rs->fields;
-                    $班级       = $涉及记录['班级'];
-                    if($班级 == "" && $涉及记录['班级名称'] != "" ) $班级   = $涉及记录['班级名称'];
-                    if($班级 == "" && $涉及记录['学生班级'] != "" ) $班级   = $涉及记录['学生班级'];
-                    $班主任用户名 = returntablefield("data_banji", "班级名称", $班级, "班主任用户名")['班主任用户名'];
-                    if($班主任用户名 != "")  {
-                        $NodeFlow_AuthorizedUser[] = $USER_MAP[$班主任用户名];
+                    $工作ID     = $rs->fields['工作ID'];
+                    if($工作ID != "" && $TableName != "")  {
+                        $sql = "select * from $TableName where id = '$工作ID' ";
+                        $rs         = $db->Execute($sql);
+                        $涉及记录    = $rs->fields;
+                        $班级       = $涉及记录['班级'];
+                        if($班级 == "" && $涉及记录['班级名称'] != "" ) $班级   = $涉及记录['班级名称'];
+                        if($班级 == "" && $涉及记录['学生班级'] != "" ) $班级   = $涉及记录['学生班级'];
+                        $班主任用户名 = returntablefield("data_banji", "班级名称", $班级, "班主任用户名")['班主任用户名'];
+                        if($班主任用户名 != "")  {
+                            $NodeFlow_AuthorizedUser[] = $USER_MAP[$班主任用户名];
+                        }
                     }
                 }
-            }
-            if($Page_Role_Name == "Dormitory")      {
-                //额外限制权限为: 宿舍管理员
-                $sql        = "select 工作ID from form_flow_run_process where id = '$processid'";
-                $rs         = $db->Execute($sql);
-                $工作ID     = $rs->fields['工作ID'];
-                if($工作ID != "" && $TableName == "data_wygl_baoxiuxinxi")  {
-                    $sql = "select 楼房属性, 楼房名称 from $TableName where id = '$工作ID' ";
+                if($Page_Role_Name == "Dormitory")      {
+                    //额外限制权限为: 宿舍管理员
+                    $sql        = "select 工作ID from form_flow_run_process where id = '$processid'";
                     $rs         = $db->Execute($sql);
-                    $涉及记录    = $rs->fields;
-                    $楼房属性    = $涉及记录['楼房属性'];
-                    $楼房名称    = $涉及记录['楼房名称'];
-                    if($楼房属性 == "学生宿舍" && $楼房名称 != "")  {
-                        $生管老师 = returntablefield("data_dorm_building", "宿舍楼名称", $楼房名称, "生管老师一,生管老师二,生管老师三,生管老师四,生管老师五,生管老师六,生管老师七,生管老师八,生管老师九,生管老师十");
-                        $生管老师VALUES = array_values($生管老师);
-                        $生管老师KEYS   = array_flip($生管老师VALUES);
-                        foreach($生管老师KEYS as $生管老师KEY => $NOT_USE) {
-                            if($生管老师KEY != "") {
-                                $NodeFlow_AuthorizedUser[] = $USER_MAP[$生管老师KEY];
+                    $工作ID     = $rs->fields['工作ID'];
+                    if($工作ID != "" && $TableName == "data_wygl_baoxiuxinxi")  {
+                        $sql = "select 楼房属性, 楼房名称 from $TableName where id = '$工作ID' ";
+                        $rs         = $db->Execute($sql);
+                        $涉及记录    = $rs->fields;
+                        $楼房属性    = $涉及记录['楼房属性'];
+                        $楼房名称    = $涉及记录['楼房名称'];
+                        if($楼房属性 == "学生宿舍" && $楼房名称 != "")  {
+                            $生管老师 = returntablefield("data_dorm_building", "宿舍楼名称", $楼房名称, "生管老师一,生管老师二,生管老师三,生管老师四,生管老师五,生管老师六,生管老师七,生管老师八,生管老师九,生管老师十");
+                            $生管老师VALUES = array_values($生管老师);
+                            $生管老师KEYS   = array_flip($生管老师VALUES);
+                            foreach($生管老师KEYS as $生管老师KEY => $NOT_USE) {
+                                if($生管老师KEY != "") {
+                                    $NodeFlow_AuthorizedUser[] = $USER_MAP[$生管老师KEY];
+                                }
                             }
                         }
                     }
                 }
-            }
-            $Faculty_Filter_Field = $SettingData['Faculty_Filter_Field'];
-            if($Page_Role_Name == "Faculty" && $Faculty_Filter_Field != "")     {
-                //额外限制权限为: 院系
-                $sql        = "select 工作ID from form_flow_run_process where id = '$processid'";
-                $rs         = $db->Execute($sql);
-                $工作ID     = $rs->fields['工作ID'];
-                if($工作ID != "" && $TableName != "")  {
-                    $sql = "select * from $TableName where id = '$工作ID' ";
+                $Faculty_Filter_Field = $SettingData['Faculty_Filter_Field'];
+                if($Page_Role_Name == "Faculty" && $Faculty_Filter_Field != "")     {
+                    //额外限制权限为: 院系
+                    $sql        = "select 工作ID from form_flow_run_process where id = '$processid'";
                     $rs         = $db->Execute($sql);
-                    $涉及记录    = $rs->fields;
-                    $班级       = $涉及记录['班级'];
-                    if($班级 == "" && $涉及记录['班级名称'] != "" ) $班级   = $涉及记录['班级名称'];
-                    if($班级 == "" && $涉及记录['学生班级'] != "" ) $班级   = $涉及记录['学生班级'];
-                    $所属系部 = returntablefield("data_banji", "班级名称", $班级, "所属系部")['所属系部'];
-                    if($所属系部 != "")  {
-                        $系部管理员Text = returntablefield("data_xi", "系部名称", $所属系部, $Faculty_Filter_Field)[$Faculty_Filter_Field];
-                        if($系部管理员Text != "" )  {
-                            $系部管理员Array = explode(',', $系部管理员Text);
-                            foreach($系部管理员Array as $用户名) {
-                                $NodeFlow_AuthorizedUser[] = $USER_MAP[$用户名];
+                    $工作ID     = $rs->fields['工作ID'];
+                    if($工作ID != "" && $TableName != "")  {
+                        $sql = "select * from $TableName where id = '$工作ID' ";
+                        $rs         = $db->Execute($sql);
+                        $涉及记录    = $rs->fields;
+                        $班级       = $涉及记录['班级'];
+                        if($班级 == "" && $涉及记录['班级名称'] != "" ) $班级   = $涉及记录['班级名称'];
+                        if($班级 == "" && $涉及记录['学生班级'] != "" ) $班级   = $涉及记录['学生班级'];
+                        $所属系部 = returntablefield("data_banji", "班级名称", $班级, "所属系部")['所属系部'];
+                        if($所属系部 != "")  {
+                            $系部管理员Text = returntablefield("data_xi", "系部名称", $所属系部, $Faculty_Filter_Field)[$Faculty_Filter_Field];
+                            if($系部管理员Text != "" )  {
+                                $系部管理员Array = explode(',', $系部管理员Text);
+                                foreach($系部管理员Array as $用户名) {
+                                    $NodeFlow_AuthorizedUser[] = $USER_MAP[$用户名];
+                                }
                             }
                         }
                     }
                 }
-            }
-            //网上报修-维修组长派单-维修组长列表
-            if($item['FlowName'] == "维修组长派单")  {
-                $sql        = "select 工作ID from form_flow_run_process where id = '$processid'";
-                $rs         = $db->Execute($sql);
-                $工作ID     = $rs->fields['工作ID'];
-                if($工作ID != "" && $TableName != "")  {
-                    $sql = "select 负责人,维修人员 from data_wygl_biaoxiuxiangmu ";
+                //网上报修-维修组长派单-维修组长列表
+                if($item['FlowName'] == "维修组长派单")  {
+                    $sql        = "select 工作ID from form_flow_run_process where id = '$processid'";
                     $rs         = $db->Execute($sql);
-                    $涉及记录    = $rs->GetArray();
-                    $负责人     = [];
-                    foreach($涉及记录 as $List) {
-                        $负责人[] = $List['负责人'];
-                    }
-                    $负责人TEXT  = join(',', $负责人);
-                    $负责人Array = explode(',', $负责人TEXT);
-                    $负责人Flip  = array_flip($负责人Array);
-                    foreach($负责人Flip as $List=>$NOT_USE)   {
-                        if($List != '' && is_array($USER_MAP[$List]) )     {
-                            $NodeFlow_AuthorizedUser[] = $USER_MAP[$List];                            
+                    $工作ID     = $rs->fields['工作ID'];
+                    if($工作ID != "" && $TableName != "")  {
+                        $sql = "select 负责人,维修人员 from data_wygl_biaoxiuxiangmu ";
+                        $rs         = $db->Execute($sql);
+                        $涉及记录    = $rs->GetArray();
+                        $负责人     = [];
+                        foreach($涉及记录 as $List) {
+                            $负责人[] = $List['负责人'];
+                        }
+                        $负责人TEXT  = join(',', $负责人);
+                        $负责人Array = explode(',', $负责人TEXT);
+                        $负责人Flip  = array_flip($负责人Array);
+                        foreach($负责人Flip as $List=>$NOT_USE)   {
+                            if($List != '' && is_array($USER_MAP[$List]) )     {
+                                $NodeFlow_AuthorizedUser[] = $USER_MAP[$List];                            
+                            }
                         }
                     }
                 }
-            }
-            //网上报修-确认维修-得到维修人员列表
-            if($item['FlowName'] == "确认维修")  {
-                $sql        = "select 工作ID from form_flow_run_process where id = '$processid'";
-                $rs         = $db->Execute($sql);
-                $工作ID     = $rs->fields['工作ID'];
-                if($工作ID != "" && $TableName != "")  {
-                    $sql = "select 报修项目 from $TableName where id = '$工作ID' ";
+                //网上报修-确认维修-得到维修人员列表
+                if($item['FlowName'] == "确认维修")  {
+                    $sql        = "select 工作ID from form_flow_run_process where id = '$processid'";
                     $rs         = $db->Execute($sql);
-                    $报修项目    = $rs->fields['报修项目'];
-                    $sql = "select 负责人,维修人员 from data_wygl_biaoxiuxiangmu where 名称 = '$报修项目'";
-                    $rs         = $db->Execute($sql);
-                    $涉及记录    = $rs->GetArray();
-                    $负责人Array = explode(',', $涉及记录[0]['维修人员']);
-                    $负责人Flip  = array_flip($负责人Array);
-                    foreach($负责人Flip as $List=>$NOT_USE)   {
-                        if($List != '' && is_array($USER_MAP[$List]) )     {
-                            $NodeFlow_AuthorizedUser[] = $USER_MAP[$List];                            
+                    $工作ID     = $rs->fields['工作ID'];
+                    if($工作ID != "" && $TableName != "")  {
+                        $sql = "select 报修项目 from $TableName where id = '$工作ID' ";
+                        $rs         = $db->Execute($sql);
+                        $报修项目    = $rs->fields['报修项目'];
+                        $sql = "select 负责人,维修人员 from data_wygl_biaoxiuxiangmu where 名称 = '$报修项目'";
+                        $rs         = $db->Execute($sql);
+                        $涉及记录    = $rs->GetArray();
+                        $负责人Array = explode(',', $涉及记录[0]['维修人员']);
+                        $负责人Flip  = array_flip($负责人Array);
+                        foreach($负责人Flip as $List=>$NOT_USE)   {
+                            if($List != '' && is_array($USER_MAP[$List]) )     {
+                                $NodeFlow_AuthorizedUser[] = $USER_MAP[$List];                            
+                            }
                         }
                     }
                 }
-            }
-            //网上报修-服务评价-返回发起人
-            if($item['FlowName'] == "服务评价")  {
-                $sql        = "select 工作ID from form_flow_run_process where id = '$processid'";
-                $rs         = $db->Execute($sql);
-                $工作ID     = $rs->fields['工作ID'];
-                if($工作ID != "" && $TableName != "")  {
-                    $sql = "select 报修人,学生学号 from $TableName where id = '$工作ID' ";
+                //网上报修-服务评价-返回发起人
+                if($item['FlowName'] == "服务评价")  {
+                    $sql        = "select 工作ID from form_flow_run_process where id = '$processid'";
                     $rs         = $db->Execute($sql);
-                    $报修人      = $rs->fields['报修人'];
-                    $学生学号    = $rs->fields['学生学号'];
-                    if($报修人 != '' && is_array($USER_MAP[$报修人]) )     {
-                        $NodeFlow_AuthorizedUser[] = $USER_MAP[$报修人];                            
-                    }
-                    if($学生学号 != '')     {
-                        $NodeFlow_AuthorizedUser[] = returntablefield("data_student", "学号", $学生学号, "id, 学号 as USER_ID, 姓名 as USER_NAME, 学号 as value, 姓名 as label, 班级");
+                    $工作ID     = $rs->fields['工作ID'];
+                    if($工作ID != "" && $TableName != "")  {
+                        $sql = "select 报修人,学生学号 from $TableName where id = '$工作ID' ";
+                        $rs         = $db->Execute($sql);
+                        $报修人      = $rs->fields['报修人'];
+                        $学生学号    = $rs->fields['学生学号'];
+                        if($报修人 != '' && is_array($USER_MAP[$报修人]) )     {
+                            $NodeFlow_AuthorizedUser[] = $USER_MAP[$报修人];                            
+                        }
+                        if($学生学号 != '')     {
+                            $NodeFlow_AuthorizedUser[] = returntablefield("data_student", "学号", $学生学号, "id, 学号 as USER_ID, 姓名 as USER_NAME, 学号 as value, 姓名 as label, 班级");
+                        }
                     }
                 }
-            }
-            
-            //手动指定审核人
-            if($SettingData['NodeFlow_AuthorizedUser'] != null && $SettingData['NodeFlow_AuthorizedUser'] != "") {
-                $NodeFlow_AuthorizedUser_Array = explode(',', $SettingData['NodeFlow_AuthorizedUser']);
-                foreach($NodeFlow_AuthorizedUser_Array as $itemX) {
-                    $NodeFlow_AuthorizedUser[] = $USER_MAP[$itemX];
+                
+                //手动指定审核人
+                if($SettingData['NodeFlow_AuthorizedUser'] != null && $SettingData['NodeFlow_AuthorizedUser'] != "") {
+                    $NodeFlow_AuthorizedUser_Array = explode(',', $SettingData['NodeFlow_AuthorizedUser']);
+                    foreach($NodeFlow_AuthorizedUser_Array as $itemX) {
+                        $NodeFlow_AuthorizedUser[] = $USER_MAP[$itemX];
+                    }
                 }
-            }
 
-            $NodeFlow_AuthorizedDept = [];
-            if($SettingData['NodeFlow_AuthorizedDept'] != null && $SettingData['NodeFlow_AuthorizedDept'] != "") {
-                $NodeFlow_AuthorizedDept_Array = explode(',', $SettingData['NodeFlow_AuthorizedDept']);
-                foreach($NodeFlow_AuthorizedDept_Array as $itemX) {
-                    $NodeFlow_AuthorizedDept = [...$NodeFlow_AuthorizedDept, ...(array)$USER_MAP_DEPT[$itemX]];
+                $NodeFlow_AuthorizedDept = [];
+                if($SettingData['NodeFlow_AuthorizedDept'] != null && $SettingData['NodeFlow_AuthorizedDept'] != "") {
+                    $NodeFlow_AuthorizedDept_Array = explode(',', $SettingData['NodeFlow_AuthorizedDept']);
+                    foreach($NodeFlow_AuthorizedDept_Array as $itemX) {
+                        $NodeFlow_AuthorizedDept = [...$NodeFlow_AuthorizedDept, ...(array)$USER_MAP_DEPT[$itemX]];
+                    }
                 }
-            }
-            
-            $NodeFlow_AuthorizedRole = [];
-            if($SettingData['NodeFlow_AuthorizedRole'] != null && $SettingData['NodeFlow_AuthorizedRole'] != "") {
-                $NodeFlow_AuthorizedRole_Array = explode(',', $SettingData['NodeFlow_AuthorizedRole']);
-                foreach($NodeFlow_AuthorizedRole_Array as $itemX) {
-                    $NodeFlow_AuthorizedRole = [...$NodeFlow_AuthorizedRole, ...(array)$USER_MAP_PRIV[$itemX]];
+                
+                $NodeFlow_AuthorizedRole = [];
+                if($SettingData['NodeFlow_AuthorizedRole'] != null && $SettingData['NodeFlow_AuthorizedRole'] != "") {
+                    $NodeFlow_AuthorizedRole_Array = explode(',', $SettingData['NodeFlow_AuthorizedRole']);
+                    foreach($NodeFlow_AuthorizedRole_Array as $itemX) {
+                        $NodeFlow_AuthorizedRole = [...$NodeFlow_AuthorizedRole, ...(array)$USER_MAP_PRIV[$itemX]];
+                    }
                 }
-            }
-            
-            //过滤重复数据 
-            $ApprovalUsers = [];
-            foreach($NodeFlow_AuthorizedUser as $itemF) {
-                $ApprovalUsers[$itemF['USER_ID']] = $itemF;
-            }
-            foreach($NodeFlow_AuthorizedDept as $itemF) {
-                $ApprovalUsers[$itemF['USER_ID']] = $itemF;
-            }
-            foreach($NodeFlow_AuthorizedRole as $itemF) {
-                $ApprovalUsers[$itemF['USER_ID']] = $itemF;
-            }
-            $可选节点['授权允许访问的用户']          = $NodeFlow_AuthorizedUser; 
-            $可选节点['授权允许访问的部门']          = $NodeFlow_AuthorizedDept; 
-            $可选节点['授权允许访问的角色']          = $NodeFlow_AuthorizedRole;
-            $可选节点['NodeFlow_AuthorizedUser']   = array_values($ApprovalUsers); 
-            $可选节点['经办步骤']                   = "(第".$StepName."步： ".$item['FlowName'].")";
-            $可选节点['经办步骤id']                 = $item['id'];
-            $可选节点['经办步骤Step']               = $item['Step'];
-            $可选节点['经办步骤FlowId']             = $item['id'];
-            if(count($可选节点['NodeFlow_AuthorizedUser']) > 0) {
-                $下一步骤可选节点[] = $可选节点;
-                $下一步骤可选节点序号[] = $item['Step'];
-            }
+                
+                //过滤重复数据 
+                $ApprovalUsers = [];
+                foreach($NodeFlow_AuthorizedUser as $itemF) {
+                    $ApprovalUsers[$itemF['USER_ID']] = $itemF;
+                }
+                foreach($NodeFlow_AuthorizedDept as $itemF) {
+                    $ApprovalUsers[$itemF['USER_ID']] = $itemF;
+                }
+                foreach($NodeFlow_AuthorizedRole as $itemF) {
+                    $ApprovalUsers[$itemF['USER_ID']] = $itemF;
+                }
+                $可选节点['授权允许访问的用户']          = $NodeFlow_AuthorizedUser; 
+                $可选节点['授权允许访问的部门']          = $NodeFlow_AuthorizedDept; 
+                $可选节点['授权允许访问的角色']          = $NodeFlow_AuthorizedRole;
+                $可选节点['NodeFlow_AuthorizedUser']   = array_values($ApprovalUsers); 
+                $可选节点['经办步骤']                   = "(第".$StepName."步： ".$item['FlowName'].")";
+                $可选节点['经办步骤id']                 = $item['id'];
+                $可选节点['经办步骤Step']               = $item['Step'];
+                $可选节点['经办步骤FlowId']             = $item['id'];
+                if(count($可选节点['NodeFlow_AuthorizedUser']) > 0) {
+                    $下一步骤可选节点[] = $可选节点;
+                    $下一步骤可选节点序号[] = $item['Step'];
+                }
+            }//允许执行当前节点-结束
         }
-
+        $NextStep = join(',', $下一步骤可选节点序号);
+    }
+    else {
+        //$NextStep = "[结束]";
     }
 
     $RS             = [];
     $RS['data']     = $下一步骤可选节点;
     $RS['status']   = 'ok';
-    $RS['NextStep'] = join(',', $下一步骤可选节点序号);
+    $RS['NextStep'] = $NextStep;
     print_R(json_encode($RS));
     exit;
 }
