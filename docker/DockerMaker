@@ -3,7 +3,7 @@ docker login
     password
 
 # 制作镜像
-docker build -t chatbookai/schooldatacenter:0.1 .
+docker buildx build --platform linux/amd64,linux/arm64 -t chatbookai/schooldatacenter:0.1 --push .
 
 # 上传镜像
 docker push chatbookai/schooldatacenter:0.1
