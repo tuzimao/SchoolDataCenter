@@ -260,6 +260,22 @@ if($_GET['action'] == 'GetNextApprovalUsers' && $FlowId > 0 && $processid > 0)  
                                 break;
                         }
                         break;
+                    case '发起人角色条件限制':
+                        $当前角色名称 = $GLOBAL_USER->role;
+                        if(substr($规则的值1, 0, 2) == '!=')  {
+                            $规则的值1Value = substr($规则的值1, 2, strlen($规则的值1));
+                            $角色名称列表   = explode('|', $规则的值1Value);
+                            if(in_array($当前角色名称, $角色名称列表)) {
+                                $目标节点的前置条件判断 = false; //!in_array的时候为true, 所以只需要记录为false的情况
+                            }
+                        }
+                        else {
+                            $角色名称列表 = explode('|', $规则的值1);
+                            if(!in_array($当前角色名称, $角色名称列表)) {
+                                $目标节点的前置条件判断 = false; //in_array的时候为true, 所以只需要记录为false的情况
+                            }
+                        }
+                        break;
                     case '表单字段限制':
                         $sql        = "select 工作ID from form_flow_run_process where id = '$processid'";
                         $rs         = $db->Execute($sql);
@@ -667,11 +683,12 @@ if($_GET['action'] == 'GobackToPreviousStep' && $FlowId > 0 && $processid > 0 &&
     $当前经办步骤    = '';
     $sql            = "select * from form_flow_run_process where id = '$上一步ProcessId'";
     $rsT            = $db->Execute($sql);
-    $当前经办步骤    = $rsT->fields['经办步骤'];
-    $FlowId         = $rsT->fields['FlowId'];
-    $流程步骤ID      = $rsT->fields['流程步骤ID'];
-    $上一步ProcessId     = $rsT->fields['上一步ProcessId'];
-    $FlowName           = $rsT->fields['FlowName'];
+    $上一步ProcessInfo      = $rsT->fields;
+    $当前经办步骤            = $rsT->fields['经办步骤'];
+    $FlowId                 = $rsT->fields['FlowId'];
+    $流程步骤ID             = $rsT->fields['流程步骤ID'];
+    $上一步ProcessId        = $rsT->fields['上一步ProcessId'];
+    $FlowName               = $rsT->fields['FlowName'];
 
     //上一步骤的Flow信息
     $sql        = "select * from form_formflow where id='$FlowId'";
@@ -710,7 +727,7 @@ if($_GET['action'] == 'GobackToPreviousStep' && $FlowId > 0 && $processid > 0 &&
     $NewProcess['FormId'] = $ProcessInfo['FormId'];
     $NewProcess['FlowId'] = $FlowId;
     $NewProcess['RunId']  = $ProcessInfo['RunId'];
-    $NewProcess['用户ID'] = $ProcessInfo['用户ID'];
+    $NewProcess['用户ID'] = $上一步ProcessInfo['用户ID'];
     $NewProcess['工作ID'] = $ProcessInfo['工作ID'];
     $NewProcess['工作接收时间'] = date("Y-m-d H:i:s");
     $NewProcess['步骤状态']     = "未办理";
