@@ -92,7 +92,7 @@ const AuthProvider = ({ children }: Props) => {
       else {
         setLoading(false)
         console.log("router.asPath", router.asPath)
-        if(storedToken == undefined && !router.asPath.startsWith('/oauth/') && !router.asPath.startsWith('/cas/'))  {
+        if(storedToken == undefined && !router.asPath.startsWith('/oauth/') && !router.asPath.startsWith('/cas/') && !router.asPath.startsWith('/login/?code='))  {
           setTimeout(function() {
             router.replace('/login')
           }, 5000);

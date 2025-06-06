@@ -44,74 +44,93 @@ if($_GET['action']=="login")                {
     $Data           = $_POST['Data'];
     $Data           = decodeBase58(decodeBase58($Data));
     $_POST          = json_decode($Data, true);
-    
-    //POW计算证明校验
-    $challenge      = ForSqlInjection($_POST['challenge']);
-    $nonce          = ForSqlInjection($_POST['nonce']);
-    $hash           = ForSqlInjection($_POST['hash']);
-    if(strlen($challenge)!=32 && strlen($hash)!=64)  {
-        $RS = [];
-        $RS['status']   = "ERROR";
-        $RS['msg']      = $RS['email']    = "用户客户端工作量证明内容失败";
-        print_R(EncryptApiData($RS, (Object)['USER_ID'=>time()], true));
-        exit;
-    }
-    $challengeValue = RedisGetElement("JWT_POW_CHALLENGE_CHAR", $challenge);
-    if(strlen($challengeValue)==32) {
-        $test = $challengeValue . $nonce;
-        $hash = hash('sha256', $test);
-        if(substr($hash, 0, strlen($difficulty)) != $difficulty) {
-            $RS['status']   = "ERROR";
-            $RS['msg']      = $RS['email']    = "用户客户端工作量证明验证失败";
-            print_R(EncryptApiData($RS, (Object)['USER_ID'=>time()], true));
-            exit;
-        }
-    }
 
     $EMAIL          = ForSqlInjection($_POST['email']);
     $USER_ID        = ForSqlInjection($_POST['username']);
     $password       = ForSqlInjection($_POST['password']);
     $rememberMe     = ForSqlInjection($_POST['rememberMe']);
     $UserType       = ForSqlInjection($_POST['UserType']);
+    
+    //POW计算证明校验
+    if($USER_ID != "")   {
+        $challenge      = ForSqlInjection($_POST['challenge']);
+        $nonce          = ForSqlInjection($_POST['nonce']);
+        $hash           = ForSqlInjection($_POST['hash']);
+        if(strlen($challenge)!=32 && strlen($hash)!=64)  {
+            $RS = [];
+            $RS['status']   = "ERROR";
+            $RS['msg']      = $RS['email']    = "用户客户端工作量证明内容失败";
+            print_R(EncryptApiData($RS, (Object)['USER_ID'=>time()], true));
+            exit;
+        }
+        $challengeValue = RedisGetElement("JWT_POW_CHALLENGE_CHAR", $challenge);
+        if(strlen($challengeValue)==32) {
+            $test = $challengeValue . $nonce;
+            $hash = hash('sha256', $test);
+            if(substr($hash, 0, strlen($difficulty)) != $difficulty) {
+                $RS['status']   = "ERROR";
+                $RS['msg']      = $RS['email']    = "用户客户端工作量证明验证失败";
+                print_R(EncryptApiData($RS, (Object)['USER_ID'=>time()], true));
+                exit;
+            }
+        }
 
-    $getRealIP      = getRealIP();
-    //每个外部IP仅限登录10次-过期自动清除
-    $限制外部IP登录时间   = $redis->hGet("USER_LOGIN_IP_ADDRESS_LAST_TIME", $getRealIP);
-    if($限制外部IP登录时间 > 0 && (time() - $限制外部IP登录时间) > 60) {
-        $redis->hSet("USER_LOGIN_IP_ADDRESS_LAST_TIME", $getRealIP, 0);
-        $redis->hSet("USER_LOGIN_IP_ADDRESS_LIMIT", $getRealIP, 0);
-    }
-    else {
-        //每个外部IP仅限登录10次-开始记录
-        $限制外部IP登录次数 = (int)$redis->hGet("USER_LOGIN_IP_ADDRESS_LIMIT", $getRealIP);
-        if($限制外部IP登录次数 > 3) {
-            $RS             = [];
-            $RS['status']   = "ERROR";
-            $RS['msg']      = __("Malicious ip");
-            $redis->hSet("USER_LOGIN_IP_ADDRESS_LAST_TIME", $getRealIP, time());
-            print_R(EncryptApiData($RS, (Object)['USER_ID'=>time()], true));
-            exit;
+        $getRealIP      = getRealIP();
+        //每个外部IP仅限登录10次-过期自动清除
+        $限制外部IP登录时间   = $redis->hGet("USER_LOGIN_IP_ADDRESS_LAST_TIME", $getRealIP);
+        if($限制外部IP登录时间 > 0 && (time() - $限制外部IP登录时间) > 60) {
+            $redis->hSet("USER_LOGIN_IP_ADDRESS_LAST_TIME", $getRealIP, 0);
+            $redis->hSet("USER_LOGIN_IP_ADDRESS_LIMIT", $getRealIP, 0);
+        }
+        else {
+            //每个外部IP仅限登录10次-开始记录
+            $限制外部IP登录次数 = (int)$redis->hGet("USER_LOGIN_IP_ADDRESS_LIMIT", $getRealIP);
+            if($限制外部IP登录次数 > 3) {
+                $RS             = [];
+                $RS['status']   = "ERROR";
+                $RS['msg']      = __("Malicious ip");
+                $redis->hSet("USER_LOGIN_IP_ADDRESS_LAST_TIME", $getRealIP, time());
+                print_R(EncryptApiData($RS, (Object)['USER_ID'=>time()], true));
+                exit;
+            }
+        }
+        //判断用户密码错误次数-过期自动清除
+        $用户登录错误时间   = $redis->hGet("USER_LOGIN_ERROR_LAST_TIME", $USER_ID);
+        //print (time() - $用户登录错误时间);
+        if($用户登录错误时间 > 0 && (time() - $用户登录错误时间) > 60) {
+            $redis->hSet("USER_LOGIN_ERROR_LAST_TIME", $USER_ID, 0);
+            $redis->hSet("USER_LOGIN_ERROR_TIMES_LIMIT", $USER_ID, 0);
+        }
+        else {
+            //判断用户密码错误次数-开始记录
+            $用户登录错误次数   = (int)$redis->hGet("USER_LOGIN_ERROR_TIMES_LIMIT", $USER_ID);
+            if($用户登录错误次数 > 3) {
+                $RS             = [];
+                $RS['status']   = "ERROR";
+                $RS['msg']      = __("Malicious login");
+                $redis->hSet("USER_LOGIN_ERROR_LAST_TIME", $USER_ID, time());
+                print_R(EncryptApiData($RS, (Object)['USER_ID'=>time()], true));
+                exit;
+            }
+        }
+    } // USER_ID != ''
+
+    //绑定微信用户
+    $OAuth          = "Login"; //用户名和密码登录
+    $wechatcode     = ForSqlInjection($_POST['wechatcode']);
+    if($wechatcode != "") {
+        $wechatUser = getUserInfoFromWechatServer($wechatcode);
+        if(isset($wechatUser) && $wechatUser['openid']!='' && $wechatUser['headimgurl'] != '')  {
+            $OAuth                  = "Wechat"; //微信授权登录成功
+            $USER_ID_IN_WECHAT      = returntablefield("data_oauth_wechat","openid",$wechatUser['openid'],"USER_ID")['USER_ID'];
+            if($USER_ID_IN_WECHAT != "")  {
+                //已经绑定微信用户的时候, 直接返回绑定的用户名
+                $USER_ID = $USER_ID_IN_WECHAT;
+            }
         }
     }
-    //判断用户密码错误次数-过期自动清除
-    $用户登录错误时间   = $redis->hGet("USER_LOGIN_ERROR_LAST_TIME", $USER_ID);
-    //print (time() - $用户登录错误时间);
-    if($用户登录错误时间 > 0 && (time() - $用户登录错误时间) > 60) {
-        $redis->hSet("USER_LOGIN_ERROR_LAST_TIME", $USER_ID, 0);
-        $redis->hSet("USER_LOGIN_ERROR_TIMES_LIMIT", $USER_ID, 0);
-    }
-    else {
-        //判断用户密码错误次数-开始记录
-        $用户登录错误次数   = (int)$redis->hGet("USER_LOGIN_ERROR_TIMES_LIMIT", $USER_ID);
-        if($用户登录错误次数 > 3) {
-            $RS             = [];
-            $RS['status']   = "ERROR";
-            $RS['msg']      = __("Malicious login");
-            $redis->hSet("USER_LOGIN_ERROR_LAST_TIME", $USER_ID, time());
-            print_R(EncryptApiData($RS, (Object)['USER_ID'=>time()], true));
-            exit;
-        }
-    }
+    //print_R($wechatUser);exit;
+    
     if($USER_ID!="")   {
         if($EMAIL!="")   {
             $sql = "select * from data_user where EMAIL='$EMAIL'";
@@ -121,6 +140,7 @@ if($_GET['action']=="login")                {
         }
         $rs		= $db->Execute($sql);
         $UserInfo = $rs->fields;
+        //先判断用户信息为空的时候, 学生是校友还是在校生
         if($UserInfo['USER_ID']==""&&$UserType!="校友")  {
             $sql    = "select * from data_student where 学号='$USER_ID'";
             $rs		= $db->Execute($sql);
@@ -138,7 +158,7 @@ if($_GET['action']=="login")                {
                 exit;
             }
             $PASSWORD_IN_DB         = $StudentInfo['密码'];
-            if($password!=""&&$PASSWORD_IN_DB!=""&&password_check($password,$PASSWORD_IN_DB))  {
+            if(($password!=""&&$PASSWORD_IN_DB!=""&&password_check($password, $PASSWORD_IN_DB)&&$OAuth=='Login') || ($OAuth=='Wechat'))  {
                 //Reform userData
                 $userData = [];
                 $userData['id']         = $StudentInfo['id'];
@@ -176,6 +196,24 @@ if($_GET['action']=="login")                {
                 $redis->hSet("USER_LOGIN_IP_ADDRESS_LIMIT", $getRealIP, 0);
                 print_R(EncryptApiData($RS, (Object)['USER_ID'=>time()], true));
                 SystemLogRecord("Login", __("Success"), __("Success"),$USER_ID);
+
+                //微信用户和系统用户名进行关联
+                if(isset($wechatUser) && $wechatUser['openid']!='' && $wechatUser['headimgurl'] != '')  {
+                    $OAuth                     = "Wechat"; //微信授权登录成功
+                    $FieldsArray               = [];
+                    $FieldsArray['openid']     = $wechatUser['openid'];
+                    $FieldsArray['nickname']   = $wechatUser['nickname'];
+                    $FieldsArray['sex']        = $wechatUser['sex'];
+                    $FieldsArray['language']   = $wechatUser['language'];
+                    $FieldsArray['city']       = $wechatUser['city'];
+                    $FieldsArray['province']   = $wechatUser['province'];
+                    $FieldsArray['country']    = $wechatUser['country'];
+                    $FieldsArray['headimgurl'] = $wechatUser['headimgurl'];
+                    $FieldsArray['unionid']    = $wechatUser['unionid'];
+                    $FieldsArray['USER_ID']     = $userData['USER_ID'];
+                    $FieldsArray['USER_NAME']   = $userData['USER_NAME'];
+                    [$rs,$sql] = InsertOrUpdateTableByArray("data_oauth_wechat",$FieldsArray,'USER_ID',0);
+                }
                 exit;
             }
             $RS = [];
@@ -251,6 +289,24 @@ if($_GET['action']=="login")                {
                     $sql = "update data_xiaoyou_member set OPENID='$LOGIN_USER_OPENID' where id='".$StudentInfo['id']."'";
                     $db->Execute($sql);
                 }
+                
+                //微信用户和系统用户名进行关联
+                if(isset($wechatUser) && $wechatUser['openid']!='' && $wechatUser['headimgurl'] != '')  {
+                    $OAuth                     = "Wechat"; //微信授权登录成功
+                    $FieldsArray               = [];
+                    $FieldsArray['openid']     = $wechatUser['openid'];
+                    $FieldsArray['nickname']   = $wechatUser['nickname'];
+                    $FieldsArray['sex']        = $wechatUser['sex'];
+                    $FieldsArray['language']   = $wechatUser['language'];
+                    $FieldsArray['city']       = $wechatUser['city'];
+                    $FieldsArray['province']   = $wechatUser['province'];
+                    $FieldsArray['country']    = $wechatUser['country'];
+                    $FieldsArray['headimgurl'] = $wechatUser['headimgurl'];
+                    $FieldsArray['unionid']    = $wechatUser['unionid'];
+                    $FieldsArray['USER_ID']     = $userData['USER_ID'];
+                    $FieldsArray['USER_NAME']   = $userData['USER_NAME'];
+                    [$rs,$sql] = InsertOrUpdateTableByArray("data_oauth_wechat",$FieldsArray,'USER_ID',0);
+                }
                 exit;
             }
             $RS = [];
@@ -265,7 +321,8 @@ if($_GET['action']=="login")                {
             exit;
         }
         $PASSWORD_IN_DB         = $UserInfo['PASSWORD'];
-        if($password!=""&&$PASSWORD_IN_DB!=""&&password_check($password,$PASSWORD_IN_DB))  {
+        //教职工用户
+        if(($password!=""&&$PASSWORD_IN_DB!=""&&password_check($password, $PASSWORD_IN_DB)&&$OAuth=='Login') || ($OAuth=='Wechat'))  {
             //Reform userData
             $userData = [];
             $userData['id']         = $UserInfo['id'];
@@ -313,8 +370,27 @@ if($_GET['action']=="login")                {
             $RS['USER_PROFILE'] = $USER_PROFILE;
             $redis->hSet("USER_LOGIN_ERROR_TIMES_LIMIT", $USER_ID, 0);
             $redis->hSet("USER_LOGIN_IP_ADDRESS_LIMIT", $getRealIP, 0);
+
             print_R(EncryptApiData($RS, (Object)['USER_ID'=>time()], true));
             SystemLogRecord("Login", __("Success"), __("Success"),$USER_ID);
+
+            //微信用户和系统用户名进行关联
+            if(isset($wechatUser) && $wechatUser['openid']!='' && $wechatUser['headimgurl'] != '')  {
+                $OAuth                     = "Wechat"; //微信授权登录成功
+                $FieldsArray               = [];
+                $FieldsArray['openid']     = $wechatUser['openid'];
+                $FieldsArray['nickname']   = $wechatUser['nickname'];
+                $FieldsArray['sex']        = $wechatUser['sex'];
+                $FieldsArray['language']   = $wechatUser['language'];
+                $FieldsArray['city']       = $wechatUser['city'];
+                $FieldsArray['province']   = $wechatUser['province'];
+                $FieldsArray['country']    = $wechatUser['country'];
+                $FieldsArray['headimgurl'] = $wechatUser['headimgurl'];
+                $FieldsArray['unionid']    = $wechatUser['unionid'];
+                $FieldsArray['USER_ID']     = $userData['USER_ID'];
+                $FieldsArray['USER_NAME']   = $userData['USER_NAME'];
+                [$rs,$sql] = InsertOrUpdateTableByArray("data_oauth_wechat",$FieldsArray,'USER_ID',0);
+            }
             exit;
         }
         else {

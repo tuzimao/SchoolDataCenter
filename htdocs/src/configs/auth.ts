@@ -1,16 +1,17 @@
 export const AppSchoolConfigMap: any  = {}
-AppSchoolConfigMap['production']       = ["/api/", 'SchoolAI', "auth/menus.php", "/api/"] //For Exe Package
-AppSchoolConfigMap['development']     = ["http://localhost:8888/api/", 'SchoolAI', "auth/menus.php", "http://localhost:8888/api/"] //For Local Development
-AppSchoolConfigMap['dandian.net']     = ["https://demoapi.dandian.net/api/", 'SchoolAI', "auth/menus.php", "https://demoapi.dandian.net/api/"] // For School and Demoapi.dandian.net
-AppSchoolConfigMap['fdzyzz.com']      = ["https://fdzz.dandian.net:8443/api/", '福鼎职中', "auth/menus.php", "https://fdzz.dandian.net:8443/api/"]
-AppSchoolConfigMap['fjsmnx.com']      = ["https://dsj.fjsmlyxx.com:1443/api/", '三明林业', "auth/menus.php", "https://dsj.fjsmlyxx.com:1443/api/"]
+AppSchoolConfigMap['production']       = ["/api/", 'SchoolAI', "auth/menus.php", "/api/", 'wx8731239b834cd9ca'] //For Exe Package
+AppSchoolConfigMap['development']     = ["http://localhost:8888/api/", 'SchoolAI', "auth/menus.php", "http://localhost:8888/api/", 'wx8731239b834cd9ca'] //For Local Development
+AppSchoolConfigMap['dandian.net']     = ["https://demoapi.dandian.net/api/", 'SchoolAI', "auth/menus.php", "https://demoapi.dandian.net/api/", 'wx8731239b834cd9ca'] // For School and Demoapi.dandian.net
+AppSchoolConfigMap['fdzyzz.com']      = ["https://fdzz.dandian.net:8443/api/", '福鼎职中', "auth/menus.php", "https://fdzz.dandian.net:8443/api/", '']
+AppSchoolConfigMap['fjsmnx.com']      = ["https://dsj.fjsmlyxx.com:1443/api/", '三明林业', "auth/menus.php", "https://dsj.fjsmlyxx.com:1443/api/", '']
 
-const AppMarkId   = "production"; //这一行, 一定要写在第8行, 否则需要同时修改Github 的 workflows 文件
-const AppVersion  = '20250525'; //需要刷新客户端JS时需要更新此值
+const AppMarkId   = "development"; //这一行, 一定要写在第8行, 否则需要同时修改Github 的 workflows 文件
+const AppVersion  = '20250606'; //需要刷新客户端JS时需要更新此值
 const APP_URL = AppSchoolConfigMap[AppMarkId][0]
 const AppName = AppSchoolConfigMap[AppMarkId][1]
 const indexMenuspath = AppSchoolConfigMap[AppMarkId][2]
 const backEndApiAiBaseUrl = AppSchoolConfigMap[AppMarkId][3]
+const oauth2WechatAppId = AppSchoolConfigMap[AppMarkId][4]
 
 export const authConfig = {
     AppName: AppName,
@@ -27,7 +28,9 @@ export const authConfig = {
     backEndApiHost: APP_URL,
     backEndApiAiBaseUrl: backEndApiAiBaseUrl,
     indexImageUrl: '/images/school/' + AppMarkId + '/index.jpg',
-    logoUrl: '/images/school/' + AppMarkId + '/logo.png'
+    logoUrl: '/images/school/' + AppMarkId + '/logo.png',
+    oauth2WechatAppId: oauth2WechatAppId,
+    oauth2WechatRedirectUri: 'https://demoapi.dandian.net/api/oauth/wechat/' // 必须要以/结尾, 不然会出问题.
 }
 
 export const defaultConfig = {

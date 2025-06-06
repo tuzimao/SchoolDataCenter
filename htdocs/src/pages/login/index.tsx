@@ -1,7 +1,7 @@
 import bs58 from 'bs58'
 
 // ** React Imports
-import { useState, ReactNode, Fragment } from 'react'
+import { useState, ReactNode, Fragment, useEffect } from 'react'
 
 // ** MUI Components
 import Button from '@mui/material/Button'
@@ -20,6 +20,8 @@ import Typography, { TypographyProps } from '@mui/material/Typography'
 import MuiFormControlLabel, { FormControlLabelProps } from '@mui/material/FormControlLabel'
 
 import { DecryptDataAES256GCM } from 'src/configs/functions'
+
+import { useRouter } from 'next/router'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -118,10 +120,22 @@ const LoginPage = () => {
   // ** Hooks
   const auth = useAuth()
   const theme = useTheme()
+  const router = useRouter()
   const { settings } = useSettings()
   const hidden = useMediaQuery(theme.breakpoints.down('md'))
   const [loginButtonText, setLoginButtonText] = useState<string>("登录");
   const [loginButtonDisabled, setLoginButtonDisabled] = useState<boolean>(false);
+
+  useEffect(() => {
+    router && router.query && router.query.code && handleGetUseInfoFromWechatServer(router.query.code as string)
+  }, [router])
+
+  const handleGetUseInfoFromWechatServer = async (code: string) => {
+    console.log("code", code)
+    auth.login({Data: base58Encode(base58Encode(JSON.stringify({ username:'', password:'', rememberMe: true, challenge:'', hash:'', nonce:'', wechatcode: code})))}, () => {
+      console.log("Login Error:", "----")
+    })
+  }
 
   // ** Vars
   const { skin } = settings
@@ -201,7 +215,7 @@ const LoginPage = () => {
       console.log("Challenge string:", challenge)
       console.log("Challenge Result:", hash)
 
-      auth.login({Data: base58Encode(base58Encode(JSON.stringify({ username, password, rememberMe: true, challenge, hash, nonce})))}, () => {
+      auth.login({Data: base58Encode(base58Encode(JSON.stringify({ username, password, rememberMe: true, challenge, hash, nonce, wechatcode: router.query?.code})))}, () => {
         setError('username', {
           type: 'manual',
           message: '用户名或密码错误'
@@ -351,6 +365,32 @@ const LoginPage = () => {
                 {loginButtonText}
               </Button>
             </form>
+            
+            {router.query && !router.query.code && (
+              <Button
+                fullWidth
+                variant="outlined"
+                color="success"
+                startIcon={<Icon icon="ic:baseline-wechat" fontSize={20} />}
+                onClick={() =>
+                  router.push(
+                    `https://open.weixin.qq.com/connect/qrconnect?appid=${authConfig.oauth2WechatAppId}&redirect_uri=${authConfig.oauth2WechatRedirectUri}&response_type=code&scope=snsapi_login&state=SchoolAI#wechat_redirect`
+                  )
+                }
+                sx={{ fontSize: '1rem' }}
+                size="small"
+              >
+                微信快捷登录
+              </Button>
+            )}
+
+            {router.query && router.query.code && (
+              <Box>
+                <TypographyStyled variant='body1'>微信登录成功👋🏻,请输入您的用户名和密码用于关联您的微信账号.</TypographyStyled>
+                <TypographyStyled variant='body1'>关联成功以后, 下次即可直接使用微信登录.</TypographyStyled>
+              </Box>
+            )}
+
           </BoxWrapper>
         </Box>
       </RightWrapper>
