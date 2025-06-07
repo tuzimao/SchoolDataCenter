@@ -30,7 +30,7 @@ export const authConfig = {
     indexImageUrl: '/images/school/' + AppMarkId + '/index.jpg',
     logoUrl: '/images/school/' + AppMarkId + '/logo.png',
     oauth2WechatAppId: oauth2WechatAppId,
-    oauth2WechatRedirectUri: 'https://demoapi.dandian.net/api/oauth/wechat/' // 必须要以/结尾, 不然会出问题.
+    oauth2WechatRedirectUri: 'https://demoapi.dandian.net/login/' // 必须要以/结尾, 不然会出问题.
 }
 
 export const defaultConfig = {
