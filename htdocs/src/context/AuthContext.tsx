@@ -134,7 +134,9 @@ const AuthProvider = ({ children }: Props) => {
 
         //console.log("defaultConfig.storageTokenKeyName",defaultConfig.storageTokenKeyName)
         //console.log("dataJson.accessToken",dataJson.accessToken)
-        //console.log("dataJson.userData",dataJson)
+
+        console.log("dataJson.userData",dataJson)
+        
         //console.log("JSON.stringify(dataJson.userData)",JSON.stringify(dataJson.userData))
         if(dataJson.userData!=undefined && dataJson.accessToken!=undefined)  {
           window.localStorage.setItem(defaultConfig.storageTokenKeyName, dataJson.accessToken)
