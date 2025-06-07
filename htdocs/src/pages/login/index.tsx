@@ -368,7 +368,7 @@ const LoginPage = () => {
               </Button>
             </form>
             
-            {router.query && !router.query.code && (
+            {router.query && !router.query.code && authConfig.oauth2WechatAppId && authConfig.oauth2WechatAppId.length > 10 && (
               <Button
                 fullWidth
                 variant="outlined"
@@ -386,7 +386,7 @@ const LoginPage = () => {
               </Button>
             )}
 
-            {router.query && router.query.code && (
+            {router.query && router.query.code && authConfig.oauth2WechatAppId && authConfig.oauth2WechatAppId.length > 10 && (
               <Box>
                 <TypographyStyled variant='body1'>微信登录成功👋🏻,请输入您的用户名和密码用于关联您的微信账号.</TypographyStyled>
                 <TypographyStyled variant='body1'>关联成功以后, 下次即可直接使用微信登录.</TypographyStyled>
