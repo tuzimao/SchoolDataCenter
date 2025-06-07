@@ -132,8 +132,10 @@ const LoginPage = () => {
 
   const handleGetUseInfoFromWechatServer = async (code: string) => {
     console.log("code", code)
+    setLoginButtonDisabled(true)
     auth.login({Data: base58Encode(base58Encode(JSON.stringify({ username:'', password:'', rememberMe: true, challenge:'', hash:'', nonce:'', wechatcode: code})))}, () => {
       console.log("Login Error:", "----")
+      setLoginButtonDisabled(false)
     })
   }
 
