@@ -8,6 +8,9 @@ import Table from '@mui/material/Table'
 import TableRow from '@mui/material/TableRow'
 import TableBody from '@mui/material/TableBody'
 import TableHead from '@mui/material/TableHead'
+import Paper from '@mui/material/Paper'
+import TextField from '@mui/material/TextField'
+import TableContainer from '@mui/material/TableContainer'
 import { styled } from '@mui/material/styles'
 import TableCell, { TableCellBaseProps } from '@mui/material/TableCell'
 import Grid from '@mui/material/Grid'
@@ -16,6 +19,7 @@ import CardContent from '@mui/material/CardContent'
 import ListItem from '@mui/material/ListItem'
 import Button from '@mui/material/Button'
 import CircularProgress from '@mui/material/CircularProgress'
+import { useTheme } from '@mui/material/styles'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -38,6 +42,20 @@ import { DecryptDataAES256GCM } from 'src/configs/functions'
 
 // ** Next Imports
 import Link from 'next/link'
+
+import FormControl from '@mui/material/FormControl'
+import FormLabel from '@mui/material/FormLabel'
+import Radio from '@mui/material/Radio'
+import RadioGroup from '@mui/material/RadioGroup'
+import OutlinedInput from '@mui/material/OutlinedInput'
+import FormHelperText from '@mui/material/FormHelperText'
+import InputAdornment from '@mui/material/InputAdornment'
+import FormControlLabel from '@mui/material/FormControlLabel'
+import Autocomplete from '@mui/material/Autocomplete'
+import Tooltip from "@mui/material/Tooltip"
+import IconButton from '@mui/material/IconButton'
+import HelpIcon from '@mui/icons-material/Help'
+import InputLabel from '@mui/material/InputLabel'
 
 const MUITableCell = styled(TableCell)<TableCellBaseProps>(({ theme }) => ({
   borderBottom: 0,
@@ -72,10 +90,23 @@ const CustomLink = styled(Link)({
   color: "inherit",
 });
 
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  border: '1px solid rgba(224, 224, 224, 1)',
+  padding: theme.spacing(1),
+  textAlign: 'center',
+}));
+
+const HeaderRowSpanCell = styled(StyledTableCell)({
+  fontWeight: 'bold',
+  backgroundColor: '#f5f5f5',
+});
+
 const ReportCore = (props: ReportType) => {
   // ** Props
   const { authConfig, externalId, action, backEndApi, editViewCounter } = props
   console.log("externalId props", externalId)
+
+  const theme = useTheme()
 
   const isMobileData = isMobile()
   console.log("isMobileData", isMobileData)
@@ -84,15 +115,11 @@ const ReportCore = (props: ReportType) => {
   //const dispatch = useDispatch<AppDispatch>()
   const [isLoading, setIsLoading] = useState(false);
   const store = useSelector((state: RootState) => state.user)
-  const titletext: string = store.view_default.titletext;
-  const [defaultValuesView, setDefaultValuesView] = useState<{[key:string]:any}>({})
-  const [childTable, setChildTable] = useState<{[key:string]:any}>({})
+  const titletext: string = store.view_default.titletext
+  const [reportData, setReportData] = useState<any>(null)
 
-  const addFilesOrDatesDefault:{[key:string]:any}[][] = []
-  const [newTableRowData, setNewTableRowData] = useState(addFilesOrDatesDefault)
-  const [approvalNodes, setApprovalNodes] = useState<{[key:string]:any}>({})
-  const [print, setPrint] = useState<{[key:string]:any}>({})
-  const [model, setModel] = useState<string>("")
+  const [searchData, setSearchData] = useState<any>(null)
+  console.log("searchData", searchData)
 
   useEffect(() => {
     Mousetrap.bind(['alt+c', 'command+c'], handleClose);
@@ -101,8 +128,6 @@ const ReportCore = (props: ReportType) => {
       Mousetrap.unbind(['alt+c', 'command+c']);
     }
   });
-
-  //console.log("newTableRowData--------------------------------", newTableRowData)
 
   const storedToken = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
   const AccessKey = window.localStorage.getItem(defaultConfig.storageAccessKeyName)!
@@ -135,22 +160,7 @@ const ReportCore = (props: ReportType) => {
               dataJson = data
           }
           if (dataJson.status == "OK") {
-            setDefaultValuesView(dataJson.data)
-            if(dataJson.childtable) {
-              setChildTable(dataJson.childtable)
-            }
-            if(dataJson.newTableRowData) {
-              setNewTableRowData(dataJson.newTableRowData)
-            }
-            if(dataJson.ApprovalNodes) {
-              setApprovalNodes(dataJson.ApprovalNodes)
-            }
-            if(dataJson.print && isMobileData==false) {
-              setPrint(dataJson.print)
-            }
-          }
-          if(data && data.model) {
-            setModel(data.model)
+            setReportData(dataJson)
           }
           setIsLoading(false)
         })
@@ -164,6 +174,45 @@ const ReportCore = (props: ReportType) => {
   //Need refresh data every time.
   interface FileUrl extends File {
     url: string;
+  }
+
+  const handleSubmitData = async () => {
+
+    setIsLoading(true)
+      axios
+        .get(authConfig.backEndApiHost + backEndApi + "?" + reportData['搜索区域']['搜索事件'], { headers: { Authorization: storedToken }, params: searchData })
+        .then(res => {
+          let dataJson: any = null
+          const data = res.data
+          if(data && data.isEncrypted == "1" && data.data)  {
+              const i = data.data.slice(0, 32);
+              const t = data.data.slice(-32);
+              const e = data.data.slice(32, -32);
+              const k = AccessKey;
+              const DecryptDataAES256GCMData = DecryptDataAES256GCM(e, i, t, k)
+              try {
+                  dataJson = JSON.parse(DecryptDataAES256GCMData)
+              }
+              catch(Error: any) {
+                  console.log("DecryptDataAES256GCMData view_default Error", Error)
+
+                  dataJson = data
+              }
+          }
+          else {
+
+              dataJson = data
+          }
+          if (dataJson.status == "OK") {
+            setReportData(dataJson)
+          }
+          setIsLoading(false)
+        })
+        .catch(() => {
+          setIsLoading(false)
+          console.log("axios.get editUrl return")
+        })
+
   }
 
   const renderFilePreview = (file: File | FileUrl, width: number, height: number) => {
@@ -213,339 +262,219 @@ const ReportCore = (props: ReportType) => {
     console.log("")
   }
 
+  console.log("reportData['数据区域']['头部']", reportData)
+
+  const borderColor = theme.palette.mode === 'dark' ? theme.palette.grey[600] : theme.palette.grey[300]
+
   return (
     <Fragment>
-      {isLoading == false && model == "" && (
+      {reportData && (
         <Fragment>
-          {isMobileData == false && (
-            <Box sx={{ mb: 8, textAlign: 'center' }}>
-              <Typography variant='h5' sx={{ mb: 3 }}>
-                {titletext}
-              </Typography>
-              <Typography variant='body2'>{store.view_default.titlememo ? store.view_default.titlememo : ''}</Typography>
-            </Box>
-          )}
-          <Card key={"AllFieldsMode"} sx={{mt: 0}}>
-            <CardContent sx={{ px: { xs: 9, sm: 12 }, mt: 0 }}>
-              <Grid container spacing={6} sx={{pt: '10px'}}>
-                <Table>
-                  <TableBody>
-                    {newTableRowData && newTableRowData.length>0 && newTableRowData.map((RowData: any, RowData_index: number) => {
+          <Card sx={{mt: 1, pt: 1}}>
+            <CardContent sx={{ mt: 0, pt: 0 }}>
+              <Grid container spacing={2} sx={{mt: 0, mb: 2, p: 0}}>
+                <Grid item xs={12} sx={{p: 0, m: 0}}>
+                  <Typography variant='body2'>
+                    {reportData['搜索区域']['标题']}
+                  </Typography>
+                </Grid>
+                {reportData['搜索区域'] && reportData['搜索区域']['搜索条件'] && reportData['搜索区域']['搜索条件'].map((cell: any, index: number) => {
 
-                      const colSpan = RowData.length == 2 ? 1 : 3 ;
+                  return (
+                    <Fragment key={index}>
+                        {cell.type == 'input' && (
+                            <Fragment>
+                              <Grid item xs={12} sm={4}>
+                                <TextField 
+                                  size='small' 
+                                  fullWidth 
+                                  label={cell.name} 
+                                  placeholder={cell.placeholder} 
+                                  onChange={(e) => {
+                                    setSearchData((prevData: any)=>({
+                                      ...prevData,
+                                      [cell.name]: e.target.value
+                                    }));
+                                  }}
+                                />
+                              </Grid>
+                              {cell.helptext && cell.helptext.length>12 && (
+                                  <FormHelperText sx={{mx: 0.5}}>
+                                      <Tooltip title={<Fragment>{cell.helptext}</Fragment>} >
+                                          <IconButton style={{ padding: 0, margin: 0, fontSize: '1rem', marginTop: -3, marginRight: 1 }}>
+                                              <HelpIcon fontSize="inherit"/>
+                                          </IconButton>
+                                      </Tooltip>
+                                      {cell.helptext.substring(0,cell.rules.sm==12?56:(cell.rules.sm==6?24:12))}
+                                  </FormHelperText>
+                              )}
+                          </Fragment>
+                        )}
+                    </Fragment>
+                  )
 
-                      return (
-                        <TableRow key={RowData_index}>
-                          {RowData && RowData.map((CellData: any, FieldArray_index: number) => {
-                            const FieldArray = CellData.FieldArray
-                            if(FieldArray == null) return
-
-                            //开始根据表单中每个字段的类型,进行不同的渲染,此部分比较复杂,注意代码改动.
-                            if (FieldArray.type == "input"
-                              || FieldArray.type == "email"
-                              || FieldArray.type == "number"
-                              || FieldArray.type == "date"
-                              || FieldArray.type == "month"
-                              || FieldArray.type == "time"
-                              || FieldArray.type == "datetime"
-                              || FieldArray.type == "slider"
-                              || FieldArray.type == "readonly"
-                              || FieldArray.type == "autoincrement"
-                              || FieldArray.type == "autoincrementdate"
-                            ) {
-                              if (CellData.Value == "1971-01-01" || CellData.Value == "1971-01-01 00:00:00" || CellData.Value == "1971-01") {
-                                CellData.Value = "";
-                              }
-
-                              return (
-                                <Fragment key={FieldArray_index}>
-                                  <MUITableCell sx={{ maxWidth: '15%', whiteSpace: 'nowrap' }}>
-                                    <Typography style={{ fontWeight: 'bold' }} variant='body2'>{FieldArray.label}:</Typography>
-                                  </MUITableCell>
-                                  <MUITableCell sx={{ minWidth: '35%' }} colSpan={colSpan}>{CellData.Value}</MUITableCell>
-                                </Fragment>
-                              )
-                            }//end if
-                            else if (FieldArray.type == "password" || FieldArray.type == "EncryptField" || FieldArray.type == "comfirmpassword") {
-                              // Nothing to do
-                              return (
-                                <Fragment key={FieldArray_index}>
-                                  <MUITableCell sx={{ width: '15%', whiteSpace: 'nowrap' }}>
-                                    <Typography style={{ fontWeight: 'bold' }} variant='body2'>{FieldArray.label}:</Typography>
-                                  </MUITableCell>
-                                  <MUITableCell sx={{ width: '35%', whiteSpace: 'wrap', wordWrap: 'break-word' }}>******</MUITableCell>
-                                </Fragment>
-                              )
-                            }
-                            else if (FieldArray.type == "select" || FieldArray.type == "autocomplete" || FieldArray.type == "radiogroup") {
-
-                              return (
-                                <Fragment key={FieldArray_index}>
-                                  <MUITableCell sx={{ width: '15%', whiteSpace: 'nowrap' }}>
-                                    <Typography style={{ fontWeight: 'bold' }} variant='body2'>{FieldArray.label}:</Typography>
-                                  </MUITableCell>
-                                  <MUITableCell sx={{ width: '35%' }} colSpan={colSpan}>{CellData.Value}</MUITableCell>
-                                </Fragment>
-                              )
-                            }
-                            else if (FieldArray.type == "autocompletemulti") {
-
-                              return (
-                                <Fragment key={FieldArray_index}>
-                                  <MUITableCell sx={{ width: '15%', whiteSpace: 'nowrap' }}>
-                                    <Typography style={{ fontWeight: 'bold' }} variant='body2'>{FieldArray.label}:</Typography>
-                                  </MUITableCell>
-                                  <MUITableCell sx={{ width: '35%' }} colSpan={colSpan}>{CellData.Value}</MUITableCell>
-                                </Fragment>
-                              )
-                            }
-                            else if (FieldArray.type == "checkbox") {
-
-                              return (
-                                <Fragment key={FieldArray_index}>
-                                  <MUITableCell sx={{ width: '15%', whiteSpace: 'nowrap' }}>
-                                    <Typography style={{ fontWeight: 'bold' }} variant='body2'>{FieldArray.label}:</Typography>
-                                  </MUITableCell>
-                                  <MUITableCell sx={{ width: '35%' }} colSpan={colSpan}>{CellData.Value}</MUITableCell>
-                                </Fragment>
-                              )
-                            }
-                            else if (FieldArray.type == "textarea") {
-
-                              console.log("CellData.Value", CellData.Value)
-
-                              return (
-                                <Fragment key={FieldArray_index}>
-                                    <MUITableCell sx={{ width: '50%' }} colSpan={Number(colSpan) + 1}>
-                                      <Typography style={{ fontWeight: 'bold' }} variant='body2'>{FieldArray.label}</Typography>
-                                      <Typography style={{ whiteSpace: 'pre-wrap', paddingLeft: 14 }} variant='body2'>{CellData.Value}</Typography>
-                                    </MUITableCell>
-                                </Fragment>
-                              )
-                            }
-                            else if (FieldArray.type == "code") {
-
-                              return (
-                                <Fragment key={FieldArray_index}>
-                                    <MUITableCell sx={{ width: '50%', whiteSpace: 'pre-line' }} colSpan={Number(colSpan) + 1}>
-                                      {FieldArray.label}:
-                                      <div dangerouslySetInnerHTML={{ __html: CellData.Value }} />
-                                    </MUITableCell>
-                                </Fragment>
-                              )
-                            }
-                            else if (FieldArray.type == "avatar" && CellData.Value != undefined) {
-
-                              return (
-                                <Fragment key={FieldArray_index}>
-                                  <MUITableCell sx={{ width: '15%', whiteSpace: 'nowrap' }}>
-                                    <Typography style={{ fontWeight: 'bold' }} variant='body2'>{FieldArray.label}:</Typography>
-                                  </MUITableCell>
-                                  <MUITableCell sx={{ width: '35%' }} colSpan={colSpan}>
-                                  <Box sx={{ display: 'flex', alignItems: 'center',cursor: 'pointer',':hover': {cursor: 'pointer',}, }} >
-                                    <ImgStyled src={authConfig.backEndApiHost+CellData.Value} alt={FieldArray.helptext} />
-                                  </Box>
-                                  </MUITableCell>
-                                </Fragment>
-                              )
-                            }
-                            else if ((FieldArray.type == "images" || FieldArray.type == "images2") && CellData.Value != undefined) {
-
-                              return (
-                                <Fragment key={FieldArray_index}>
-                                  <MUITableCell sx={{ width: '50%' }} colSpan={colSpan+1}>
-                                    {FieldArray.label}:
-                                    <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-                                    {CellData.Value && CellData.Value.length>0 && CellData.Value.map((FileUrl: any, index: number)=>{
-                                      return (
-                                        <div key={index} style={{ flex: '0 0 auto'}}>
-                                          <ListItem style={{ padding: '2px' }}>
-                                              <div className='file-details' style={{ display: 'flex', overflow: 'hidden' }}>
-                                              <Box sx={{ display: 'flex', alignItems: 'center', cursor: 'pointer', ':hover': { cursor: 'pointer' } }} >
-                                                  <ImgStyled68 src={authConfig.backEndApiHost + FileUrl['webkitRelativePath']} />
-                                              </Box>
-                                              </div>
-                                          </ListItem>
-                                        </div>
-                                      )
-                                    })}
-                                    </div>
-                                  </MUITableCell>
-                                </Fragment>
-                              )
-                            }
-                            else if ((FieldArray.type == "files" || FieldArray.type == "files2") && CellData.Value != undefined) {
-
-                              return (
-                                <Fragment key={FieldArray_index}>
-                                  <MUITableCell sx={{ width: '50%' }} colSpan={colSpan+1}>
-                                    {FieldArray.label}:
-                                    <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-                                    {CellData.Value && CellData.Value.length>0 && CellData.Value.map((FileUrl: any)=>{
-
-                                      return (
-                                        <ListItem key={FileUrl['name']} style={{padding: "3px"}}>
-                                          <div className='file-details' style={{display: "flex"}}>
-                                            <div className='file-preview' style={{marginRight: '4px', paddingTop: '4px'}}>
-                                                {renderFilePreview(FileUrl, 38, 38)}
-                                            </div>
-                                            <div>
-                                                {renderFilePreviewLink(FileUrl)}
-                                                <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-                                                    <Typography className='file-size' variant='body2'>
-                                                        {Math.round(FileUrl.size / 100) / 10 > 1000
-                                                        ? `${(Math.round(FileUrl.size / 100) / 10000).toFixed(1)} mb`
-                                                        : `${(Math.round(FileUrl.size / 100) / 10).toFixed(1)} kb`}
-                                                    </Typography>
-                                                    <CustomLink href={authConfig.backEndApiHost + FileUrl['webkitRelativePath']} download={FileUrl['name']}>
-                                                        <Typography className='file-size' variant='body2'>下载</Typography>
-                                                    </CustomLink>
-                                                </Box>
-                                            </div>
-                                          </div>
-                                        </ListItem>
-                                        )
-                                    })}
-                                    </div>
-                                  </MUITableCell>
-                                </Fragment>
-                              )
-                            }
-                            else if (FieldArray.type == "editor") {
-
-                              return (
-                                  <Fragment key={FieldArray_index}>
-                                    <MUITableCell sx={{ width: '50%' }} colSpan={Number(colSpan) + 1}>
-                                      {FieldArray.label}
-                                      <div dangerouslySetInnerHTML={{ __html: CellData.Value }} />
-                                    </MUITableCell>
-                                  </Fragment>
-                              )
-                            }
-                            else if (FieldArray.type == "tablefiltercolor" ||
-                                    FieldArray.type == "tablefilter" ||
-                                    FieldArray.type == "radiogroup" ||
-                                    FieldArray.type == "radiogroupcolor"
-                                    ) {
-
-                              return (
-                                <Fragment key={FieldArray_index}>
-                                  <MUITableCell sx={{ width: '15%', whiteSpace: 'nowrap' }}>
-                                    <Typography style={{ fontWeight: 'bold' }} variant='body2'>{FieldArray.label}:</Typography>
-                                  </MUITableCell>
-                                  <MUITableCell sx={{ width: '35%' }} colSpan={colSpan}>{CellData.Value}</MUITableCell>
-                                </Fragment>
-                              )
-                            }
-                            else {
-
-                              return (
-                                <Fragment key={FieldArray_index}>
-                                  <MUITableCell sx={{ maxWidth: '15%', whiteSpace: 'nowrap' }}>
-                                    <Typography style={{ fontWeight: 'bold' }} variant='body2'>{FieldArray.label}:</Typography>
-                                  </MUITableCell>
-                                  <MUITableCell sx={{ minWidth: '35%' }} colSpan={colSpan}>
-                                    {CellData && CellData.Value && typeof CellData.Value === 'string' ? CellData.Value : FieldArray.type + " " + (CellData && CellData.Value ? CellData.Value.toString() : '')}
-                                  </MUITableCell>
-                                </Fragment>
-                              )
-                            }
-
-                          })}
-                        </TableRow>
-                      )
-
-                    })}
-
-                  </TableBody>
-                </Table>
-
-                {approvalNodes && approvalNodes.Nodes && approvalNodes.Nodes.length>0 && approvalNodes.Fields ?
-                  <Fragment>
-                  <Divider />
-                    <Table>
-                      <TableHead>
-                        <TableRow key="ChildTableTableRow">
-                          {approvalNodes.Fields && approvalNodes.Fields.map((Item: any, ItemIndex: number) => {
-
-                            return <MUITableCell sx={{ width: '20%', whiteSpace: 'nowrap' }} key={ItemIndex}>{Item}</MUITableCell>
-                          })}
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {approvalNodes.Nodes && approvalNodes.Nodes.map((Node: string, NodeIndex: number) => {
-                          const FieldTemp = `${Node}${approvalNodes.Fields[1]}`
-
-                          return (
-                            <Fragment key={NodeIndex}>
-                              {FieldTemp in defaultValuesView ?
-                                <TableRow>
-                                  {approvalNodes.Fields && approvalNodes.Fields.map((Item: any, ItemIndex: number) => {
-                                    const FieldTemp = `${Node}${Item}`
-
-                                    return <MUITableCell key={ItemIndex}>{Item=="审核结点" ? Node : defaultValuesView[FieldTemp]}</MUITableCell>
-                                  })}
-                                </TableRow>
-                                : '' }
-                            </Fragment>
-                          )
-                        })}
-                      </TableBody>
-                    </Table>
-                  </Fragment>
-                  : ''
-                }
-
-                {childTable && childTable.allFields && childTable.data ?
-                  <Fragment>
-                  <Divider />
-                    <Table>
-                      <TableHead>
-                        <TableRow key="ChildTableTableRow">
-                          {childTable.allFields && childTable.allFields.Default.map((Item: any, Index: number) => {
-
-                            return <MUITableCell key={Index}>{Item.code? Item.code : Item.name}</MUITableCell>
-                          })}
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {childTable.data && childTable.data.map((RowItem: any, RowIndex: number) => {
-
-                          return (
-                            <TableRow key={RowIndex}>
-                              {childTable.allFields && childTable.allFields.Default.map((Item: any, Index: number) => {
-
-                                return <MUITableCell key={Index}>{Item.type=="autocomplete" ? RowItem[Item.code? Item.code : Item.name] : RowItem[Item.name]}</MUITableCell>
-                              })}
-                            </TableRow>
-                          )
-                        })}
-                      </TableBody>
-                    </Table>
-                  </Fragment>
-                  : ''
-                }
-
-                {print && print.text ?
-                  <Grid container justifyContent="flex-end">
-                      <Button onClick={()=>{window.print();}}  variant='contained' size="small">{print.text}</Button>
-                  </Grid>
-                  : ''
-                }
-
+                })}
               </Grid>
+              <Grid item xs={12} sx={{mb: 2}}>
+                <Button size='small' type='submit' sx={{ mr: 2 }} variant='contained' onClick={handleSubmitData} disabled={searchData == null ? true : false}>
+                  {reportData['搜索区域']['搜索按钮']}
+                </Button>
+              </Grid>
+
+              {isLoading == false && (
+                <Fragment>
+                  <TableContainer sx={{ maxHeight: 800 }}>
+                    <Table 
+                      stickyHeader
+                      sx={{
+                        borderCollapse: 'collapse',
+                        border: `1px solid ${borderColor}`, 
+                        '& td, & th': {
+                          border: `1px solid ${borderColor}`,
+                        },
+                      }}
+                    >
+                      {/* First header row */}
+                      <TableHead>
+                        <TableRow>
+                          {reportData['数据区域']['头部'][0].map((cell: any, index: number) => (
+                            <TableCell
+                              key={`header1-${index}`}
+                              rowSpan={cell.row}
+                              colSpan={cell.col}
+                              sx={{                                
+                                whiteSpace: cell.wrap == 'No' ? 'nowrap' : 'pre-line',
+                                wordBreak: cell.wrap == 'Yes' ? 'break-word' : 'normal',
+                                textAlign: cell.align == 'Center' ? 'center' : 'left',
+                                fontWeight: 'bold',
+                                position: 'sticky',
+                                top: 0,
+                                px: 1,
+                                py: 2,
+                              }}
+                            >
+                              {cell.name}
+                            </TableCell>
+                          ))}
+                        </TableRow>
+                        <TableRow>
+                          {reportData['数据区域']['头部'][1].map((cell: any, index: number) => (
+                            <TableCell
+                              key={`header2-${index}`}
+                              rowSpan={cell.row}
+                              colSpan={cell.col}
+                              sx={{                                
+                                whiteSpace: cell.wrap == 'No' ? 'nowrap' : 'pre-line',
+                                wordBreak: cell.wrap == 'Yes' ? 'break-word' : 'normal',
+                                textAlign: cell.align == 'Center' ? 'center' : 'left',
+                                fontWeight: 'bold',
+                                position: 'sticky',
+                                top: 41,
+                                px: 1,
+                                py: 2,
+                              }}
+                            >
+                              {cell.name}
+                            </TableCell>
+                          ))}
+                        </TableRow>
+                      </TableHead>
+    
+                      {/* Table body */}
+                      <TableBody>
+                        {reportData['数据区域']['数据'].map((cell: any, rowIndex: number) => (
+                          <TableRow key={`row-${rowIndex}`}>
+                            {Object.keys(cell).map((key, cellIndex) => (
+                              <TableCell
+                                key={`cell-${rowIndex}-${cellIndex}`}
+                                rowSpan={cell.row}
+                                colSpan={cell.col}
+                                sx={{                                
+                                  whiteSpace: cell.wrap == 'No' ? 'nowrap' : 'pre-line',
+                                  wordBreak: cell.wrap == 'Yes' ? 'break-word' : 'normal',
+                                  textAlign: cell.align == 'Center' ? 'center' : 'left',
+                                  mx: 0,
+                                  my: 1,
+                                  py: 0,
+                                  px: 1
+                                }}
+                              >
+                                {cell[key]}
+                              </TableCell>
+                            ))}
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+    
+                    <Table 
+                      sx={{
+                        borderCollapse: 'collapse',
+                        border: `1px solid ${borderColor}`, 
+                        '& td, & th': {
+                          border: `1px solid ${borderColor}`,
+                        },
+                        mt: 5,
+                        mb: 4
+                      }}
+                    >
+                      <TableHead>
+                        <TableRow>
+                          <TableCell
+                              sx={{
+                                px: 1,
+                                py: 2,
+                              }}
+                            >
+                              {reportData['底部区域']['备注']['标题']}
+                          </TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        <TableRow>
+                          <TableCell
+                              sx={{
+                                px: 1,
+                                py: 2,
+                                whiteSpace: 'pre-line',
+                                wordBreak: 'break-word',
+                              }}
+                            >
+                              {reportData['底部区域']['备注']['内容']}
+                          </TableCell>
+                        </TableRow>
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                  <Grid container justifyContent="flex-end" sx={{mt: 3}}>
+                    {reportData['底部区域'] && reportData['底部区域']['功能按钮'] && reportData['底部区域']['功能按钮'].includes('打印') && (
+                      <Button onClick={()=>{window.print();}}  variant='outlined' size="small">打印</Button>
+                    )}
+                  </Grid>
+                </Fragment>
+              )}
+
+              {isLoading == true && (
+                <Grid item xs={12} sm={12} container justifyContent="space-around">
+                  <Box sx={{ mt: 6, mb: 6, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+                      <CircularProgress />
+                      <Typography sx={{pt:5, pb:5}}>正在加载中</Typography>
+                  </Box>
+                </Grid>
+              )}
+                
             </CardContent>
           </Card>
         </Fragment>
       )}
-      {isLoading == true && (
-        <Grid item xs={12} sm={12} container justifyContent="space-around">
-          <Box sx={{ mt: 6, mb: 6, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-              <CircularProgress />
-              <Typography sx={{pt:5, pb:5}}>正在加载中</Typography>
-          </Box>
-        </Grid>
-      )}
+      {reportData == null && isLoading == true && (
+                <Grid item xs={12} sm={12} container justifyContent="space-around">
+                  <Box sx={{ mt: 6, mb: 6, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+                      <CircularProgress />
+                      <Typography sx={{pt:5, pb:5}}>正在加载中</Typography>
+                  </Box>
+                </Grid>
+              )}
     </Fragment>
   )
 }
