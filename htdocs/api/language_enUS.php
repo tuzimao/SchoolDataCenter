@@ -349,6 +349,7 @@ $MAP['Approval'] 									= 'Approve';
 $MAP['Refuse'] 										= 'Reject';
 $MAP['Cancel'] 										= 'Cancel';
 $MAP['Interface'] 									= 'Interface';
+$MAP['ReportSetting'] 							    = 'Report Setting';
 $MAP['NodeSetting'] 						        = 'Node Setting';
 $MAP['Batch Approval'] 								= 'Batch Approval';
 $MAP['Design Form'] 							    = 'Design Form';

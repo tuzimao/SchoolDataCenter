@@ -4,3 +4,4 @@ $MAP['NodeFlow_Authorized_Requirement'] 	= 'NodeFlow_Authorized_Requirement';
 $MAP['NodeFlow_Authorized_Requirement'] 	= 'NodeFlow_Authorized_Requirement';
 $MAP['NodeFlow_Authorized_Requirement'] 	= 'NodeFlow_Authorized_Requirement';
 $MAP['NodeFlow_Authorized_Requirement'] 	= 'NodeFlow_Authorized_Requirement';
+$MAP['Report'] 	= 'Report';

@@ -165,6 +165,7 @@ include_once('./lib/form_formflow_edit_default_3.php');
 include_once('./lib/form_formflow_edit_default_4.php');
 include_once('./lib/form_formflow_edit_default_5.php');
 include_once('./lib/form_formflow_edit_default_7.php');
+include_once('./lib/form_formflow_edit_default_8.php');
 
 if(($_GET['action']=="edit_default_6_data") && $id!="")     {
     $sql        = "select * from form_formflow where id = '$id'";
@@ -197,7 +198,7 @@ if(($_GET['action']=="edit_default_6_data") && $id!="")     {
     }
 }
 
-if(($_GET['action']=="edit_default_1_data" || $_GET['action']=="edit_default_2_data" || $_GET['action']=="edit_default_3_data" || $_GET['action']=="edit_default_4_data" || $_GET['action']=="edit_default_5_data" || $_GET['action']=="edit_default_7_data") && $id!="")     {
+if(($_GET['action']=="edit_default_1_data" || $_GET['action']=="edit_default_2_data" || $_GET['action']=="edit_default_3_data" || $_GET['action']=="edit_default_4_data" || $_GET['action']=="edit_default_5_data" || $_GET['action']=="edit_default_7_data" || $_GET['action']=="edit_default_8_data") && $id!="")     {
 
     //处理一些特殊情况, 在流程中批量设置多个字段的值为某一个值的时候, 会使用到
     if($_GET['action']=="edit_default_1_data" && $_POST['FormSubmitButtonText']=='全部设置为编辑只读') {
@@ -458,11 +459,12 @@ $init_default_columns[] = ['flex' => 0.1, 'minWidth' => 120, 'maxWidth' => 200, 
 $columnName = "Step";           $init_default_columns[] = ['flex' => 0.1, 'minWidth' => 100, 'maxWidth' => 200, 'field' => $columnName, 'headerName' => __($columnName), 'editable'=>false, 'show'=>true, 'type'=>'string', 'renderCell' => NULL];
 $columnName = "FlowName";       $init_default_columns[] = ['flex' => 0.1, 'minWidth' => 150, 'maxWidth' => 300, 'field' => $columnName, 'headerName' => __($columnName), 'editable'=>true, 'show'=>true, 'type'=>'string', 'renderCell' => NULL];
 $columnName = "Field Type";     $init_default_columns[] = ['flex' => 0.1, 'minWidth' => 130, 'maxWidth' => 300, 'field' => $columnName, 'headerName' => __($columnName), 'editable'=>false, 'show'=>true, 'type'=>'api','apimdi'=>'mdi:chart-donut','apicolor'=>'success.main', 'apiaction' => "edit_default_1", 'renderCell' => NULL ];
-$columnName = "NodeType";    $init_default_columns[] = ['flex' => 0.1, 'minWidth' => 130, 'maxWidth' => 250, 'field' => $columnName, 'headerName' => __($columnName), 'editable'=>false, 'show'=>true, 'type'=>'apivalue','apimdi'=>'hugeicons:flow','apicolor'=>'error.main', 'apiaction' => "edit_default_7", 'renderCell' => NULL ];
+$columnName = "NodeType";       $init_default_columns[] = ['flex' => 0.1, 'minWidth' => 130, 'maxWidth' => 250, 'field' => $columnName, 'headerName' => __($columnName), 'editable'=>false, 'show'=>true, 'type'=>'apivalue','apimdi'=>'hugeicons:flow','apicolor'=>'error.main', 'apiaction' => "edit_default_7", 'renderCell' => NULL ];
 $columnName = "Interface";      $init_default_columns[] = ['flex' => 0.1, 'minWidth' => 130, 'maxWidth' => 250, 'field' => $columnName, 'headerName' => __($columnName), 'editable'=>false, 'show'=>true, 'type'=>'api','apimdi'=>'mdi:cog-outline','apicolor'=>'warning.main', 'apiaction' => "edit_default_2", 'renderCell' => NULL ];
-$columnName = "Batch Approval";  $init_default_columns[] = ['flex' => 0.1, 'minWidth' => 130, 'maxWidth' => 250, 'field' => $columnName, 'headerName' => __($columnName), 'editable'=>false, 'show'=>true, 'type'=>'api','apimdi'=>'mdi:border-bottom','apicolor'=>'info.main', 'apiaction' => "edit_default_3", 'renderCell' => NULL ];
-$columnName = "MobileEnd";  $init_default_columns[] = ['flex' => 0.1, 'minWidth' => 100, 'maxWidth' => 250, 'field' => $columnName, 'headerName' => __($columnName), 'editable'=>false, 'show'=>true, 'type'=>'api','apimdi'=>'mdi:cellphone','apicolor'=>'info.main', 'apiaction' => "edit_default_5", 'renderCell' => NULL ];
-$columnName = "Msg Reminder";  $init_default_columns[] = ['flex' => 0.1, 'minWidth' => 130, 'maxWidth' => 250, 'field' => $columnName, 'headerName' => __($columnName), 'editable'=>false, 'show'=>true, 'type'=>'api','apimdi'=>'mdi:message-bulleted','apicolor'=>'info.main', 'apiaction' => "edit_default_4", 'renderCell' => NULL ];
+$columnName = "ReportSetting";  $init_default_columns[] = ['flex' => 0.1, 'minWidth' => 130, 'maxWidth' => 250, 'field' => $columnName, 'headerName' => __($columnName), 'editable'=>false, 'show'=>true, 'type'=>'api','apimdi'=>'mdi:report-scatter-plot-hexbin','apicolor'=>'success.main', 'apiaction' => "edit_default_8", 'renderCell' => NULL ];
+$columnName = "Batch Approval"; $init_default_columns[] = ['flex' => 0.1, 'minWidth' => 130, 'maxWidth' => 250, 'field' => $columnName, 'headerName' => __($columnName), 'editable'=>false, 'show'=>true, 'type'=>'api','apimdi'=>'mdi:border-bottom','apicolor'=>'info.main', 'apiaction' => "edit_default_3", 'renderCell' => NULL ];
+$columnName = "MobileEnd";      $init_default_columns[] = ['flex' => 0.1, 'minWidth' => 100, 'maxWidth' => 250, 'field' => $columnName, 'headerName' => __($columnName), 'editable'=>false, 'show'=>true, 'type'=>'api','apimdi'=>'mdi:cellphone','apicolor'=>'info.main', 'apiaction' => "edit_default_5", 'renderCell' => NULL ];
+$columnName = "Msg Reminder";   $init_default_columns[] = ['flex' => 0.1, 'minWidth' => 130, 'maxWidth' => 250, 'field' => $columnName, 'headerName' => __($columnName), 'editable'=>false, 'show'=>true, 'type'=>'api','apimdi'=>'mdi:message-bulleted','apicolor'=>'info.main', 'apiaction' => "edit_default_4", 'renderCell' => NULL ];
 $columnName = "FaceTo";         $init_default_columns[] = ['flex' => 0.1, 'minWidth' => 100, 'maxWidth' => 300, 'field' => $columnName, 'headerName' => __($columnName), 'editable'=>true, 'show'=>true, 'type'=>'string', 'renderCell' => NULL];
 
 
@@ -661,13 +663,25 @@ $RS['edit_default_7']['allFields']      = $edit_default_7;
 $RS['edit_default_7']['allFieldsMode']  = $edit_default_7_mode;
 $RS['edit_default_7']['defaultValues']  = $defaultValues_7;
 $RS['edit_default_7']['dialogContentHeight']  = "850px";
-$RS['edit_default_7']['submitaction']  = "edit_default_7_data";
-$RS['edit_default_7']['componentsize'] = "small";
-$RS['edit_default_7']['submittext']    = __("Submit");
-$RS['edit_default_7']['canceltext']    = __("Cancel");
-$RS['edit_default_7']['titletext']  = __("Node Setting");
-$RS['edit_default_7']['titlememo']  = __("Set Node Information");
-$RS['edit_default_7']['tablewidth']  = 650;
+$RS['edit_default_7']['submitaction']   = "edit_default_7_data";
+$RS['edit_default_7']['componentsize']  = "small";
+$RS['edit_default_7']['submittext']     = __("Submit");
+$RS['edit_default_7']['canceltext']     = __("Cancel");
+$RS['edit_default_7']['titletext']      = __("Node Setting");
+$RS['edit_default_7']['titlememo']      = __("Set Node Information");
+$RS['edit_default_7']['tablewidth']     = 650;
+
+$RS['edit_default_8']['allFields']      = $edit_default_8;
+$RS['edit_default_8']['allFieldsMode']  = $edit_default_8_mode;
+$RS['edit_default_8']['defaultValues']  = $defaultValues_8;
+$RS['edit_default_8']['dialogContentHeight']  = "850px";
+$RS['edit_default_8']['submitaction']   = "edit_default_8_data";
+$RS['edit_default_8']['componentsize']  = "small";
+$RS['edit_default_8']['submittext']     = __("Submit");
+$RS['edit_default_8']['canceltext']     = __("Cancel");
+$RS['edit_default_8']['titletext']      = __("Node Setting");
+$RS['edit_default_8']['titlememo']      = __("Success");
+$RS['edit_default_8']['tablewidth']     = 650;
 
 $RS['view_default'] = $RS['add_default'];
 $RS['view_default']['titletext']  = __("View Form");

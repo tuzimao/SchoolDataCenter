@@ -345,6 +345,7 @@ $MAP['Approval'] 							= '通过';
 $MAP['Refuse'] 								= '退回';
 $MAP['Cancel'] 								= '取消';
 $MAP['Interface'] 							= '界面设置';
+$MAP['ReportSetting'] 						= '报表设置';
 $MAP['NodeSetting'] 						= '节点设置';
 $MAP['Batch Approval'] 						= '批量审核';
 $MAP['Design Form'] 					    = '设计表单';
