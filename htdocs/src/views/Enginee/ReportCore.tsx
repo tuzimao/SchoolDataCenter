@@ -8,21 +8,17 @@ import Table from '@mui/material/Table'
 import TableRow from '@mui/material/TableRow'
 import TableBody from '@mui/material/TableBody'
 import TableHead from '@mui/material/TableHead'
-import Paper from '@mui/material/Paper'
 import TextField from '@mui/material/TextField'
 import TableContainer from '@mui/material/TableContainer'
-import { styled } from '@mui/material/styles'
-import TableCell, { TableCellBaseProps } from '@mui/material/TableCell'
+import TableCell from '@mui/material/TableCell'
 import Grid from '@mui/material/Grid'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
-import ListItem from '@mui/material/ListItem'
 import Button from '@mui/material/Button'
 import CircularProgress from '@mui/material/CircularProgress'
 import { useTheme } from '@mui/material/styles'
 
 // ** Icon Imports
-import Icon from 'src/@core/components/icon'
 import {isMobile} from 'src/configs/functions'
 
 // ** Config
@@ -30,43 +26,17 @@ import { defaultConfig } from 'src/configs/auth'
 import axios from 'axios'
 import Mousetrap from 'mousetrap';
 
-// ** Store Imports
-import { useSelector } from 'react-redux'
-
 // ** Styles
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 
-import { RootState } from 'src/store/index'
-import { Divider } from '@mui/material'
 import { DecryptDataAES256GCM } from 'src/configs/functions'
 
-// ** Next Imports
-import Link from 'next/link'
-
 import FormControl from '@mui/material/FormControl'
-import FormLabel from '@mui/material/FormLabel'
-import Radio from '@mui/material/Radio'
-import RadioGroup from '@mui/material/RadioGroup'
-import OutlinedInput from '@mui/material/OutlinedInput'
-import FormHelperText from '@mui/material/FormHelperText'
-import InputAdornment from '@mui/material/InputAdornment'
-import FormControlLabel from '@mui/material/FormControlLabel'
 import Autocomplete from '@mui/material/Autocomplete'
-import Tooltip from "@mui/material/Tooltip"
-import IconButton from '@mui/material/IconButton'
-import HelpIcon from '@mui/icons-material/Help'
 import InputLabel from '@mui/material/InputLabel'
-import Select, { SelectChangeEvent } from '@mui/material/Select'
+import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
 
-
-const MUITableCell = styled(TableCell)<TableCellBaseProps>(({ theme }) => ({
-  borderBottom: 0,
-  paddingLeft: '0 !important',
-  paddingRight: '0 !important',
-  paddingTop: `${theme.spacing(1)} !important`,
-  paddingBottom: `${theme.spacing(1)} !important`
-}))
 
 interface ReportType {
   action: string
@@ -75,34 +45,6 @@ interface ReportType {
   authConfig: any
   externalId: number
 }
-
-const ImgStyled = styled('img')(({ theme }) => ({
-  width: 120,
-  borderRadius: 4,
-  marginRight: theme.spacing(5)
-}))
-
-const ImgStyled68 = styled('img')(({ theme }) => ({
-  width: 65,
-  borderRadius: 4,
-  marginRight: theme.spacing(1)
-}))
-
-const CustomLink = styled(Link)({
-  textDecoration: "none",
-  color: "inherit",
-});
-
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-  border: '1px solid rgba(224, 224, 224, 1)',
-  padding: theme.spacing(1),
-  textAlign: 'center',
-}));
-
-const HeaderRowSpanCell = styled(StyledTableCell)({
-  fontWeight: 'bold',
-  backgroundColor: '#f5f5f5',
-});
 
 const ReportCore = (props: ReportType) => {
   // ** Props
@@ -117,8 +59,6 @@ const ReportCore = (props: ReportType) => {
   // ** Hooks
   //const dispatch = useDispatch<AppDispatch>()
   const [isLoading, setIsLoading] = useState(false);
-  const store = useSelector((state: RootState) => state.user)
-  const titletext: string = store.view_default.titletext
   const [reportData, setReportData] = useState<any>(null)
 
   const [searchData, setSearchData] = useState<any>(null)
@@ -174,11 +114,6 @@ const ReportCore = (props: ReportType) => {
     }
   }, [editViewCounter, isMobileData])
 
-  //Need refresh data every time.
-  interface FileUrl extends File {
-    url: string;
-  }
-
   const handleSubmitData = async () => {
 
     setIsLoading(true)
@@ -218,49 +153,6 @@ const ReportCore = (props: ReportType) => {
 
   }
 
-  const renderFilePreview = (file: File | FileUrl, width: number, height: number) => {
-    if (file && 'webkitRelativePath' in file && file['webkitRelativePath']!="" && file['type']=="image") {
-        return <Box sx={{m: 0, p: 0, cursor: 'pointer'}} ><img width={width} height={height} alt={file.name} style={{padding: "1px"}} src={authConfig.backEndApiHost+file['webkitRelativePath']} /></Box>
-    }
-    else if (file && 'webkitRelativePath' in file && file['webkitRelativePath']!="" && file['type']=="Word") {
-        return <Icon icon='icon-park-outline:word' />
-    }
-    else if (file && 'webkitRelativePath' in file && file['webkitRelativePath']!="" && file['type']=="Excel") {
-        return <Icon icon='icon-park-outline:excel' />
-    }
-    else if (file && 'webkitRelativePath' in file && file['webkitRelativePath']!="" && file['type']=="PowerPoint") {
-        return <Icon icon='teenyicons:ppt-outline' />
-    }
-    else if (file && 'webkitRelativePath' in file && file['webkitRelativePath']!="" && file['type']=="pdf") {
-        return <Icon icon='icomoon-free:file-pdf' />
-    }
-    else if (file && 'webkitRelativePath' in file && file['webkitRelativePath']!="" && file['type']!="image") {
-        return <Icon icon='mdi:file-document-outline' />
-    }
-    else if (file.type.startsWith('image')) {
-        return <img width={width} height={height} alt={file.name} style={{padding: "1px"}} src={URL.createObjectURL(file as any)} />
-    }
-    else {
-        return <Icon icon='mdi:file-document-outline' />
-    }
-  }
-  const renderFilePreviewLink = (fileInfor: File | FileUrl) => {
-    if(fileInfor['type']=="file" || fileInfor['type']=="Word" || fileInfor['type']=="Excel" || fileInfor['type']=="PowerPoint" || fileInfor['type']=="pdf" || fileInfor['type']=="image")  {
-
-        return (
-            <Typography className='file-name'>
-                <Box sx={{m: 0, p: 0, cursor: 'pointer'}} >{fileInfor['name']}</Box>
-            </Typography>
-        )
-    }
-    else {
-        
-        return (
-            <Typography className='file-name'>{fileInfor['name']}</Typography>
-        )
-    }
-  }
-    
   const handleClose = () => {
     console.log("")
   }
@@ -276,7 +168,7 @@ const ReportCore = (props: ReportType) => {
           <Card sx={{mt: 1, pt: 1}}>
             <CardContent sx={{ mt: 0, pt: 0 }}>
               <Grid container spacing={2} sx={{mt: 0, mb: 2, p: 0}}>
-                <Grid item xs={12} sx={{p: 0, m: 0}}>
+                <Grid item xs={12} sx={{p: 0, m: 0, mb: 1}}>
                   <Typography variant='body2'>
                     {reportData['搜索区域']['标题']}
                   </Typography>
@@ -287,7 +179,7 @@ const ReportCore = (props: ReportType) => {
                     <Fragment key={index}>
                         {cell.type == 'input' && (
                             <Fragment>
-                              <Grid item xs={12} sm={cell.sm}>
+                              <Grid item xs={12} sm={cell.sm} sx={{mb: 1}}>
                                 <TextField 
                                   size='small' 
                                   fullWidth 
@@ -305,7 +197,7 @@ const ReportCore = (props: ReportType) => {
                         )}
                         {cell.type == 'select' && (
                           <Fragment>
-                            <Grid item xs={12} sm={cell.sm}>
+                            <Grid item xs={12} sm={cell.sm} sx={{mb: 1}}>
                               <FormControl size='small' fullWidth>
                                 <InputLabel id='form-layouts-separator-select-label'>{cell.name} </InputLabel>
                                 <Select
@@ -331,51 +223,51 @@ const ReportCore = (props: ReportType) => {
                         )}
                         {cell.type == 'autocomplete' && (
                           <Fragment>
-                            <Grid item xs={12} sm={cell.sm}>
-                            <Autocomplete
-                              size='small'
-                              fullWidth
-                              options={cell.data}
-                              id='autocomplete-outlined'
-                              getOptionLabel={(option: any) => option.name}
-                              renderInput={params => <TextField {...params} label={cell.name} />}
-                              onChange={(e: any, newValue: any) => {
-                                console.log("search e", newValue)
-                                setSearchData((prevData: any)=>({
-                                  ...prevData,
-                                  [cell.name]: newValue.value
-                                }));
-                              }}
-                            />
+                            <Grid item xs={12} sm={cell.sm} sx={{mb: 1}}>
+                              <Autocomplete
+                                size='small'
+                                fullWidth
+                                options={cell.data}
+                                id='autocomplete-outlined'
+                                getOptionLabel={(option: any) => option.name}
+                                renderInput={params => <TextField {...params} label={cell.name} />}
+                                onChange={(e: any, newValue: any) => {
+                                  console.log("search e", newValue)
+                                  setSearchData((prevData: any)=>({
+                                    ...prevData,
+                                    [cell.name]: newValue.value
+                                  }));
+                                }}
+                              />
                             </Grid>
                           </Fragment>
                         )}
                         
                         {cell.type == 'autocompletemulti' && (
                           <Fragment>
-                            <Grid item xs={12} sm={cell.sm}>
-                            <Autocomplete
-                              size='small'
-                              fullWidth
-                              multiple
-                              options={cell.data}
-                              id='autocomplete-outlined'
-                              getOptionLabel={(option: any) => option.name}
-                              renderInput={params => <TextField {...params} label={cell.name} />}
-                              onChange={(e: any, newValue: any) => {
-                                console.log("search e", newValue)
-                                if (newValue && newValue.length > 0) {
-                                  const newValueArray: string[] = []
-                                  for (const fieldItem of newValue) {
-                                      newValueArray.push(fieldItem.value);
+                            <Grid item xs={12} sm={cell.sm} sx={{mb: 1}}>
+                              <Autocomplete
+                                size='small'
+                                fullWidth
+                                multiple
+                                options={cell.data}
+                                id='autocomplete-outlined'
+                                getOptionLabel={(option: any) => option.name}
+                                renderInput={params => <TextField {...params} label={cell.name} />}
+                                onChange={(e: any, newValue: any) => {
+                                  console.log("search e", newValue)
+                                  if (newValue && newValue.length > 0) {
+                                    const newValueArray: string[] = []
+                                    for (const fieldItem of newValue) {
+                                        newValueArray.push(fieldItem.value);
+                                    }
+                                    setSearchData((prevData: any)=>({
+                                      ...prevData,
+                                      [cell.name]: newValueArray.join(',')
+                                    }));
                                   }
-                                  setSearchData((prevData: any)=>({
-                                    ...prevData,
-                                    [cell.name]: newValueArray.join(',')
-                                  }));
-                                }
-                              }}
-                            />
+                                }}
+                              />
                             </Grid>
                           </Fragment>
                         )}
