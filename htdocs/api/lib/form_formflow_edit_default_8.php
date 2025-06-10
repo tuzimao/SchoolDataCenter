@@ -196,14 +196,14 @@ $edit_default_8['AuthorizedControl'][] = ['name' => "NodeFlow_Approval_Change_Ch
 $edit_default_8['AuthorizedControl'][] = ['name' => "NodeFlow_Approval_Change_ChildTable_Field_To_DateTime", 'show'=>true, 'type'=>'input', 'label' => __("NodeFlow_Approval_Change_ChildTable_Field_To_DateTime"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false, 'disabled' => false, 'xs'=>12, 'sm'=>3]];
 $edit_default_8['AuthorizedControl'][] = ['name' => "NodeFlow_Approval_Change_ChildTable_Field_To_UserId", 'show'=>true, 'type'=>'input', 'label' => __("NodeFlow_Approval_Change_ChildTable_Field_To_UserId"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false, 'disabled' => false, 'xs'=>12, 'sm'=>3]];
 
-$defaultValues_7 = [];
+$defaultValues_8 = [];
 foreach($edit_default_8 as $ModeName=>$allFieldItem) {
     foreach($allFieldItem as $ITEM) {
         if($ITEM['type'] == "autocompletemulti")  {
-            $defaultValues_7[$ITEM['code']] = $ITEM['value'];
+            $defaultValues_8[$ITEM['code']] = $ITEM['value'];
         }
         else {
-            $defaultValues_7[$ITEM['name']] = $ITEM['value'];
+            $defaultValues_8[$ITEM['name']] = $ITEM['value'];
         }
     }
 }
@@ -221,9 +221,9 @@ if($_GET['action']=="edit_default_8"&&$id!='')         {
     $SettingMap = unserialize(base64_decode($Setting));
     $FlowName   = $rs->fields['FlowName'];
     if(is_array($SettingMap))   {
-        $defaultValues_7_keys = array_keys($defaultValues_7);
+        $defaultValues_8_keys = array_keys($defaultValues_8);
         foreach($SettingMap as $value => $label)  {
-            if(in_array($value, $defaultValues_7_keys))  {
+            if(in_array($value, $defaultValues_8_keys))  {
                 if($value=="Menu_Three" && strpos($label,"班主任")!==false) {
                     $SettingMap['Menu_Three_Icon'] = "account-search";
                 }
@@ -248,27 +248,27 @@ if($_GET['action']=="edit_default_8"&&$id!='')         {
             }
         }
         foreach($SettingMap as $value => $label)  {
-            if(in_array($value, $defaultValues_7_keys) && $value!="Init_Action_Page_ConfigSettingUrl")  {
-                $defaultValues_7[$value] = $label;
+            if(in_array($value, $defaultValues_8_keys) && $value!="Init_Action_Page_ConfigSettingUrl")  {
+                $defaultValues_8[$value] = $label;
             }
         }
     }
 
     $EnableFields = [];
-    switch($defaultValues_7['Page_Role_Name']) {
+    switch($defaultValues_8['Page_Role_Name']) {
         case '院系':
             $EnableFields[] = "Faculty_Filter_Field";
             break;
     }
 
     //临时启用
-    //$defaultValues_7['Menu_One'] = $SettingMap['Menu_One'];
-    //$defaultValues_7['Menu_Two'] = $SettingMap['Menu_Two'];
-    //$defaultValues_7['Menu_Three'] = $SettingMap['Menu_Three'];
-    //$defaultValues_7['FaceTo'] = $SettingMap['FaceTo'];
+    //$defaultValues_8['Menu_One'] = $SettingMap['Menu_One'];
+    //$defaultValues_8['Menu_Two'] = $SettingMap['Menu_Two'];
+    //$defaultValues_8['Menu_Three'] = $SettingMap['Menu_Three'];
+    //$defaultValues_8['FaceTo'] = $SettingMap['FaceTo'];
     $edit_default['allFields']      = $edit_default_8;
     $edit_default['allFieldsMode']  = $edit_default_8_mode;
-    $edit_default['defaultValues']  = $defaultValues_7;
+    $edit_default['defaultValues']  = $defaultValues_8;
     $edit_default['dialogContentHeight']  = "90%";
     $edit_default['componentsize']  = "small";
     $edit_default['submitaction']   = "edit_default_8_data";
@@ -281,7 +281,7 @@ if($_GET['action']=="edit_default_8"&&$id!='')         {
     $RS['edit_default'] = $edit_default;
     $RS['EnableFields'] = $EnableFields;
     $RS['status'] = "OK";
-    $RS['data'] = $defaultValues_7;
+    $RS['data'] = $defaultValues_8;
     $RS['sql']  = $sql;
     $RS['forceuse'] = true;
     $RS['msg'] = __("Get Data Success");
