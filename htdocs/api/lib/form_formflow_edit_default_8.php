@@ -24,177 +24,51 @@ $MenuOneNameArray = [];
 foreach($rsf_a as $Item)  {
     $MenuOneNameArray[] = ['value'=>$Item['MenuOneName'],'label'=>$Item['MenuOneName']];
 }
-$NodeType_Array    = [];
-$NodeType_Array[]  = ['value'=>"工作流",'label'=>"工作流"];
-$NodeType_Array[]  = ['value'=>"菜单",'label'=>"菜单"];
 
-$edit_default_8['Menu_Location'][] = ['name' => "NodeType", 'show'=>true, 'type'=>'select', 'options'=>$NodeType_Array, 'label' => __("NodeType"), 'value' => $NodeType_Array[1]['value'], 'placeholder' => "", 'helptext' => __("NodeTypeHelpText"), 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
 $MenuTab_Options = [];
 $MenuTab_Options[] = ['value'=>'Yes', 'label'=>__('Yes')];
 $MenuTab_Options[] = ['value'=>'No', 'label'=>__('No')];
-$edit_default_8['Menu_Location'][] = ['name' => "IsStartNode", 'show'=>true, 'type'=>'select', 'options'=>$MenuTab_Options, 'label' => __("IsStartNode"), 'value' => "No", 'placeholder' => "", 'helptext' => __(""), 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>2]];
+$edit_default_8['ReportSetting1'][] = ['name' => "EnableReport", 'show'=>true, 'type'=>'select', 'options'=>$MenuTab_Options, 'label' => __("EnableReport"), 'value' => "No", 'placeholder' => "", 'helptext' => __(""), 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>6]];
 
-$StepNameArray = [];
-$StepNameArray[] = ['value'=>0, 'label'=>"未设置"];
-for($X=1;$X<=15;$X++) {
-    $StepNameArray[] = ['value'=>$X, 'label'=>$X];
-}
-$edit_default_8['Menu_Location'][] = ['name' => "StepName", 'show'=>true, 'type'=>'select', 'options'=>$StepNameArray, 'label' => __("StepName"), 'value' => 0, 'placeholder' => "", 'helptext' => __(""), 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>2]];
-
-$edit_default_8['Menu_Location'][] = ['name' => "NextStep", 'show'=>true, 'type'=>"input", 'label' => __("NextStep"), 'value' => "", 'placeholder' => "", 'helptext' => __("NextStepHelpText"), 'rules' => ['required' => false,'xs'=>12, 'sm'=>4, 'disabled' => false]];
-
-$edit_default_8['Menu_Location'][] = ['name' => "Menu_One", 'show'=>true, 'type'=>'select', 'options'=>$MenuOneNameArray, 'label' => __("Menu_One"), 'value' => $MetaColumnNamesOptionsAll[1]['value'], 'placeholder' => "", 'helptext' => __("Allow_Repeat"), 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
-$edit_default_8['Menu_Location'][] = ['name' => "Menu_Two", 'show'=>true, 'type'=>"input", 'label' => __("Menu_Two"), 'value' => "", 'placeholder' => "", 'helptext' => __("Allow_Repeat"), 'rules' => ['required' => false,'xs'=>12, 'sm'=>4, 'disabled' => false]];
-$edit_default_8['Menu_Location'][] = ['name' => "Menu_Three", 'show'=>true, 'type'=>"input", 'label' => __("Menu_Three"), 'value' => "", 'placeholder' => "", 'helptext' => __("Optional"), 'rules' => ['required' => false,'xs'=>12, 'sm'=>4, 'disabled' => false]];
-$edit_default_8['Menu_Location'][] = ['name' => "FaceTo", 'show'=>true, 'type'=>'select', 'options'=>$FaceToOptions, 'label' => __("Face_To"), 'value' => "AuthUser", 'placeholder' => "", 'helptext' => __(""), 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
-$edit_default_8['Menu_Location'][] = ['name' => "Menu_Three_Icon", 'show'=>true, 'type'=>'autocompletemdi', 'options'=>[], 'label' => __("Menu_Three_Icon"), 'value' => "account-outline", 'placeholder' => "", 'helptext' => __(""), 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
 $MenuTab_Options = [];
-$MenuTab_Options[] = ['value'=>'Yes', 'label'=>__('Yes')];
-$MenuTab_Options[] = ['value'=>'No', 'label'=>__('No')];
-$edit_default_8['Menu_Location'][] = ['name' => "MenuTab", 'show'=>true, 'type'=>'select', 'options'=>$MenuTab_Options, 'label' => __("Menu_Tab"), 'value' => "Yes", 'placeholder' => "", 'helptext' => __(""), 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
+$MenuTab_Options[] = ['value'=>'3', 'label'=>'表头3行'];
+$MenuTab_Options[] = ['value'=>'2', 'label'=>'表头2行'];
+$MenuTab_Options[] = ['value'=>'1', 'label'=>'表头1行'];
+$edit_default_8['ReportSetting1'][] = ['name' => "ReportHeaderCount", 'show'=>true, 'type'=>'select', 'options'=>$MenuTab_Options, 'label' => __("ReportHeaderCount"), 'value' => "2", 'placeholder' => "", 'helptext' => __(""), 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>6]];
 
-$Page_Role_Array = [];
-$Page_Role_Array[] = ['value'=>"None", 'label'=>__("None")];
-$Page_Role_Array[] = ['value'=>"Student", 'label'=>__("Student")];
-//$Page_Role_Array[] = ['value'=>"Parent", 'label'=>__("Parent")];
-$Page_Role_Array[] = ['value'=>"ClassMaster", 'label'=>__("ClassMaster")];
-$Page_Role_Array[] = ['value'=>"ClassTeacher", 'label'=>__("ClassTeacher")];
-$Page_Role_Array[] = ['value'=>"Faculty", 'label'=>__("Faculty")];
-$Page_Role_Array[] = ['value'=>"Dormitory", 'label'=>__("Dormitory")];
-$Page_Role_Array[] = ['value'=>"Department", 'label'=>__("Department")];
-$Page_Role_Array[] = ['value'=>"Vice-president", 'label'=>__("Vice-president")];
-$Page_Role_Array[] = ['value'=>"President", 'label'=>__("President")];
+$MenuTab_Options = [];
+$MenuTab_Options[] = ['value'=>'用户名/姓名', 'label'=>'用户名/姓名'];
+$MenuTab_Options[] = ['value'=>'用户名/姓名/部门', 'label'=>'用户名/姓名/部门'];
+$MenuTab_Options[] = ['value'=>'部门/用户名/姓名', 'label'=>'部门/用户名/姓名'];
+$MenuTab_Options[] = ['value'=>'学生/姓名/班级', 'label'=>'学生/姓名/班级'];
+$MenuTab_Options[] = ['value'=>'班级/学生/姓名', 'label'=>'班级/学生/姓名'];
+$MenuTab_Options[] = ['value'=>'班级/专业/系部', 'label'=>'班级/专业/系部'];
+$MenuTab_Options[] = ['value'=>'系部/专业/班级', 'label'=>'系部/专业/班级'];
+$MenuTab_Options[] = ['value'=>'动态数据做为左侧列', 'label'=>'动态数据做为左侧列'];
+$edit_default_8['ReportSetting1'][] = ['name' => "ReportLeftColumnDefine", 'show'=>true, 'type'=>'select', 'options'=>$MenuTab_Options, 'label' => __("ReportLeftColumnDefine"), 'value' => "用户名/姓名", 'placeholder' => "", 'helptext' => __(""), 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>6]];
 
-$Extra_Priv_Filter_Method = [];
-$Extra_Priv_Filter_Method[] = ['value'=>"=", 'label'=>__("=")];
-$Extra_Priv_Filter_Method[] = ['value'=>"!=", 'label'=>__("!=")];
-$Extra_Priv_Filter_Method[] = ['value'=>">", 'label'=>__(">")];
-$Extra_Priv_Filter_Method[] = ['value'=>">=", 'label'=>__(">=")];
-$Extra_Priv_Filter_Method[] = ['value'=>"<", 'label'=>__("<")];
-$Extra_Priv_Filter_Method[] = ['value'=>"<=", 'label'=>__("<=")];
-$Extra_Priv_Filter_Method[] = ['value'=>"in", 'label'=>__("in")];
-$Extra_Priv_Filter_Method[] = ['value'=>"not in", 'label'=>__("not in")];
-$Extra_Priv_Filter_Method[] = ['value'=>"like", 'label'=>__("like")];
-$Extra_Priv_Filter_Method[] = ['value'=>"Today", 'label'=>__("Today")];
-$Extra_Priv_Filter_Method[] = ['value'=>"<->", 'label'=>__("<->")];
-$Extra_Priv_Filter_Method[] = ['value'=>"BeforeDays", 'label'=>__("BeforeDays")];
-$Extra_Priv_Filter_Method[] = ['value'=>"AfterDays", 'label'=>__("AfterDays")];
-$Extra_Priv_Filter_Method[] = ['value'=>"BeforeAndAfterDays", 'label'=>__("BeforeAndAfterDays")];
-$Extra_Priv_Filter_Method[] = ['value'=>"CurrentSemester", 'label'=>__("CurrentSemester")];
+$MenuTab_Options = [];
+$MenuTab_Options[] = ['value'=>'只显示有数据的记录', 'label'=>'只显示有数据的记录'];
+$MenuTab_Options[] = ['value'=>'全部显示所有记录', 'label'=>'全部显示所有记录'];
+$edit_default_8['ReportSetting1'][] = ['name' => "ReportLeftColumnDataShow", 'show'=>true, 'type'=>'select', 'options'=>$MenuTab_Options, 'label' => __("ReportLeftColumnDataShow"), 'value' => "只显示有数据的记录", 'placeholder' => "", 'helptext' => __(""), 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>6]];
 
-$Faculty_Filter_Field = [];
-$Faculty_Filter_Field[] = ['value'=>"None", 'label'=>__("None")];
-$Faculty_Filter_Field[] = ['value'=>"学籍二级管理", 'label'=>__("学籍二级管理")];
-$Faculty_Filter_Field[] = ['value'=>"学生请假二级管理", 'label'=>__("学生请假二级管理")];
-$Faculty_Filter_Field[] = ['value'=>"奖惩补助二级管理", 'label'=>__("奖惩补助二级管理")];
-$Faculty_Filter_Field[] = ['value'=>"教学计划二级管理", 'label'=>__("教学计划二级管理")];
-$Faculty_Filter_Field[] = ['value'=>"量化考核二级管理", 'label'=>__("量化考核二级管理")];
-$Faculty_Filter_Field[] = ['value'=>"岗位实习二级管理", 'label'=>__("岗位实习二级管理")];
-$Faculty_Filter_Field[] = ['value'=>"学生考勤二级管理", 'label'=>__("学生考勤二级管理")];
-$Faculty_Filter_Field[] = ['value'=>"学生成绩二级管理", 'label'=>__("学生成绩二级管理")];
-$Faculty_Filter_Field[] = ['value'=>"班级事务二级管理", 'label'=>__("班级事务二级管理")];
-$Faculty_Filter_Field[] = ['value'=>"固定资产二级管理", 'label'=>__("固定资产二级管理")];
-$Faculty_Filter_Field[] = ['value'=>"学生健康二级管理", 'label'=>__("学生健康二级管理")];
-
-$Dormitory_Filter_Field = [];
-$Dormitory_Filter_Field[] = ['value'=>"None", 'label'=>__("None")];
-$Dormitory_Filter_Field[] = ['value'=>"宿舍楼", 'label'=>__("宿舍楼")];
-$Dormitory_Filter_Field[] = ['value'=>"宿舍房间", 'label'=>__("宿舍房间")];
-
-$EnableFields = [];
-//$EnableFields['Faculty'] = ["Faculty_Filter_Field"];
-$DisableFields = [];
-$edit_default_8['Page_Role'][] = ['name' => "Page_Role_Name", 'show'=>true, 'type'=>'select', 'options'=>$Page_Role_Array, 'label' => __("Page_Role_Name"), 'value' => $Page_Role_Array[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>12], 'EnableFields'=>$EnableFields, 'DisableFields'=>$DisableFields];
-$edit_default_8['Page_Role'][] = ['name' => "Faculty_Filter_Field", 'show'=>true, 'type'=>'select', 'options'=>$Faculty_Filter_Field, 'label' => __("Faculty_Filter_Field"), 'value' => $Faculty_Filter_Field[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>6]];
-$edit_default_8['Page_Role'][] = ['name' => "Dormitory_Filter_Field", 'show'=>true, 'type'=>'select', 'options'=>$Dormitory_Filter_Field, 'label' => __("Dormitory_Filter_Field"), 'value' => $Dormitory_Filter_Field[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>6]];
-
-$edit_default_8['Page_Role'][] = ['name' => "Extra_Priv_Filter_Field_One", 'show'=>true, 'type'=>'select', 'options'=>$MetaColumnNamesOptionsAll, 'label' => __("Extra_Priv_Filter_Field_One"), 'value' => $MetaColumnNamesOptionsAll[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
-$edit_default_8['Page_Role'][] = ['name' => "Extra_Priv_Filter_Method_One", 'show'=>true, 'type'=>'select', 'options'=>$Extra_Priv_Filter_Method, 'label' => __("Extra_Priv_Filter_Method_One"), 'value' => $Extra_Priv_Filter_Method[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
-$edit_default_8['Page_Role'][] = ['name' => "Extra_Priv_Filter_Value_One", 'show'=>true, 'type'=>"input", 'label' => __("Extra_Priv_Filter_Value_One"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>4, 'disabled' => false]];
-
-$edit_default_8['Page_Role'][] = ['name' => "Extra_Priv_Filter_Field_Two", 'show'=>true, 'type'=>'select', 'options'=>$MetaColumnNamesOptionsAll, 'label' => __("Extra_Priv_Filter_Field_Two"), 'value' => $MetaColumnNamesOptionsAll[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
-$edit_default_8['Page_Role'][] = ['name' => "Extra_Priv_Filter_Method_Two", 'show'=>true, 'type'=>'select', 'options'=>$Extra_Priv_Filter_Method, 'label' => __("Extra_Priv_Filter_Method_Two"), 'value' => $Extra_Priv_Filter_Method[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
-$edit_default_8['Page_Role'][] = ['name' => "Extra_Priv_Filter_Value_Two", 'show'=>true, 'type'=>"input", 'label' => __("Extra_Priv_Filter_Value_Two"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>4, 'disabled' => false]];
-
-$edit_default_8['Page_Role'][] = ['name' => "Extra_Priv_Filter_Field_Three", 'show'=>true, 'type'=>'select', 'options'=>$MetaColumnNamesOptionsAll, 'label' => __("Extra_Priv_Filter_Field_Three"), 'value' => $MetaColumnNamesOptionsAll[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
-$edit_default_8['Page_Role'][] = ['name' => "Extra_Priv_Filter_Method_Three", 'show'=>true, 'type'=>'select', 'options'=>$Extra_Priv_Filter_Method, 'label' => __("Extra_Priv_Filter_Method_Three"), 'value' => $Extra_Priv_Filter_Method[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
-$edit_default_8['Page_Role'][] = ['name' => "Extra_Priv_Filter_Value_Three", 'show'=>true, 'type'=>"input", 'label' => __("Extra_Priv_Filter_Value_Three"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>4, 'disabled' => false]];
-
-$edit_default_8['Page_Role'][] = ['name' => "Extra_Priv_Filter_Field_Four", 'show'=>true, 'type'=>'select', 'options'=>$MetaColumnNamesOptionsAll, 'label' => __("Extra_Priv_Filter_Field_Four"), 'value' => $MetaColumnNamesOptionsAll[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
-$edit_default_8['Page_Role'][] = ['name' => "Extra_Priv_Filter_Method_Four", 'show'=>true, 'type'=>'select', 'options'=>$Extra_Priv_Filter_Method, 'label' => __("Extra_Priv_Filter_Method_Four"), 'value' => $Extra_Priv_Filter_Method[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
-$edit_default_8['Page_Role'][] = ['name' => "Extra_Priv_Filter_Value_Four", 'show'=>true, 'type'=>"input", 'label' => __("Extra_Priv_Filter_Value_Four"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>4, 'disabled' => false]];
-
-$edit_default_8['Page_Role'][] = ['name' => "Extra_Priv_Filter_Field_Five", 'show'=>true, 'type'=>'select', 'options'=>$MetaColumnNamesOptionsAll, 'label' => __("Extra_Priv_Filter_Field_Five"), 'value' => $MetaColumnNamesOptionsAll[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
-$edit_default_8['Page_Role'][] = ['name' => "Extra_Priv_Filter_Method_Five", 'show'=>true, 'type'=>'select', 'options'=>$Extra_Priv_Filter_Method, 'label' => __("Extra_Priv_Filter_Method_Five"), 'value' => $Extra_Priv_Filter_Method[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
-$edit_default_8['Page_Role'][] = ['name' => "Extra_Priv_Filter_Value_Five", 'show'=>true, 'type'=>"input", 'label' => __("Extra_Priv_Filter_Value_Five"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>4, 'disabled' => false]];
-
-
-$edit_default_8['Page_Role'][] = ['name' => "Extra_Priv_Filter_Or_Field_One", 'show'=>true, 'type'=>'select', 'options'=>$MetaColumnNamesOptionsAll, 'label' => __("Extra_Priv_Filter_Or_Field_One"), 'value' => $MetaColumnNamesOptionsAll[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
-$edit_default_8['Page_Role'][] = ['name' => "Extra_Priv_Filter_Or_Method_One", 'show'=>true, 'type'=>'select', 'options'=>$Extra_Priv_Filter_Method, 'label' => __("Extra_Priv_Filter_Or_Method_One"), 'value' => $Extra_Priv_Filter_Method[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
-$edit_default_8['Page_Role'][] = ['name' => "Extra_Priv_Filter_Or_Value_One", 'show'=>true, 'type'=>"input", 'label' => __("Extra_Priv_Filter_Or_Value_One"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>4, 'disabled' => false]];
-
-$edit_default_8['Page_Role'][] = ['name' => "Extra_Priv_Filter_Or_Field_Two", 'show'=>true, 'type'=>'select', 'options'=>$MetaColumnNamesOptionsAll, 'label' => __("Extra_Priv_Filter_Or_Field_Two"), 'value' => $MetaColumnNamesOptionsAll[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
-$edit_default_8['Page_Role'][] = ['name' => "Extra_Priv_Filter_Or_Method_Two", 'show'=>true, 'type'=>'select', 'options'=>$Extra_Priv_Filter_Method, 'label' => __("Extra_Priv_Filter_Or_Method_Two"), 'value' => $Extra_Priv_Filter_Method[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
-$edit_default_8['Page_Role'][] = ['name' => "Extra_Priv_Filter_Or_Value_Two", 'show'=>true, 'type'=>"input", 'label' => __("Extra_Priv_Filter_Or_Value_Two"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>4, 'disabled' => false]];
-
-$edit_default_8['Page_Role'][] = ['name' => "Extra_Priv_Filter_Or_Field_Three", 'show'=>true, 'type'=>'select', 'options'=>$MetaColumnNamesOptionsAll, 'label' => __("Extra_Priv_Filter_Or_Field_Three"), 'value' => $MetaColumnNamesOptionsAll[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
-$edit_default_8['Page_Role'][] = ['name' => "Extra_Priv_Filter_Or_Method_Three", 'show'=>true, 'type'=>'select', 'options'=>$Extra_Priv_Filter_Method, 'label' => __("Extra_Priv_Filter_Or_Method_Three"), 'value' => $Extra_Priv_Filter_Method[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
-$edit_default_8['Page_Role'][] = ['name' => "Extra_Priv_Filter_Or_Value_Three", 'show'=>true, 'type'=>"input", 'label' => __("Extra_Priv_Filter_Or_Value_Three"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>4, 'disabled' => false]];
-
-$edit_default_8['AuthorizedControl'][] = ['name' => "divider", 'show'=>true, 'type'=>"divider", 'label' => __("divider"), 'value' => "", 'placeholder' => "", 'helptext' => __(""), 'rules' => ['required' => false,'xs'=>12, 'sm'=>12, 'disabled' => false]];
-
-$edit_default_8['AuthorizedControl'][] = ['name' => "NodeFlow_Authorized_Requirement", 'code' => "NodeFlow_Authorized_Requirement", 'FieldTypeArray'=>$CurrentUserFieldTypeArray, 'show'=>true, 'type'=>"input", 'label' => __("NodeFlow_Authorized_Requirement"), 'value' => '', 'placeholder' => __(""), 'helptext' => "常用规则如下: 发起人部门条件限制:系部, 发起人部门条件限制:非系部, 发起人角色条件限制:!=系统管理员|班主任, 表单字段限制:采购类型:教学, 表单字段限制:采购类型:!=教学", 'rules' => ['required' => false,'xs'=>12, 'sm'=>12,'disabled' => false]];
-
-
-$edit_default_8['AuthorizedControl'][] = ['name' => "NodeFlow_AuthorizedUser_名称", 'code' => "NodeFlow_AuthorizedUser", 'FieldTypeArray'=>$CurrentUserFieldTypeArray, 'show'=>true, 'type'=>"autocompletemulti", 'options'=>$UserRecords, 'label' => __("NodeFlow_AuthorizedUser"), 'value' => '', 'placeholder' => __(""), 'helptext' => __("NodeFlow_AuthorizedHelpText"), 'rules' => ['required' => false,'xs'=>12, 'sm'=>12,'disabled' => false]];
-
-$CurrentDepartmentFieldTypeArray = explode(":","autocompletemulti:data_department:0:1:");
-$TableNameTemp      = $CurrentDepartmentFieldTypeArray[1];
-$KeyField           = $CurrentDepartmentFieldTypeArray[2];
-$ValueField         = $CurrentDepartmentFieldTypeArray[3];
-$DefaultValue       = $CurrentDepartmentFieldTypeArray[4];
-$WhereField         = ForSqlInjection($CurrentDepartmentFieldTypeArray[5]);
-$WhereValue         = ForSqlInjection($CurrentDepartmentFieldTypeArray[6]);
-$MetaColumnNamesTemp    = GLOBAL_MetaColumnNames($TableNameTemp);
-if(sizeof($CurrentDepartmentFieldTypeArray)==5||sizeof($CurrentDepartmentFieldTypeArray)==4)   {
-    $sql = "select `".$MetaColumnNamesTemp[$KeyField]."` as value, `".$MetaColumnNamesTemp[$ValueField]."` as label from $TableNameTemp where 1=1 $AddSqlTemp order by `".$MetaColumnNamesTemp[$ValueField]."` asc, id asc";
-}
-else {
-    print "autocompletemulti para error!";exit;
-}
-$rs = $db->Execute($sql) or print($sql);
-$DepartmentRecords = $rs->GetArray();
-$edit_default_8['AuthorizedControl'][] = ['name' => "NodeFlow_AuthorizedDept_名称", 'code' => "NodeFlow_AuthorizedDept", 'FieldTypeArray'=>$CurrentDepartmentFieldTypeArray, 'show'=>true, 'type'=>"autocompletemulti", 'options'=>$DepartmentRecords, 'label' => __("NodeFlow_AuthorizedDept"), 'value' => '', 'placeholder' => __(""), 'helptext' => __("NodeFlow_AuthorizedHelpText"), 'rules' => ['required' => false,'xs'=>12, 'sm'=>12,'disabled' => false]];
-
-$CurrentRoleFieldTypeArray = explode(":","autocompletemulti:data_role:0:1:");
-$TableNameTemp      = $CurrentRoleFieldTypeArray[1];
-$KeyField           = $CurrentRoleFieldTypeArray[2];
-$ValueField         = $CurrentRoleFieldTypeArray[3];
-$DefaultValue       = $CurrentRoleFieldTypeArray[4];
-$WhereField         = ForSqlInjection($CurrentRoleFieldTypeArray[5]);
-$WhereValue         = ForSqlInjection($CurrentRoleFieldTypeArray[6]);
-$MetaColumnNamesTemp    = GLOBAL_MetaColumnNames($TableNameTemp);
-if(sizeof($CurrentRoleFieldTypeArray)==5||sizeof($CurrentRoleFieldTypeArray)==4)   {
-    $sql = "select `".$MetaColumnNamesTemp[$KeyField]."` as value, `".$MetaColumnNamesTemp[$ValueField]."` as label from $TableNameTemp where 1=1 $AddSqlTemp order by `".$MetaColumnNamesTemp[$ValueField]."` asc, id asc";
-}
-else {
-    print "autocompletemulti para error!";exit;
-}
-$rs = $db->Execute($sql) or print($sql);
-$RoleRecords = $rs->GetArray();
-$edit_default_8['AuthorizedControl'][] = ['name' => "NodeFlow_AuthorizedRole_名称", 'code' => "NodeFlow_AuthorizedRole", 'FieldTypeArray'=>$CurrentRoleFieldTypeArray, 'show'=>true, 'type'=>"autocompletemulti", 'options'=>$RoleRecords, 'label' => __("NodeFlow_AuthorizedRole"), 'value' => '', 'placeholder' => __(""), 'helptext' => __("NodeFlow_AuthorizedHelpText"), 'rules' => ['required' => false,'xs'=>12, 'sm'=>12,'disabled' => false]];
-$edit_default_8['AuthorizedControl'][] = ['name' => "NodeFlow_Approval_Execute_Function", 'show'=>true, 'type'=>"input", 'label' => __("NodeFlow_Approval_Execute_Function"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>12, 'disabled' => false]];
-
-$edit_default_8['AuthorizedControl'][] = ['name' => "NodeFlow_Approval_Change_Field_Name", 'show'=>true, 'type'=>'select', 'options'=>$MetaColumnNamesOptionsAll, 'label' => __("NodeFlow_Approval_Change_Field_Name"), 'value' => $MetaColumnNamesOptionsAll[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>3]];
-$edit_default_8['AuthorizedControl'][] = ['name' => "NodeFlow_Approval_Change_Field_Value", 'show'=>true, 'type'=>"input", 'label' => __("NodeFlow_Approval_Change_Field_Value"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>3, 'disabled' => false]];
-$edit_default_8['AuthorizedControl'][] = ['name' => "NodeFlow_Approval_Change_Field_To_DateTime", 'show'=>true, 'type'=>'select', 'options'=>$MetaColumnNamesOptionsAll, 'label' => __("NodeFlow_Approval_Change_Field_To_DateTime"), 'value' => $MetaColumnNamesOptionsAll[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>3]];
-$edit_default_8['AuthorizedControl'][] = ['name' => "NodeFlow_Approval_Change_Field_To_UserId", 'show'=>true, 'type'=>'select', 'options'=>$MetaColumnNamesOptionsAll, 'label' => __("NodeFlow_Approval_Change_Field_To_UserId"), 'value' => $MetaColumnNamesOptionsAll[0]['value'], 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>3]];
-
-
-$edit_default_8['AuthorizedControl'][] = ['name' => "NodeFlow_Approval_Change_ChildTable_Field_Name", 'show'=>true, 'type'=>'input', 'label' => __("NodeFlow_Approval_Change_ChildTable_Field_Name"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false, 'disabled' => false, 'xs'=>12, 'sm'=>3]];
-$edit_default_8['AuthorizedControl'][] = ['name' => "NodeFlow_Approval_Change_ChildTable_Field_Value", 'show'=>true, 'type'=>"input", 'label' => __("NodeFlow_Approval_Change_ChildTable_Field_Value"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>3, 'disabled' => false]];
-$edit_default_8['AuthorizedControl'][] = ['name' => "NodeFlow_Approval_Change_ChildTable_Field_To_DateTime", 'show'=>true, 'type'=>'input', 'label' => __("NodeFlow_Approval_Change_ChildTable_Field_To_DateTime"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false, 'disabled' => false, 'xs'=>12, 'sm'=>3]];
-$edit_default_8['AuthorizedControl'][] = ['name' => "NodeFlow_Approval_Change_ChildTable_Field_To_UserId", 'show'=>true, 'type'=>'input', 'label' => __("NodeFlow_Approval_Change_ChildTable_Field_To_UserId"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false, 'disabled' => false, 'xs'=>12, 'sm'=>3]];
+$edit_default_8['ReportSetting1'][] = ['name' => "ReportDataColumn_1_Name", 'show'=>true, 'type'=>"input", 'label' => __("ReportDataColumn_1_Name"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>2, 'disabled' => false]];
+$edit_default_8['ReportSetting1'][] = ['name' => "ReportDataColumn_1_SQL", 'show'=>true, 'type'=>"input", 'label' => __("ReportDataColumn_1_SQL"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>10, 'disabled' => false]];
+$edit_default_8['ReportSetting1'][] = ['name' => "ReportDataColumn_2_Name", 'show'=>true, 'type'=>"input", 'label' => __("ReportDataColumn_2_Name"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>2, 'disabled' => false]];
+$edit_default_8['ReportSetting1'][] = ['name' => "ReportDataColumn_2_SQL", 'show'=>true, 'type'=>"input", 'label' => __("ReportDataColumn_2_SQL"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>10, 'disabled' => false]];
+$edit_default_8['ReportSetting1'][] = ['name' => "ReportDataColumn_3_Name", 'show'=>true, 'type'=>"input", 'label' => __("ReportDataColumn_3_Name"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>2, 'disabled' => false]];
+$edit_default_8['ReportSetting1'][] = ['name' => "ReportDataColumn_3_SQL", 'show'=>true, 'type'=>"input", 'label' => __("ReportDataColumn_3_SQL"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>10, 'disabled' => false]];
+$edit_default_8['ReportSetting1'][] = ['name' => "ReportDataColumn_4_Name", 'show'=>true, 'type'=>"input", 'label' => __("ReportDataColumn_4_Name"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>2, 'disabled' => false]];
+$edit_default_8['ReportSetting1'][] = ['name' => "ReportDataColumn_4_SQL", 'show'=>true, 'type'=>"input", 'label' => __("ReportDataColumn_4_SQL"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>10, 'disabled' => false]];
+$edit_default_8['ReportSetting1'][] = ['name' => "ReportDataColumn_5_Name", 'show'=>true, 'type'=>"input", 'label' => __("ReportDataColumn_5_Name"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>2, 'disabled' => false]];
+$edit_default_8['ReportSetting1'][] = ['name' => "ReportDataColumn_5_SQL", 'show'=>true, 'type'=>"input", 'label' => __("ReportDataColumn_5_SQL"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>10, 'disabled' => false]];
+$edit_default_8['ReportSetting1'][] = ['name' => "ReportDataColumn_6_Name", 'show'=>true, 'type'=>"input", 'label' => __("ReportDataColumn_6_Name"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>2, 'disabled' => false]];
+$edit_default_8['ReportSetting1'][] = ['name' => "ReportDataColumn_6_SQL", 'show'=>true, 'type'=>"input", 'label' => __("ReportDataColumn_6_SQL"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>10, 'disabled' => false]];
+$edit_default_8['ReportSetting1'][] = ['name' => "ReportDataColumn_7_Name", 'show'=>true, 'type'=>"input", 'label' => __("ReportDataColumn_7_Name"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>2, 'disabled' => false]];
+$edit_default_8['ReportSetting1'][] = ['name' => "ReportDataColumn_7_SQL", 'show'=>true, 'type'=>"input", 'label' => __("ReportDataColumn_7_SQL"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>10, 'disabled' => false]];
+$edit_default_8['ReportSetting1'][] = ['name' => "ReportDataColumn_8_Name", 'show'=>true, 'type'=>"input", 'label' => __("ReportDataColumn_8_Name"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>2, 'disabled' => false]];
+$edit_default_8['ReportSetting1'][] = ['name' => "ReportDataColumn_8_SQL", 'show'=>true, 'type'=>"input", 'label' => __("ReportDataColumn_8_SQL"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>10, 'disabled' => false]];
+$edit_default_8['ReportSetting1'][] = ['name' => "divider", 'show'=>true, 'type'=>"divider", 'label' => __("divider"), 'value' => "", 'placeholder' => "", 'helptext' => __(""), 'rules' => ['required' => false,'xs'=>12, 'sm'=>12, 'disabled' => false]];
 
 $defaultValues_8 = [];
 foreach($edit_default_8 as $ModeName=>$allFieldItem) {
@@ -209,7 +83,7 @@ foreach($edit_default_8 as $ModeName=>$allFieldItem) {
 }
 
 
-$edit_default_8_mode[] = ['value'=>"Menu_Location", 'label'=>__("Menu_Location")];
+$edit_default_8_mode[] = ['value'=>"ReportSetting1", 'label'=>__("ReportSetting1")];
 $edit_default_8_mode[] = ['value'=>"Page_Role", 'label'=>__("Page_Role")];
 $edit_default_8_mode[] = ['value'=>"AuthorizedControl", 'label'=>__("AuthorizedControl")];
 
@@ -222,31 +96,6 @@ if($_GET['action']=="edit_default_8"&&$id!='')         {
     $FlowName   = $rs->fields['FlowName'];
     if(is_array($SettingMap))   {
         $defaultValues_8_keys = array_keys($defaultValues_8);
-        foreach($SettingMap as $value => $label)  {
-            if(in_array($value, $defaultValues_8_keys))  {
-                if($value=="Menu_Three" && strpos($label,"班主任")!==false) {
-                    $SettingMap['Menu_Three_Icon'] = "account-search";
-                }
-                else if($value=="Menu_Three" && strpos($label,"系部")!==false) {
-                    $SettingMap['Menu_Three_Icon'] = "account-settings";
-                }
-                else if($value=="Menu_Three" && strpos($label,"教务")!==false) {
-                    $SettingMap['Menu_Three_Icon'] = "account-multiple-plus";
-                }
-                else if($value=="Menu_Three" && strpos($label,"学工")!==false) {
-                    $SettingMap['Menu_Three_Icon'] = "account-settings-variant";
-                }
-                else if($value=="Menu_Three" && strpos($label,"分管校长")!==false) {
-                    $SettingMap['Menu_Three_Icon'] = "account-box-outline";
-                }
-                else if($value=="Menu_Three" && strpos($label,"校长")!==false) {
-                    $SettingMap['Menu_Three_Icon'] = "account-box";
-                }
-                else if($value=="Menu_Three" && strpos($label,"所有")!==false) {
-                    $SettingMap['Menu_Three_Icon'] = "table";
-                }
-            }
-        }
         foreach($SettingMap as $value => $label)  {
             if(in_array($value, $defaultValues_8_keys) && $value!="Init_Action_Page_ConfigSettingUrl")  {
                 $defaultValues_8[$value] = $label;

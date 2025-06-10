@@ -362,6 +362,26 @@ $MAP['NextStepHelpText'] 	                = '请输入步骤ID, 结束节点: [�
 $MAP['转到表单'] 				             = '转到表单';
 $MAP['转到流程'] 				             = '节点设置';
 $MAP['NextStep'] 	                        = '下一步骤';
+$MAP['EnableReport'] 	                    = '启用报表';
+$MAP['ReportHeaderCount'] 	                = '表头行数';
+$MAP['ReportLeftColumnDefine'] 	            = '左侧列定义';
+$MAP['ReportLeftColumnDataShow'] 	        = '左侧列数据显示';
+$MAP['ReportDataColumn_1_Name'] 	        = '数据列1 名称';
+$MAP['ReportDataColumn_1_SQL'] 	            = '数据列1 SQL';
+$MAP['ReportDataColumn_2_Name'] 	        = '数据列2 名称';
+$MAP['ReportDataColumn_2_SQL'] 	            = '数据列2 SQL';
+$MAP['ReportDataColumn_3_Name'] 	        = '数据列3 名称';
+$MAP['ReportDataColumn_3_SQL'] 	            = '数据列3 SQL';
+$MAP['ReportDataColumn_4_Name'] 	        = '数据列4 名称';
+$MAP['ReportDataColumn_4_SQL'] 	            = '数据列4 SQL';
+$MAP['ReportDataColumn_5_Name'] 	        = '数据列5 名称';
+$MAP['ReportDataColumn_5_SQL'] 	            = '数据列5 SQL';
+$MAP['ReportDataColumn_6_Name'] 	        = '数据列6 名称';
+$MAP['ReportDataColumn_6_SQL'] 	            = '数据列6 SQL';
+$MAP['ReportDataColumn_7_Name'] 	        = '数据列7 名称';
+$MAP['ReportDataColumn_7_SQL'] 	            = '数据列7 SQL';
+$MAP['ReportDataColumn_8_Name'] 	        = '数据列8 名称';
+$MAP['ReportDataColumn_8_SQL'] 	            = '数据列8 SQL';
 
 
 $MAP['Field Name in Database'] 	= '字段名称';
