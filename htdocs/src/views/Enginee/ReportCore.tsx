@@ -56,6 +56,9 @@ import Tooltip from "@mui/material/Tooltip"
 import IconButton from '@mui/material/IconButton'
 import HelpIcon from '@mui/icons-material/Help'
 import InputLabel from '@mui/material/InputLabel'
+import Select, { SelectChangeEvent } from '@mui/material/Select'
+import MenuItem from '@mui/material/MenuItem'
+
 
 const MUITableCell = styled(TableCell)<TableCellBaseProps>(({ theme }) => ({
   borderBottom: 0,
@@ -284,7 +287,7 @@ const ReportCore = (props: ReportType) => {
                     <Fragment key={index}>
                         {cell.type == 'input' && (
                             <Fragment>
-                              <Grid item xs={12} sm={4}>
+                              <Grid item xs={12} sm={cell.sm}>
                                 <TextField 
                                   size='small' 
                                   fullWidth 
@@ -298,16 +301,82 @@ const ReportCore = (props: ReportType) => {
                                   }}
                                 />
                               </Grid>
-                              {cell.helptext && cell.helptext.length>12 && (
-                                  <FormHelperText sx={{mx: 0.5}}>
-                                      <Tooltip title={<Fragment>{cell.helptext}</Fragment>} >
-                                          <IconButton style={{ padding: 0, margin: 0, fontSize: '1rem', marginTop: -3, marginRight: 1 }}>
-                                              <HelpIcon fontSize="inherit"/>
-                                          </IconButton>
-                                      </Tooltip>
-                                      {cell.helptext.substring(0,cell.rules.sm==12?56:(cell.rules.sm==6?24:12))}
-                                  </FormHelperText>
-                              )}
+                          </Fragment>
+                        )}
+                        {cell.type == 'select' && (
+                          <Fragment>
+                            <Grid item xs={12} sm={cell.sm}>
+                              <FormControl size='small' fullWidth>
+                                <InputLabel id='form-layouts-separator-select-label'>{cell.name} </InputLabel>
+                                <Select
+                                  label={cell.name}
+                                  defaultValue={cell.default}
+                                  id='form-layouts-separator-select'
+                                  labelId='form-layouts-separator-select-label'
+                                  onChange={(e) => {
+                                    setSearchData((prevData: any)=>({
+                                      ...prevData,
+                                      [cell.name]: e.target.value
+                                    }));
+                                  }}
+                                >
+                                  {cell.data && cell.data.map((item: any, itemIndex: number)=>{
+
+                                    return <MenuItem value={item.value} key={itemIndex}>{item.name}</MenuItem>
+                                  })}
+                                </Select>
+                              </FormControl>
+                            </Grid>
+                          </Fragment>
+                        )}
+                        {cell.type == 'autocomplete' && (
+                          <Fragment>
+                            <Grid item xs={12} sm={cell.sm}>
+                            <Autocomplete
+                              size='small'
+                              fullWidth
+                              options={cell.data}
+                              id='autocomplete-outlined'
+                              getOptionLabel={(option: any) => option.name}
+                              renderInput={params => <TextField {...params} label={cell.name} />}
+                              onChange={(e: any, newValue: any) => {
+                                console.log("search e", newValue)
+                                setSearchData((prevData: any)=>({
+                                  ...prevData,
+                                  [cell.name]: newValue.value
+                                }));
+                              }}
+                            />
+                            </Grid>
+                          </Fragment>
+                        )}
+                        
+                        {cell.type == 'autocompletemulti' && (
+                          <Fragment>
+                            <Grid item xs={12} sm={cell.sm}>
+                            <Autocomplete
+                              size='small'
+                              fullWidth
+                              multiple
+                              options={cell.data}
+                              id='autocomplete-outlined'
+                              getOptionLabel={(option: any) => option.name}
+                              renderInput={params => <TextField {...params} label={cell.name} />}
+                              onChange={(e: any, newValue: any) => {
+                                console.log("search e", newValue)
+                                if (newValue && newValue.length > 0) {
+                                  const newValueArray: string[] = []
+                                  for (const fieldItem of newValue) {
+                                      newValueArray.push(fieldItem.value);
+                                  }
+                                  setSearchData((prevData: any)=>({
+                                    ...prevData,
+                                    [cell.name]: newValueArray.join(',')
+                                  }));
+                                }
+                              }}
+                            />
+                            </Grid>
                           </Fragment>
                         )}
                     </Fragment>
