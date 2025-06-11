@@ -63,7 +63,7 @@ const ReportCore = (props: ReportType) => {
 
   const ButtonList = report_default['ButtonList']
 
-  console.log("report_default", report_default)
+  console.log("searchData", searchData)
 
   useEffect(() => {
     Mousetrap.bind(['alt+c', 'command+c'], handleClose);
@@ -79,8 +79,14 @@ const ReportCore = (props: ReportType) => {
   useEffect(() => {
     if (backEndApi && backEndApi.length > 0 && report_default && report_default['ButtonList'] && report_default['ButtonList'][0] && report_default['ButtonList'][0]['code']) {
       setIsLoading(true)
+      setSearchData(null)
+      const currentReport = currentButtonName !== '' ? currentButtonName : report_default['ButtonList'][0]['code'] 
       axios
-        .get(authConfig.backEndApiHost + backEndApi, { headers: { Authorization: storedToken }, params: { action: 'report_default', isMobileData, currentReport: currentButtonName != '' ? currentButtonName : report_default['ButtonList'][0]['code'] } })
+        .post(
+          authConfig.backEndApiHost + backEndApi + '?action=report_default&currentReport=' + currentReport,
+          searchData,
+          { headers: { Authorization: storedToken } }
+        )      
         .then(res => {
           let dataJson: any = null
           const data = res.data
@@ -105,6 +111,13 @@ const ReportCore = (props: ReportType) => {
           }
           if (dataJson.status == "OK") {
             setReportData(dataJson)
+            const 搜索条件 = dataJson['搜索区域']['搜索条件']
+            const NewDefaultValue: any = {}
+            搜索条件 && 搜索条件.length > 0 && 搜索条件.map((item: any, index: number)=>{
+              NewDefaultValue[item.name] = item.default
+            })
+            setSearchData(NewDefaultValue)
+            console.log("搜索条件", 搜索条件)
           }
           setIsLoading(false)
         })
@@ -118,39 +131,44 @@ const ReportCore = (props: ReportType) => {
   const handleSubmitData = async () => {
 
     setIsLoading(true)
-      axios
-        .get(authConfig.backEndApiHost + backEndApi + "?" + reportData['搜索区域']['搜索事件'], { headers: { Authorization: storedToken }, params: searchData })
-        .then(res => {
-          let dataJson: any = null
-          const data = res.data
-          if(data && data.isEncrypted == "1" && data.data)  {
-              const i = data.data.slice(0, 32);
-              const t = data.data.slice(-32);
-              const e = data.data.slice(32, -32);
-              const k = AccessKey;
-              const DecryptDataAES256GCMData = DecryptDataAES256GCM(e, i, t, k)
-              try {
-                  dataJson = JSON.parse(DecryptDataAES256GCMData)
-              }
-              catch(Error: any) {
-                  console.log("DecryptDataAES256GCMData view_default Error", Error)
+    const currentReport = currentButtonName !== '' ? currentButtonName : report_default['ButtonList'][0]['code'] 
+    axios
+      .post(
+        authConfig.backEndApiHost + backEndApi + '?action=report_default&currentReport=' + currentReport,
+        searchData,
+        { headers: { Authorization: storedToken } }
+      )  
+      .then(res => {
+        let dataJson: any = null
+        const data = res.data
+        if(data && data.isEncrypted == "1" && data.data)  {
+            const i = data.data.slice(0, 32);
+            const t = data.data.slice(-32);
+            const e = data.data.slice(32, -32);
+            const k = AccessKey;
+            const DecryptDataAES256GCMData = DecryptDataAES256GCM(e, i, t, k)
+            try {
+                dataJson = JSON.parse(DecryptDataAES256GCMData)
+            }
+            catch(Error: any) {
+                console.log("DecryptDataAES256GCMData view_default Error", Error)
 
-                  dataJson = data
-              }
-          }
-          else {
+                dataJson = data
+            }
+        }
+        else {
 
-              dataJson = data
-          }
-          if (dataJson.status == "OK") {
-            setReportData(dataJson)
-          }
-          setIsLoading(false)
-        })
-        .catch(() => {
-          setIsLoading(false)
-          console.log("axios.get editUrl return")
-        })
+            dataJson = data
+        }
+        if (dataJson.status == "OK") {
+          setReportData(dataJson)
+        }
+        setIsLoading(false)
+      })
+      .catch(() => {
+        setIsLoading(false)
+        console.log("axios.get editUrl return")
+      })
 
   }
 
@@ -194,6 +212,7 @@ const ReportCore = (props: ReportType) => {
                                     fullWidth 
                                     label={cell.name} 
                                     placeholder={cell.placeholder} 
+                                    value={searchData && searchData[cell.name]}
                                     onChange={(e) => {
                                       setSearchData((prevData: any)=>({
                                         ...prevData,
@@ -251,7 +270,6 @@ const ReportCore = (props: ReportType) => {
                               </Grid>
                             </Fragment>
                           )}
-                          
                           {cell.type == 'autocompletemulti' && (
                             <Fragment>
                               <Grid item xs={12} sm={cell.sm} sx={{mb: 1}}>
