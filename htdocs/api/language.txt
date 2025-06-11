@@ -379,3 +379,7 @@ $MAP['ReportSetting1'] 	= 'ReportSetting1';
 $MAP['ReportSetting2'] 	= 'ReportSetting2';
 $MAP['ReportSetting3'] 	= 'ReportSetting3';
 $MAP['ReportSetting4'] 	= 'ReportSetting4';
+$MAP['ReportSetting1'] 	= 'ReportSetting1';
+$MAP['ReportSetting2'] 	= 'ReportSetting2';
+$MAP['ReportSetting3'] 	= 'ReportSetting3';
+$MAP['ReportSetting4'] 	= 'ReportSetting4';

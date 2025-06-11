@@ -738,11 +738,13 @@ if($pageNumberArray=="" || true) {
 }
 $page       = intval($_REQUEST['page']);
 $pageSize   = intval($_REQUEST['pageSize']);
-if(!in_array($pageSize,$pageNumberArray) || $pageSize == 10)  {
+if(!in_array($pageSize,$pageNumberArray) || $pageSize == 10 || $pageSize =='' || $pageSize == 0)  {
 	$pageSize = intval($SettingMap['Page_Number_In_List']);
 }
+if($pageSize <= 0)  {
+    $pageSize = 10;
+}
 $fromRecord = $page * $pageSize;
-
 
 //print "TIME EXCEUTE 9:".(time()-$TIME_BEGIN)."<BR>\n";
 if($FromInfo['TableName']!="")   {

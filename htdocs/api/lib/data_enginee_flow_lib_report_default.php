@@ -4,6 +4,23 @@ $CurrentUrlFileName = basename($_SERVER['PHP_SELF']);
 $ForbiddenAccessUrlList = ['data_enginee_flow_lib_report_default.php'];
 if(in_array($CurrentUrlFileName, $ForbiddenAccessUrlList)) exit;
 
+$currentReport = ForSqlInjection($_GET['currentReport']);
+if( $_GET['action']=="report_default" && $currentReport!="")  {
+    if($currentReport!="Report_1"&&$currentReport!="Report_2"&&$currentReport!="Report_3"&&$currentReport!="Report_4"&&$currentReport!="Report_5"&&$currentReport!="Report_6"&&$currentReport!="Report_7"&&$currentReport!="Report_8")   {
+        $RS = [];
+        $RS['status'] = "ERROR";
+        $RS['msg'] = __("Error Id Value");
+        $RS['_GET'] = $_GET;
+        $RS['_POST'] = $_POST;
+        print_R(EncryptApiData($RS, $GLOBAL_USER));
+        exit;
+    }
+
+    $RS = getReportStructureDataSingle($currentReport);
+    print_R(EncryptApiData($RS, $GLOBAL_USER));
+    exit;
+}
+
 function getReportStructureData() {
     global $db, $TableName, $Step, $GLOBAL_USER, $SettingMap, $MetaColumnNames;
 
@@ -13,23 +30,21 @@ function getReportStructureData() {
         $functionNameIndividual($id);
     }
 
-    $ReportData = [];
+    $ReportData                         = [];
     $ReportButtonList = [];
     if($SettingMap['EnableReport'] == 'Yes' && $SettingMap['Report_1_Name'] != '')   {
-        $ReportData['Init_Action_Value'] = 'report_default';
-        $ReportData['Report_1']     = getReportStructureDataSingle($Index=1);
-        $ReportButtonList[]         = ['name'=>$SettingMap['Report_1_Name'], 'code'=>'Report_1'];
+        $ReportData['Init_Action_Value']    = 'report_default'; //只能放到这个位置
+        $ReportButtonList[]             = ['name'=>$SettingMap['Report_1_Name'], 'code'=>'Report_1'];
     }
     if($SettingMap['EnableReport'] == 'Yes' && $SettingMap['Report_2_Name'] != '')   {
-        $ReportData['Init_Action_Value'] = 'report_default';
-        $ReportData['Report_2']     = getReportStructureDataSingle($Index=2);
-        $ReportButtonList[]         = ['name'=>$SettingMap['Report_2_Name'], 'code'=>'Report_2'];
+        $ReportData['Init_Action_Value']    = 'report_default'; //只能放到这个位置
+        $ReportButtonList[]             = ['name'=>$SettingMap['Report_2_Name'], 'code'=>'Report_2'];
     }
     $ReportData['ButtonList'] = $ReportButtonList;
     return $ReportData;
 }
 
-function getReportStructureDataSingle($Index) {
+function getReportStructureDataSingle($currentReport) {
     global $db, $TableName, $Step, $GLOBAL_USER, $SettingMap, $MetaColumnNames;
 
     //functionNameIndividual
@@ -49,7 +64,7 @@ function getReportStructureDataSingle($Index) {
 
     $报表页面 = [];
     $报表页面['搜索区域'] = [];
-    $报表页面['搜索区域']['标题'] = "固定资产数据统计";
+    $报表页面['搜索区域']['标题'] = "固定资产数据统计" . $currentReport;
 
     $sql    = "select 学期名称 as name, 学期名称 as value from data_xueqi order by id desc";
     $rs     = $db->Execute($sql);

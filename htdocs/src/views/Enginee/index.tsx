@@ -1326,7 +1326,7 @@ const UserList = ({ authConfig, backEndApi, externalId, handleActionInMobileApp,
       }
       {store.init_action.action == 'report_default' && isMobileData == false && store.init_action.actionValue == "" && 
         <Grid item xs={12}>
-          <ReportCore authConfig={authConfig} backEndApi={''} report_default={store.report_default} />
+          <ReportCore authConfig={authConfig} backEndApi={backEndApi} report_default={store.report_default} />
         </Grid>
       }
       {addEditActionName == 'init_default' && isMobileData == true && isFirstLoadingTip==false && store.init_action.actionValue == "" &&  (

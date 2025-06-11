@@ -57,9 +57,13 @@ const ReportCore = (props: ReportType) => {
   //const dispatch = useDispatch<AppDispatch>()
   const [isLoading, setIsLoading] = useState(false);
   const [reportData, setReportData] = useState<any>(null)
+  const [currentButtonName, setCurrentButtonName] = useState<string>('')
 
-  const [searchData, setSearchData] = useState<any>(report_default)
-  console.log("searchData", searchData)
+  const [searchData, setSearchData] = useState<any>(null)
+
+  const ButtonList = report_default['ButtonList']
+
+  console.log("report_default", report_default)
 
   useEffect(() => {
     Mousetrap.bind(['alt+c', 'command+c'], handleClose);
@@ -73,10 +77,10 @@ const ReportCore = (props: ReportType) => {
   const AccessKey = window.localStorage.getItem(defaultConfig.storageAccessKeyName)!
 
   useEffect(() => {
-    if (backEndApi && backEndApi.length > 0) {
+    if (backEndApi && backEndApi.length > 0 && report_default && report_default['ButtonList'] && report_default['ButtonList'][0] && report_default['ButtonList'][0]['code']) {
       setIsLoading(true)
       axios
-        .get(authConfig.backEndApiHost + backEndApi, { headers: { Authorization: storedToken }, params: { action: 'report_default', isMobileData } })
+        .get(authConfig.backEndApiHost + backEndApi, { headers: { Authorization: storedToken }, params: { action: 'report_default', isMobileData, currentReport: currentButtonName != '' ? currentButtonName : report_default['ButtonList'][0]['code'] } })
         .then(res => {
           let dataJson: any = null
           const data = res.data
@@ -109,7 +113,7 @@ const ReportCore = (props: ReportType) => {
           console.log("axios.get editUrl return")
         })
     }
-  }, [isMobileData])
+  }, [currentButtonName, isMobileData])
 
   const handleSubmitData = async () => {
 
@@ -160,279 +164,289 @@ const ReportCore = (props: ReportType) => {
 
   return (
     <Fragment>
-      {reportData && (
-        <Fragment>
-          <Card sx={{mt: 1, pt: 1}}>
-            <CardContent sx={{ mt: 0, pt: 0 }}>
-              <Grid container spacing={2} sx={{mt: 0, mb: 2, p: 0}}>
-                <Grid item xs={12} sx={{p: 0, m: 0, mb: 1}}>
-                  <Typography variant='body2'>
-                    {reportData['搜索区域']['标题']}
-                  </Typography>
-                </Grid>
-                {reportData['搜索区域'] && reportData['搜索区域']['搜索条件'] && reportData['搜索区域']['搜索条件'].map((cell: any, index: number) => {
+      <Fragment>
+        <Card sx={{mt: 1, pt: 1}}>
+          <CardContent sx={{ mt: 0, pt: 0 }}>
+            <Grid container justifyContent="flex-start" sx={{mt: 3}}>
+              {ButtonList && ButtonList.length > 0 && ButtonList.map((item:any , index: number)=>(
+                <Button onClick={()=>{
+                  setCurrentButtonName(item.code)
+                }} sx={{ mr: 2}} variant={item.code == currentButtonName || (currentButtonName == '' && index == 0) ? 'contained' : 'outlined'} size="small">{item.name}</Button>
+              ))}
+            </Grid>
+            {reportData && (
+              <Fragment>
+                <Grid container spacing={2} sx={{mt: 0, mb: 2, p: 0}}>
+                  <Grid item xs={12} sx={{p: 0, m: 0, mb: 1}}>
+                    <Typography variant='body2'>
+                      {reportData['搜索区域']['标题']}
+                    </Typography>
+                  </Grid>
+                  {reportData['搜索区域'] && reportData['搜索区域']['搜索条件'] && reportData['搜索区域']['搜索条件'].map((cell: any, index: number) => {
 
-                  return (
-                    <Fragment key={index}>
-                        {cell.type == 'input' && (
+                    return (
+                      <Fragment key={index}>
+                          {cell.type == 'input' && (
+                              <Fragment>
+                                <Grid item xs={12} sm={cell.sm} sx={{mb: 1}}>
+                                  <TextField 
+                                    size='small' 
+                                    fullWidth 
+                                    label={cell.name} 
+                                    placeholder={cell.placeholder} 
+                                    onChange={(e) => {
+                                      setSearchData((prevData: any)=>({
+                                        ...prevData,
+                                        [cell.name]: e.target.value
+                                      }));
+                                    }}
+                                  />
+                                </Grid>
+                            </Fragment>
+                          )}
+                          {cell.type == 'select' && (
                             <Fragment>
                               <Grid item xs={12} sm={cell.sm} sx={{mb: 1}}>
-                                <TextField 
-                                  size='small' 
-                                  fullWidth 
-                                  label={cell.name} 
-                                  placeholder={cell.placeholder} 
-                                  onChange={(e) => {
+                                <FormControl size='small' fullWidth>
+                                  <InputLabel id='form-layouts-separator-select-label'>{cell.name} </InputLabel>
+                                  <Select
+                                    label={cell.name}
+                                    defaultValue={cell.default}
+                                    id='form-layouts-separator-select'
+                                    labelId='form-layouts-separator-select-label'
+                                    onChange={(e) => {
+                                      setSearchData((prevData: any)=>({
+                                        ...prevData,
+                                        [cell.name]: e.target.value
+                                      }));
+                                    }}
+                                  >
+                                    {cell.data && cell.data.map((item: any, itemIndex: number)=>{
+
+                                      return <MenuItem value={item.value} key={itemIndex}>{item.name}</MenuItem>
+                                    })}
+                                  </Select>
+                                </FormControl>
+                              </Grid>
+                            </Fragment>
+                          )}
+                          {cell.type == 'autocomplete' && (
+                            <Fragment>
+                              <Grid item xs={12} sm={cell.sm} sx={{mb: 1}}>
+                                <Autocomplete
+                                  size='small'
+                                  fullWidth
+                                  options={cell.data}
+                                  id='autocomplete-outlined'
+                                  getOptionLabel={(option: any) => option.name}
+                                  renderInput={params => <TextField {...params} label={cell.name} />}
+                                  onChange={(e: any, newValue: any) => {
+                                    console.log("search e", newValue)
                                     setSearchData((prevData: any)=>({
                                       ...prevData,
-                                      [cell.name]: e.target.value
+                                      [cell.name]: newValue.value
                                     }));
                                   }}
                                 />
                               </Grid>
-                          </Fragment>
-                        )}
-                        {cell.type == 'select' && (
-                          <Fragment>
-                            <Grid item xs={12} sm={cell.sm} sx={{mb: 1}}>
-                              <FormControl size='small' fullWidth>
-                                <InputLabel id='form-layouts-separator-select-label'>{cell.name} </InputLabel>
-                                <Select
-                                  label={cell.name}
-                                  defaultValue={cell.default}
-                                  id='form-layouts-separator-select'
-                                  labelId='form-layouts-separator-select-label'
-                                  onChange={(e) => {
-                                    setSearchData((prevData: any)=>({
-                                      ...prevData,
-                                      [cell.name]: e.target.value
-                                    }));
-                                  }}
-                                >
-                                  {cell.data && cell.data.map((item: any, itemIndex: number)=>{
-
-                                    return <MenuItem value={item.value} key={itemIndex}>{item.name}</MenuItem>
-                                  })}
-                                </Select>
-                              </FormControl>
-                            </Grid>
-                          </Fragment>
-                        )}
-                        {cell.type == 'autocomplete' && (
-                          <Fragment>
-                            <Grid item xs={12} sm={cell.sm} sx={{mb: 1}}>
-                              <Autocomplete
-                                size='small'
-                                fullWidth
-                                options={cell.data}
-                                id='autocomplete-outlined'
-                                getOptionLabel={(option: any) => option.name}
-                                renderInput={params => <TextField {...params} label={cell.name} />}
-                                onChange={(e: any, newValue: any) => {
-                                  console.log("search e", newValue)
-                                  setSearchData((prevData: any)=>({
-                                    ...prevData,
-                                    [cell.name]: newValue.value
-                                  }));
-                                }}
-                              />
-                            </Grid>
-                          </Fragment>
-                        )}
-                        
-                        {cell.type == 'autocompletemulti' && (
-                          <Fragment>
-                            <Grid item xs={12} sm={cell.sm} sx={{mb: 1}}>
-                              <Autocomplete
-                                size='small'
-                                fullWidth
-                                multiple
-                                options={cell.data}
-                                id='autocomplete-outlined'
-                                getOptionLabel={(option: any) => option.name}
-                                renderInput={params => <TextField {...params} label={cell.name} />}
-                                onChange={(e: any, newValue: any) => {
-                                  console.log("search e", newValue)
-                                  if (newValue && newValue.length > 0) {
-                                    const newValueArray: string[] = []
-                                    for (const fieldItem of newValue) {
-                                        newValueArray.push(fieldItem.value);
+                            </Fragment>
+                          )}
+                          
+                          {cell.type == 'autocompletemulti' && (
+                            <Fragment>
+                              <Grid item xs={12} sm={cell.sm} sx={{mb: 1}}>
+                                <Autocomplete
+                                  size='small'
+                                  fullWidth
+                                  multiple
+                                  options={cell.data}
+                                  id='autocomplete-outlined'
+                                  getOptionLabel={(option: any) => option.name}
+                                  renderInput={params => <TextField {...params} label={cell.name} />}
+                                  onChange={(e: any, newValue: any) => {
+                                    console.log("search e", newValue)
+                                    if (newValue && newValue.length > 0) {
+                                      const newValueArray: string[] = []
+                                      for (const fieldItem of newValue) {
+                                          newValueArray.push(fieldItem.value);
+                                      }
+                                      setSearchData((prevData: any)=>({
+                                        ...prevData,
+                                        [cell.name]: newValueArray.join(',')
+                                      }));
                                     }
-                                    setSearchData((prevData: any)=>({
-                                      ...prevData,
-                                      [cell.name]: newValueArray.join(',')
-                                    }));
-                                  }
-                                }}
-                              />
-                            </Grid>
-                          </Fragment>
-                        )}
-                    </Fragment>
-                  )
+                                  }}
+                                />
+                              </Grid>
+                            </Fragment>
+                          )}
+                      </Fragment>
+                    )
 
-                })}
-              </Grid>
-              <Grid item xs={12} sx={{mb: 2}}>
-                <Button size='small' type='submit' sx={{ mr: 2 }} variant='contained' onClick={handleSubmitData} disabled={searchData == null ? true : false}>
-                  {reportData['搜索区域']['搜索按钮']}
-                </Button>
-              </Grid>
+                  })}
+                </Grid>
+                <Grid item xs={12} sx={{mb: 2}}>
+                  <Button size='small' type='submit' sx={{ mr: 2 }} variant='contained' onClick={handleSubmitData} disabled={searchData == null ? true : false}>
+                    {reportData['搜索区域']['搜索按钮']}
+                  </Button>
+                </Grid>
+              </Fragment>
+            )}
 
-              {isLoading == false && (
-                <Fragment>
-                  <TableContainer sx={{ maxHeight: 800 }}>
-                    <Table 
-                      stickyHeader
-                      sx={{
-                        borderCollapse: 'collapse',
-                        border: `1px solid ${borderColor}`, 
-                        '& td, & th': {
-                          border: `1px solid ${borderColor}`,
-                        },
-                      }}
-                    >
-                      {/* First header row */}
-                      <TableHead>
-                        <TableRow>
-                          {reportData['数据区域']['头部'][0].map((cell: any, index: number) => (
-                            <TableCell
-                              key={`header1-${index}`}
-                              rowSpan={cell.row}
-                              colSpan={cell.col}
-                              sx={{                                
-                                whiteSpace: cell.wrap == 'No' ? 'nowrap' : 'pre-line',
-                                wordBreak: cell.wrap == 'Yes' ? 'break-word' : 'normal',
-                                textAlign: cell.align == 'Center' ? 'center' : 'left',
-                                fontWeight: 'bold',
-                                position: 'sticky',
-                                top: 0,
-                                px: 1,
-                                py: 2,
-                              }}
-                            >
-                              {cell.name}
-                            </TableCell>
-                          ))}
-                        </TableRow>
-                        <TableRow>
-                          {reportData['数据区域']['头部'][1].map((cell: any, index: number) => (
-                            <TableCell
-                              key={`header2-${index}`}
-                              rowSpan={cell.row}
-                              colSpan={cell.col}
-                              sx={{                                
-                                whiteSpace: cell.wrap == 'No' ? 'nowrap' : 'pre-line',
-                                wordBreak: cell.wrap == 'Yes' ? 'break-word' : 'normal',
-                                textAlign: cell.align == 'Center' ? 'center' : 'left',
-                                fontWeight: 'bold',
-                                position: 'sticky',
-                                top: 41,
-                                px: 1,
-                                py: 2,
-                              }}
-                            >
-                              {cell.name}
-                            </TableCell>
-                          ))}
-                        </TableRow>
-                      </TableHead>
-    
-                      {/* Table body */}
-                      <TableBody>
-                        {reportData['数据区域']['数据'].map((cell: any, rowIndex: number) => (
-                          <TableRow key={`row-${rowIndex}`}>
-                            {Object.keys(cell).map((key, cellIndex) => (
-                              <TableCell
-                                key={`cell-${rowIndex}-${cellIndex}`}
-                                rowSpan={cell.row}
-                                colSpan={cell.col}
-                                sx={{                                
-                                  whiteSpace: cell.wrap == 'No' ? 'nowrap' : 'pre-line',
-                                  wordBreak: cell.wrap == 'Yes' ? 'break-word' : 'normal',
-                                  textAlign: cell.align == 'Center' ? 'center' : 'left',
-                                  mx: 0,
-                                  my: 1,
-                                  py: 0,
-                                  px: 1
-                                }}
-                              >
-                                {cell[key]}
-                              </TableCell>
-                            ))}
-                          </TableRow>
+            {isLoading == false && reportData && (
+              <Fragment>
+                <TableContainer sx={{ maxHeight: 800 }}>
+                  <Table 
+                    stickyHeader
+                    sx={{
+                      borderCollapse: 'collapse',
+                      border: `1px solid ${borderColor}`, 
+                      '& td, & th': {
+                        border: `1px solid ${borderColor}`,
+                      },
+                    }}
+                  >
+                    {/* First header row */}
+                    <TableHead>
+                      <TableRow>
+                        {reportData['数据区域']['头部'][0].map((cell: any, index: number) => (
+                          <TableCell
+                            key={`header1-${index}`}
+                            rowSpan={cell.row}
+                            colSpan={cell.col}
+                            sx={{                                
+                              whiteSpace: cell.wrap == 'No' ? 'nowrap' : 'pre-line',
+                              wordBreak: cell.wrap == 'Yes' ? 'break-word' : 'normal',
+                              textAlign: cell.align == 'Center' ? 'center' : 'left',
+                              fontWeight: 'bold',
+                              position: 'sticky',
+                              top: 0,
+                              px: 1,
+                              py: 2,
+                            }}
+                          >
+                            {cell.name}
+                          </TableCell>
                         ))}
-                      </TableBody>
-                    </Table>
-    
-                    <Table 
-                      sx={{
-                        borderCollapse: 'collapse',
-                        border: `1px solid ${borderColor}`, 
-                        '& td, & th': {
-                          border: `1px solid ${borderColor}`,
-                        },
-                        mt: 5,
-                        mb: 4
-                      }}
-                    >
-                      <TableHead>
-                        <TableRow>
+                      </TableRow>
+                      <TableRow>
+                        {reportData['数据区域']['头部'][1].map((cell: any, index: number) => (
                           <TableCell
-                              sx={{
-                                px: 1,
-                                py: 2,
+                            key={`header2-${index}`}
+                            rowSpan={cell.row}
+                            colSpan={cell.col}
+                            sx={{                                
+                              whiteSpace: cell.wrap == 'No' ? 'nowrap' : 'pre-line',
+                              wordBreak: cell.wrap == 'Yes' ? 'break-word' : 'normal',
+                              textAlign: cell.align == 'Center' ? 'center' : 'left',
+                              fontWeight: 'bold',
+                              position: 'sticky',
+                              top: 41,
+                              px: 1,
+                              py: 2,
+                            }}
+                          >
+                            {cell.name}
+                          </TableCell>
+                        ))}
+                      </TableRow>
+                    </TableHead>
+  
+                    {/* Table body */}
+                    <TableBody>
+                      {reportData['数据区域']['数据'].map((cell: any, rowIndex: number) => (
+                        <TableRow key={`row-${rowIndex}`}>
+                          {Object.keys(cell).map((key, cellIndex) => (
+                            <TableCell
+                              key={`cell-${rowIndex}-${cellIndex}`}
+                              rowSpan={cell.row}
+                              colSpan={cell.col}
+                              sx={{                                
+                                whiteSpace: cell.wrap == 'No' ? 'nowrap' : 'pre-line',
+                                wordBreak: cell.wrap == 'Yes' ? 'break-word' : 'normal',
+                                textAlign: cell.align == 'Center' ? 'center' : 'left',
+                                mx: 0,
+                                my: 1,
+                                py: 0,
+                                px: 1
                               }}
                             >
-                              {reportData['底部区域']['备注']['标题']}
-                          </TableCell>
+                              {cell[key]}
+                            </TableCell>
+                          ))}
                         </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        <TableRow>
-                          <TableCell
-                              sx={{
-                                px: 1,
-                                py: 2,
-                                whiteSpace: 'pre-line',
-                                wordBreak: 'break-word',
-                              }}
-                            >
-                              {reportData['底部区域']['备注']['内容']}
-                          </TableCell>
-                        </TableRow>
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                  <Grid container justifyContent="flex-end" sx={{mt: 3}}>
-                    {reportData['底部区域'] && reportData['底部区域']['功能按钮'] && reportData['底部区域']['功能按钮'].includes('打印') && (
-                      <Button onClick={()=>{window.print();}}  variant='outlined' size="small">打印</Button>
-                    )}
-                  </Grid>
-                </Fragment>
-              )}
+                      ))}
+                    </TableBody>
+                  </Table>
+  
+                  <Table 
+                    sx={{
+                      borderCollapse: 'collapse',
+                      border: `1px solid ${borderColor}`, 
+                      '& td, & th': {
+                        border: `1px solid ${borderColor}`,
+                      },
+                      mt: 5,
+                      mb: 4
+                    }}
+                  >
+                    <TableHead>
+                      <TableRow>
+                        <TableCell
+                            sx={{
+                              px: 1,
+                              py: 2,
+                            }}
+                          >
+                            {reportData['底部区域']['备注']['标题']}
+                        </TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      <TableRow>
+                        <TableCell
+                            sx={{
+                              px: 1,
+                              py: 2,
+                              whiteSpace: 'pre-line',
+                              wordBreak: 'break-word',
+                            }}
+                          >
+                            {reportData['底部区域']['备注']['内容']}
+                        </TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+                <Grid container justifyContent="flex-end" sx={{mt: 3}}>
+                  {reportData['底部区域'] && reportData['底部区域']['功能按钮'] && reportData['底部区域']['功能按钮'].includes('打印') && (
+                    <Button onClick={()=>{window.print();}}  variant='outlined' size="small">打印</Button>
+                  )}
+                </Grid>
+              </Fragment>
+            )}
 
-              {isLoading == true && (
-                <Grid item xs={12} sm={12} container justifyContent="space-around">
-                  <Box sx={{ mt: 6, mb: 6, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-                      <CircularProgress />
-                      <Typography sx={{pt:5, pb:5}}>正在加载中</Typography>
-                  </Box>
-                </Grid>
-              )}
-                
-            </CardContent>
-          </Card>
-        </Fragment>
-      )}
+            {reportData != null && isLoading == true && (
+              <Grid item xs={12} sm={12} container justifyContent="space-around">
+                <Box sx={{ mt: 6, mb: 6, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+                    <CircularProgress />
+                    <Typography sx={{pt:5, pb:5}}>正在加载中</Typography>
+                </Box>
+              </Grid>
+            )}
+              
+          </CardContent>
+        </Card>
+      </Fragment>
+      
       {reportData == null && isLoading == true && (
-                <Grid item xs={12} sm={12} container justifyContent="space-around">
-                  <Box sx={{ mt: 6, mb: 6, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-                      <CircularProgress />
-                      <Typography sx={{pt:5, pb:5}}>正在加载中</Typography>
-                  </Box>
-                </Grid>
-              )}
+        <Grid item xs={12} sm={12} container justifyContent="space-around">
+          <Box sx={{ mt: 6, mb: 6, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+              <CircularProgress />
+              <Typography sx={{pt:5, pb:5}}>正在加载中</Typography>
+          </Box>
+        </Grid>
+      )}
     </Fragment>
   )
 }
