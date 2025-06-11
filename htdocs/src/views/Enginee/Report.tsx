@@ -46,7 +46,7 @@ const ViewTable = ({ backEndApi }: any) => { //props: ViewTableType
     <Fragment>
     {addEditViewShowInWindow ?
       <Grid sx={{ pb: 2, px: 0, pt: 1, position: 'relative' }} style={{ width: '100%' }}>
-        <ReportCore authConfig={authConfig} externalId={Number(externalId)} action={action} backEndApi={backEndApi} editViewCounter={editViewCounter + 1} />
+        <ReportCore authConfig={authConfig} backEndApi={backEndApi} report_default={null} />
       </Grid>
       :
       <Dialog
@@ -65,7 +65,7 @@ const ViewTable = ({ backEndApi }: any) => { //props: ViewTableType
           >
             <Icon icon='mdi:close' />
           </IconButton>
-          <ReportCore authConfig={authConfig} externalId={Number(externalId)} action={action} backEndApi={backEndApi} editViewCounter={editViewCounter + 1} />
+          <ReportCore authConfig={authConfig} backEndApi={backEndApi} report_default={null} />
         </DialogContent>
       </Dialog >
     }

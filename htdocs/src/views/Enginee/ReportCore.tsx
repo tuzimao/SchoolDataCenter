@@ -39,17 +39,14 @@ import MenuItem from '@mui/material/MenuItem'
 
 
 interface ReportType {
-  action: string
-  backEndApi: string
-  editViewCounter: number
   authConfig: any
-  externalId: number
+  backEndApi: string
+  report_default: any
 }
 
 const ReportCore = (props: ReportType) => {
   // ** Props
-  const { authConfig, externalId, action, backEndApi, editViewCounter } = props
-  console.log("externalId props", externalId)
+  const { authConfig, backEndApi, report_default } = props
 
   const theme = useTheme()
 
@@ -61,7 +58,7 @@ const ReportCore = (props: ReportType) => {
   const [isLoading, setIsLoading] = useState(false);
   const [reportData, setReportData] = useState<any>(null)
 
-  const [searchData, setSearchData] = useState<any>(null)
+  const [searchData, setSearchData] = useState<any>(report_default)
   console.log("searchData", searchData)
 
   useEffect(() => {
@@ -76,10 +73,10 @@ const ReportCore = (props: ReportType) => {
   const AccessKey = window.localStorage.getItem(defaultConfig.storageAccessKeyName)!
 
   useEffect(() => {
-    if (action == "report_default" && editViewCounter > 0) {
+    if (backEndApi && backEndApi.length > 0) {
       setIsLoading(true)
       axios
-        .get(authConfig.backEndApiHost + backEndApi, { headers: { Authorization: storedToken }, params: { action, editViewCounter, isMobileData } })
+        .get(authConfig.backEndApiHost + backEndApi, { headers: { Authorization: storedToken }, params: { action: 'report_default', isMobileData } })
         .then(res => {
           let dataJson: any = null
           const data = res.data
@@ -112,7 +109,7 @@ const ReportCore = (props: ReportType) => {
           console.log("axios.get editUrl return")
         })
     }
-  }, [editViewCounter, isMobileData])
+  }, [isMobileData])
 
   const handleSubmitData = async () => {
 

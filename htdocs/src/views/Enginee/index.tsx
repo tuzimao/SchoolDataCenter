@@ -64,6 +64,7 @@ import IndexTableHeader from 'src/views/Enginee/IndexTableHeader'
 import IndexTableHeaderMobile from 'src/views/Enginee/IndexTableHeaderMobile'
 import AddOrEditTable from './AddOrEditTable'
 import ViewTable from './ViewTable'
+import ReportCore from './ReportCore'
 import FilesPreview from './FilesPreview'
 import IndexBottomFlowNode from './IndexBottomFlowNode'
 import AppSoulChatList from './AppSoulChatList'
@@ -300,6 +301,13 @@ const UserList = ({ authConfig, backEndApi, externalId, handleActionInMobileApp,
         setAddEditActionName(response.init_action.action)
         setAddEditActionId(response.init_action.id)
         setAddEditActionOpen(!addEditActionOpen)
+        setAddEditViewShowInWindow(true)
+      }
+      if(response && response.init_action.action.indexOf("report_default") != -1) {
+        setAddEditActionName(response.init_action.action)
+        setAddEditActionId(response.init_action.id)
+        setViewActionOpen(!viewActionOpen)
+        setEditViewCounter(0)
         setAddEditViewShowInWindow(true)
       }
       else if(response && response.init_action.action.indexOf("init_default") != -1) {
@@ -1179,143 +1187,148 @@ const UserList = ({ authConfig, backEndApi, externalId, handleActionInMobileApp,
 
   return (
     <Grid container spacing={0}>
-      {store.init_action.action == 'init_default' && isMobileData == false && store.init_action.actionValue == "" ?
-      <Grid item xs={12}>
-        <Card>
-          {((store.init_default.returnButton1 && store.init_default.returnButton1.status) || (store.init_default.returnButton2 && store.init_default.returnButton2.status)) ?
-            <Grid sx={{ pr: 3, pb: 0, display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
-              <CardHeader title={store.init_default.searchtitle} />
-              <Grid sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
-                {store.init_default.returnButton1 && store.init_default.returnButton1.status && (
-                  <Button sx={{ mb: 2, mr: 2 }} variant='outlined' size='small' onClick={() => { window.history.back(); }}>{store.init_default.returnButton1.text}</Button>
-                )}
-                {store.init_default.returnButton2 && store.init_default.returnButton2.status && store.init_default.returnButton2.url && (
-                  <Button sx={{ mb: 2, mr: 2 }} variant='contained' size='small' onClick={() => { router.push(store.init_default.returnButton2.url + externalId) }}>{store.init_default.returnButton2.text}</Button>
-                )}
+      {store.init_action.action == 'init_default' && isMobileData == false && store.init_action.actionValue == "" &&
+        <Grid item xs={12}>
+          <Card>
+            {((store.init_default.returnButton1 && store.init_default.returnButton1.status) || (store.init_default.returnButton2 && store.init_default.returnButton2.status)) ?
+              <Grid sx={{ pr: 3, pb: 0, display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
+                <CardHeader title={store.init_default.searchtitle} />
+                <Grid sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
+                  {store.init_default.returnButton1 && store.init_default.returnButton1.status && (
+                    <Button sx={{ mb: 2, mr: 2 }} variant='outlined' size='small' onClick={() => { window.history.back(); }}>{store.init_default.returnButton1.text}</Button>
+                  )}
+                  {store.init_default.returnButton2 && store.init_default.returnButton2.status && store.init_default.returnButton2.url && (
+                    <Button sx={{ mb: 2, mr: 2 }} variant='contained' size='small' onClick={() => { router.push(store.init_default.returnButton2.url + externalId) }}>{store.init_default.returnButton2.text}</Button>
+                  )}
+                </Grid>
               </Grid>
-            </Grid>
-            :
-            <CardHeader title={store.init_default.searchtitle} sx={{ pb: 2, pt: 3 }}/>
-          }
-          {store && store.init_default && store.init_default.rowdelete && store.init_default.rowdelete.map((Item: any, index: number) => {
+              :
+              <CardHeader title={store.init_default.searchtitle} sx={{ pb: 2, pt: 3 }}/>
+            }
+            {store && store.init_default && store.init_default.rowdelete && store.init_default.rowdelete.map((Item: any, index: number) => {
 
-            return (
-              <Grid item key={"Grid_" + index}>
-                <Fragment>
-                  <Dialog
-                    open={multiReviewOpenDialog[Item.action] == undefined ? false : multiReviewOpenDialog[Item.action]}
-                    onClose={() => handleMultiCloseDialog()}
-                    aria-labelledby='form-dialog-title'
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
-                        e.preventDefault();
-                        handleMultiCloseDialogAndSubmit(Item.action, selectedRows, store.init_default.CSRF_TOKEN);
-                      }
-                    }}
-                  >
-                    <DialogTitle id='form-dialog-title'>{Item.title}</DialogTitle>
-                    <DialogContent>
-                      <DialogContentText sx={{ mb: 3 }}>
-                        {Item.content}
-                      </DialogContentText>
-                    </DialogContent>
-                    <DialogActions className='dialog-actions-dense'>
-                      <Button onClick={() => handleMultiCloseDialog()}>{Item.cancel}</Button>
-                      <Button 
-                        onClick={() => { handleMultiCloseDialogAndSubmit(Item.action, selectedRows, store.init_default.CSRF_TOKEN) }} 
-                        variant='contained'
-                        >
-                        {Item.submit}
-                        </Button>
-                    </DialogActions>
-                  </Dialog>
-                </Fragment>
-              </Grid>
-            )
-          })}
-
-          {store && store.init_default && store.init_default.searchFieldText && store.init_default.searchFieldArray && store.init_default.searchFieldArray.length>0 && isLoadingTip==false && isFirstLoadingTip==false ? <IndexTableHeader filter={store.init_default.filter} handleFilterChange={handleFilterChange} value={searchFieldName} handleFilter={tableHeaderHandleFilter} toggleAddTableDrawer={toggleAddTableDrawer} toggleImportTableDrawer={toggleImportTableDrawer} toggleExportTableDrawer={toggleExportTableDrawer} searchFieldText={store.init_default.searchFieldText} searchFieldArray={store.init_default.searchFieldArray} selectedRows={selectedRows} multireview={store.init_default.multireview} multiReviewHandleFilter={multiReviewHandleFilter} button_search={store.init_default.button_search} button_add={store.init_default.button_add} button_import={store.init_default.button_import} button_export={store.init_default.button_export} isAddButton={store && store.add_default && store.add_default.allFields ? true : false} isImportButton={store && store.import_default && store.import_default.allFields ? true : false} isExportButton={store && store.export_default && store.export_default.allFields && store.export_default.exportUrl ? true : false} CSRF_TOKEN={store.init_default.CSRF_TOKEN} MobileEndShowSearch={store.init_default.MobileEndShowSearch} MobileEndShowGroupFilter={store.init_default.MobileEndShowGroupFilter} /> : ''}
-
-          {isLoadingTip ?
-            <Grid item xs={12} sm={12} container justifyContent="space-around">
-                <Box sx={{ mt: 6, mb: 6, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-                    <CircularProgress />
-                    <Typography sx={{pt:5,pb:5}}>{isLoadingTipText}</Typography>
-                </Box>
-            </Grid>
-          :
-          <DataGrid
-            page={page}
-            autoHeight
-            pagination
-            rows={store.data}
-            rowCount={store.total}
-            rowHeight={Number(store.init_default.rowHeight)}
-            columns={columns_for_datagrid}
-            checkboxSelection={store.init_default.checkboxSelection?true:false}
-            disableSelectionOnClick
-            pageSize={pageSize}
-            sortingMode='server'
-            paginationMode='server'
-            onSortModelChange={handleSortModel}
-            rowsPerPageOptions={store.pageNumberArray}
-            onPageChange={newPage => setPage(newPage)}
-            onPageSizeChange={(newPageSize: number) => setPageSize(newPageSize)}
-            selectionModel={selectedRows}
-            onSelectionModelChange={rows => setSelectedRows(rows)}
-            loading={isLoading}
-            filterMode="server"
-            onFilterModelChange={onFilterColumnChangeMulti}
-            isRowSelectable={(params) => !store.init_default.ForbiddenSelectRow.includes(params.id)}
-            onCellEditCommit={(props:GridCellEditCommitParams) => {
-              const { id, field, value } = props;
-              const formData = new FormData();
-              formData.append('id', String(id));
-              formData.append('field', field);
-              formData.append('value', value);
-              formData.append('externalId', externalId);
-              fetch(
-                authConfig.backEndApiHost + backEndApi + '?action=updateone',
-                {
-                  headers: {
-                    Authorization: storedToken+"::::"+store.init_default.CSRF_TOKEN
-                  },
-                  method: 'POST',
-                  body: formData,
-                }
+              return (
+                <Grid item key={"Grid_" + index}>
+                  <Fragment>
+                    <Dialog
+                      open={multiReviewOpenDialog[Item.action] == undefined ? false : multiReviewOpenDialog[Item.action]}
+                      onClose={() => handleMultiCloseDialog()}
+                      aria-labelledby='form-dialog-title'
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault();
+                          handleMultiCloseDialogAndSubmit(Item.action, selectedRows, store.init_default.CSRF_TOKEN);
+                        }
+                      }}
+                    >
+                      <DialogTitle id='form-dialog-title'>{Item.title}</DialogTitle>
+                      <DialogContent>
+                        <DialogContentText sx={{ mb: 3 }}>
+                          {Item.content}
+                        </DialogContentText>
+                      </DialogContent>
+                      <DialogActions className='dialog-actions-dense'>
+                        <Button onClick={() => handleMultiCloseDialog()}>{Item.cancel}</Button>
+                        <Button 
+                          onClick={() => { handleMultiCloseDialogAndSubmit(Item.action, selectedRows, store.init_default.CSRF_TOKEN) }} 
+                          variant='contained'
+                          >
+                          {Item.submit}
+                          </Button>
+                      </DialogActions>
+                    </Dialog>
+                  </Fragment>
+                </Grid>
               )
-                .then((response) => response.json())
-                .then((result) => {
-                  console.log('Success:', result);
-                  if (result.status == "OK") {
-                    toast.success(result.msg)
-                  }
-                  else {
-                    toast.error(result.msg)
-                  }
-                })
-                .catch((error) => {
-                  console.error('Error:', error);
-                  toast.error("Network Error!");
-                });
-            }}
+            })}
 
-            //pinnedColumns={pinnedColumns}
-            //onPinnedColumnsChange={handlePinnedColumnsChange}
-            localeText={dataGridLanguageText['localeText']}
-          />
+            {store && store.init_default && store.init_default.searchFieldText && store.init_default.searchFieldArray && store.init_default.searchFieldArray.length>0 && isLoadingTip==false && isFirstLoadingTip==false ? <IndexTableHeader filter={store.init_default.filter} handleFilterChange={handleFilterChange} value={searchFieldName} handleFilter={tableHeaderHandleFilter} toggleAddTableDrawer={toggleAddTableDrawer} toggleImportTableDrawer={toggleImportTableDrawer} toggleExportTableDrawer={toggleExportTableDrawer} searchFieldText={store.init_default.searchFieldText} searchFieldArray={store.init_default.searchFieldArray} selectedRows={selectedRows} multireview={store.init_default.multireview} multiReviewHandleFilter={multiReviewHandleFilter} button_search={store.init_default.button_search} button_add={store.init_default.button_add} button_import={store.init_default.button_import} button_export={store.init_default.button_export} isAddButton={store && store.add_default && store.add_default.allFields ? true : false} isImportButton={store && store.import_default && store.import_default.allFields ? true : false} isExportButton={store && store.export_default && store.export_default.allFields && store.export_default.exportUrl ? true : false} CSRF_TOKEN={store.init_default.CSRF_TOKEN} MobileEndShowSearch={store.init_default.MobileEndShowSearch} MobileEndShowGroupFilter={store.init_default.MobileEndShowGroupFilter} /> : ''}
+
+            {isLoadingTip ?
+              <Grid item xs={12} sm={12} container justifyContent="space-around">
+                  <Box sx={{ mt: 6, mb: 6, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+                      <CircularProgress />
+                      <Typography sx={{pt:5,pb:5}}>{isLoadingTipText}</Typography>
+                  </Box>
+              </Grid>
+            :
+            <DataGrid
+              page={page}
+              autoHeight
+              pagination
+              rows={store.data}
+              rowCount={store.total}
+              rowHeight={Number(store.init_default.rowHeight)}
+              columns={columns_for_datagrid}
+              checkboxSelection={store.init_default.checkboxSelection?true:false}
+              disableSelectionOnClick
+              pageSize={pageSize}
+              sortingMode='server'
+              paginationMode='server'
+              onSortModelChange={handleSortModel}
+              rowsPerPageOptions={store.pageNumberArray}
+              onPageChange={newPage => setPage(newPage)}
+              onPageSizeChange={(newPageSize: number) => setPageSize(newPageSize)}
+              selectionModel={selectedRows}
+              onSelectionModelChange={rows => setSelectedRows(rows)}
+              loading={isLoading}
+              filterMode="server"
+              onFilterModelChange={onFilterColumnChangeMulti}
+              isRowSelectable={(params) => !store.init_default.ForbiddenSelectRow.includes(params.id)}
+              onCellEditCommit={(props:GridCellEditCommitParams) => {
+                const { id, field, value } = props;
+                const formData = new FormData();
+                formData.append('id', String(id));
+                formData.append('field', field);
+                formData.append('value', value);
+                formData.append('externalId', externalId);
+                fetch(
+                  authConfig.backEndApiHost + backEndApi + '?action=updateone',
+                  {
+                    headers: {
+                      Authorization: storedToken+"::::"+store.init_default.CSRF_TOKEN
+                    },
+                    method: 'POST',
+                    body: formData,
+                  }
+                )
+                  .then((response) => response.json())
+                  .then((result) => {
+                    console.log('Success:', result);
+                    if (result.status == "OK") {
+                      toast.success(result.msg)
+                    }
+                    else {
+                      toast.error(result.msg)
+                    }
+                  })
+                  .catch((error) => {
+                    console.error('Error:', error);
+                    toast.error("Network Error!");
+                  });
+              }}
+
+              //pinnedColumns={pinnedColumns}
+              //onPinnedColumnsChange={handlePinnedColumnsChange}
+              localeText={dataGridLanguageText['localeText']}
+            />
+            }
+          </Card>
+          { (store.init_default.ApprovalNodeFields && store.init_default.ApprovalNodeFields.AllNodes && store.init_default.ApprovalNodeFields.CurrentNode && store.init_default.ApprovalNodeFields.ApprovalNodeTitle) || (store.init_default?.ApprovalNodeFields?.DebugSql) ?
+            (
+            <Grid item xs={12} sx={{mt: 2}}>
+              <IndexBottomFlowNode ApprovalNodeFields={store.init_default.ApprovalNodeFields.AllNodes} ApprovalNodeCurrentField={store.init_default.ApprovalNodeFields.CurrentNode} ActiveStep={store.init_default.ApprovalNodeFields.ActiveStep} ApprovalNodeTitle={store.init_default.ApprovalNodeFields.ApprovalNodeTitle} DebugSql={store.init_default?.ApprovalNodeFields?.DebugSql} Memo={store.init_default.ApprovalNodeFields.Memo} AdminFilterTipText={store.init_default.ApprovalNodeFields.AdminFilterTipText} />
+            </Grid>
+            )
+            : ''
           }
-        </Card>
-        { (store.init_default.ApprovalNodeFields && store.init_default.ApprovalNodeFields.AllNodes && store.init_default.ApprovalNodeFields.CurrentNode && store.init_default.ApprovalNodeFields.ApprovalNodeTitle) || (store.init_default?.ApprovalNodeFields?.DebugSql) ?
-          (
-          <Grid item xs={12} sx={{mt: 2}}>
-            <IndexBottomFlowNode ApprovalNodeFields={store.init_default.ApprovalNodeFields.AllNodes} ApprovalNodeCurrentField={store.init_default.ApprovalNodeFields.CurrentNode} ActiveStep={store.init_default.ApprovalNodeFields.ActiveStep} ApprovalNodeTitle={store.init_default.ApprovalNodeFields.ApprovalNodeTitle} DebugSql={store.init_default?.ApprovalNodeFields?.DebugSql} Memo={store.init_default.ApprovalNodeFields.Memo} AdminFilterTipText={store.init_default.ApprovalNodeFields.AdminFilterTipText} />
-          </Grid>
-          )
-          : ''
-        }
-      </Grid>
-      : '' }
+        </Grid>
+      }
+      {store.init_action.action == 'report_default' && isMobileData == false && store.init_action.actionValue == "" && 
+        <Grid item xs={12}>
+          <ReportCore authConfig={authConfig} backEndApi={''} report_default={store.report_default} />
+        </Grid>
+      }
       {addEditActionName == 'init_default' && isMobileData == true && isFirstLoadingTip==false && store.init_action.actionValue == "" &&  (
         <Grid item xs={12}>
           <Card sx={{ mb: 3}}>

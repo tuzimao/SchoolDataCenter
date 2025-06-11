@@ -49,6 +49,7 @@ export const appUsersSlice = createSlice({
     view_default_5: [],
     export_default: [],
     import_default: [],
+    report_default: [],
     rowHeight: 60,
     pageNumber: 10,
     pageNumberArray: [10, 15, 20, 30, 40, 50, 100]
@@ -68,6 +69,7 @@ export const appUsersSlice = createSlice({
       state.view_default = action.payload.view_default
       state.export_default = action.payload.export_default
       state.import_default = action.payload.import_default
+      state.report_default = action.payload.report_default
       state.edit_default_configsetting = action.payload.edit_default_configsetting
       state.edit_default_1 = action.payload.edit_default_1
       state.edit_default_2 = action.payload.edit_default_2
