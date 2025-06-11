@@ -18,7 +18,6 @@ $USER_ID    = ForSqlInjection($GLOBAL_USER->USER_ID);
 $USER_NAME  = ForSqlInjection($GLOBAL_USER->USER_NAME);
 $DEPT_ID    = ForSqlInjection($GLOBAL_USER->DEPT_ID);
 
-sleep(1);
 
 $报表页面 = [];
 $报表页面['搜索区域'] = [];

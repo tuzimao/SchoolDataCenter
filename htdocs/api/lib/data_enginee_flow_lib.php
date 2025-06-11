@@ -260,6 +260,8 @@ require_once('data_enginee_flow_lib_edit_default_configsetting_data.php');
 
 require_once('data_enginee_flow_lib_view_default.php');
 
+require_once('data_enginee_flow_lib_report_default.php');
+
 require_once('data_enginee_flow_lib_delete_array.php');
 
 
@@ -1234,6 +1236,14 @@ else {
 $RS['init_action']['id']                            = EncryptID($GetAllIDList[0]); //USE THIS VALUE IN EDIT_DEFAULT SINGLE RECORD
 $RS['init_action']['IsGetStructureFromEditDefault'] = 0;
 
+$getReportStructureDataData             = getReportStructureData(); //在data_enginee_flow_lib_report_default.php中定义
+$RS['report_default']                   = $getReportStructureDataData;
+if($getReportStructureDataData['Init_Action_Value'] != "") {
+    //强制转为报表模型
+    $RS['init_action']['actionValue']   = "";
+    $RS['init_action']['action']        = $getReportStructureDataData['Init_Action_Value'];
+}
+
 $currentUrlAccessFileName                           = basename($_SERVER['PHP_SELF']);
 $currentUrlAccessFileName                           = str_replace("apps_", "", $currentUrlAccessFileName);
 $currentUrlAccessFileName                           = str_replace(".php", "", $currentUrlAccessFileName);
@@ -1363,11 +1373,12 @@ $RS['edit_default']['tablewidth']       = 650;
 $RS['edit_default']['submitloading']    = __("SubmitLoading");
 $RS['edit_default']['loading']          = __("Loading");
 
-$RS['view_default']               = $RS['add_default'];
-$RS['view_default']['allFields']  = $allFieldsView;
-$RS['view_default']['titletext']  = $SettingMap['View_Title_Name'];
-$RS['view_default']['titlememo']  = $SettingMap['View_Subtitle_Name'];
-$RS['view_default']['componentsize'] = "small";
+$RS['view_default']                     = $RS['add_default'];
+$RS['view_default']['allFields']        = $allFieldsView;
+$RS['view_default']['titletext']        = $SettingMap['View_Title_Name'];
+$RS['view_default']['titlememo']        = $SettingMap['View_Subtitle_Name'];
+$RS['view_default']['componentsize']    = "small";
+
 
 //Relative Child Table Support
 $Relative_Child_Table                   = $SettingMap['Relative_Child_Table'];

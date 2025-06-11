@@ -25,50 +25,95 @@ foreach($rsf_a as $Item)  {
     $MenuOneNameArray[] = ['value'=>$Item['MenuOneName'],'label'=>$Item['MenuOneName']];
 }
 
+
+$表头选项 = [];
+$表头选项[] = ['value'=>'3', 'label'=>'表头3行'];
+$表头选项[] = ['value'=>'2', 'label'=>'表头2行'];
+$表头选项[] = ['value'=>'1', 'label'=>'表头1行'];
+
+$左侧结构选项 = [];
+$左侧结构选项[] = ['value'=>'用户名/姓名', 'label'=>'用户名/姓名'];
+$左侧结构选项[] = ['value'=>'用户名/姓名/部门', 'label'=>'用户名/姓名/部门'];
+$左侧结构选项[] = ['value'=>'部门/用户名/姓名', 'label'=>'部门/用户名/姓名'];
+$左侧结构选项[] = ['value'=>'学生/姓名/班级', 'label'=>'学生/姓名/班级'];
+$左侧结构选项[] = ['value'=>'班级/学生/姓名', 'label'=>'班级/学生/姓名'];
+$左侧结构选项[] = ['value'=>'班级/专业/系部', 'label'=>'班级/专业/系部'];
+$左侧结构选项[] = ['value'=>'系部/专业/班级', 'label'=>'系部/专业/班级'];
+$左侧结构选项[] = ['value'=>'动态数据做为左侧列', 'label'=>'动态数据做为左侧列'];
+
+$左侧数据是否全部显示 = [];
+$左侧数据是否全部显示[] = ['value'=>'只显示有数据的记录', 'label'=>'只显示有数据的记录'];
+$左侧数据是否全部显示[] = ['value'=>'全部显示所有记录', 'label'=>'全部显示所有记录'];
+
 $MenuTab_Options = [];
 $MenuTab_Options[] = ['value'=>'Yes', 'label'=>__('Yes')];
 $MenuTab_Options[] = ['value'=>'No', 'label'=>__('No')];
-$edit_default_8['ReportSetting1'][] = ['name' => "EnableReport", 'show'=>true, 'type'=>'select', 'options'=>$MenuTab_Options, 'label' => __("EnableReport"), 'value' => "No", 'placeholder' => "", 'helptext' => __(""), 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>6]];
+$edit_default_8['ReportSetting'][] = ['name' => "EnableReport", 'show'=>true, 'type'=>'select', 'options'=>$MenuTab_Options, 'label' => __("EnableReport"), 'value' => "No", 'placeholder' => "", 'helptext' => __(""), 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>12]];
 
-$MenuTab_Options = [];
-$MenuTab_Options[] = ['value'=>'3', 'label'=>'表头3行'];
-$MenuTab_Options[] = ['value'=>'2', 'label'=>'表头2行'];
-$MenuTab_Options[] = ['value'=>'1', 'label'=>'表头1行'];
-$edit_default_8['ReportSetting1'][] = ['name' => "ReportHeaderCount", 'show'=>true, 'type'=>'select', 'options'=>$MenuTab_Options, 'label' => __("ReportHeaderCount"), 'value' => "2", 'placeholder' => "", 'helptext' => __(""), 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>6]];
-
-$MenuTab_Options = [];
-$MenuTab_Options[] = ['value'=>'用户名/姓名', 'label'=>'用户名/姓名'];
-$MenuTab_Options[] = ['value'=>'用户名/姓名/部门', 'label'=>'用户名/姓名/部门'];
-$MenuTab_Options[] = ['value'=>'部门/用户名/姓名', 'label'=>'部门/用户名/姓名'];
-$MenuTab_Options[] = ['value'=>'学生/姓名/班级', 'label'=>'学生/姓名/班级'];
-$MenuTab_Options[] = ['value'=>'班级/学生/姓名', 'label'=>'班级/学生/姓名'];
-$MenuTab_Options[] = ['value'=>'班级/专业/系部', 'label'=>'班级/专业/系部'];
-$MenuTab_Options[] = ['value'=>'系部/专业/班级', 'label'=>'系部/专业/班级'];
-$MenuTab_Options[] = ['value'=>'动态数据做为左侧列', 'label'=>'动态数据做为左侧列'];
-$edit_default_8['ReportSetting1'][] = ['name' => "ReportLeftColumnDefine", 'show'=>true, 'type'=>'select', 'options'=>$MenuTab_Options, 'label' => __("ReportLeftColumnDefine"), 'value' => "用户名/姓名", 'placeholder' => "", 'helptext' => __(""), 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>6]];
-
-$MenuTab_Options = [];
-$MenuTab_Options[] = ['value'=>'只显示有数据的记录', 'label'=>'只显示有数据的记录'];
-$MenuTab_Options[] = ['value'=>'全部显示所有记录', 'label'=>'全部显示所有记录'];
-$edit_default_8['ReportSetting1'][] = ['name' => "ReportLeftColumnDataShow", 'show'=>true, 'type'=>'select', 'options'=>$MenuTab_Options, 'label' => __("ReportLeftColumnDataShow"), 'value' => "只显示有数据的记录", 'placeholder' => "", 'helptext' => __(""), 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>6]];
-
-$edit_default_8['ReportSetting1'][] = ['name' => "ReportDataColumn_1_Name", 'show'=>true, 'type'=>"input", 'label' => __("ReportDataColumn_1_Name"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>2, 'disabled' => false]];
-$edit_default_8['ReportSetting1'][] = ['name' => "ReportDataColumn_1_SQL", 'show'=>true, 'type'=>"input", 'label' => __("ReportDataColumn_1_SQL"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>10, 'disabled' => false]];
-$edit_default_8['ReportSetting1'][] = ['name' => "ReportDataColumn_2_Name", 'show'=>true, 'type'=>"input", 'label' => __("ReportDataColumn_2_Name"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>2, 'disabled' => false]];
-$edit_default_8['ReportSetting1'][] = ['name' => "ReportDataColumn_2_SQL", 'show'=>true, 'type'=>"input", 'label' => __("ReportDataColumn_2_SQL"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>10, 'disabled' => false]];
-$edit_default_8['ReportSetting1'][] = ['name' => "ReportDataColumn_3_Name", 'show'=>true, 'type'=>"input", 'label' => __("ReportDataColumn_3_Name"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>2, 'disabled' => false]];
-$edit_default_8['ReportSetting1'][] = ['name' => "ReportDataColumn_3_SQL", 'show'=>true, 'type'=>"input", 'label' => __("ReportDataColumn_3_SQL"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>10, 'disabled' => false]];
-$edit_default_8['ReportSetting1'][] = ['name' => "ReportDataColumn_4_Name", 'show'=>true, 'type'=>"input", 'label' => __("ReportDataColumn_4_Name"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>2, 'disabled' => false]];
-$edit_default_8['ReportSetting1'][] = ['name' => "ReportDataColumn_4_SQL", 'show'=>true, 'type'=>"input", 'label' => __("ReportDataColumn_4_SQL"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>10, 'disabled' => false]];
-$edit_default_8['ReportSetting1'][] = ['name' => "ReportDataColumn_5_Name", 'show'=>true, 'type'=>"input", 'label' => __("ReportDataColumn_5_Name"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>2, 'disabled' => false]];
-$edit_default_8['ReportSetting1'][] = ['name' => "ReportDataColumn_5_SQL", 'show'=>true, 'type'=>"input", 'label' => __("ReportDataColumn_5_SQL"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>10, 'disabled' => false]];
-$edit_default_8['ReportSetting1'][] = ['name' => "ReportDataColumn_6_Name", 'show'=>true, 'type'=>"input", 'label' => __("ReportDataColumn_6_Name"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>2, 'disabled' => false]];
-$edit_default_8['ReportSetting1'][] = ['name' => "ReportDataColumn_6_SQL", 'show'=>true, 'type'=>"input", 'label' => __("ReportDataColumn_6_SQL"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>10, 'disabled' => false]];
-$edit_default_8['ReportSetting1'][] = ['name' => "ReportDataColumn_7_Name", 'show'=>true, 'type'=>"input", 'label' => __("ReportDataColumn_7_Name"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>2, 'disabled' => false]];
-$edit_default_8['ReportSetting1'][] = ['name' => "ReportDataColumn_7_SQL", 'show'=>true, 'type'=>"input", 'label' => __("ReportDataColumn_7_SQL"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>10, 'disabled' => false]];
-$edit_default_8['ReportSetting1'][] = ['name' => "ReportDataColumn_8_Name", 'show'=>true, 'type'=>"input", 'label' => __("ReportDataColumn_8_Name"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>2, 'disabled' => false]];
-$edit_default_8['ReportSetting1'][] = ['name' => "ReportDataColumn_8_SQL", 'show'=>true, 'type'=>"input", 'label' => __("ReportDataColumn_8_SQL"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>10, 'disabled' => false]];
 $edit_default_8['ReportSetting1'][] = ['name' => "divider", 'show'=>true, 'type'=>"divider", 'label' => __("divider"), 'value' => "", 'placeholder' => "", 'helptext' => __(""), 'rules' => ['required' => false,'xs'=>12, 'sm'=>12, 'disabled' => false]];
+
+$edit_default_8['ReportSetting1'][] = ['name' => "Report_1_Name", 'show'=>true, 'type'=>"input", 'label' => __("Report_1_Name"), 'value' => "", 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>6, 'disabled' => false]];
+
+$edit_default_8['ReportSetting1'][] = ['name' => "Report_1_HeaderCount", 'show'=>true, 'type'=>'select', 'options'=>$表头选项, 'label' => __("Report_1_HeaderCount"), 'value' => "2", 'placeholder' => "", 'helptext' => __(""), 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>6]];
+
+$edit_default_8['ReportSetting1'][] = ['name' => "Report_1_LeftColumnDefine", 'show'=>true, 'type'=>'select', 'options'=>$左侧结构选项, 'label' => __("Report_1_LeftColumnDefine"), 'value' => "用户名/姓名", 'placeholder' => "", 'helptext' => __(""), 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
+
+$edit_default_8['ReportSetting1'][] = ['name' => "Report_1_LeftColumnField", 'show'=>true, 'type'=>'select', 'options'=>$MetaColumnNamesOptionsAll, 'label' => __("Report_1_LeftColumnField"), 'value' => "", 'placeholder' => "", 'helptext' => __(""), 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
+
+$edit_default_8['ReportSetting1'][] = ['name' => "Report_1_LeftColumnDataShow", 'show'=>true, 'type'=>'select', 'options'=>$左侧数据是否全部显示, 'label' => __("Report_1_LeftColumnDataShow"), 'value' => "只显示有数据的记录", 'placeholder' => "", 'helptext' => __(""), 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
+
+$edit_default_8['ReportSetting1'][] = ['name' => "Report_1_DataColumn_1_Name", 'show'=>true, 'type'=>"input", 'label' => __("Report_1_DataColumn_1_Name"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>2, 'disabled' => false]];
+$edit_default_8['ReportSetting1'][] = ['name' => "Report_1_DataColumn_1_SQL", 'show'=>true, 'type'=>"input", 'label' => __("Report_1_DataColumn_1_SQL"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>10, 'disabled' => false]];
+$edit_default_8['ReportSetting1'][] = ['name' => "Report_1_DataColumn_2_Name", 'show'=>true, 'type'=>"input", 'label' => __("Report_1_DataColumn_2_Name"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>2, 'disabled' => false]];
+$edit_default_8['ReportSetting1'][] = ['name' => "Report_1_DataColumn_2_SQL", 'show'=>true, 'type'=>"input", 'label' => __("Report_1_DataColumn_2_SQL"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>10, 'disabled' => false]];
+$edit_default_8['ReportSetting1'][] = ['name' => "Report_1_DataColumn_3_Name", 'show'=>true, 'type'=>"input", 'label' => __("Report_1_DataColumn_3_Name"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>2, 'disabled' => false]];
+$edit_default_8['ReportSetting1'][] = ['name' => "Report_1_DataColumn_3_SQL", 'show'=>true, 'type'=>"input", 'label' => __("Report_1_DataColumn_3_SQL"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>10, 'disabled' => false]];
+$edit_default_8['ReportSetting1'][] = ['name' => "Report_1_DataColumn_4_Name", 'show'=>true, 'type'=>"input", 'label' => __("Report_1_DataColumn_4_Name"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>2, 'disabled' => false]];
+$edit_default_8['ReportSetting1'][] = ['name' => "Report_1_DataColumn_4_SQL", 'show'=>true, 'type'=>"input", 'label' => __("Report_1_DataColumn_4_SQL"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>10, 'disabled' => false]];
+$edit_default_8['ReportSetting1'][] = ['name' => "Report_1_DataColumn_5_Name", 'show'=>true, 'type'=>"input", 'label' => __("Report_1_DataColumn_5_Name"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>2, 'disabled' => false]];
+$edit_default_8['ReportSetting1'][] = ['name' => "Report_1_DataColumn_5_SQL", 'show'=>true, 'type'=>"input", 'label' => __("Report_1_DataColumn_5_SQL"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>10, 'disabled' => false]];
+$edit_default_8['ReportSetting1'][] = ['name' => "Report_1_DataColumn_6_Name", 'show'=>true, 'type'=>"input", 'label' => __("Report_1_DataColumn_6_Name"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>2, 'disabled' => false]];
+$edit_default_8['ReportSetting1'][] = ['name' => "Report_1_DataColumn_6_SQL", 'show'=>true, 'type'=>"input", 'label' => __("Report_1_DataColumn_6_SQL"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>10, 'disabled' => false]];
+$edit_default_8['ReportSetting1'][] = ['name' => "Report_1_DataColumn_7_Name", 'show'=>true, 'type'=>"input", 'label' => __("Report_1_DataColumn_7_Name"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>2, 'disabled' => false]];
+$edit_default_8['ReportSetting1'][] = ['name' => "Report_1_DataColumn_7_SQL", 'show'=>true, 'type'=>"input", 'label' => __("Report_1_DataColumn_7_SQL"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>10, 'disabled' => false]];
+$edit_default_8['ReportSetting1'][] = ['name' => "Report_1_DataColumn_8_Name", 'show'=>true, 'type'=>"input", 'label' => __("Report_1_DataColumn_8_Name"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>2, 'disabled' => false]];
+$edit_default_8['ReportSetting1'][] = ['name' => "Report_1_DataColumn_8_SQL", 'show'=>true, 'type'=>"input", 'label' => __("Report_1_DataColumn_8_SQL"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>10, 'disabled' => false]];
+
+################################################################################################
+
+$edit_default_8['ReportSetting2'][] = ['name' => "divider", 'show'=>true, 'type'=>"divider", 'label' => __("divider"), 'value' => "", 'placeholder' => "", 'helptext' => __(""), 'rules' => ['required' => false,'xs'=>12, 'sm'=>12, 'disabled' => false]];
+
+$edit_default_8['ReportSetting2'][] = ['name' => "Report_2_Name", 'show'=>true, 'type'=>"input", 'label' => __("Report_2_Name"), 'value' => "", 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>6, 'disabled' => false]];
+
+$edit_default_8['ReportSetting2'][] = ['name' => "Report_2_HeaderCount", 'show'=>true, 'type'=>'select', 'options'=>$表头选项, 'label' => __("Report_2_HeaderCount"), 'value' => "2", 'placeholder' => "", 'helptext' => __(""), 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>6]];
+
+$edit_default_8['ReportSetting2'][] = ['name' => "Report_2_LeftColumnDefine", 'show'=>true, 'type'=>'select', 'options'=>$左侧结构选项, 'label' => __("Report_2_LeftColumnDefine"), 'value' => "用户名/姓名", 'placeholder' => "", 'helptext' => __(""), 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
+
+$edit_default_8['ReportSetting2'][] = ['name' => "Report_2_LeftColumnField", 'show'=>true, 'type'=>'select', 'options'=>$MetaColumnNamesOptionsAll, 'label' => __("Report_2_LeftColumnField"), 'value' => "", 'placeholder' => "", 'helptext' => __(""), 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
+
+$edit_default_8['ReportSetting2'][] = ['name' => "Report_2_LeftColumnDataShow", 'show'=>true, 'type'=>'select', 'options'=>$左侧数据是否全部显示, 'label' => __("Report_2_LeftColumnDataShow"), 'value' => "只显示有数据的记录", 'placeholder' => "", 'helptext' => __(""), 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
+
+$edit_default_8['ReportSetting2'][] = ['name' => "Report_2_DataColumn_1_Name", 'show'=>true, 'type'=>"input", 'label' => __("Report_2_DataColumn_1_Name"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>2, 'disabled' => false]];
+$edit_default_8['ReportSetting2'][] = ['name' => "Report_2_DataColumn_1_SQL", 'show'=>true, 'type'=>"input", 'label' => __("Report_2_DataColumn_1_SQL"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>10, 'disabled' => false]];
+$edit_default_8['ReportSetting2'][] = ['name' => "Report_2_DataColumn_2_Name", 'show'=>true, 'type'=>"input", 'label' => __("Report_2_DataColumn_2_Name"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>2, 'disabled' => false]];
+$edit_default_8['ReportSetting2'][] = ['name' => "Report_2_DataColumn_2_SQL", 'show'=>true, 'type'=>"input", 'label' => __("Report_2_DataColumn_2_SQL"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>10, 'disabled' => false]];
+$edit_default_8['ReportSetting2'][] = ['name' => "Report_2_DataColumn_3_Name", 'show'=>true, 'type'=>"input", 'label' => __("Report_2_DataColumn_3_Name"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>2, 'disabled' => false]];
+$edit_default_8['ReportSetting2'][] = ['name' => "Report_2_DataColumn_3_SQL", 'show'=>true, 'type'=>"input", 'label' => __("Report_2_DataColumn_3_SQL"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>10, 'disabled' => false]];
+$edit_default_8['ReportSetting2'][] = ['name' => "Report_2_DataColumn_4_Name", 'show'=>true, 'type'=>"input", 'label' => __("Report_2_DataColumn_4_Name"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>2, 'disabled' => false]];
+$edit_default_8['ReportSetting2'][] = ['name' => "Report_2_DataColumn_4_SQL", 'show'=>true, 'type'=>"input", 'label' => __("Report_2_DataColumn_4_SQL"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>10, 'disabled' => false]];
+$edit_default_8['ReportSetting2'][] = ['name' => "Report_2_DataColumn_5_Name", 'show'=>true, 'type'=>"input", 'label' => __("Report_2_DataColumn_5_Name"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>2, 'disabled' => false]];
+$edit_default_8['ReportSetting2'][] = ['name' => "Report_2_DataColumn_5_SQL", 'show'=>true, 'type'=>"input", 'label' => __("Report_2_DataColumn_5_SQL"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>10, 'disabled' => false]];
+$edit_default_8['ReportSetting2'][] = ['name' => "Report_2_DataColumn_6_Name", 'show'=>true, 'type'=>"input", 'label' => __("Report_2_DataColumn_6_Name"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>2, 'disabled' => false]];
+$edit_default_8['ReportSetting2'][] = ['name' => "Report_2_DataColumn_6_SQL", 'show'=>true, 'type'=>"input", 'label' => __("Report_2_DataColumn_6_SQL"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>10, 'disabled' => false]];
+$edit_default_8['ReportSetting2'][] = ['name' => "Report_2_DataColumn_7_Name", 'show'=>true, 'type'=>"input", 'label' => __("Report_2_DataColumn_7_Name"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>2, 'disabled' => false]];
+$edit_default_8['ReportSetting2'][] = ['name' => "Report_2_DataColumn_7_SQL", 'show'=>true, 'type'=>"input", 'label' => __("Report_2_DataColumn_7_SQL"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>10, 'disabled' => false]];
+$edit_default_8['ReportSetting2'][] = ['name' => "Report_2_DataColumn_8_Name", 'show'=>true, 'type'=>"input", 'label' => __("Report_2_DataColumn_8_Name"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>2, 'disabled' => false]];
+$edit_default_8['ReportSetting2'][] = ['name' => "Report_2_DataColumn_8_SQL", 'show'=>true, 'type'=>"input", 'label' => __("Report_2_DataColumn_8_SQL"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>10, 'disabled' => false]];
+
+################################################################################################
+
+
+
 
 $defaultValues_8 = [];
 foreach($edit_default_8 as $ModeName=>$allFieldItem) {
@@ -83,9 +128,11 @@ foreach($edit_default_8 as $ModeName=>$allFieldItem) {
 }
 
 
+$edit_default_8_mode[] = ['value'=>"ReportSetting", 'label'=>__("ReportSetting")];
 $edit_default_8_mode[] = ['value'=>"ReportSetting1", 'label'=>__("ReportSetting1")];
-$edit_default_8_mode[] = ['value'=>"Page_Role", 'label'=>__("Page_Role")];
-$edit_default_8_mode[] = ['value'=>"AuthorizedControl", 'label'=>__("AuthorizedControl")];
+$edit_default_8_mode[] = ['value'=>"ReportSetting2", 'label'=>__("ReportSetting2")];
+$edit_default_8_mode[] = ['value'=>"ReportSetting3", 'label'=>__("ReportSetting3")];
+$edit_default_8_mode[] = ['value'=>"ReportSetting4", 'label'=>__("ReportSetting4")];
 
 if($_GET['action']=="edit_default_8"&&$id!='')         {
     $sql    = "select * from form_formflow where id = '$id'";
