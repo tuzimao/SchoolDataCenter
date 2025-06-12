@@ -11,7 +11,6 @@ $CurrentUrlFileName = basename($_SERVER['PHP_SELF']);
 $ForbiddenAccessUrlList = ['form_formflow_edit_default_8.php'];
 if(in_array($CurrentUrlFileName, $ForbiddenAccessUrlList)) exit;
 
-
 //#########################################################################################################################
 //NodeFlow#################################################################################################################
 //#########################################################################################################################
@@ -57,6 +56,13 @@ $edit_default_8['ReportSetting1'][] = ['name' => "Report_1_Name", 'show'=>true, 
 
 $edit_default_8['ReportSetting1'][] = ['name' => "Report_1_HeaderCount", 'show'=>true, 'type'=>'select', 'options'=>$表头选项, 'label' => __("Report_1_HeaderCount"), 'value' => "2", 'placeholder' => "", 'helptext' => __(""), 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>6]];
 
+$edit_default_8['ReportSetting1'][] = ['name' => "Report_1_SearchField_1", 'show'=>true, 'type'=>'select', 'options'=>$MetaColumnNamesOptionsAll, 'label' => __("Report_1_SearchField_1"), 'value' => $MetaColumnNamesOptionsAll[0]['value'], 'placeholder' => "", 'helptext' => __(""), 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
+$edit_default_8['ReportSetting1'][] = ['name' => "Report_1_SearchField_2", 'show'=>true, 'type'=>'select', 'options'=>$MetaColumnNamesOptionsAll, 'label' => __("Report_1_SearchField_2"), 'value' => $MetaColumnNamesOptionsAll[0]['value'], 'placeholder' => "", 'helptext' => __(""), 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
+$edit_default_8['ReportSetting1'][] = ['name' => "Report_1_SearchField_3", 'show'=>true, 'type'=>'select', 'options'=>$MetaColumnNamesOptionsAll, 'label' => __("Report_1_SearchField_3"), 'value' => $MetaColumnNamesOptionsAll[0]['value'], 'placeholder' => "", 'helptext' => __(""), 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
+$edit_default_8['ReportSetting1'][] = ['name' => "Report_1_SearchField_4", 'show'=>true, 'type'=>'select', 'options'=>$MetaColumnNamesOptionsAll, 'label' => __("Report_1_SearchField_4"), 'value' => $MetaColumnNamesOptionsAll[0]['value'], 'placeholder' => "", 'helptext' => __(""), 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
+$edit_default_8['ReportSetting1'][] = ['name' => "Report_1_SearchField_5", 'show'=>true, 'type'=>'select', 'options'=>$MetaColumnNamesOptionsAll, 'label' => __("Report_1_SearchField_5"), 'value' => $MetaColumnNamesOptionsAll[0]['value'], 'placeholder' => "", 'helptext' => __(""), 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
+$edit_default_8['ReportSetting1'][] = ['name' => "Report_1_SearchField_6", 'show'=>true, 'type'=>'select', 'options'=>$MetaColumnNamesOptionsAll, 'label' => __("Report_1_SearchField_6"), 'value' => $MetaColumnNamesOptionsAll[0]['value'], 'placeholder' => "", 'helptext' => __(""), 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
+
 $edit_default_8['ReportSetting1'][] = ['name' => "Report_1_LeftColumnDefine", 'show'=>true, 'type'=>'select', 'options'=>$左侧结构选项, 'label' => __("Report_1_LeftColumnDefine"), 'value' => "用户名/姓名", 'placeholder' => "", 'helptext' => __(""), 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
 
 $edit_default_8['ReportSetting1'][] = ['name' => "Report_1_LeftColumnField", 'show'=>true, 'type'=>'select', 'options'=>$MetaColumnNamesOptionsAll, 'label' => __("Report_1_LeftColumnField"), 'value' => "", 'placeholder' => "", 'helptext' => __(""), 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
@@ -89,6 +95,13 @@ $edit_default_8['ReportSetting2'][] = ['name' => "divider", 'show'=>true, 'type'
 $edit_default_8['ReportSetting2'][] = ['name' => "Report_2_Name", 'show'=>true, 'type'=>"input", 'label' => __("Report_2_Name"), 'value' => "", 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>6, 'disabled' => false]];
 
 $edit_default_8['ReportSetting2'][] = ['name' => "Report_2_HeaderCount", 'show'=>true, 'type'=>'select', 'options'=>$表头选项, 'label' => __("Report_2_HeaderCount"), 'value' => "2", 'placeholder' => "", 'helptext' => __(""), 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>6]];
+
+$edit_default_8['ReportSetting2'][] = ['name' => "Report_2_SearchField_1", 'show'=>true, 'type'=>'select', 'options'=>$MetaColumnNamesOptionsAll, 'label' => __("Report_2_SearchField_1"), 'value' => $MetaColumnNamesOptionsAll[0]['value'], 'placeholder' => "", 'helptext' => __(""), 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
+$edit_default_8['ReportSetting2'][] = ['name' => "Report_2_SearchField_2", 'show'=>true, 'type'=>'select', 'options'=>$MetaColumnNamesOptionsAll, 'label' => __("Report_2_SearchField_2"), 'value' => $MetaColumnNamesOptionsAll[0]['value'], 'placeholder' => "", 'helptext' => __(""), 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
+$edit_default_8['ReportSetting2'][] = ['name' => "Report_2_SearchField_3", 'show'=>true, 'type'=>'select', 'options'=>$MetaColumnNamesOptionsAll, 'label' => __("Report_2_SearchField_3"), 'value' => $MetaColumnNamesOptionsAll[0]['value'], 'placeholder' => "", 'helptext' => __(""), 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
+$edit_default_8['ReportSetting2'][] = ['name' => "Report_2_SearchField_4", 'show'=>true, 'type'=>'select', 'options'=>$MetaColumnNamesOptionsAll, 'label' => __("Report_2_SearchField_4"), 'value' => $MetaColumnNamesOptionsAll[0]['value'], 'placeholder' => "", 'helptext' => __(""), 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
+$edit_default_8['ReportSetting2'][] = ['name' => "Report_2_SearchField_5", 'show'=>true, 'type'=>'select', 'options'=>$MetaColumnNamesOptionsAll, 'label' => __("Report_2_SearchField_5"), 'value' => $MetaColumnNamesOptionsAll[0]['value'], 'placeholder' => "", 'helptext' => __(""), 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
+$edit_default_8['ReportSetting2'][] = ['name' => "Report_2_SearchField_6", 'show'=>true, 'type'=>'select', 'options'=>$MetaColumnNamesOptionsAll, 'label' => __("Report_2_SearchField_6"), 'value' => $MetaColumnNamesOptionsAll[0]['value'], 'placeholder' => "", 'helptext' => __(""), 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
 
 $edit_default_8['ReportSetting2'][] = ['name' => "Report_2_LeftColumnDefine", 'show'=>true, 'type'=>'select', 'options'=>$左侧结构选项, 'label' => __("Report_2_LeftColumnDefine"), 'value' => "用户名/姓名", 'placeholder' => "", 'helptext' => __(""), 'rules' => ['required' => true, 'disabled' => false, 'xs'=>12, 'sm'=>4]];
 

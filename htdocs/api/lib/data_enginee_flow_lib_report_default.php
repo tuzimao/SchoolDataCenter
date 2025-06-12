@@ -232,7 +232,44 @@ function getReportStructureDataSingle($currentReport) {
 
     } //$Report_X_LeftColumnField != "" && $$Report_X_LeftColumnField != "无"
 
-/*
+    $sql    = "select ShowType, FieldName from form_formfield where FormName = '$TableName'";
+    $rs     = $db->Execute($sql);
+    $rs_a   = $rs->GetArray();
+    $字段的显示类型 = [];
+    foreach($rs_a as $Item)  {
+        $字段的显示类型[$Item['FieldName']] = $Item['ShowType']; 
+    }
+    //print_R($字段的显示类型);
+
+    $报表页面['搜索区域']['搜索按钮']   = "开始查询";
+    $报表页面['搜索区域']['搜索事件']   = "action=search";
+
+    for($X=1;$X<=6;$X++)    {
+        if(in_array($SettingMap['Report_1_SearchField_'.$X], $MetaColumnNames) && $SettingMap['Report_1_SearchField_'.$X] != '') {
+            $字段类型       = $字段的显示类型[$SettingMap['Report_1_SearchField_'.$X]];
+            $字段类型Edit   = returntablefield("form_formfield_showtype","`Name`",$字段类型,"Edit")['Edit'];
+            $字段类型EditArray = explode(':', $字段类型Edit);
+            $字段类型2      = $字段类型EditArray[0];
+            if($字段类型 == 'Input:input') {
+                $字段类型2 = 'input';
+            }
+            switch($字段类型2) {
+                case 'input':
+                    $报表页面['搜索区域']['搜索条件'][] = ['name'=>$SettingMap['Report_1_SearchField_'.$X], 'sm'=>4, 'type'=>'input', 'field'=>$SettingMap['Report_1_SearchField_'.$X], 'default'=> '', 'placeholder'=>$SettingMap['Report_1_SearchField_'.$X]];
+                    break;
+                case 'autocomplete':
+                case 'tablefilter':
+                case 'tablefiltercolor':
+                case 'radiofilter':
+                case 'radiofiltercolor':
+                    $报表页面['搜索区域']['搜索条件'][] = ['name'=>$SettingMap['Report_1_SearchField_'.$X], 'sm'=>4, 'type'=>'input', 'field'=>$SettingMap['Report_1_SearchField_'.$X], 'default'=> '', 'placeholder'=>$SettingMap['Report_1_SearchField_'.$X]];
+                    break;
+            }
+            //print $字段类型2;//print_R($字段类型EditArray);//exit;
+        }
+    }
+
+    /*
     $sql    = "select 学期名称 as name, 学期名称 as value from data_xueqi order by id desc";
     $rs     = $db->Execute($sql);
     $rs_a   = $rs->GetArray();
