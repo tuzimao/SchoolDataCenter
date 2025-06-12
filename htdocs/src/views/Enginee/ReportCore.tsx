@@ -192,7 +192,7 @@ const ReportCore = (props: ReportType) => {
                 }} sx={{ mr: 2}} variant={item.code == currentButtonName || (currentButtonName == '' && index == 0) ? 'contained' : 'outlined'} size="small">{item.name}</Button>
               ))}
             </Grid>
-            {reportData && (
+            {reportData && reportData['搜索区域'] && reportData['搜索区域']['标题'] && (
               <Fragment>
                 <Grid container spacing={2} sx={{mt: 0, mb: 2, p: 0}}>
                   <Grid item xs={12} sx={{p: 0, m: 0, mb: 1}}>
@@ -303,11 +303,13 @@ const ReportCore = (props: ReportType) => {
 
                   })}
                 </Grid>
-                <Grid item xs={12} sx={{mb: 2}}>
-                  <Button size='small' type='submit' sx={{ mr: 2 }} variant='contained' onClick={handleSubmitData} disabled={searchData == null ? true : false}>
-                    {reportData['搜索区域']['搜索按钮']}
-                  </Button>
-                </Grid>
+                {reportData['搜索区域']['搜索按钮'] && (
+                  <Grid item xs={12} sx={{mb: 2}}>
+                    <Button size='small' type='submit' sx={{ mr: 2 }} variant='contained' onClick={handleSubmitData} disabled={searchData == null ? true : false}>
+                      {reportData['搜索区域']['搜索按钮']}
+                    </Button>
+                  </Grid>
+                )}
               </Fragment>
             )}
 
@@ -339,8 +341,10 @@ const ReportCore = (props: ReportType) => {
                               fontWeight: 'bold',
                               position: 'sticky',
                               top: 0,
-                              px: 1,
-                              py: 2,
+                              mx: '0 !important',
+                              my: '0 !important',
+                              py: '4px !important',
+                              px: '8px !important',
                             }}
                           >
                             {cell.name}
@@ -359,9 +363,11 @@ const ReportCore = (props: ReportType) => {
                               textAlign: cell.align == 'Center' ? 'center' : 'left',
                               fontWeight: 'bold',
                               position: 'sticky',
-                              top: 41,
-                              px: 1,
-                              py: 2,
+                              top: 29,
+                              mx: '0 !important',
+                              my: '0 !important',
+                              py: '4px !important',
+                              px: '8px !important',
                             }}
                           >
                             {cell.name}
@@ -373,7 +379,7 @@ const ReportCore = (props: ReportType) => {
                     {/* Table body */}
                     <TableBody>
                       {reportData['数据区域']['数据'].map((cell: any, rowIndex: number) => (
-                        <TableRow key={`row-${rowIndex}`}>
+                        <TableRow key={`row-${rowIndex}`} >
                           {Object.keys(cell).map((key, cellIndex) => (
                             <TableCell
                               key={`cell-${rowIndex}-${cellIndex}`}
@@ -382,11 +388,11 @@ const ReportCore = (props: ReportType) => {
                               sx={{                                
                                 whiteSpace: cell.wrap == 'No' ? 'nowrap' : 'pre-line',
                                 wordBreak: cell.wrap == 'Yes' ? 'break-word' : 'normal',
-                                textAlign: cell.align == 'Center' ? 'center' : 'left',
-                                mx: 0,
-                                my: 1,
-                                py: 0,
-                                px: 1
+                                textAlign: cell.align == 'Center' ? 'center' : 'center',
+                                mx: '0 !important',
+                                my: '0 !important',
+                                py: '6px !important',
+                                px: '0 !important'
                               }}
                             >
                               {cell[key]}
@@ -396,49 +402,58 @@ const ReportCore = (props: ReportType) => {
                       ))}
                     </TableBody>
                   </Table>
-  
-                  <Table 
-                    sx={{
-                      borderCollapse: 'collapse',
-                      border: `1px solid ${borderColor}`, 
-                      '& td, & th': {
-                        border: `1px solid ${borderColor}`,
-                      },
-                      mt: 5,
-                      mb: 4
-                    }}
-                  >
-                    <TableHead>
-                      <TableRow>
-                        <TableCell
-                            sx={{
-                              px: 1,
-                              py: 2,
-                            }}
-                          >
-                            {reportData['底部区域']['备注']['标题']}
-                        </TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      <TableRow>
-                        <TableCell
-                            sx={{
-                              px: 1,
-                              py: 2,
-                              whiteSpace: 'pre-line',
-                              wordBreak: 'break-word',
-                            }}
-                          >
-                            {reportData['底部区域']['备注']['内容']}
-                        </TableCell>
-                      </TableRow>
-                    </TableBody>
-                  </Table>
+                  
+                  {reportData['底部区域'] && reportData['底部区域']['备注'] && reportData['底部区域']['备注']['标题'] && (
+                    <Table 
+                      sx={{
+                        borderCollapse: 'collapse',
+                        border: `1px solid ${borderColor}`, 
+                        '& td, & th': {
+                          border: `1px solid ${borderColor}`,
+                        },
+                        mt: 5,
+                        mb: 4
+                      }}
+                    >
+                      <TableHead>
+                        <TableRow>
+                          <TableCell
+                              sx={{
+                                px: 1,
+                                py: 2,
+                              }}
+                            >
+                              {reportData['底部区域']['备注']['标题']}
+                          </TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        <TableRow>
+                          <TableCell
+                              sx={{
+                                px: 1,
+                                py: 2,
+                                whiteSpace: 'pre-line',
+                                wordBreak: 'break-word',
+                              }}
+                            >
+                              {reportData['底部区域']['备注']['内容']}
+                          </TableCell>
+                        </TableRow>
+                      </TableBody>
+                    </Table>
+                  )}
+
                 </TableContainer>
                 <Grid container justifyContent="flex-end" sx={{mt: 3}}>
                   {reportData['底部区域'] && reportData['底部区域']['功能按钮'] && reportData['底部区域']['功能按钮'].includes('打印') && (
-                    <Button onClick={()=>{window.print();}}  variant='outlined' size="small">打印</Button>
+                    <Button onClick={()=>{window.print();}}  variant='outlined' size="small" sx={{mr: 2}}>打印</Button>
+                  )}
+                  {reportData['底部区域'] && reportData['底部区域']['功能按钮'] && reportData['底部区域']['功能按钮'].includes('导出Excel') && (
+                    <Button onClick={()=>{window.print();}}  variant='outlined' size="small" sx={{mr: 2}}>导出Excel</Button>
+                  )}
+                  {reportData['底部区域'] && reportData['底部区域']['功能按钮'] && reportData['底部区域']['功能按钮'].includes('导出Pdf') && (
+                    <Button onClick={()=>{window.print();}}  variant='outlined' size="small" sx={{mr: 2}}>导出Pdf</Button>
                   )}
                 </Grid>
               </Fragment>

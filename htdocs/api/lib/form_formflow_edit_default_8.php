@@ -79,6 +79,8 @@ $edit_default_8['ReportSetting1'][] = ['name' => "Report_1_DataColumn_7_Name", '
 $edit_default_8['ReportSetting1'][] = ['name' => "Report_1_DataColumn_7_SQL", 'show'=>true, 'type'=>"input", 'label' => __("Report_1_DataColumn_7_SQL"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>10, 'disabled' => false]];
 $edit_default_8['ReportSetting1'][] = ['name' => "Report_1_DataColumn_8_Name", 'show'=>true, 'type'=>"input", 'label' => __("Report_1_DataColumn_8_Name"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>2, 'disabled' => false]];
 $edit_default_8['ReportSetting1'][] = ['name' => "Report_1_DataColumn_8_SQL", 'show'=>true, 'type'=>"input", 'label' => __("Report_1_DataColumn_8_SQL"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>10, 'disabled' => false]];
+$edit_default_8['ReportSetting1'][] = ['name' => "Report_1_Memo_Title", 'show'=>true, 'type'=>"input", 'label' => __("Report_1_Memo_Title"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>12, 'disabled' => false]];
+$edit_default_8['ReportSetting1'][] = ['name' => "Report_1_Memo_Content", 'show'=>true, 'type'=>"textarea", 'label' => __("Report_1_Memo_Content"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>12, 'disabled' => false]];
 
 ################################################################################################
 
@@ -110,6 +112,8 @@ $edit_default_8['ReportSetting2'][] = ['name' => "Report_2_DataColumn_7_Name", '
 $edit_default_8['ReportSetting2'][] = ['name' => "Report_2_DataColumn_7_SQL", 'show'=>true, 'type'=>"input", 'label' => __("Report_2_DataColumn_7_SQL"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>10, 'disabled' => false]];
 $edit_default_8['ReportSetting2'][] = ['name' => "Report_2_DataColumn_8_Name", 'show'=>true, 'type'=>"input", 'label' => __("Report_2_DataColumn_8_Name"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>2, 'disabled' => false]];
 $edit_default_8['ReportSetting2'][] = ['name' => "Report_2_DataColumn_8_SQL", 'show'=>true, 'type'=>"input", 'label' => __("Report_2_DataColumn_8_SQL"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>10, 'disabled' => false]];
+$edit_default_8['ReportSetting2'][] = ['name' => "Report_2_Memo_Title", 'show'=>true, 'type'=>"input", 'label' => __("Report_2_Memo_Title"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>12, 'disabled' => false]];
+$edit_default_8['ReportSetting2'][] = ['name' => "Report_2_Memo_Content", 'show'=>true, 'type'=>"textarea", 'label' => __("Report_2_Memo_Content"), 'value' => __(""), 'placeholder' => "", 'helptext' => "", 'rules' => ['required' => false,'xs'=>12, 'sm'=>12, 'disabled' => false]];
 
 ################################################################################################
 

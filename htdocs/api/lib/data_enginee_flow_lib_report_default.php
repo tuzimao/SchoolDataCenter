@@ -40,6 +40,30 @@ function getReportStructureData() {
         $ReportData['Init_Action_Value']    = 'report_default'; //只能放到这个位置
         $ReportButtonList[]             = ['name'=>$SettingMap['Report_2_Name'], 'code'=>'Report_2'];
     }
+    if($SettingMap['EnableReport'] == 'Yes' && $SettingMap['Report_3_Name'] != '')   {
+        $ReportData['Init_Action_Value']    = 'report_default'; //只能放到这个位置
+        $ReportButtonList[]             = ['name'=>$SettingMap['Report_3_Name'], 'code'=>'Report_3'];
+    }
+    if($SettingMap['EnableReport'] == 'Yes' && $SettingMap['Report_4_Name'] != '')   {
+        $ReportData['Init_Action_Value']    = 'report_default'; //只能放到这个位置
+        $ReportButtonList[]             = ['name'=>$SettingMap['Report_4_Name'], 'code'=>'Report_4'];
+    }
+    if($SettingMap['EnableReport'] == 'Yes' && $SettingMap['Report_5_Name'] != '')   {
+        $ReportData['Init_Action_Value']    = 'report_default'; //只能放到这个位置
+        $ReportButtonList[]             = ['name'=>$SettingMap['Report_5_Name'], 'code'=>'Report_5'];
+    }
+    if($SettingMap['EnableReport'] == 'Yes' && $SettingMap['Report_6_Name'] != '')   {
+        $ReportData['Init_Action_Value']    = 'report_default'; //只能放到这个位置
+        $ReportButtonList[]             = ['name'=>$SettingMap['Report_6_Name'], 'code'=>'Report_6'];
+    }
+    if($SettingMap['EnableReport'] == 'Yes' && $SettingMap['Report_7_Name'] != '')   {
+        $ReportData['Init_Action_Value']    = 'report_default'; //只能放到这个位置
+        $ReportButtonList[]             = ['name'=>$SettingMap['Report_7_Name'], 'code'=>'Report_7'];
+    }
+    if($SettingMap['EnableReport'] == 'Yes' && $SettingMap['Report_8_Name'] != '')   {
+        $ReportData['Init_Action_Value']    = 'report_default'; //只能放到这个位置
+        $ReportButtonList[]             = ['name'=>$SettingMap['Report_8_Name'], 'code'=>'Report_8'];
+    }
     $ReportData['ButtonList'] = $ReportButtonList;
     return $ReportData;
 }
@@ -59,18 +83,18 @@ function getReportStructureDataSingle($currentReport) {
 
     $报表页面 = [];
     $报表页面['搜索区域'] = [];
-    $报表页面['搜索区域']['标题'] = $SettingMap['Report_1_Name'];
+    $报表页面['搜索区域']['标题'] = $SettingMap[$currentReport.'_Name'];
 
     //主要数据输出
     $USER_ID    = ForSqlInjection($GLOBAL_USER->USER_ID);
     $USER_NAME  = ForSqlInjection($GLOBAL_USER->USER_NAME);
     $DEPT_ID    = ForSqlInjection($GLOBAL_USER->DEPT_ID);
 
-    $Report_1_LeftColumnDefine      = $SettingMap['Report_1_LeftColumnDefine'];
-    $Report_1_LeftColumnField       = $SettingMap['Report_1_LeftColumnField'];
-    $Report_1_LeftColumnDataShow    = $SettingMap['Report_1_LeftColumnDataShow'];
+    $Report_X_LeftColumnDefine      = $SettingMap[$currentReport.'_LeftColumnDefine'];
+    $Report_X_LeftColumnField       = $SettingMap[$currentReport.'_LeftColumnField'];
+    $Report_X_LeftColumnDataShow    = $SettingMap[$currentReport.'_LeftColumnDataShow'];
     //判断统计字段是否为数据表字段
-    if(!in_array($Report_1_LeftColumnField, $MetaColumnNames) && $Report_1_LeftColumnField != '') {
+    if(!in_array($Report_X_LeftColumnField, $MetaColumnNames) && $Report_X_LeftColumnField != '' && $Report_X_LeftColumnField != 'None') {
         $RS = [];
         $RS['status'] = "ERROR";
         $RS['msg'] = "Report_1_LeftColumnField not a field in $TableName";
@@ -78,26 +102,72 @@ function getReportStructureDataSingle($currentReport) {
         exit;
     }
 
-    if($Report_1_LeftColumnField != "" && $$Report_1_LeftColumnField != "无")   {
+    if($Report_X_LeftColumnField != "" && $$Report_X_LeftColumnField != "无")   {
+        $右侧数据关联字段  = '';
         //生成左侧区域数据
         $左侧区域数据 = [];
-        switch($Report_1_LeftColumnDefine) {
+        switch($Report_X_LeftColumnDefine)  {
             case '班级/专业/系部':
+                $右侧数据关联字段  = '班级';
                 $报表页面['数据区域']['头部'][0][]   = ['name'=>'序号', 'col'=>1, 'row'=>2, 'link'=>'', 'wrap'=>'No', 'align'=>'Center'];
                 $报表页面['数据区域']['头部'][0][]   = ['name'=>'班级', 'col'=>1, 'row'=>2, 'link'=>'', 'wrap'=>'No', 'align'=>'Center'];
                 $报表页面['数据区域']['头部'][0][]   = ['name'=>'专业', 'col'=>1, 'row'=>2, 'link'=>'', 'wrap'=>'No', 'align'=>'Center'];
                 $报表页面['数据区域']['头部'][0][]   = ['name'=>'系部', 'col'=>1, 'row'=>2, 'link'=>'', 'wrap'=>'No', 'align'=>'Center'];
-                $左侧区域数据['cols'] = 3;
                 $sql        = "select 班级名称 as 班级, 所属专业 as 专业, 所属系部 as 系部 from data_banji where (是否毕业='否' or 是否毕业='0')";
                 $rs         = $db->Execute($sql);
                 $rs_a       = $rs->GetArray();
                 $Counter    = 0;
                 foreach($rs_a as $Line) {
-                    $左侧区域数据['data'][] = $Line;
+                    $左侧区域数据[] = $Line;
                     $Counter ++;
                 }
                 break;
             case '系部/专业/班级':
+                $右侧数据关联字段  = '班级';
+                $报表页面['数据区域']['头部'][0][]   = ['name'=>'序号', 'col'=>1, 'row'=>2, 'link'=>'', 'wrap'=>'No', 'align'=>'Center'];
+                $报表页面['数据区域']['头部'][0][]   = ['name'=>'系部', 'col'=>1, 'row'=>2, 'link'=>'', 'wrap'=>'No', 'align'=>'Center'];
+                $报表页面['数据区域']['头部'][0][]   = ['name'=>'专业', 'col'=>1, 'row'=>2, 'link'=>'', 'wrap'=>'No', 'align'=>'Center'];
+                $报表页面['数据区域']['头部'][0][]   = ['name'=>'班级', 'col'=>1, 'row'=>2, 'link'=>'', 'wrap'=>'No', 'align'=>'Center'];
+                $sql        = "select 班级名称 as 班级, 所属专业 as 专业, 所属系部 as 系部 from data_banji where (是否毕业='否' or 是否毕业='0') order by 所属系部, 所属专业, 班级名称";
+                $rs         = $db->Execute($sql);
+                $rs_a       = $rs->GetArray();
+                $Counter    = 0;
+                $组织结构    = [];
+                foreach($rs_a as $Line) {
+                    $左侧区域数据[] = $Line;
+                    $Counter ++;
+                    $组织结构[$Line['系部']][$Line['专业']][] = $Line['班级'];
+                }
+                break;
+            case '用户名/姓名/部门':
+                $右侧数据关联字段  = '用户名';
+                $报表页面['数据区域']['头部'][0][]   = ['name'=>'序号', 'col'=>1, 'row'=>2, 'link'=>'', 'wrap'=>'No', 'align'=>'Center'];
+                $报表页面['数据区域']['头部'][0][]   = ['name'=>'用户名', 'col'=>1, 'row'=>2, 'link'=>'', 'wrap'=>'No', 'align'=>'Center'];
+                $报表页面['数据区域']['头部'][0][]   = ['name'=>'姓名', 'col'=>1, 'row'=>2, 'link'=>'', 'wrap'=>'No', 'align'=>'Center'];
+                $报表页面['数据区域']['头部'][0][]   = ['name'=>'部门', 'col'=>1, 'row'=>2, 'link'=>'', 'wrap'=>'No', 'align'=>'Center'];
+                $sql        = "select USER_ID as 用户名, USER_NAME as 姓名, DEPT_NAME as 部门 from data_user, data_department where data_user.DEPT_ID = data_department.id and data_user.NOT_LOGIN = '0' order by data_user.DEPT_ID, data_user.USER_ID";
+                $rs         = $db->Execute($sql);
+                $rs_a       = $rs->GetArray();
+                $Counter    = 0;
+                foreach($rs_a as $Line) {
+                    $左侧区域数据[] = $Line;
+                    $Counter ++;
+                }
+                break;
+            case '部门/用户名/姓名':
+                $右侧数据关联字段  = '用户名';
+                $报表页面['数据区域']['头部'][0][]   = ['name'=>'序号', 'col'=>1, 'row'=>2, 'link'=>'', 'wrap'=>'No', 'align'=>'Center'];
+                $报表页面['数据区域']['头部'][0][]   = ['name'=>'用户名', 'col'=>1, 'row'=>2, 'link'=>'', 'wrap'=>'No', 'align'=>'Center'];
+                $报表页面['数据区域']['头部'][0][]   = ['name'=>'姓名', 'col'=>1, 'row'=>2, 'link'=>'', 'wrap'=>'No', 'align'=>'Center'];
+                $报表页面['数据区域']['头部'][0][]   = ['name'=>'部门', 'col'=>1, 'row'=>2, 'link'=>'', 'wrap'=>'No', 'align'=>'Center'];
+                $sql        = "select USER_ID as 用户名, USER_NAME as 姓名, DEPT_NAME as 部门 from data_user, data_department where data_user.DEPT_ID = data_department.id and data_user.NOT_LOGIN = '0' order by data_user.DEPT_ID, data_user.USER_ID";
+                $rs         = $db->Execute($sql);
+                $rs_a       = $rs->GetArray();
+                $Counter    = 0;
+                foreach($rs_a as $Line) {
+                    $左侧区域数据[] = $Line;
+                    $Counter ++;
+                }
                 break;
         }
 
@@ -105,35 +175,62 @@ function getReportStructureDataSingle($currentReport) {
         $报表头部数组       = [];
 
         //右侧数据区域字段1
-        $Report_1_DataColumn_1_Name = $SettingMap['Report_1_DataColumn_1_Name'];
+        $Report_X_DataColumn_1_Name = $SettingMap[$currentReport.'_DataColumn_1_Name'];
         //判断统计字段是否为数据表字段
-        if(!in_array($Report_1_DataColumn_1_Name, $MetaColumnNames) && $Report_1_DataColumn_1_Name != '') {
+        if(!in_array($Report_X_DataColumn_1_Name, $MetaColumnNames) && $Report_X_DataColumn_1_Name != '') {
             $RS = [];
             $RS['status'] = "ERROR";
-            $RS['msg'] = "$Report_1_DataColumn_1_Name not a field in $TableName";
+            $RS['msg'] = "$Report_X_DataColumn_1_Name not a field in $TableName";
             print_R(EncryptApiData($RS, $GLOBAL_USER));
             exit;
         }
         $右侧数据区域字段1  = [];
-        $sql        = "select count(*) AS NUM, $Report_1_LeftColumnField, $Report_1_DataColumn_1_Name from $TableName group by $Report_1_LeftColumnField, $Report_1_DataColumn_1_Name order by $Report_1_DataColumn_1_Name asc";
+        $sql        = "select count(*) AS NUM, $Report_X_LeftColumnField, $Report_X_DataColumn_1_Name from $TableName group by $Report_X_LeftColumnField, $Report_X_DataColumn_1_Name order by $Report_X_DataColumn_1_Name asc";
         $rs         = $db->Execute($sql);
         $rs_a       = $rs->GetArray();
         //print_R($rs_a);
         foreach($rs_a as $Line) {
-            $报表头部数组[$Report_1_DataColumn_1_Name][$Line[$Report_1_DataColumn_1_Name]] = $Line[$Report_1_DataColumn_1_Name];
-            $右侧数据区域字段1[$Line[$Report_1_LeftColumnField]][$Report_1_DataColumn_1_Name][$Line[$Report_1_DataColumn_1_Name]] = $Line['NUM'];
+            if($Line[$Report_X_DataColumn_1_Name] == '') $Line[$Report_X_DataColumn_1_Name] = '空值';
+            $报表头部数组[$Report_X_DataColumn_1_Name][$Line[$Report_X_DataColumn_1_Name]] = $Line[$Report_X_DataColumn_1_Name];
+            $右侧数据区域字段1[$Line[$Report_X_LeftColumnField]][$Report_X_DataColumn_1_Name][$Line[$Report_X_DataColumn_1_Name]] = $Line['NUM'];
         }
         
-        $右侧数据区域字段1_列名 = array_keys($报表头部数组[$Report_1_DataColumn_1_Name]);
+        $右侧数据区域字段1_列名 = array_keys($报表头部数组[$Report_X_DataColumn_1_Name]);
         foreach($右侧数据区域字段1_列名 as $右侧数据区域字段1_列名Value) {
             $报表页面['数据区域']['头部'][1][]   = ['name'=>$右侧数据区域字段1_列名Value, 'col'=>1, 'row'=>1, 'link'=>'', 'wrap'=>'No', 'align'=>'Center'];
         }
+        $报表页面['数据区域']['头部'][0][]   = ['name'=>$Report_X_DataColumn_1_Name, 'col'=>count($右侧数据区域字段1_列名), 'row'=>1, 'link'=>'', 'wrap'=>'No', 'align'=>'Center'];
 
-        $报表页面['数据区域']['头部'][0][]   = ['name'=>$Report_1_DataColumn_1_Name, 'col'=>count($右侧数据区域字段1_列名), 'row'=>1, 'link'=>'', 'wrap'=>'No', 'align'=>'Center'];
+        //右侧数据区域字段2
+        $Report_X_DataColumn_2_Name = $SettingMap[$currentReport.'_DataColumn_2_Name'];
+        //判断统计字段是否为数据表字段
+        if(!in_array($Report_X_DataColumn_2_Name, $MetaColumnNames) && $Report_X_DataColumn_2_Name != '') {
+            $RS = [];
+            $RS['status'] = "ERROR";
+            $RS['msg'] = "$Report_X_DataColumn_2_Name not a field in $TableName";
+            print_R(EncryptApiData($RS, $GLOBAL_USER));
+            exit;
+        }
+        $右侧数据区域字段2  = [];
+        $sql        = "select count(*) AS NUM, $Report_X_LeftColumnField, $Report_X_DataColumn_2_Name from $TableName group by $Report_X_LeftColumnField, $Report_X_DataColumn_2_Name order by $Report_X_DataColumn_2_Name asc";
+        $rs         = $db->Execute($sql);
+        $rs_a       = $rs->GetArray();
+        //print_R($rs_a);
+        foreach($rs_a as $Line) {
+            if($Line[$Report_X_DataColumn_2_Name] == '') $Line[$Report_X_DataColumn_2_Name] = '空值';
+            $报表头部数组[$Report_X_DataColumn_2_Name][$Line[$Report_X_DataColumn_2_Name]] = $Line[$Report_X_DataColumn_2_Name];
+            $右侧数据区域字段2[$Line[$Report_X_LeftColumnField]][$Report_X_DataColumn_2_Name][$Line[$Report_X_DataColumn_2_Name]] = $Line['NUM'];
+        }
+        
+        $右侧数据区域字段2_列名 = array_keys($报表头部数组[$Report_X_DataColumn_2_Name]);
+        foreach($右侧数据区域字段2_列名 as $右侧数据区域字段2_列名Value) {
+            $报表页面['数据区域']['头部'][1][]   = ['name'=>$右侧数据区域字段2_列名Value, 'col'=>1, 'row'=>1, 'link'=>'', 'wrap'=>'No', 'align'=>'Center'];
+        }
+        $报表页面['数据区域']['头部'][0][]   = ['name'=>$Report_X_DataColumn_2_Name, 'col'=>count($右侧数据区域字段2_列名), 'row'=>1, 'link'=>'', 'wrap'=>'No', 'align'=>'Center'];
 
-        //print_R($报表页面); print $Report_1_LeftColumnDefine; print $Report_1_LeftColumnField; exit;
+        //print_R($报表页面); print $Report_X_LeftColumnDefine; print $Report_X_LeftColumnField; exit;
 
-    } //$Report_1_LeftColumnField != "" && $$Report_1_LeftColumnField != "无"
+    } //$Report_X_LeftColumnField != "" && $$Report_X_LeftColumnField != "无"
 
 /*
     $sql    = "select 学期名称 as name, 学期名称 as value from data_xueqi order by id desc";
@@ -179,27 +276,29 @@ function getReportStructureDataSingle($currentReport) {
 */
     $报表页面['数据区域']['数据']   = [];
 
-    $左侧数组 = $左侧区域数据['data'];
-    for($i=0;$i<sizeof($左侧数组);$i++)   {
+    for($i=0;$i<sizeof($左侧区域数据);$i++)   {
         $报表页面['数据区域']['数据'][$i]['序号']   = $i + 1;
-        $左侧单元 = $左侧数组[$i];
+        $左侧单元 = $左侧区域数据[$i];
         foreach($左侧单元 as $左侧单元Item => $左侧单元Value)   {
             $报表页面['数据区域']['数据'][$i][$左侧单元Item]    = $左侧单元Value;
         }
-        $临时变量 = array_values($报表页面['数据区域']['数据'][$i]);
-        $每行的主KEy = $临时变量[1];
+        $右侧数据关联字段Value = $左侧单元[$右侧数据关联字段];
         if(sizeof($右侧数据区域字段1) > 0) {
             foreach($右侧数据区域字段1_列名 as $右侧数据区域字段1_列名_Value) {
-                $报表页面['数据区域']['数据'][$i][$右侧数据区域字段1_列名_Value]    = $右侧数据区域字段1[$每行的主KEy][$Report_1_DataColumn_1_Name][$右侧数据区域字段1_列名_Value];
+                $报表页面['数据区域']['数据'][$i][$右侧数据区域字段1_列名_Value]    = $右侧数据区域字段1[$右侧数据关联字段Value][$Report_X_DataColumn_1_Name][$右侧数据区域字段1_列名_Value];
+            }
+        }
+        if(sizeof($右侧数据区域字段2) > 0) {
+            foreach($右侧数据区域字段2_列名 as $右侧数据区域字段2_列名_Value) {
+                $报表页面['数据区域']['数据'][$i][$右侧数据区域字段2_列名_Value]    = $右侧数据区域字段2[$右侧数据关联字段Value][$Report_X_DataColumn_2_Name][$右侧数据区域字段2_列名_Value];
             }
         }
     }
     //print_R($报表页面);
-    //print_R($右侧数据区域字段1);
+    //print_R($右侧数据区域字段2);
 
-
-    $报表页面['底部区域']['备注']['标题']   = '底部区域-备注代课-';
-    $报表页面['底部区域']['备注']['内容']   = '底部区域-备注代课-因私代课-因私代课-因私代课-因私代课-因私代课-因私代课-因私代课-因私代课-因私代课-\n0000000因私代课-因私代课-因私代课-因私代课-因私代课-因私代课-因私代课-因私';
+    $报表页面['底部区域']['备注']['标题']   = $SettingMap[$currentReport.'_Memo_Title'];
+    $报表页面['底部区域']['备注']['内容']   = $SettingMap[$currentReport.'_Memo_Content'];
 
     $报表页面['底部区域']['功能按钮']       = ['打印', '导出Excel', '导出Pdf'];
 
