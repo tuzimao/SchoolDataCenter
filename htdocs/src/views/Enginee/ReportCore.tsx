@@ -1,5 +1,6 @@
 // ** React Imports
 import { useState, useEffect, Fragment } from 'react'
+import React, { useRef } from "react";
 
 // ** MUI Imports
 import Typography from '@mui/material/Typography'
@@ -37,6 +38,8 @@ import InputLabel from '@mui/material/InputLabel'
 import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
 
+import ExcelJS from "exceljs";
+import { saveAs } from "file-saver"
 
 interface ReportType {
   authConfig: any
@@ -174,6 +177,104 @@ const ReportCore = (props: ReportType) => {
 
   const handleClose = () => {
     console.log("")
+  }
+
+  const tableRef = useRef<HTMLTableElement>(null);
+
+  const ExportDataToExcel = async () => {
+    const table = tableRef.current;
+    if (!table) return;
+
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet("Sheet1");
+
+    const rows = table.querySelectorAll("tr");
+    const sheetData: (string | null)[][] = [];
+    const occupied: Record<string, boolean> = {};
+
+    rows.forEach((tr, rowIndex) => {
+      sheetData[rowIndex] = sheetData[rowIndex] || [];
+      let colIndex = 0;
+
+      const cells = Array.from(tr.querySelectorAll("th, td"));
+      cells.forEach((cell) => {
+        while (occupied[`${rowIndex}_${colIndex}`]) {
+          colIndex++;
+        }
+
+        const rowspan = parseInt(cell.getAttribute("rowspan") || "1", 10);
+        const colspan = parseInt(cell.getAttribute("colspan") || "1", 10);
+
+        sheetData[rowIndex][colIndex] = cell.textContent?.trim() || "";
+
+        for (let r = rowIndex; r < rowIndex + rowspan; r++) {
+          for (let c = colIndex; c < colIndex + colspan; c++) {
+            if (r === rowIndex && c === colIndex) continue;
+            occupied[`${r}_${c}`] = true;
+          }
+        }
+
+        if (rowspan > 1 || colspan > 1) {
+          worksheet.mergeCells(
+            rowIndex + 1,
+            colIndex + 1,
+            rowIndex + rowspan,
+            colIndex + colspan
+          );
+        }
+
+        colIndex += colspan;
+      });
+    });
+
+    // 插入数据及样式
+    sheetData.forEach((rowData, rowIndex) => {
+      const row = worksheet.getRow(rowIndex + 1);
+      row.height = 20;
+      rowData.forEach((value, colIndex) => {
+        if (value !== null && value !== undefined) {
+          const cell = row.getCell(colIndex + 1);
+          cell.value = value;
+          cell.alignment = { horizontal: "center", vertical: "middle" };
+          cell.font = { name: "Arial", size: 12 };
+          cell.border = {
+            top: { style: "thin" },
+            left: { style: "thin" },
+            bottom: { style: "thin" },
+            right: { style: "thin" },
+          };
+        }
+      });
+    });
+
+    // 自动列宽：优先用第一行（header）长度，和所有单元格长度最大值
+    worksheet.columns.forEach((column, colIndex) => {
+      let maxLength = 10;
+
+      // 先用第一行（表头）文本长度
+      const headerCell = worksheet.getRow(1).getCell(colIndex + 1);
+      const headerLength = headerCell.value ? headerCell.value.toString().length : 0;
+      if (headerLength > maxLength) maxLength = headerLength;
+
+      // 再用所有单元格文本最大长度
+      column.eachCell && column.eachCell((cell) => {
+        const len = cell.value ? cell.value.toString().length : 0;
+        if (len > maxLength) maxLength = len;
+      });
+
+      // 设宽度，多留2个字符空间
+      column.width = maxLength + 2;
+    });
+
+    // 导出
+    const buffer = await workbook.xlsx.writeBuffer();
+    const blob = new Blob([buffer], {
+      type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    });
+    
+    const title = reportData?.['搜索区域']?.['标题'] ?? '导出数据';
+    saveAs(blob, `${title}.xlsx`);
+
   }
 
   console.log("reportData['数据区域']['头部']", reportData)
@@ -331,6 +432,7 @@ const ReportCore = (props: ReportType) => {
               <Fragment>
                 <TableContainer sx={{ maxHeight: 800 }}>
                   <Table 
+                    ref={tableRef}
                     stickyHeader
                     sx={{
                       borderCollapse: 'collapse',
@@ -479,7 +581,7 @@ const ReportCore = (props: ReportType) => {
                     <Button onClick={()=>{window.print();}}  variant='outlined' size="small" sx={{mr: 2}}>打印</Button>
                   )}
                   {reportData['底部区域'] && reportData['底部区域']['功能按钮'] && reportData['底部区域']['功能按钮'].includes('导出Excel') && (
-                    <Button onClick={()=>{window.print();}}  variant='outlined' size="small" sx={{mr: 2}}>导出Excel</Button>
+                    <Button onClick={()=>ExportDataToExcel()}  variant='outlined' size="small" sx={{mr: 2}}>导出Excel</Button>
                   )}
                   {reportData['底部区域'] && reportData['底部区域']['功能按钮'] && reportData['底部区域']['功能按钮'].includes('导出Pdf') && (
                     <Button onClick={()=>{window.print();}}  variant='outlined' size="small" sx={{mr: 2}}>导出Pdf</Button>
