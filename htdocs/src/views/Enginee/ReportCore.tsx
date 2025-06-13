@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, useEffect, Fragment } from 'react'
+import { forwardRef, Ref, ReactElement, useState, useEffect, Fragment } from 'react'
 import React, { useRef } from "react";
 
 // ** MUI Imports
@@ -40,8 +40,23 @@ import InputLabel from '@mui/material/InputLabel'
 import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
 
+import IconButton from '@mui/material/IconButton'
+import Dialog from '@mui/material/Dialog'
+import DialogContent from '@mui/material/DialogContent'
+import Fade, { FadeProps } from '@mui/material/Fade'
+import Icon from 'src/@core/components/icon'
+
+import jsPDF from 'jspdf'
+import html2canvas from 'html2canvas'
 import ExcelJS from "exceljs";
 import { saveAs } from "file-saver"
+
+const Transition = forwardRef(function Transition(
+  props: FadeProps & { children?: ReactElement<any, any> },
+  ref: Ref<unknown>
+) {
+  return <Fade ref={ref} {...props} />
+})
 
 interface ReportType {
   authConfig: any
@@ -65,6 +80,8 @@ const ReportCore = (props: ReportType) => {
   const [currentButtonName, setCurrentButtonName] = useState<string>('')
   const [sortMethod, setSortMethod] = useState<number>(0)
   const [sortField, setSortField] = useState<string>('')
+  const [isExporting, setIsExporting] = useState(false);
+  const [open, setOpen] = useState(false);
 
   const [searchData, setSearchData] = useState<any>(null)
 
@@ -180,7 +197,7 @@ const ReportCore = (props: ReportType) => {
   }
 
   const handleClose = () => {
-    console.log("")
+    setOpen(false)
   }
 
   const isNumber = (value: any) => {
@@ -231,6 +248,8 @@ const ReportCore = (props: ReportType) => {
   const ExportDataToExcel = async () => {
     const table = tableRef.current;
     if (!table) return;
+
+    setIsExporting(true)
 
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Sheet1");
@@ -339,7 +358,84 @@ const ReportCore = (props: ReportType) => {
     const title = reportData?.['搜索区域']?.['标题'] ?? '导出数据';
     saveAs(blob, `${title}.xlsx`);
 
+    setIsExporting(false)
+
   }
+
+  const ExportDataToPDF = async () => {
+    const table = tableRef.current;
+    if (!table) return;
+
+    setIsExporting(true)
+
+    // 应用到所有单元格
+    const originalStyle = table.style.cssText;
+    table.style.border = '1px solid black';
+    table.style.borderCollapse = 'separate';
+    table.style.borderSpacing = '0px';
+    table.style.boxSizing = 'border-box';
+    const originalStyles: any[] = [];
+    table.querySelectorAll('td, th').forEach((cell: any, index: number) => {
+      originalStyles[index] = cell.style.cssText;
+      cell.style.border = 'none';
+      cell.style.boxShadow = 'inset 0 0 0 1px black';
+      cell.style.backgroundColor = 'transparent';
+      cell.style.color = 'black';
+    });
+
+    try {
+      // Capture the table as an image using html2canvas
+      const canvas = await html2canvas(table, {
+        scale: 3,
+        useCORS: true,
+      });
+      const imgData = canvas.toDataURL('image/png');
+
+      // Create a new PDF document
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const imgWidth = 190; // Width of the image in the PDF
+      const pageHeight = pdf.internal.pageSize.height;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+      let position = 10;
+      
+      // Add the image to the PDF
+      pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+
+      // If the image is longer than a page, add new pages
+      while (position + imgHeight > pageHeight) {
+        position -= pageHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
+      }
+
+      // Save the PDF
+      const title = reportData?.['搜索区域']?.['标题'] ?? '导出数据';
+      pdf.save(`${title}.pdf`);
+
+      // 恢复每个单元格的原始样式
+      table.style.cssText = originalStyle;
+      table.querySelectorAll('td, th').forEach((cell: any, index: number) => {
+        cell.style.cssText = originalStyles[index];
+      });
+
+      setIsExporting(false)
+
+    } catch (error) {
+      console.error("Error exporting data to PDF:", error);
+
+      setIsExporting(false)
+    }
+  };
+
+  useEffect(() => {
+    if (open) {
+      // 弹窗打开时，自动弹出打印窗口
+      setTimeout(() => {
+        window.print();
+      }, 1000); // 延迟300ms，保证内容渲染完成
+    }
+  }, [open]);
 
   console.log("reportData['数据区域']['头部']", reportData)
 
@@ -494,176 +590,28 @@ const ReportCore = (props: ReportType) => {
               </Fragment>
             )}
 
-            {isLoading == false && reportData && (
-              <Fragment>
-                <TableContainer sx={{ maxHeight: 800 }}>
-                  <Table 
-                    ref={tableRef}
-                    stickyHeader
-                    sx={{
-                      borderCollapse: 'collapse',
-                      border: `1px solid ${borderColor}`, 
-                      '& td, & th': {
-                        border: `1px solid ${borderColor}`,
-                      },
-                    }}
-                  >
-                    {/* First header row */}
-                    <TableHead>
-                      <TableRow>
-                        {reportData['数据区域']['头部'][1] && reportData['数据区域']['头部'][0].map((cell: any, index: number) => (
-                          <TableCell
-                            key={`header1-${index}`}
-                            rowSpan={cell.row}
-                            colSpan={cell.col}
-                            sx={{                                
-                              whiteSpace: cell.wrap == 'No' ? 'nowrap' : 'pre-line',
-                              wordBreak: cell.wrap == 'Yes' ? 'break-word' : 'normal',
-                              textAlign: cell.align == 'Center' ? 'center' : 'left',
-                              fontWeight: 'bold',
-                              position: 'sticky',
-                              top: 0,
-                              mx: '0 !important',
-                              my: '0 !important',
-                              py: '4px !important',
-                              px: '8px !important',
-                              cursor: cell.col == 1 ? 'pointer' : 'auto',
-                            }}
-                            onClick={()=>handleFilterDataByColumnName(cell.name)}
-                          >
-                            {cell.name}
-                            {sortField === cell.name && cell.col == 1 && (
-                              sortMethod % 2 == 0 ? <ArrowDropUpIcon sx={{ verticalAlign: 'middle' }} /> : <ArrowDropDownIcon sx={{ verticalAlign: 'middle' }} />
-                            )}
-                          </TableCell>
-                        ))}
-                      </TableRow>
-                      <TableRow>
-                        {reportData['数据区域']['头部'][1] && reportData['数据区域']['头部'][1].map((cell: any, index: number) => (
-                          <TableCell
-                            key={`header2-${index}`}
-                            rowSpan={cell.row}
-                            colSpan={cell.col}
-                            sx={{                                
-                              whiteSpace: cell.wrap == 'No' ? 'nowrap' : 'pre-line',
-                              wordBreak: cell.wrap == 'Yes' ? 'break-word' : 'normal',
-                              textAlign: cell.align == 'Center' ? 'center' : 'left',
-                              fontWeight: 'bold',
-                              position: 'sticky',
-                              top: 29,
-                              mx: '0 !important',
-                              my: '0 !important',
-                              py: '4px !important',
-                              px: '8px !important',
-                              cursor: cell.col == 1 ? 'pointer' : 'auto',
-                            }}
-                            onClick={()=>handleFilterDataByColumnName(cell.name)}
-                          >
-                            {cell.name}
-                            {sortField === cell.name && cell.col == 1 && (
-                              sortMethod % 2 == 0 ? <ArrowDropUpIcon sx={{ verticalAlign: 'middle' }} /> : <ArrowDropDownIcon sx={{ verticalAlign: 'middle' }} />
-                            )}
-                          </TableCell>
-                        ))}
-                      </TableRow>
-                    </TableHead>
-  
-                    {/* Table body */}
-                    <TableBody>
-                      {reportData['数据区域']['头部'][1] && reportData['数据区域']['数据'].map((cell: any, rowIndex: number) => (
-                        <TableRow key={`row-${rowIndex}`} >
-                          {Object.keys(cell).map((key, cellIndex) => (
-                            <TableCell
-                              key={`cell-${rowIndex}-${cellIndex}`}
-                              rowSpan={cell.row}
-                              colSpan={cell.col}
-                              sx={{                                
-                                whiteSpace: cell.wrap == 'No' ? 'nowrap' : 'pre-line',
-                                wordBreak: cell.wrap == 'Yes' ? 'break-word' : 'normal',
-                                textAlign: cell.align == 'Center' ? 'center' : 'center',
-                                mx: '0 !important',
-                                my: '0 !important',
-                                py: '6px !important',
-                                px: '0 !important'
-                              }}
-                            >
-                              {cell[key]}
-                            </TableCell>
-                          ))}
-                        </TableRow>
-                      ))}
-                      {reportData['数据区域']['头部'][1] == null && (
-                        <TableRow  >
-                          <TableCell
-                              sx={{      
-                                textAlign: 'center',                          
-                                mx: '0 !important',
-                                my: '0 !important',
-                                py: '6px !important',
-                                px: '0 !important'
-                              }}
-                            >
-                              无数据
-                            </TableCell>
-                        </TableRow>
-                      )}
-                    </TableBody>
-                  </Table>
-                  
-                  {reportData['底部区域'] && reportData['底部区域']['备注'] && reportData['底部区域']['备注']['标题'] && (
-                    <Table 
-                      sx={{
-                        borderCollapse: 'collapse',
-                        border: `1px solid ${borderColor}`, 
-                        '& td, & th': {
-                          border: `1px solid ${borderColor}`,
-                        },
-                        mt: 5,
-                        mb: 4
-                      }}
-                    >
-                      <TableHead>
-                        <TableRow>
-                          <TableCell
-                              sx={{
-                                px: 1,
-                                py: 2,
-                              }}
-                            >
-                              {reportData['底部区域']['备注']['标题']}
-                          </TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        <TableRow>
-                          <TableCell
-                              sx={{
-                                px: 1,
-                                py: 2,
-                                whiteSpace: 'pre-line',
-                                wordBreak: 'break-word',
-                              }}
-                            >
-                              {reportData['底部区域']['备注']['内容']}
-                          </TableCell>
-                        </TableRow>
-                      </TableBody>
-                    </Table>
-                  )}
+            <TableDataAreaRender 
+              reportData={reportData}
+              isLoading={isLoading}
+              tableRef={tableRef}
+              borderColor={borderColor}
+              handleFilterDataByColumnName={handleFilterDataByColumnName}
+              sortField={sortField}
+              sortMethod={sortMethod}
+              />
 
-                </TableContainer>
-                <Grid container justifyContent="flex-end" sx={{mt: 3}}>
-                  {reportData['底部区域'] && reportData['底部区域']['功能按钮'] && reportData['底部区域']['功能按钮'].includes('打印') && (
-                    <Button onClick={()=>{window.print();}}  variant='outlined' size="small" sx={{mr: 2}}>打印</Button>
-                  )}
-                  {reportData['底部区域'] && reportData['底部区域']['功能按钮'] && reportData['底部区域']['功能按钮'].includes('导出Excel') && (
-                    <Button onClick={()=>ExportDataToExcel()}  variant='outlined' size="small" sx={{mr: 2}}>导出Excel</Button>
-                  )}
-                  {reportData['底部区域'] && reportData['底部区域']['功能按钮'] && reportData['底部区域']['功能按钮'].includes('导出Pdf') && (
-                    <Button onClick={()=>{window.print();}}  variant='outlined' size="small" sx={{mr: 2}}>导出Pdf</Button>
-                  )}
-                </Grid>
-              </Fragment>
+            {reportData && reportData['底部区域'] && reportData['底部区域']['功能按钮'] && (
+              <Grid container justifyContent="flex-end" sx={{mt: 3}}>
+                {reportData['底部区域'] && reportData['底部区域']['功能按钮'] && reportData['底部区域']['功能按钮'].includes('打印') && (
+                  <Button onClick={()=>setOpen(true)}  variant='outlined' size="small" sx={{mr: 2}}>打印</Button>
+                )}
+                {reportData['底部区域'] && reportData['底部区域']['功能按钮'] && reportData['底部区域']['功能按钮'].includes('导出Excel') && (
+                  <Button onClick={()=>ExportDataToExcel()} disabled={isExporting} variant='outlined' size="small" sx={{mr: 2}}>导出Excel</Button>
+                )}
+                {reportData['底部区域'] && reportData['底部区域']['功能按钮'] && reportData['底部区域']['功能按钮'].includes('导出Pdf') && (
+                  <Button onClick={()=>ExportDataToPDF()} disabled={isExporting} variant='outlined' size="small" sx={{mr: 2}}>导出Pdf</Button>
+                )}
+              </Grid>
             )}
 
             {reportData != null && isLoading == true && (
@@ -678,6 +626,36 @@ const ReportCore = (props: ReportType) => {
           </CardContent>
         </Card>
       </Fragment>
+
+      {open && (
+        <Dialog
+          fullWidth
+          open={open}
+          maxWidth={'lg'}
+          scroll='body'
+          onClose={handleClose}
+          TransitionComponent={Transition}
+        >
+          <DialogContent sx={{ pb: 8, pl: { xs: 4, sm: 6 }, pr: { xs: 0, sm: 6 }, pt: { xs: 8, sm: 12.5 }, position: 'relative' }}>
+            <IconButton
+              size='small'
+              onClick={handleClose}
+              sx={{ position: 'absolute', right: '1rem', top: '0.5rem' }}
+            >
+              <Icon icon='mdi:close' />
+            </IconButton>
+            <TableDataAreaRender 
+              reportData={reportData}
+              isLoading={isLoading}
+              tableRef={tableRef}
+              borderColor={borderColor}
+              handleFilterDataByColumnName={handleFilterDataByColumnName}
+              sortField={sortField}
+              sortMethod={sortMethod}
+              />
+          </DialogContent>
+        </Dialog >
+      )}
       
       {reportData == null && isLoading == true && (
         <Grid item xs={12} sm={12} container justifyContent="space-around">
@@ -690,5 +668,171 @@ const ReportCore = (props: ReportType) => {
     </Fragment>
   )
 }
+
+const TableDataAreaRender = ({ reportData, isLoading, tableRef, borderColor, handleFilterDataByColumnName, sortField, sortMethod}: any) => {
+
+  return (
+    <Fragment>
+      {isLoading == false && reportData && (
+        <Fragment>
+          <TableContainer sx={{ maxHeight: 800 }}>
+            <Table 
+              ref={tableRef}
+              stickyHeader
+              sx={{
+                borderCollapse: 'collapse',
+                border: `1px solid ${borderColor}`, 
+                '& td, & th': {
+                  border: `1px solid ${borderColor}`,
+                },
+              }}
+            >
+              {/* First header row */}
+              <TableHead>
+                <TableRow>
+                  {reportData['数据区域']['头部'][1] && reportData['数据区域']['头部'][0].map((cell: any, index: number) => (
+                    <TableCell
+                      key={`header1-${index}`}
+                      rowSpan={cell.row}
+                      colSpan={cell.col}
+                      sx={{                                
+                        whiteSpace: cell.wrap == 'No' ? 'nowrap' : 'pre-line',
+                        wordBreak: cell.wrap == 'Yes' ? 'break-word' : 'normal',
+                        textAlign: cell.align == 'Center' ? 'center' : 'left',
+                        fontWeight: 'bold',
+                        position: 'sticky',
+                        top: 0,
+                        mx: '0 !important',
+                        my: '0 !important',
+                        py: '4px !important',
+                        px: '8px !important',
+                        cursor: cell.col == 1 ? 'pointer' : 'auto',
+                      }}
+                      onClick={()=>handleFilterDataByColumnName(cell.name)}
+                    >
+                      {cell.name}
+                      {sortField === cell.name && cell.col == 1 && (
+                        sortMethod % 2 == 0 ? <ArrowDropUpIcon sx={{ verticalAlign: 'middle' }} /> : <ArrowDropDownIcon sx={{ verticalAlign: 'middle' }} />
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+                <TableRow>
+                  {reportData['数据区域']['头部'][1] && reportData['数据区域']['头部'][1].map((cell: any, index: number) => (
+                    <TableCell
+                      key={`header2-${index}`}
+                      rowSpan={cell.row}
+                      colSpan={cell.col}
+                      sx={{                                
+                        whiteSpace: cell.wrap == 'No' ? 'nowrap' : 'pre-line',
+                        wordBreak: cell.wrap == 'Yes' ? 'break-word' : 'normal',
+                        textAlign: cell.align == 'Center' ? 'center' : 'left',
+                        fontWeight: 'bold',
+                        position: 'sticky',
+                        top: 29,
+                        mx: '0 !important',
+                        my: '0 !important',
+                        py: '4px !important',
+                        px: '8px !important',
+                        cursor: cell.col == 1 ? 'pointer' : 'auto',
+                      }}
+                      onClick={()=>handleFilterDataByColumnName(cell.name)}
+                    >
+                      {cell.name}
+                      {sortField === cell.name && cell.col == 1 && (
+                        sortMethod % 2 == 0 ? <ArrowDropUpIcon sx={{ verticalAlign: 'middle' }} /> : <ArrowDropDownIcon sx={{ verticalAlign: 'middle' }} />
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              </TableHead>
+
+              {/* Table body */}
+              <TableBody>
+                {reportData['数据区域']['头部'][1] && reportData['数据区域']['数据'].map((cell: any, rowIndex: number) => (
+                  <TableRow key={`row-${rowIndex}`} >
+                    {Object.keys(cell).map((key, cellIndex) => (
+                      <TableCell
+                        key={`cell-${rowIndex}-${cellIndex}`}
+                        rowSpan={cell.row}
+                        colSpan={cell.col}
+                        sx={{                                
+                          whiteSpace: cell.wrap == 'No' ? 'nowrap' : 'pre-line',
+                          wordBreak: cell.wrap == 'Yes' ? 'break-word' : 'normal',
+                          textAlign: cell.align == 'Center' ? 'center' : 'center',
+                          mx: '0 !important',
+                          my: '0 !important',
+                          py: '6px !important',
+                          px: '0 !important'
+                        }}
+                      >
+                        {cell[key]}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))}
+                {reportData['数据区域']['头部'][1] == null && (
+                  <TableRow  >
+                    <TableCell
+                        sx={{      
+                          textAlign: 'center',                          
+                          mx: '0 !important',
+                          my: '0 !important',
+                          py: '6px !important',
+                          px: '0 !important'
+                        }}
+                      >
+                        无数据
+                      </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+            {reportData['底部区域'] && reportData['底部区域']['备注'] && reportData['底部区域']['备注']['标题'] && (
+              <Table 
+                sx={{
+                  borderCollapse: 'collapse',
+                  border: `1px solid ${borderColor}`, 
+                  '& td, & th': {
+                    border: `1px solid ${borderColor}`,
+                  },
+                  mt: 5,
+                  mb: 4
+                }}
+              >
+                <TableHead>
+                  <TableRow>
+                    <TableCell
+                        sx={{
+                          px: 1,
+                          py: 2,
+                        }}
+                      >
+                        {reportData['底部区域']['备注']['标题']}
+                    </TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  <TableRow>
+                    <TableCell
+                        sx={{
+                          px: 1,
+                          py: 2,
+                          whiteSpace: 'pre-line',
+                          wordBreak: 'break-word',
+                        }}
+                      >
+                        {reportData['底部区域']['备注']['内容']}
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            )}
+          </TableContainer>
+        </Fragment>
+      )}
+    </Fragment>
+  );
+};
 
 export default ReportCore
