@@ -18,6 +18,8 @@ import CardContent from '@mui/material/CardContent'
 import Button from '@mui/material/Button'
 import CircularProgress from '@mui/material/CircularProgress'
 import { useTheme } from '@mui/material/styles'
+import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 // ** Icon Imports
 import {isMobile} from 'src/configs/functions'
@@ -61,6 +63,8 @@ const ReportCore = (props: ReportType) => {
   const [isLoading, setIsLoading] = useState(false);
   const [reportData, setReportData] = useState<any>(null)
   const [currentButtonName, setCurrentButtonName] = useState<string>('')
+  const [sortMethod, setSortMethod] = useState<number>(0)
+  const [sortField, setSortField] = useState<string>('')
 
   const [searchData, setSearchData] = useState<any>(null)
 
@@ -179,6 +183,49 @@ const ReportCore = (props: ReportType) => {
     console.log("")
   }
 
+  const isNumber = (value: any) => {
+    return typeof value === 'number' || (!isNaN(value) && !isNaN(parseFloat(value)));
+  }
+
+  const handleFilterDataByColumnName = (ColumnName: string) => {
+
+    const TempData = reportData['数据区域']['数据']
+    console.log("TempData", TempData)
+    TempData[0] && Object.keys(TempData[0]).includes(ColumnName) && TempData.sort((a: any, b: any) => {
+
+      if(a[ColumnName] == null)   a[ColumnName] = '' ;
+      if(b[ColumnName] == null)   b[ColumnName] = '' ;
+
+      if(sortMethod % 2 == 0) {
+        if(isNumber(a[ColumnName]) && isNumber(b[ColumnName])) {
+          
+          return a[ColumnName] - b[ColumnName];
+        }
+        else {
+          
+          return a[ColumnName].localeCompare(b[ColumnName], 'zh');
+        }
+      }
+      else {
+        if(isNumber(b[ColumnName]) && isNumber(a[ColumnName])) {
+          
+          return b[ColumnName] - a[ColumnName];
+        }
+        else {
+          
+          return b[ColumnName].localeCompare(a[ColumnName], 'zh');
+        }
+      }
+    });
+
+    if(TempData[0] && Object.keys(TempData[0]).includes(ColumnName)) {
+      setSortMethod(sortMethod + 1)
+      setSortField(ColumnName)
+      setReportData(reportData)
+    }
+
+  }
+
   const tableRef = useRef<HTMLTableElement>(null);
 
   const ExportDataToExcel = async () => {
@@ -255,6 +302,23 @@ const ReportCore = (props: ReportType) => {
       const headerCell = worksheet.getRow(1).getCell(colIndex + 1);
       const headerLength = headerCell.value ? headerCell.value.toString().length : 0;
       if (headerLength > maxLength) maxLength = headerLength;
+      if (headerCell.value) {
+        switch(headerCell.value.toString()) {
+          case '序号':
+            maxLength = 8
+            break;
+          case '系部':
+          case '系部名称':
+          case '专业':
+          case '专业名称':
+          case '班级':
+          case '班级名称':
+          case '部门':
+          case '部门名称':
+            maxLength = 16
+            break;
+        }
+      }
 
       // 再用所有单元格文本最大长度
       column.eachCell && column.eachCell((cell) => {
@@ -357,6 +421,7 @@ const ReportCore = (props: ReportType) => {
                                   size='small'
                                   fullWidth
                                   options={cell.data}
+                                  defaultValue={{name: cell.default, value: cell.default}}
                                   id='autocomplete-outlined'
                                   getOptionLabel={(option: any) => option.name}
                                   renderInput={params => <TextField {...params} label={cell.name} />}
@@ -387,6 +452,7 @@ const ReportCore = (props: ReportType) => {
                                   fullWidth
                                   multiple
                                   options={cell.data}
+                                  defaultValue={{name: cell.default, value: cell.default}}
                                   id='autocomplete-outlined'
                                   getOptionLabel={(option: any) => option.name}
                                   renderInput={params => <TextField {...params} label={cell.name} />}
@@ -461,9 +527,14 @@ const ReportCore = (props: ReportType) => {
                               my: '0 !important',
                               py: '4px !important',
                               px: '8px !important',
+                              cursor: cell.col == 1 ? 'pointer' : 'auto',
                             }}
+                            onClick={()=>handleFilterDataByColumnName(cell.name)}
                           >
                             {cell.name}
+                            {sortField === cell.name && cell.col == 1 && (
+                              sortMethod % 2 == 0 ? <ArrowDropUpIcon sx={{ verticalAlign: 'middle' }} /> : <ArrowDropDownIcon sx={{ verticalAlign: 'middle' }} />
+                            )}
                           </TableCell>
                         ))}
                       </TableRow>
@@ -484,9 +555,14 @@ const ReportCore = (props: ReportType) => {
                               my: '0 !important',
                               py: '4px !important',
                               px: '8px !important',
+                              cursor: cell.col == 1 ? 'pointer' : 'auto',
                             }}
+                            onClick={()=>handleFilterDataByColumnName(cell.name)}
                           >
                             {cell.name}
+                            {sortField === cell.name && cell.col == 1 && (
+                              sortMethod % 2 == 0 ? <ArrowDropUpIcon sx={{ verticalAlign: 'middle' }} /> : <ArrowDropDownIcon sx={{ verticalAlign: 'middle' }} />
+                            )}
                           </TableCell>
                         ))}
                       </TableRow>
