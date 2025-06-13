@@ -548,7 +548,7 @@ const ReportCore = (props: ReportType) => {
                                   fullWidth
                                   multiple
                                   options={cell.data}
-                                  defaultValue={{name: cell.default, value: cell.default}}
+                                  defaultValue={[{name: cell.default, value: cell.default}]}
                                   id='autocomplete-outlined'
                                   getOptionLabel={(option: any) => option.name}
                                   renderInput={params => <TextField {...params} label={cell.name} />}
