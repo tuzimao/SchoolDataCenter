@@ -15,7 +15,6 @@ import ReportCore from './ReportCore'
 import { Breakpoint } from '@mui/system'
 
 import { authConfig } from 'src/configs/auth'
-import { Props } from 'react-apexcharts'
 
 const Transition = forwardRef(function Transition(
   props: FadeProps & { children?: ReactElement<any, any> },
@@ -35,9 +34,6 @@ const ViewTable = ({ backEndApi }: any) => { //props: ViewTableType
   }
 
   const addEditViewShowInWindow = true
-  const externalId = 0
-  const action = 'report_default'
-  const editViewCounter = 0
   const dialogMaxWidth = 'lg' as Breakpoint
   const open = true
 

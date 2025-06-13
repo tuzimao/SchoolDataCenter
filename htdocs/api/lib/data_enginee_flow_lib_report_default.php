@@ -6,6 +6,7 @@ if(in_array($CurrentUrlFileName, $ForbiddenAccessUrlList)) exit;
 
 $currentReport = ForSqlInjection($_GET['currentReport']);
 if( $_GET['action']=="report_default" && $currentReport!="")  {
+    
     if($currentReport!="Report_1"&&$currentReport!="Report_2"&&$currentReport!="Report_3"&&$currentReport!="Report_4"&&$currentReport!="Report_5"&&$currentReport!="Report_6"&&$currentReport!="Report_7"&&$currentReport!="Report_8")   {
         $RS = [];
         $RS['status'] = "ERROR";
@@ -71,6 +72,9 @@ function getReportStructureData() {
 function getReportStructureDataSingle($currentReport) {
     global $db, $TableName, $Step, $GLOBAL_USER, $SettingMap, $MetaColumnNames;
 
+    $payload        = file_get_contents('php://input');
+    $_POST          = json_decode($payload,true);
+
     //functionNameIndividual
     $functionNameIndividual = "plugin_".$TableName."_".$Step."_report_default";
     if(function_exists($functionNameIndividual))  {
@@ -100,6 +104,72 @@ function getReportStructureDataSingle($currentReport) {
         $RS['msg'] = "Report_1_LeftColumnField not a field in $TableName";
         print_R(EncryptApiData($RS, $GLOBAL_USER));
         exit;
+    }
+
+    $sql    = "select ShowType, FieldName from form_formfield where FormName = '$TableName'";
+    $rs     = $db->Execute($sql);
+    $rs_a   = $rs->GetArray();
+    $字段的显示类型 = [];
+    foreach($rs_a as $Item)  {
+        $字段的显示类型[$Item['FieldName']] = $Item['ShowType'];
+    }
+    //print_R($字段的显示类型);
+    
+    //处理搜索时的SQL条件过滤
+    $WhereSql = "";
+    for($X=1;$X<=6;$X++)    {
+        $字段名称 = $SettingMap['Report_1_SearchField_'.$X];
+        if(in_array($字段名称, $MetaColumnNames) && $字段名称 != '') {
+            $字段类型           = $字段的显示类型[$字段名称];
+            $字段类型Edit       = returntablefield("form_formfield_showtype","`Name`",$字段类型,"Edit")['Edit'];
+            $字段类型EditArray  = explode(':', $字段类型Edit);
+            $字段类型2          = $字段类型EditArray[0];
+            if($字段类型 == 'Input:input') {
+                $字段类型2  = 'input';
+            }
+            $POST字段的值   = ForSqlInjection($_POST[$字段名称]);
+            //print $POST字段的值; print $字段名称; print $字段类型2.'\n'; 
+            switch($字段类型2) {
+                case 'input':
+                    if($POST字段的值 == "全部数据") {
+                        $WhereSql .= "";
+                    }
+                    else if($POST字段的值 == "空值") {
+                        $WhereSql .= " and $字段名称 = '' ";
+                    }
+                    else if($POST字段的值 != "") {
+                        $WhereSql .= " and $字段名称 like '%".$POST字段的值."%' ";
+                    }
+                    break;
+                case 'autocomplete':
+                case 'tablefilter':
+                case 'tablefiltercolor':
+                case 'radiofilter':
+                case 'radiofiltercolor':
+                    if($POST字段的值 == "全部数据") {
+                        $WhereSql .= "";
+                    }
+                    else if($POST字段的值 == "空值") {
+                        $WhereSql .= " and $字段名称 = '' ";
+                    }
+                    else if($POST字段的值 != "") {
+                        $WhereSql .= " and $字段名称 = '".$POST字段的值."' ";
+                    }
+                    break;
+                case 'autocompletemulti':
+                    if($POST字段的值 == "全部数据") {
+                        $WhereSql .= "";
+                    }
+                    else if($POST字段的值 == "空值") {
+                        $WhereSql .= " and $字段名称 = '' ";
+                    }
+                    else if($POST字段的值 != "") {
+                        $POST字段的值Array = explode(',', $POST字段的值);
+                        $WhereSql .= " and $字段名称 in ('".join("','", $POST字段的值Array)."') ";
+                    }
+                    break;
+            }
+        }
     }
 
     if($Report_X_LeftColumnField != "" && $$Report_X_LeftColumnField != "无")   {
@@ -185,17 +255,17 @@ function getReportStructureDataSingle($currentReport) {
             exit;
         }
         $右侧数据区域字段1  = [];
-        $sql        = "select count(*) AS NUM, $Report_X_LeftColumnField, $Report_X_DataColumn_1_Name from $TableName group by $Report_X_LeftColumnField, $Report_X_DataColumn_1_Name order by $Report_X_DataColumn_1_Name asc";
+        $sql        = "select count(*) AS NUM, $Report_X_LeftColumnField, $Report_X_DataColumn_1_Name from $TableName where 1=1 $WhereSql group by $Report_X_LeftColumnField, $Report_X_DataColumn_1_Name order by $Report_X_DataColumn_1_Name asc";
         $rs         = $db->Execute($sql);
         $rs_a       = $rs->GetArray();
-        //print_R($rs_a);
+        $数据区域SQL = $sql;
         foreach($rs_a as $Line) {
             if($Line[$Report_X_DataColumn_1_Name] == '') $Line[$Report_X_DataColumn_1_Name] = '空值';
             $报表头部数组[$Report_X_DataColumn_1_Name][$Line[$Report_X_DataColumn_1_Name]] = $Line[$Report_X_DataColumn_1_Name];
             $右侧数据区域字段1[$Line[$Report_X_LeftColumnField]][$Report_X_DataColumn_1_Name][$Line[$Report_X_DataColumn_1_Name]] = $Line['NUM'];
         }
         
-        $右侧数据区域字段1_列名 = array_keys($报表头部数组[$Report_X_DataColumn_1_Name]);
+        $右侧数据区域字段1_列名 = array_keys((array)$报表头部数组[$Report_X_DataColumn_1_Name]);
         foreach($右侧数据区域字段1_列名 as $右侧数据区域字段1_列名Value) {
             $报表页面['数据区域']['头部'][1][]   = ['name'=>$右侧数据区域字段1_列名Value, 'col'=>1, 'row'=>1, 'link'=>'', 'wrap'=>'No', 'align'=>'Center'];
         }
@@ -212,7 +282,7 @@ function getReportStructureDataSingle($currentReport) {
             exit;
         }
         $右侧数据区域字段2  = [];
-        $sql        = "select count(*) AS NUM, $Report_X_LeftColumnField, $Report_X_DataColumn_2_Name from $TableName group by $Report_X_LeftColumnField, $Report_X_DataColumn_2_Name order by $Report_X_DataColumn_2_Name asc";
+        $sql        = "select count(*) AS NUM, $Report_X_LeftColumnField, $Report_X_DataColumn_2_Name from $TableName where 1=1 $WhereSql group by $Report_X_LeftColumnField, $Report_X_DataColumn_2_Name order by $Report_X_DataColumn_2_Name asc";
         $rs         = $db->Execute($sql);
         $rs_a       = $rs->GetArray();
         //print_R($rs_a);
@@ -222,7 +292,7 @@ function getReportStructureDataSingle($currentReport) {
             $右侧数据区域字段2[$Line[$Report_X_LeftColumnField]][$Report_X_DataColumn_2_Name][$Line[$Report_X_DataColumn_2_Name]] = $Line['NUM'];
         }
         
-        $右侧数据区域字段2_列名 = array_keys($报表头部数组[$Report_X_DataColumn_2_Name]);
+        $右侧数据区域字段2_列名 = array_keys((array)$报表头部数组[$Report_X_DataColumn_2_Name]);
         foreach($右侧数据区域字段2_列名 as $右侧数据区域字段2_列名Value) {
             $报表页面['数据区域']['头部'][1][]   = ['name'=>$右侧数据区域字段2_列名Value, 'col'=>1, 'row'=>1, 'link'=>'', 'wrap'=>'No', 'align'=>'Center'];
         }
@@ -232,37 +302,59 @@ function getReportStructureDataSingle($currentReport) {
 
     } //$Report_X_LeftColumnField != "" && $$Report_X_LeftColumnField != "无"
 
-    $sql    = "select ShowType, FieldName from form_formfield where FormName = '$TableName'";
-    $rs     = $db->Execute($sql);
-    $rs_a   = $rs->GetArray();
-    $字段的显示类型 = [];
-    foreach($rs_a as $Item)  {
-        $字段的显示类型[$Item['FieldName']] = $Item['ShowType']; 
-    }
-    //print_R($字段的显示类型);
 
     $报表页面['搜索区域']['搜索按钮']   = "开始查询";
     $报表页面['搜索区域']['搜索事件']   = "action=search";
 
     for($X=1;$X<=6;$X++)    {
-        if(in_array($SettingMap['Report_1_SearchField_'.$X], $MetaColumnNames) && $SettingMap['Report_1_SearchField_'.$X] != '') {
-            $字段类型       = $字段的显示类型[$SettingMap['Report_1_SearchField_'.$X]];
+        $字段名称 = $SettingMap['Report_1_SearchField_'.$X];
+        if(in_array($字段名称, $MetaColumnNames) && $字段名称 != '') {
+            $字段类型       = $字段的显示类型[$字段名称];
             $字段类型Edit   = returntablefield("form_formfield_showtype","`Name`",$字段类型,"Edit")['Edit'];
-            $字段类型EditArray = explode(':', $字段类型Edit);
-            $字段类型2      = $字段类型EditArray[0];
+            $字段类型EditArray  = explode(':', $字段类型Edit);
+            $字段类型2          = $字段类型EditArray[0];
             if($字段类型 == 'Input:input') {
                 $字段类型2 = 'input';
             }
             switch($字段类型2) {
                 case 'input':
-                    $报表页面['搜索区域']['搜索条件'][] = ['name'=>$SettingMap['Report_1_SearchField_'.$X], 'sm'=>4, 'type'=>'input', 'field'=>$SettingMap['Report_1_SearchField_'.$X], 'default'=> '', 'placeholder'=>$SettingMap['Report_1_SearchField_'.$X]];
+                    $报表页面['搜索区域']['搜索条件'][] = ['name'=>$字段名称, 'sm'=>4, 'type'=>'input', 'field'=>$字段名称, 'default'=> '', 'placeholder'=>$字段名称];
                     break;
                 case 'autocomplete':
                 case 'tablefilter':
                 case 'tablefiltercolor':
                 case 'radiofilter':
                 case 'radiofiltercolor':
-                    $报表页面['搜索区域']['搜索条件'][] = ['name'=>$SettingMap['Report_1_SearchField_'.$X], 'sm'=>4, 'type'=>'input', 'field'=>$SettingMap['Report_1_SearchField_'.$X], 'default'=> '', 'placeholder'=>$SettingMap['Report_1_SearchField_'.$X]];
+                    $sql    = "select $字段名称, COUNT(*) AS NUM from $TableName group by $字段名称 order by ".$字段名称." asc";
+                    $rs     = $db->Execute($sql);
+                    $rs_a   = $rs->GetArray();
+                    $NewArray = [];
+                    $NewArray[] = ['name'=>'全部数据', 'value'=>'全部数据'];
+                    for($F=0;$F<sizeof($rs_a);$F++)  {
+                        if($rs_a[$F][$字段名称] == "")  {
+                            $NewArray[] = ['name'=>"空值"."(".$rs_a[$F]['NUM'].")", 'value'=>'空值'];
+                        }
+                        else {
+                            $NewArray[] = ['name'=>$rs_a[$F][$字段名称]."(".$rs_a[$F]['NUM'].")", 'value'=>$rs_a[$F][$字段名称]];
+                        }
+                    }
+                    $报表页面['搜索区域']['搜索条件'][] = ['name'=>$字段名称, 'sm'=>4, 'type'=> $字段类型2=='autocomplete' ? 'autocomplete' : 'select', 'field'=>$字段名称, 'default'=> '全部数据', 'placeholder'=>$字段名称, 'data'=>$NewArray];
+                    break;
+                case 'autocompletemulti':
+                    $sql    = "select $字段名称, COUNT(*) AS NUM from $TableName group by $字段名称 order by ".$字段名称." asc";
+                    $rs     = $db->Execute($sql);
+                    $rs_a   = $rs->GetArray();
+                    $NewArray = [];
+                    $NewArray[] = ['name'=>'全部数据', 'value'=>'全部数据'];
+                    for($F=0;$F<sizeof($rs_a);$F++)  {
+                        if($rs_a[$F][$字段名称] == "")  {
+                            $NewArray[] = ['name'=>"空值"."(".$rs_a[$F]['NUM'].")", 'value'=>'空值'];
+                        }
+                        else {
+                            $NewArray[] = ['name'=>$rs_a[$F][$字段名称]."(".$rs_a[$F]['NUM'].")", 'value'=>$rs_a[$F][$字段名称]];
+                        }
+                    }
+                    $报表页面['搜索区域']['搜索条件'][] = ['name'=>$字段名称, 'sm'=>4, 'type'=>'autocompletemulti', 'field'=>$字段名称, 'default'=> '全部数据', 'placeholder'=>$字段名称, 'data'=>$NewArray];
                     break;
             }
             //print $字段类型2;//print_R($字段类型EditArray);//exit;
@@ -340,6 +432,8 @@ function getReportStructureDataSingle($currentReport) {
     $报表页面['底部区域']['功能按钮']       = ['打印', '导出Excel', '导出Pdf'];
 
     $报表页面['status'] = 'OK';
+    
+    $报表页面['SQL']['数据区域SQL'] = $数据区域SQL;
 
     return $报表页面;
 }

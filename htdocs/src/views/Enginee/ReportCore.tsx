@@ -113,7 +113,7 @@ const ReportCore = (props: ReportType) => {
             setReportData(dataJson)
             const 搜索条件 = dataJson['搜索区域']['搜索条件']
             const NewDefaultValue: any = {}
-            搜索条件 && 搜索条件.length > 0 && 搜索条件.map((item: any, index: number)=>{
+            搜索条件 && 搜索条件.length > 0 && 搜索条件.map((item: any)=>{
               NewDefaultValue[item.name] = item.default
             })
             setSearchData(NewDefaultValue)
@@ -135,7 +135,7 @@ const ReportCore = (props: ReportType) => {
     axios
       .post(
         authConfig.backEndApiHost + backEndApi + '?action=report_default&currentReport=' + currentReport,
-        searchData,
+        {...searchData, system: 'search'},
         { headers: { Authorization: storedToken } }
       )  
       .then(res => {
@@ -187,7 +187,7 @@ const ReportCore = (props: ReportType) => {
           <CardContent sx={{ mt: 0, pt: 0 }}>
             <Grid container justifyContent="flex-start" sx={{mt: 3}}>
               {ButtonList && ButtonList.length > 0 && ButtonList.map((item:any , index: number)=>(
-                <Button onClick={()=>{
+                <Button key={index} onClick={()=>{
                   setCurrentButtonName(item.code)
                 }} sx={{ mr: 2}} variant={item.code == currentButtonName || (currentButtonName == '' && index == 0) ? 'contained' : 'outlined'} size="small">{item.name}</Button>
               ))}
@@ -261,10 +261,18 @@ const ReportCore = (props: ReportType) => {
                                   renderInput={params => <TextField {...params} label={cell.name} />}
                                   onChange={(e: any, newValue: any) => {
                                     console.log("search e", newValue)
-                                    setSearchData((prevData: any)=>({
-                                      ...prevData,
-                                      [cell.name]: newValue.value
-                                    }));
+                                    if(newValue == null) {
+                                      setSearchData((prevData: any)=>({
+                                        ...prevData,
+                                        [cell.name]: ''
+                                      }));
+                                    }
+                                    else {
+                                      setSearchData((prevData: any)=>({
+                                        ...prevData,
+                                        [cell.name]: newValue.value
+                                      }));
+                                    }
                                   }}
                                 />
                               </Grid>
@@ -291,6 +299,12 @@ const ReportCore = (props: ReportType) => {
                                       setSearchData((prevData: any)=>({
                                         ...prevData,
                                         [cell.name]: newValueArray.join(',')
+                                      }));
+                                    }
+                                    else {
+                                      setSearchData((prevData: any)=>({
+                                        ...prevData,
+                                        [cell.name]: ''
                                       }));
                                     }
                                   }}
@@ -329,7 +343,7 @@ const ReportCore = (props: ReportType) => {
                     {/* First header row */}
                     <TableHead>
                       <TableRow>
-                        {reportData['数据区域']['头部'][0].map((cell: any, index: number) => (
+                        {reportData['数据区域']['头部'][1] && reportData['数据区域']['头部'][0].map((cell: any, index: number) => (
                           <TableCell
                             key={`header1-${index}`}
                             rowSpan={cell.row}
@@ -352,7 +366,7 @@ const ReportCore = (props: ReportType) => {
                         ))}
                       </TableRow>
                       <TableRow>
-                        {reportData['数据区域']['头部'][1].map((cell: any, index: number) => (
+                        {reportData['数据区域']['头部'][1] && reportData['数据区域']['头部'][1].map((cell: any, index: number) => (
                           <TableCell
                             key={`header2-${index}`}
                             rowSpan={cell.row}
@@ -378,7 +392,7 @@ const ReportCore = (props: ReportType) => {
   
                     {/* Table body */}
                     <TableBody>
-                      {reportData['数据区域']['数据'].map((cell: any, rowIndex: number) => (
+                      {reportData['数据区域']['头部'][1] && reportData['数据区域']['数据'].map((cell: any, rowIndex: number) => (
                         <TableRow key={`row-${rowIndex}`} >
                           {Object.keys(cell).map((key, cellIndex) => (
                             <TableCell
@@ -400,6 +414,21 @@ const ReportCore = (props: ReportType) => {
                           ))}
                         </TableRow>
                       ))}
+                      {reportData['数据区域']['头部'][1] == null && (
+                        <TableRow  >
+                          <TableCell
+                              sx={{      
+                                textAlign: 'center',                          
+                                mx: '0 !important',
+                                my: '0 !important',
+                                py: '6px !important',
+                                px: '0 !important'
+                              }}
+                            >
+                              无数据
+                            </TableCell>
+                        </TableRow>
+                      )}
                     </TableBody>
                   </Table>
                   
