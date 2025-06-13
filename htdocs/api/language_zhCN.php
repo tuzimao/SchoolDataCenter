@@ -368,8 +368,9 @@ $MAP['ReportSetting1'] 	                        = '报表设置1';
 $MAP['ReportSetting2'] 	                        = '报表设置2';
 $MAP['ReportSetting3'] 	                        = '报表设置3';
 $MAP['ReportSetting4'] 	                        = '报表设置4';
-$MAP['Report_1_Setting'] 					= '报表设置';
+$MAP['Report_1_Setting'] 					    = '报表设置';
 $MAP['Report_1_Name'] 	                        = '报表名称1';
+$MAP['Report_1_TableName'] 	                    = '数据表名称';
 $MAP['Report_1_HeaderCount'] 	                = '表头行数';
 $MAP['Report_1_LeftColumnDefine'] 	            = '左侧列定义';
 $MAP['Report_1_LeftColumnField'] 	            = '左侧计算字段';
@@ -400,6 +401,7 @@ $MAP['Report_1_Memo_Title'] 	                = '页面底部备注标题';
 $MAP['Report_1_Memo_Content'] 	                = '页面底部备注内容';
 
 $MAP['Report_2_Name'] 	                        = '报表名称2';
+$MAP['Report_2_TableName'] 	                    = '数据表名称';
 $MAP['Report_2_HeaderCount'] 	                = '表头行数';
 $MAP['Report_2_LeftColumnDefine'] 	            = '左侧列定义';
 $MAP['Report_2_LeftColumnField'] 	            = '左侧计算字段';
@@ -428,6 +430,39 @@ $MAP['Report_2_SearchField_5'] 	                = '搜索字段5';
 $MAP['Report_2_SearchField_6'] 	                = '搜索字段6';
 $MAP['Report_2_Memo_Title'] 	                = '页面底部备注标题';
 $MAP['Report_2_Memo_Content'] 	                = '页面底部备注内容';
+
+
+$MAP['Report_3_Name'] 	                        = '报表名称3';
+$MAP['Report_3_TableName'] 	                    = '数据表名称';
+$MAP['Report_3_HeaderCount'] 	                = '表头行数';
+$MAP['Report_3_LeftColumnDefine'] 	            = '左侧列定义';
+$MAP['Report_3_LeftColumnField'] 	            = '左侧计算字段';
+$MAP['Report_3_LeftColumnDataShow'] 	        = '左侧列数据显示';
+$MAP['Report_3_DataColumn_1_Name'] 	            = '数据列1 名称';
+$MAP['Report_3_DataColumn_1_SQL'] 	            = '数据列1 SQL';
+$MAP['Report_3_DataColumn_2_Name'] 	            = '数据列2 名称';
+$MAP['Report_3_DataColumn_2_SQL'] 	            = '数据列2 SQL';
+$MAP['Report_3_DataColumn_3_Name'] 	            = '数据列3 名称';
+$MAP['Report_3_DataColumn_3_SQL'] 	            = '数据列3 SQL';
+$MAP['Report_3_DataColumn_4_Name'] 	            = '数据列4 名称';
+$MAP['Report_3_DataColumn_4_SQL'] 	            = '数据列4 SQL';
+$MAP['Report_3_DataColumn_5_Name'] 	            = '数据列5 名称';
+$MAP['Report_3_DataColumn_5_SQL'] 	            = '数据列5 SQL';
+$MAP['Report_3_DataColumn_6_Name'] 	            = '数据列6 名称';
+$MAP['Report_3_DataColumn_6_SQL'] 	            = '数据列6 SQL';
+$MAP['Report_3_DataColumn_7_Name'] 	            = '数据列7 名称';
+$MAP['Report_3_DataColumn_7_SQL'] 	            = '数据列7 SQL';
+$MAP['Report_3_DataColumn_8_Name'] 	            = '数据列8 名称';
+$MAP['Report_3_DataColumn_8_SQL'] 	            = '数据列8 SQL';
+$MAP['Report_3_SearchField_1'] 	                = '搜索字段1';
+$MAP['Report_3_SearchField_2'] 	                = '搜索字段2';
+$MAP['Report_3_SearchField_3'] 	                = '搜索字段3';
+$MAP['Report_3_SearchField_4'] 	                = '搜索字段4';
+$MAP['Report_3_SearchField_5'] 	                = '搜索字段5';
+$MAP['Report_3_SearchField_6'] 	                = '搜索字段6';
+$MAP['Report_3_Memo_Title'] 	                = '页面底部备注标题';
+$MAP['Report_3_Memo_Content'] 	                = '页面底部备注内容';
+
 
 
 

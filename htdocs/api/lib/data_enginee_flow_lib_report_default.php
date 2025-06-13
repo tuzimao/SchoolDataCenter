@@ -101,7 +101,7 @@ function getReportStructureDataSingle($currentReport) {
     if(!in_array($Report_X_LeftColumnField, $MetaColumnNames) && $Report_X_LeftColumnField != '' && $Report_X_LeftColumnField != 'None') {
         $RS = [];
         $RS['status'] = "ERROR";
-        $RS['msg'] = "Report_1_LeftColumnField not a field in $TableName";
+        $RS['msg'] = "Report_X_LeftColumnField not a field in $TableName";
         print_R(EncryptApiData($RS, $GLOBAL_USER));
         exit;
     }
@@ -118,7 +118,7 @@ function getReportStructureDataSingle($currentReport) {
     //处理搜索时的SQL条件过滤
     $WhereSql = "";
     for($X=1;$X<=6;$X++)    {
-        $字段名称 = $SettingMap['Report_1_SearchField_'.$X];
+        $字段名称 = $SettingMap[$currentReport.'_SearchField_'.$X];
         if(in_array($字段名称, $MetaColumnNames) && $字段名称 != '') {
             $字段类型           = $字段的显示类型[$字段名称];
             $字段类型Edit       = returntablefield("form_formfield_showtype","`Name`",$字段类型,"Edit")['Edit'];
@@ -172,10 +172,10 @@ function getReportStructureDataSingle($currentReport) {
         }
     }
 
+    //生成左侧区域数据
+    $左侧区域数据 = [];
     if($Report_X_LeftColumnField != "" && $$Report_X_LeftColumnField != "无")   {
         $右侧数据关联字段  = '';
-        //生成左侧区域数据
-        $左侧区域数据 = [];
         switch($Report_X_LeftColumnDefine)  {
             case '班级/专业/系部':
                 $右侧数据关联字段  = '班级';
@@ -307,7 +307,7 @@ function getReportStructureDataSingle($currentReport) {
     $报表页面['搜索区域']['搜索事件']   = "action=search";
 
     for($X=1;$X<=6;$X++)    {
-        $字段名称 = $SettingMap['Report_1_SearchField_'.$X];
+        $字段名称 = $SettingMap[$currentReport.'_SearchField_'.$X];
         if(in_array($字段名称, $MetaColumnNames) && $字段名称 != '') {
             $字段类型       = $字段的显示类型[$字段名称];
             $字段类型Edit   = returntablefield("form_formfield_showtype","`Name`",$字段类型,"Edit")['Edit'];

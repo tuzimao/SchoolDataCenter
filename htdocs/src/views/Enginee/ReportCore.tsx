@@ -580,7 +580,7 @@ const ReportCore = (props: ReportType) => {
 
                   })}
                 </Grid>
-                {reportData['搜索区域']['搜索按钮'] && (
+                {reportData['搜索区域']['搜索按钮'] && reportData['搜索区域']['搜索条件'] && reportData['搜索区域']['搜索条件'].length > 0 && (
                   <Grid item xs={12} sx={{mb: 2}}>
                     <Button size='small' type='submit' sx={{ mr: 2 }} variant='contained' onClick={handleSubmitData} disabled={searchData == null ? true : false}>
                       {reportData['搜索区域']['搜索按钮']}
@@ -690,7 +690,7 @@ const TableDataAreaRender = ({ reportData, isLoading, tableRef, borderColor, han
               {/* First header row */}
               <TableHead>
                 <TableRow>
-                  {reportData['数据区域']['头部'][1] && reportData['数据区域']['头部'][0].map((cell: any, index: number) => (
+                  {reportData && reportData['数据区域'] && reportData['数据区域']['头部'] && reportData['数据区域']['头部'][1] && reportData['数据区域']['头部'][0].map((cell: any, index: number) => (
                     <TableCell
                       key={`header1-${index}`}
                       rowSpan={cell.row}
@@ -718,7 +718,7 @@ const TableDataAreaRender = ({ reportData, isLoading, tableRef, borderColor, han
                   ))}
                 </TableRow>
                 <TableRow>
-                  {reportData['数据区域']['头部'][1] && reportData['数据区域']['头部'][1].map((cell: any, index: number) => (
+                  {reportData && reportData['数据区域'] && reportData['数据区域']['头部'] && reportData['数据区域']['头部'][1] && reportData['数据区域']['头部'][1].map((cell: any, index: number) => (
                     <TableCell
                       key={`header2-${index}`}
                       rowSpan={cell.row}
@@ -749,7 +749,7 @@ const TableDataAreaRender = ({ reportData, isLoading, tableRef, borderColor, han
 
               {/* Table body */}
               <TableBody>
-                {reportData['数据区域']['头部'][1] && reportData['数据区域']['数据'].map((cell: any, rowIndex: number) => (
+                {reportData && reportData['数据区域'] && reportData['数据区域']['头部'] && reportData['数据区域']['头部'][1] && reportData['数据区域']['数据'].map((cell: any, rowIndex: number) => (
                   <TableRow key={`row-${rowIndex}`} >
                     {Object.keys(cell).map((key, cellIndex) => (
                       <TableCell
@@ -771,7 +771,7 @@ const TableDataAreaRender = ({ reportData, isLoading, tableRef, borderColor, han
                     ))}
                   </TableRow>
                 ))}
-                {reportData['数据区域']['头部'][1] == null && (
+                {reportData && reportData['数据区域'] && reportData['数据区域']['头部'] && reportData['数据区域']['头部'][1] == null && (
                   <TableRow  >
                     <TableCell
                         sx={{      
