@@ -23,8 +23,9 @@ if( $_GET['action']=="report_default" && $currentReport!="")  {
 }
 
 function getReportStructureData() {
-    global $db, $TableName, $Step, $GLOBAL_USER, $SettingMap, $MetaColumnNames;
+    global $db, $Step, $GLOBAL_USER, $SettingMap, $MetaColumnNames;
 
+    $TableName = $SettingMap['Report_1_TableName'];
     //functionNameIndividual
     $functionNameIndividual = "plugin_".$TableName."_".$Step."_report_default";
     if(function_exists($functionNameIndividual))  {
@@ -70,7 +71,9 @@ function getReportStructureData() {
 }
 
 function getReportStructureDataSingle($currentReport) {
-    global $db, $TableName, $Step, $GLOBAL_USER, $SettingMap, $MetaColumnNames;
+    global $db, $Step, $GLOBAL_USER, $SettingMap, $MetaColumnNames;
+
+    $TableName = $SettingMap[$currentReport.'_TableName'];
 
     $payload        = file_get_contents('php://input');
     $_POST          = json_decode($payload,true);
@@ -80,10 +83,6 @@ function getReportStructureDataSingle($currentReport) {
     if(function_exists($functionNameIndividual))  {
         $functionNameIndividual($id);
     }
-
-    $sql    = "select * from `$TableName` where id = '$id'";
-    $rsf    = $db->Execute($sql);
-    $data   = $rsf->fields;
 
     $报表页面 = [];
     $报表页面['搜索区域'] = [];
@@ -231,6 +230,19 @@ function getReportStructureDataSingle($currentReport) {
                 $报表页面['数据区域']['头部'][0][]   = ['name'=>'姓名', 'col'=>1, 'row'=>2, 'link'=>'', 'wrap'=>'No', 'align'=>'Center'];
                 $报表页面['数据区域']['头部'][0][]   = ['name'=>'部门', 'col'=>1, 'row'=>2, 'link'=>'', 'wrap'=>'No', 'align'=>'Center'];
                 $sql        = "select USER_ID as 用户名, USER_NAME as 姓名, DEPT_NAME as 部门 from data_user, data_department where data_user.DEPT_ID = data_department.id and data_user.NOT_LOGIN = '0' order by data_user.DEPT_ID, data_user.USER_ID";
+                $rs         = $db->Execute($sql);
+                $rs_a       = $rs->GetArray();
+                $Counter    = 0;
+                foreach($rs_a as $Line) {
+                    $左侧区域数据[] = $Line;
+                    $Counter ++;
+                }
+                break;
+            case '动态数据做为左侧列':
+                $右侧数据关联字段  = $SettingMap[$currentReport.'_LeftColumnField'];
+                $报表页面['数据区域']['头部'][0][]   = ['name'=>'序号', 'col'=>1, 'row'=>2, 'link'=>'', 'wrap'=>'No', 'align'=>'Center'];
+                $报表页面['数据区域']['头部'][0][]   = ['name'=>$右侧数据关联字段, 'col'=>1, 'row'=>2, 'link'=>'', 'wrap'=>'No', 'align'=>'Center'];
+                $sql        = "select distinct $右侧数据关联字段 from $TableName where 1=1 order by $右侧数据关联字段 asc";
                 $rs         = $db->Execute($sql);
                 $rs_a       = $rs->GetArray();
                 $Counter    = 0;
