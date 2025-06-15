@@ -45,6 +45,7 @@ import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
 import Fade, { FadeProps } from '@mui/material/Fade'
 import Icon from 'src/@core/components/icon'
+import Link from 'next/link'
 
 import jsPDF from 'jspdf'
 import html2canvas from 'html2canvas'
@@ -766,7 +767,10 @@ const TableDataAreaRender = ({ reportData, isLoading, tableRef, borderColor, han
                           px: '0 !important'
                         }}
                       >
-                        {cell[key]}
+                        {reportData['数据区域']['链接'] != true && cell[key]}
+                        {reportData['数据区域']['链接'] == true && (
+                          <Typography variant='body2' sx={{ my: 'auto', textAlign: 'center' }}>{cell[key]}</Typography>
+                        )}
                       </TableCell>
                     ))}
                   </TableRow>

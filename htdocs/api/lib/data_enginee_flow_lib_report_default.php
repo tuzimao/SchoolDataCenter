@@ -437,6 +437,9 @@ function getReportStructureDataSingle($currentReport) {
     }
     //print_R($报表页面);
     //print_R($右侧数据区域字段2);
+    if($SettingMap[$currentReport.'_Detail_Fields']) {
+        $报表页面['数据区域']['链接']   = true;
+    }
 
     $报表页面['底部区域']['备注']['标题']   = $SettingMap[$currentReport.'_Memo_Title'];
     $报表页面['底部区域']['备注']['内容']   = $SettingMap[$currentReport.'_Memo_Content'];

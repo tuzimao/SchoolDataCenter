@@ -397,6 +397,7 @@ $MAP['Report_1_SearchField_3'] 	                = '搜索字段3';
 $MAP['Report_1_SearchField_4'] 	                = '搜索字段4';
 $MAP['Report_1_SearchField_5'] 	                = '搜索字段5';
 $MAP['Report_1_SearchField_6'] 	                = '搜索字段6';
+$MAP['Report_1_Detail_Fields'] 	                = '明细页面字段列表';
 $MAP['Report_1_Memo_Title'] 	                = '页面底部备注标题';
 $MAP['Report_1_Memo_Content'] 	                = '页面底部备注内容';
 
@@ -428,6 +429,7 @@ $MAP['Report_2_SearchField_3'] 	                = '搜索字段3';
 $MAP['Report_2_SearchField_4'] 	                = '搜索字段4';
 $MAP['Report_2_SearchField_5'] 	                = '搜索字段5';
 $MAP['Report_2_SearchField_6'] 	                = '搜索字段6';
+$MAP['Report_2_Detail_Fields'] 	                = '明细页面字段列表';
 $MAP['Report_2_Memo_Title'] 	                = '页面底部备注标题';
 $MAP['Report_2_Memo_Content'] 	                = '页面底部备注内容';
 
@@ -460,11 +462,9 @@ $MAP['Report_3_SearchField_3'] 	                = '搜索字段3';
 $MAP['Report_3_SearchField_4'] 	                = '搜索字段4';
 $MAP['Report_3_SearchField_5'] 	                = '搜索字段5';
 $MAP['Report_3_SearchField_6'] 	                = '搜索字段6';
+$MAP['Report_3_Detail_Fields'] 	                = '明细页面字段列表';
 $MAP['Report_3_Memo_Title'] 	                = '页面底部备注标题';
 $MAP['Report_3_Memo_Content'] 	                = '页面底部备注内容';
-
-
-
 
 
 $MAP['Field Name in Database'] 	= '字段名称';
