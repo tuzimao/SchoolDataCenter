@@ -20,6 +20,7 @@ import CircularProgress from '@mui/material/CircularProgress'
 import { useTheme } from '@mui/material/styles'
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import ViewTableList from './ViewTableList'
 
 // ** Icon Imports
 import {isMobile} from 'src/configs/functions'
@@ -27,7 +28,6 @@ import {isMobile} from 'src/configs/functions'
 // ** Config
 import { defaultConfig } from 'src/configs/auth'
 import axios from 'axios'
-import Mousetrap from 'mousetrap';
 
 // ** Styles
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
@@ -45,7 +45,6 @@ import Dialog from '@mui/material/Dialog'
 import DialogContent from '@mui/material/DialogContent'
 import Fade, { FadeProps } from '@mui/material/Fade'
 import Icon from 'src/@core/components/icon'
-import Link from 'next/link'
 
 import jsPDF from 'jspdf'
 import html2canvas from 'html2canvas'
@@ -82,21 +81,16 @@ const ReportCore = (props: ReportType) => {
   const [sortMethod, setSortMethod] = useState<number>(0)
   const [sortField, setSortField] = useState<string>('')
   const [isExporting, setIsExporting] = useState(false);
-  const [open, setOpen] = useState(false);
+  const [openPrintPage, setOpenPrintPage] = useState(false);
+  const [openDetailPage, setOpenDetailPage] = useState(false);
+  const [xName, setXName] = useState<string>('')
+  const [yValue, setYValue] = useState<string>('')
 
   const [searchData, setSearchData] = useState<any>(null)
 
   const ButtonList = report_default['ButtonList']
 
   console.log("searchData", searchData)
-
-  useEffect(() => {
-    Mousetrap.bind(['alt+c', 'command+c'], handleClose);
-
-    return () => {
-      Mousetrap.unbind(['alt+c', 'command+c']);
-    }
-  });
 
   const storedToken = window.localStorage.getItem(defaultConfig.storageTokenKeyName)!
   const AccessKey = window.localStorage.getItem(defaultConfig.storageAccessKeyName)!
@@ -106,6 +100,7 @@ const ReportCore = (props: ReportType) => {
       setIsLoading(true)
       setSearchData(null)
       const currentReport = currentButtonName !== '' ? currentButtonName : report_default['ButtonList'][0]['code'] 
+      setCurrentButtonName(currentReport)
       axios
         .post(
           authConfig.backEndApiHost + backEndApi + '?action=report_default&currentReport=' + currentReport,
@@ -197,8 +192,12 @@ const ReportCore = (props: ReportType) => {
 
   }
 
-  const handleClose = () => {
-    setOpen(false)
+  const handlePrintClose = () => {
+    setOpenPrintPage(false)
+  }
+
+  const handleDetailClose = () => {
+    setOpenDetailPage(false)
   }
 
   const isNumber = (value: any) => {
@@ -430,13 +429,13 @@ const ReportCore = (props: ReportType) => {
   };
 
   useEffect(() => {
-    if (open) {
+    if (openPrintPage) {
       // 弹窗打开时，自动弹出打印窗口
       setTimeout(() => {
         window.print();
       }, 1000); // 延迟300ms，保证内容渲染完成
     }
-  }, [open]);
+  }, [openPrintPage]);
 
   console.log("reportData['数据区域']['头部']", reportData)
 
@@ -599,12 +598,15 @@ const ReportCore = (props: ReportType) => {
               handleFilterDataByColumnName={handleFilterDataByColumnName}
               sortField={sortField}
               sortMethod={sortMethod}
+              setOpenDetailPage={setOpenDetailPage}
+              setXName={setXName}
+              setYValue={setYValue}
               />
 
             {reportData && reportData['底部区域'] && reportData['底部区域']['功能按钮'] && (
               <Grid container justifyContent="flex-end" sx={{mt: 3}}>
                 {reportData['底部区域'] && reportData['底部区域']['功能按钮'] && reportData['底部区域']['功能按钮'].includes('打印') && (
-                  <Button onClick={()=>setOpen(true)}  variant='outlined' size="small" sx={{mr: 2}}>打印</Button>
+                  <Button onClick={()=>setOpenPrintPage(true)}  variant='outlined' size="small" sx={{mr: 2}}>打印</Button>
                 )}
                 {reportData['底部区域'] && reportData['底部区域']['功能按钮'] && reportData['底部区域']['功能按钮'].includes('导出Excel') && (
                   <Button onClick={()=>ExportDataToExcel()} disabled={isExporting} variant='outlined' size="small" sx={{mr: 2}}>导出Excel</Button>
@@ -628,19 +630,19 @@ const ReportCore = (props: ReportType) => {
         </Card>
       </Fragment>
 
-      {open && (
+      {openPrintPage && (
         <Dialog
           fullWidth
-          open={open}
+          open={openPrintPage}
           maxWidth={'lg'}
           scroll='body'
-          onClose={handleClose}
+          onClose={handlePrintClose}
           TransitionComponent={Transition}
         >
           <DialogContent sx={{ pb: 8, pl: { xs: 4, sm: 6 }, pr: { xs: 0, sm: 6 }, pt: { xs: 8, sm: 12.5 }, position: 'relative' }}>
             <IconButton
               size='small'
-              onClick={handleClose}
+              onClick={handlePrintClose}
               sx={{ position: 'absolute', right: '1rem', top: '0.5rem' }}
             >
               <Icon icon='mdi:close' />
@@ -657,7 +659,35 @@ const ReportCore = (props: ReportType) => {
           </DialogContent>
         </Dialog >
       )}
-      
+
+      {openDetailPage && xName && xName.length > 0 && yValue && currentButtonName && (
+        <Dialog
+          fullWidth
+          open={openDetailPage}
+          maxWidth={'lg'}
+          scroll='body'
+          onClose={handleDetailClose}
+          TransitionComponent={Transition}
+        >
+          <DialogContent sx={{ pb: 8, pl: { xs: 4, sm: 6 }, pr: { xs: 0, sm: 6 }, pt: { xs: 8, sm: 12.5 }, position: 'relative' }}>
+            <IconButton
+              size='small'
+              onClick={handleDetailClose}
+              sx={{ position: 'absolute', right: '1rem', top: '0.5rem' }}
+            >
+              <Icon icon='mdi:close' />
+            </IconButton>
+            <ViewTableList
+              authConfig={authConfig}
+              backEndApi={backEndApi}
+              currentReport={currentButtonName}
+              xName={xName}
+              yValue={yValue}
+              />
+          </DialogContent>
+        </Dialog >
+      )}
+
       {reportData == null && isLoading == true && (
         <Grid item xs={12} sm={12} container justifyContent="space-around">
           <Box sx={{ mt: 6, mb: 6, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
@@ -670,7 +700,7 @@ const ReportCore = (props: ReportType) => {
   )
 }
 
-const TableDataAreaRender = ({ reportData, isLoading, tableRef, borderColor, handleFilterDataByColumnName, sortField, sortMethod}: any) => {
+const TableDataAreaRender = ({ reportData, isLoading, tableRef, borderColor, handleFilterDataByColumnName, sortField, sortMethod, setOpenDetailPage, setXName, setYValue}: any) => {
 
   return (
     <Fragment>
@@ -769,7 +799,11 @@ const TableDataAreaRender = ({ reportData, isLoading, tableRef, borderColor, han
                       >
                         {reportData['数据区域']['链接'] != true && cell[key]}
                         {reportData['数据区域']['链接'] == true && (
-                          <Typography variant='body2' sx={{ my: 'auto', textAlign: 'center' }}>{cell[key]}</Typography>
+                          <Typography variant='body2' sx={{ my: 'auto', textAlign: 'center', cursor: 'pointer' }} onClick={()=>{
+                            setOpenDetailPage(true)
+                            setXName(key)
+                            setYValue(cell[reportData['数据区域']['右侧数据关联字段']] || '')
+                          }}>{cell[key]}</Typography>
                         )}
                       </TableCell>
                     ))}
@@ -838,5 +872,6 @@ const TableDataAreaRender = ({ reportData, isLoading, tableRef, borderColor, han
     </Fragment>
   );
 };
+
 
 export default ReportCore

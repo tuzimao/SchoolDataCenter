@@ -22,6 +22,28 @@ if( $_GET['action']=="report_default" && $currentReport!="")  {
     exit;
 }
 
+if( $_GET['action']=="report_detail" && $currentReport!="")  {
+    
+    $payload        = file_get_contents('php://input');
+    $_POST          = json_decode($payload,true);
+
+    if($currentReport!="Report_1"&&$currentReport!="Report_2"&&$currentReport!="Report_3"&&$currentReport!="Report_4"&&$currentReport!="Report_5"&&$currentReport!="Report_6"&&$currentReport!="Report_7"&&$currentReport!="Report_8")   {
+        $RS = [];
+        $RS['status'] = "ERROR";
+        $RS['msg'] = __("Error Id Value");
+        $RS['_GET'] = $_GET;
+        $RS['_POST'] = $_POST;
+        print_R(EncryptApiData($RS, $GLOBAL_USER));
+        exit;
+    }
+    
+    $报表横向字段 = ForSqlInjection($_POST['报表横向字段']);
+    $报表纵向字段值 = ForSqlInjection($_POST['报表纵向字段值']);
+    $RS = getReportDetail($currentReport, $报表横向字段, $报表纵向字段值);
+    print_R(EncryptApiData($RS, $GLOBAL_USER));
+    exit;
+}
+
 function getReportStructureData() {
     global $db, $Step, $GLOBAL_USER, $SettingMap, $MetaColumnNames;
 
@@ -414,7 +436,7 @@ function getReportStructureDataSingle($currentReport) {
     $报表页面['搜索区域']['搜索条件'][] = ['name'=>'归属班级', 'sm'=>4, 'type'=>'input', 'field'=>'归属班级', 'default'=> '222', 'placeholder'=>'归属班级'];
     $报表页面['搜索区域']['搜索按钮']   = "开始查询";
     $报表页面['搜索区域']['搜索事件']   = "action=search";
-*/
+    */
     $报表页面['数据区域']['数据']   = [];
 
     for($i=0;$i<sizeof($左侧区域数据);$i++)   {
@@ -426,12 +448,12 @@ function getReportStructureDataSingle($currentReport) {
         $右侧数据关联字段Value = $左侧单元[$右侧数据关联字段];
         if(sizeof($右侧数据区域字段1) > 0) {
             foreach($右侧数据区域字段1_列名 as $右侧数据区域字段1_列名_Value) {
-                $报表页面['数据区域']['数据'][$i][$右侧数据区域字段1_列名_Value]    = $右侧数据区域字段1[$右侧数据关联字段Value][$Report_X_DataColumn_1_Name][$右侧数据区域字段1_列名_Value];
+                $报表页面['数据区域']['数据'][$i][$Report_X_DataColumn_1_Name."____".$右侧数据区域字段1_列名_Value]    = $右侧数据区域字段1[$右侧数据关联字段Value][$Report_X_DataColumn_1_Name][$右侧数据区域字段1_列名_Value];
             }
         }
         if(sizeof($右侧数据区域字段2) > 0) {
             foreach($右侧数据区域字段2_列名 as $右侧数据区域字段2_列名_Value) {
-                $报表页面['数据区域']['数据'][$i][$右侧数据区域字段2_列名_Value]    = $右侧数据区域字段2[$右侧数据关联字段Value][$Report_X_DataColumn_2_Name][$右侧数据区域字段2_列名_Value];
+                $报表页面['数据区域']['数据'][$i][$Report_X_DataColumn_2_Name."____".$右侧数据区域字段2_列名_Value]    = $右侧数据区域字段2[$右侧数据关联字段Value][$Report_X_DataColumn_2_Name][$右侧数据区域字段2_列名_Value];
             }
         }
     }
@@ -440,6 +462,8 @@ function getReportStructureDataSingle($currentReport) {
     if($SettingMap[$currentReport.'_Detail_Fields']) {
         $报表页面['数据区域']['链接']   = true;
     }
+
+    $报表页面['数据区域']['右侧数据关联字段']   = $右侧数据关联字段;
 
     $报表页面['底部区域']['备注']['标题']   = $SettingMap[$currentReport.'_Memo_Title'];
     $报表页面['底部区域']['备注']['内容']   = $SettingMap[$currentReport.'_Memo_Content'];
@@ -451,5 +475,84 @@ function getReportStructureDataSingle($currentReport) {
     $报表页面['SQL']['数据区域SQL'] = $数据区域SQL;
 
     return $报表页面;
+}
+
+function getReportDetail($currentReport, $报表横向字段, $报表纵向字段值) {
+    global $db, $Step, $GLOBAL_USER, $SettingMap, $MetaColumnNames;
+
+    $预置的字段列表  = explode(',', $SettingMap[$currentReport.'_Detail_Fields']);
+    $TableName      = $SettingMap[$currentReport.'_TableName'];
+
+    $sql    = "select ShowType, FieldName from form_formfield where FormName = '$TableName'";
+    $rs     = $db->Execute($sql);
+    $rs_a   = $rs->GetArray();
+    $字段的显示类型 = [];
+    foreach($rs_a as $Item)  {
+        $字段的显示类型[$Item['FieldName']] = $Item['ShowType'];
+    }
+    $过滤字段列表 = [];
+    foreach($预置的字段列表 as $字段) {
+        if($字段的显示类型[$字段] != '') {
+            $过滤字段列表[] = $字段;
+        }
+    }
+
+    $报表横向字段Array  = explode('____', $报表横向字段);
+    $报表横向字段Name   = $报表横向字段Array[0];
+    $报表横向字段Value  = $报表横向字段Array[1];
+
+    $WhereSql = []; 
+    if($字段的显示类型[$报表横向字段Name] != '') {
+        if($报表横向字段Value == '空值')    {
+            $报表横向字段Value = '';
+            $WhereSql[] = " $报表横向字段Name = '$报表横向字段Value' ";
+        }
+        else if($报表横向字段Value == '全部')    {
+            $报表横向字段Value = '';
+        }
+        else {
+            $WhereSql[] = " $报表横向字段Name = '$报表横向字段Value' ";
+        }
+    }
+    $报表纵向字段 = $SettingMap[$currentReport.'_LeftColumnField'];
+    if($字段的显示类型[$报表纵向字段] != '') {
+        $报表纵向字段Value = ForSqlInjection($_POST['报表纵向字段值']);
+        if($报表纵向字段Value == '空值')    {
+            $报表纵向字段Value = '';
+            $WhereSql[] = " $报表纵向字段 = '$报表纵向字段Value' ";
+        }
+        else if($报表纵向字段Value == '全部')    {
+            $报表纵向字段Value = '';
+        }
+        else {
+            $WhereSql[] = " $报表纵向字段 = '$报表纵向字段Value' ";
+        }
+    }
+    if(sizeof($WhereSql)>0) {
+        $sql    = "select ".join(',', $过滤字段列表)." from $TableName where ".join(' and ', $WhereSql)."";
+        $rs     = $db->Execute($sql);
+        $rs_a   = (array)$rs->GetArray();
+        $NewRSA = [];
+        foreach($rs_a as $Item) {
+            $序号 ++;
+            $Element = [];
+            $Element['序号'] = $序号;
+            $Element = [...$Element, ...$Item];
+            $NewRSA[] = $Element;
+        }
+        $RS['status'] = "OK";
+        $RS['data'] = $NewRSA;
+        $RS['sql']  = $sql;
+        $RS['msg']  = __("Get Data Success");
+        return $RS;
+    }
+    else {
+        $RS = [];
+        $RS['status'] = "ERROR";
+        $RS['msg'] = "没有获得到X/Y轴信息";
+        $RS['_GET'] = $_GET;
+        $RS['_POST'] = $_POST;
+        return $RS;
+    }
 }
 ?>
