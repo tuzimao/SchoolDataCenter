@@ -22,9 +22,32 @@ if( $_GET['action']=="report_default" && $currentReport!="")  {
     exit;
 }
 
-function getReportStructureData() {
-    global $db, $TableName, $Step, $GLOBAL_USER, $SettingMap, $MetaColumnNames;
+if( $_GET['action']=="report_detail" && $currentReport!="")  {
+    
+    $payload        = file_get_contents('php://input');
+    $_POST          = json_decode($payload,true);
 
+    if($currentReport!="Report_1"&&$currentReport!="Report_2"&&$currentReport!="Report_3"&&$currentReport!="Report_4"&&$currentReport!="Report_5"&&$currentReport!="Report_6"&&$currentReport!="Report_7"&&$currentReport!="Report_8")   {
+        $RS = [];
+        $RS['status'] = "ERROR";
+        $RS['msg'] = __("Error Id Value");
+        $RS['_GET'] = $_GET;
+        $RS['_POST'] = $_POST;
+        print_R(EncryptApiData($RS, $GLOBAL_USER));
+        exit;
+    }
+    
+    $报表横向字段 = ForSqlInjection($_POST['报表横向字段']);
+    $报表纵向字段值 = ForSqlInjection($_POST['报表纵向字段值']);
+    $RS = getReportDetail($currentReport, $报表横向字段, $报表纵向字段值);
+    print_R(EncryptApiData($RS, $GLOBAL_USER));
+    exit;
+}
+
+function getReportStructureData() {
+    global $db, $Step, $GLOBAL_USER, $SettingMap, $MetaColumnNames;
+
+    $TableName = $SettingMap['Report_1_TableName'];
     //functionNameIndividual
     $functionNameIndividual = "plugin_".$TableName."_".$Step."_report_default";
     if(function_exists($functionNameIndividual))  {
@@ -70,7 +93,9 @@ function getReportStructureData() {
 }
 
 function getReportStructureDataSingle($currentReport) {
-    global $db, $TableName, $Step, $GLOBAL_USER, $SettingMap, $MetaColumnNames;
+    global $db, $Step, $GLOBAL_USER, $SettingMap, $MetaColumnNames;
+
+    $TableName = $SettingMap[$currentReport.'_TableName'];
 
     $payload        = file_get_contents('php://input');
     $_POST          = json_decode($payload,true);
@@ -80,10 +105,6 @@ function getReportStructureDataSingle($currentReport) {
     if(function_exists($functionNameIndividual))  {
         $functionNameIndividual($id);
     }
-
-    $sql    = "select * from `$TableName` where id = '$id'";
-    $rsf    = $db->Execute($sql);
-    $data   = $rsf->fields;
 
     $报表页面 = [];
     $报表页面['搜索区域'] = [];
@@ -101,7 +122,7 @@ function getReportStructureDataSingle($currentReport) {
     if(!in_array($Report_X_LeftColumnField, $MetaColumnNames) && $Report_X_LeftColumnField != '' && $Report_X_LeftColumnField != 'None') {
         $RS = [];
         $RS['status'] = "ERROR";
-        $RS['msg'] = "Report_1_LeftColumnField not a field in $TableName";
+        $RS['msg'] = "Report_X_LeftColumnField not a field in $TableName";
         print_R(EncryptApiData($RS, $GLOBAL_USER));
         exit;
     }
@@ -118,7 +139,7 @@ function getReportStructureDataSingle($currentReport) {
     //处理搜索时的SQL条件过滤
     $WhereSql = "";
     for($X=1;$X<=6;$X++)    {
-        $字段名称 = $SettingMap['Report_1_SearchField_'.$X];
+        $字段名称 = $SettingMap[$currentReport.'_SearchField_'.$X];
         if(in_array($字段名称, $MetaColumnNames) && $字段名称 != '') {
             $字段类型           = $字段的显示类型[$字段名称];
             $字段类型Edit       = returntablefield("form_formfield_showtype","`Name`",$字段类型,"Edit")['Edit'];
@@ -172,10 +193,10 @@ function getReportStructureDataSingle($currentReport) {
         }
     }
 
+    //生成左侧区域数据
+    $左侧区域数据 = [];
     if($Report_X_LeftColumnField != "" && $$Report_X_LeftColumnField != "无")   {
         $右侧数据关联字段  = '';
-        //生成左侧区域数据
-        $左侧区域数据 = [];
         switch($Report_X_LeftColumnDefine)  {
             case '班级/专业/系部':
                 $右侧数据关联字段  = '班级';
@@ -231,6 +252,19 @@ function getReportStructureDataSingle($currentReport) {
                 $报表页面['数据区域']['头部'][0][]   = ['name'=>'姓名', 'col'=>1, 'row'=>2, 'link'=>'', 'wrap'=>'No', 'align'=>'Center'];
                 $报表页面['数据区域']['头部'][0][]   = ['name'=>'部门', 'col'=>1, 'row'=>2, 'link'=>'', 'wrap'=>'No', 'align'=>'Center'];
                 $sql        = "select USER_ID as 用户名, USER_NAME as 姓名, DEPT_NAME as 部门 from data_user, data_department where data_user.DEPT_ID = data_department.id and data_user.NOT_LOGIN = '0' order by data_user.DEPT_ID, data_user.USER_ID";
+                $rs         = $db->Execute($sql);
+                $rs_a       = $rs->GetArray();
+                $Counter    = 0;
+                foreach($rs_a as $Line) {
+                    $左侧区域数据[] = $Line;
+                    $Counter ++;
+                }
+                break;
+            case '动态数据做为左侧列':
+                $右侧数据关联字段  = $SettingMap[$currentReport.'_LeftColumnField'];
+                $报表页面['数据区域']['头部'][0][]   = ['name'=>'序号', 'col'=>1, 'row'=>2, 'link'=>'', 'wrap'=>'No', 'align'=>'Center'];
+                $报表页面['数据区域']['头部'][0][]   = ['name'=>$右侧数据关联字段, 'col'=>1, 'row'=>2, 'link'=>'', 'wrap'=>'No', 'align'=>'Center'];
+                $sql        = "select distinct $右侧数据关联字段 from $TableName where 1=1 order by $右侧数据关联字段 asc";
                 $rs         = $db->Execute($sql);
                 $rs_a       = $rs->GetArray();
                 $Counter    = 0;
@@ -307,7 +341,7 @@ function getReportStructureDataSingle($currentReport) {
     $报表页面['搜索区域']['搜索事件']   = "action=search";
 
     for($X=1;$X<=6;$X++)    {
-        $字段名称 = $SettingMap['Report_1_SearchField_'.$X];
+        $字段名称 = $SettingMap[$currentReport.'_SearchField_'.$X];
         if(in_array($字段名称, $MetaColumnNames) && $字段名称 != '') {
             $字段类型       = $字段的显示类型[$字段名称];
             $字段类型Edit   = returntablefield("form_formfield_showtype","`Name`",$字段类型,"Edit")['Edit'];
@@ -402,7 +436,7 @@ function getReportStructureDataSingle($currentReport) {
     $报表页面['搜索区域']['搜索条件'][] = ['name'=>'归属班级', 'sm'=>4, 'type'=>'input', 'field'=>'归属班级', 'default'=> '222', 'placeholder'=>'归属班级'];
     $报表页面['搜索区域']['搜索按钮']   = "开始查询";
     $报表页面['搜索区域']['搜索事件']   = "action=search";
-*/
+    */
     $报表页面['数据区域']['数据']   = [];
 
     for($i=0;$i<sizeof($左侧区域数据);$i++)   {
@@ -414,17 +448,22 @@ function getReportStructureDataSingle($currentReport) {
         $右侧数据关联字段Value = $左侧单元[$右侧数据关联字段];
         if(sizeof($右侧数据区域字段1) > 0) {
             foreach($右侧数据区域字段1_列名 as $右侧数据区域字段1_列名_Value) {
-                $报表页面['数据区域']['数据'][$i][$右侧数据区域字段1_列名_Value]    = $右侧数据区域字段1[$右侧数据关联字段Value][$Report_X_DataColumn_1_Name][$右侧数据区域字段1_列名_Value];
+                $报表页面['数据区域']['数据'][$i][$Report_X_DataColumn_1_Name."____".$右侧数据区域字段1_列名_Value]    = $右侧数据区域字段1[$右侧数据关联字段Value][$Report_X_DataColumn_1_Name][$右侧数据区域字段1_列名_Value];
             }
         }
         if(sizeof($右侧数据区域字段2) > 0) {
             foreach($右侧数据区域字段2_列名 as $右侧数据区域字段2_列名_Value) {
-                $报表页面['数据区域']['数据'][$i][$右侧数据区域字段2_列名_Value]    = $右侧数据区域字段2[$右侧数据关联字段Value][$Report_X_DataColumn_2_Name][$右侧数据区域字段2_列名_Value];
+                $报表页面['数据区域']['数据'][$i][$Report_X_DataColumn_2_Name."____".$右侧数据区域字段2_列名_Value]    = $右侧数据区域字段2[$右侧数据关联字段Value][$Report_X_DataColumn_2_Name][$右侧数据区域字段2_列名_Value];
             }
         }
     }
     //print_R($报表页面);
     //print_R($右侧数据区域字段2);
+    if($SettingMap[$currentReport.'_Detail_Fields']) {
+        $报表页面['数据区域']['链接']   = true;
+    }
+
+    $报表页面['数据区域']['右侧数据关联字段']   = $右侧数据关联字段;
 
     $报表页面['底部区域']['备注']['标题']   = $SettingMap[$currentReport.'_Memo_Title'];
     $报表页面['底部区域']['备注']['内容']   = $SettingMap[$currentReport.'_Memo_Content'];
@@ -436,5 +475,84 @@ function getReportStructureDataSingle($currentReport) {
     $报表页面['SQL']['数据区域SQL'] = $数据区域SQL;
 
     return $报表页面;
+}
+
+function getReportDetail($currentReport, $报表横向字段, $报表纵向字段值) {
+    global $db, $Step, $GLOBAL_USER, $SettingMap, $MetaColumnNames;
+
+    $预置的字段列表  = explode(',', $SettingMap[$currentReport.'_Detail_Fields']);
+    $TableName      = $SettingMap[$currentReport.'_TableName'];
+
+    $sql    = "select ShowType, FieldName from form_formfield where FormName = '$TableName'";
+    $rs     = $db->Execute($sql);
+    $rs_a   = $rs->GetArray();
+    $字段的显示类型 = [];
+    foreach($rs_a as $Item)  {
+        $字段的显示类型[$Item['FieldName']] = $Item['ShowType'];
+    }
+    $过滤字段列表 = [];
+    foreach($预置的字段列表 as $字段) {
+        if($字段的显示类型[$字段] != '') {
+            $过滤字段列表[] = $字段;
+        }
+    }
+
+    $报表横向字段Array  = explode('____', $报表横向字段);
+    $报表横向字段Name   = $报表横向字段Array[0];
+    $报表横向字段Value  = $报表横向字段Array[1];
+
+    $WhereSql = []; 
+    if($字段的显示类型[$报表横向字段Name] != '') {
+        if($报表横向字段Value == '空值')    {
+            $报表横向字段Value = '';
+            $WhereSql[] = " $报表横向字段Name = '$报表横向字段Value' ";
+        }
+        else if($报表横向字段Value == '全部')    {
+            $报表横向字段Value = '';
+        }
+        else {
+            $WhereSql[] = " $报表横向字段Name = '$报表横向字段Value' ";
+        }
+    }
+    $报表纵向字段 = $SettingMap[$currentReport.'_LeftColumnField'];
+    if($字段的显示类型[$报表纵向字段] != '') {
+        $报表纵向字段Value = ForSqlInjection($_POST['报表纵向字段值']);
+        if($报表纵向字段Value == '空值')    {
+            $报表纵向字段Value = '';
+            $WhereSql[] = " $报表纵向字段 = '$报表纵向字段Value' ";
+        }
+        else if($报表纵向字段Value == '全部')    {
+            $报表纵向字段Value = '';
+        }
+        else {
+            $WhereSql[] = " $报表纵向字段 = '$报表纵向字段Value' ";
+        }
+    }
+    if(sizeof($WhereSql)>0) {
+        $sql    = "select ".join(',', $过滤字段列表)." from $TableName where ".join(' and ', $WhereSql)."";
+        $rs     = $db->Execute($sql);
+        $rs_a   = (array)$rs->GetArray();
+        $NewRSA = [];
+        foreach($rs_a as $Item) {
+            $序号 ++;
+            $Element = [];
+            $Element['序号'] = $序号;
+            $Element = [...$Element, ...$Item];
+            $NewRSA[] = $Element;
+        }
+        $RS['status'] = "OK";
+        $RS['data'] = $NewRSA;
+        $RS['sql']  = $sql;
+        $RS['msg']  = __("Get Data Success");
+        return $RS;
+    }
+    else {
+        $RS = [];
+        $RS['status'] = "ERROR";
+        $RS['msg'] = "没有获得到X/Y轴信息";
+        $RS['_GET'] = $_GET;
+        $RS['_POST'] = $_POST;
+        return $RS;
+    }
 }
 ?>
